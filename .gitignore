@@ -1,0 +1,8 @@
+# =========================
+# for jiangxin
+.project
+.classpath
+lib/
+temp/
+bin/
+# =========================
