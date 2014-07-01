@@ -1,4 +1,5 @@
 /**
+ * ÎÄ¼þ±àÂë×ª»»
  * @author jiangxin
  */
 
@@ -12,7 +13,7 @@ import java.util.Iterator;
 import org.apache.commons.io.FileUtils;
 
 public class EncoderConvert {
-	public static final String[] extensions = {"java"};
+	public static final String[] extensions = null;
 
 	public static void encodeFile(String srcFileString, String srcEncoder,
 			String desFileString, String desEncoder) throws IOException {

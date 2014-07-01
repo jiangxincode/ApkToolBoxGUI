@@ -1,8 +1,11 @@
 /**
- * 文件编码探测，使用了第三方探测包cpdetector
- * http://cpdetector.sourceforge.net/
+ * 编码探测检测器
  * @author jiangxin
- **/
+ * 使用了第三方的包:cpdetector
+ * http://cpdetector.sourceforge.net/
+ * 使用说明及包下载请查看官方介绍
+ */
+
 package edu.jiangxin.encode;
 
 import info.monitorenter.cpdetector.io.ASCIIDetector;
@@ -14,21 +17,31 @@ import info.monitorenter.cpdetector.io.UnicodeDetector;
 import java.io.File;
 import java.nio.charset.Charset;
 
-public class JudgeFileCode {
-	public static String judge(String fileName) {
+public class EncoderDetector {
+	/**
+	 * 判断文件编码类型
+	 * @param fileName
+	 * @return 编码类型字符串
+	 */
+	public static String judgeFile(String fileName) {
+
+		File file = new File(fileName);
+		if (!file.exists()) {
+			System.out.println("Can't find the file!");
+			return null;
+		}
+
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+
+		// first one returning non-null wins the decision
 		detector.add(new ParsingDetector(false));
 		detector.add(JChardetFacade.getInstance());
 		detector.add(ASCIIDetector.getInstance());
 		detector.add(UnicodeDetector.getInstance());
+
 		Charset charset = null;
-		File file = new File(fileName);
-		if(!file.exists()) {
-			System.out.println("Can't find the file!");
-			return null;
-		}
 		try {
-			charset = detector.detectCodepage(file.toURI().toURL());
+			charset = detector.detectCodepage(file.toURI().toURL()); // f.toURL()已经废弃，建议通过toURI()间接转换
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -37,11 +50,11 @@ public class JudgeFileCode {
 		} else {
 			return null;
 		}
-		
 	}
 
 	public static void main(String[] args) {
-		
-		judge("temp/test.txt");
+
+		String charset = judgeFile("temp/test.txt");
+		System.out.println(charset);
 	}
 }

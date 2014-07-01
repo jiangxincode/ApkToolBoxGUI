@@ -1,3 +1,7 @@
+/**
+ * 不同操作系统文件格式转换
+ * @author jiangxin
+ */
 package edu.jiangxin.encode;
 
 import java.io.BufferedReader;

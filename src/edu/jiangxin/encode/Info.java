@@ -1,3 +1,7 @@
+/**
+ * –≈œ¢œ‘ æ
+ * @author jiangxin
+ */
 package edu.jiangxin.encode;
 
 public class Info {
@@ -23,6 +27,7 @@ public class Info {
 		System.err.println("\t convert -dos2unix test.txt");
 		System.err.println("\t convert -r test.txt");
 	}
+	
 	public static void main(String[] args) {
 		Info.usage();
 	}
