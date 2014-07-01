@@ -12,6 +12,7 @@ public class FileProcess {
 	public static void main(String args[]) throws IOException {
 		//copyDirectory("test1", "test2");
 		//copyFile("test1/test.txt","test2/test.txt");
+		//deleteDir("temp/temp2");
 	}
 	
 	/**
@@ -91,4 +92,48 @@ public class FileProcess {
 		}
 		
 	}
+	
+	/**
+	 * 递归删除目录
+	 * @param dir
+	 * @return
+	 */
+	public static boolean deleteDir(String dir) {
+		File dirFile = new File(dir);
+		if (dirFile.isDirectory()) {
+			String[] files = dirFile.list();
+			for (int i = 0; i < files.length; i++) { //递归删除目录中的子目录下
+				String temp = dirFile.getAbsolutePath() + File.separator.toString() + files[i];
+				boolean success = deleteDir(temp);
+				if (!success) {
+					System.out.println("Something error!");
+					return false;
+				}
+			}
+		}
+		boolean ret = dirFile.delete();
+		if(ret) {
+			System.out.println("Success to delete " + dir);
+		} else {
+			System.out.println("Something error!");
+		}
+		return ret;
+	}
+	
+	/**
+	 * 删除目录组
+	 * @param dirs
+	 * @return
+	 */
+	public static boolean deleteDirs(String[] dirs) {
+		for(int i=0;i<dirs.length;i++) {
+			boolean isSuccessful = deleteDir(dirs[i]);
+			if(isSuccessful == true) {
+				System.out.println("成功删除目录：" + dirs[i]);
+			}
+		}
+		return false;
+		
+	}
+
 }
