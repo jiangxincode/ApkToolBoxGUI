@@ -5,6 +5,8 @@
 package edu.jiangxin.encode;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class FileProcess {
 	final static int BUFFERSIZE = 1024*5; //The size of the buffer
@@ -133,7 +135,15 @@ public class FileProcess {
 			}
 		}
 		return false;
-		
+	}
+	public static int sumAllFiles(ArrayList<File> arrayList) throws IOException {
+		int sum = 0;
+		Iterator<File> it = arrayList.iterator();
+		while(it.hasNext()) {
+			File file = it.next();
+			sum += LineCount.count(file.getAbsoluteFile().toString());
+		}
+		return sum;
 	}
 
 }

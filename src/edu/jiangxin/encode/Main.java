@@ -7,6 +7,7 @@ package edu.jiangxin.encode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
 	final static int MAXFILENUM = 100; //The max num of the files
@@ -16,6 +17,7 @@ public class Main {
 	static boolean isBackup = false; //Backup the file that will change, or not
 	static boolean isRecovery = false; //Recovery the file that has changed, or not
 	static boolean isHelp = false; //Display the Usage information, or not
+	static boolean isSum = false; //Sum the code lines,or not
 	
 	static String fromEncoder = null; //The encoder convert from
 	static String toEncoder = null; //The encoder convert to
@@ -52,6 +54,9 @@ public class Main {
 				continue;
 			} else if(temp.equals("-r")) { //Recovery the file that has changed, or not
 				isRecovery = true;
+				continue;
+			} else if(temp.equals("-sum")) { //Sum the code lines,or not
+				isSum = true;
 				continue;
 			}
 		}
@@ -92,6 +97,11 @@ public class Main {
 			}
 			if(toEncoder!=null) { //Convert the encoder
 				EncoderConvert.encodeFile(temp, fromEncoder, temp, toEncoder);
+			}
+			if(isSum) {
+				ArrayList<File> myList = fileFilter.list(temp,".java");
+				int sumCode = FileProcess.sumAllFiles(myList);
+				System.out.println(sumCode);
 			}
 		}
 	}
