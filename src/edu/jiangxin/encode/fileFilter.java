@@ -1,3 +1,7 @@
+/**
+ * ÎÄ¼ş¹ıÂËÆ÷
+ * @author jiangxin
+ */
 package edu.jiangxin.encode;
 
 import java.io.File;

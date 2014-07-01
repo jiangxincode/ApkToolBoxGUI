@@ -1,3 +1,7 @@
+/**
+ * 文件行数统计
+ * @author jiangxin
+ */
 package edu.jiangxin.encode;
 
 import java.io.BufferedInputStream;
@@ -8,25 +12,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
+
 public class LineCount {
     public static void main(String[] args) throws IOException {
-        LineCount app = new LineCount();
-        app.compareBufferAndLineNumber();
-    }
-    public void compareBufferAndLineNumber() throws IOException {
-        String fileName = "temp/output.txt";
+        String fileName = "temp/linux.txt";
         long time = System.currentTimeMillis();
-        System.out.println("LineNumberReader" + this.getTotalLines(fileName));
+        System.out.println("LineNumberReader" + getTotalLines(fileName));
         System.out.println(System.currentTimeMillis() - time);
         time = System.currentTimeMillis();
-        System.out.println("BufferedReader" + this.getTotalLines2(fileName));
+        System.out.println("BufferedReader" + getTotalLines2(fileName));
         System.out.println(System.currentTimeMillis() - time);
         time = System.currentTimeMillis();
         System.out.println("BufferedInputStream" + count(fileName));
         System.out.println(System.currentTimeMillis() - time);
     }
    
-    public int getTotalLines(String fileName) throws IOException {
+    public static int getTotalLines(String fileName) throws IOException {
         FileReader in = new FileReader(fileName);
         LineNumberReader reader = new LineNumberReader(in);
         String strLine = reader.readLine();
@@ -39,7 +40,7 @@ public class LineCount {
         in.close();
         return totalLines;
     }
-    public int getTotalLines2(String fileName) throws IOException {
+    public static int getTotalLines2(String fileName) throws IOException {
     	BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
     	String strLine = in.readLine();
     	int totalLines = 0;
