@@ -17,7 +17,8 @@ public class Main {
 	static boolean isBackup = false; //Backup the file that will change, or not
 	static boolean isRecovery = false; //Recovery the file that has changed, or not
 	static boolean isHelp = false; //Display the Usage information, or not
-	static boolean isSum = false; //Sum the code lines,or not
+	static boolean isSum = false; //Sum the code lines, or not
+	static boolean isReName = false; //Rename the file, or not
 	
 	static String fromEncoder = null; //The encoder convert from
 	static String toEncoder = null; //The encoder convert to
@@ -102,6 +103,9 @@ public class Main {
 				ArrayList<File> myList = fileFilter.list(temp,".java");
 				int sumCode = FileProcess.sumAllFiles(myList);
 				System.out.println(sumCode);
+			}
+			if(isReName) {
+				ReName.main(null);
 			}
 		}
 	}
