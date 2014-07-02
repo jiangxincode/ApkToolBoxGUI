@@ -12,8 +12,7 @@ import java.util.ArrayList;
 public class Main {
 	final static int MAXFILENUM = 100; //The max num of the files
 	
-	static boolean isDos2Unix = false; //Convert the file from dos to unix, or not
-	static boolean isUnix2Dox = false; //Convert the file from unxi to dos, or not
+	static boolean isOSConvert = false; //Convert the file from one os pattern to another, or not
 	static boolean isBackup = false; //Backup the file that will change, or not
 	static boolean isRecovery = false; //Recovery the file that has changed, or not
 	static boolean isHelp = false; //Display the Usage information, or not
@@ -22,10 +21,14 @@ public class Main {
 	
 	static String fromEncoder = null; //The encoder convert from
 	static String toEncoder = null; //The encoder convert to
+	static String pattern = null; //The pattern of OS convert
 	static String[] fileName = new String[MAXFILENUM]; //The max num of the files
 	
 	public static void main(String[] args) throws IOException {
 		
+		if(args.length == 0) {
+			System.out.println("Hello world");
+		}
 		for(int i=0;i<args.length;i++) {
 			String temp = args[i];
 			if(temp.equals("-h")) { //Display the Usage information, or not
@@ -44,11 +47,10 @@ public class Main {
 				i++;
 				toEncoder = args[i];
 				continue;
-			} else if(temp.equals("-dos2unix")) { //Convert the file from dos to unix, or not
-				isDos2Unix = true;
-				continue;
-			} else if(temp.equals("-unix2dos")) { //Convert the file from unxi to dos, or not
-				isUnix2Dox = true;
+			} else if(temp.equals("-os")) { //Convert the file from dos to unix, or not
+				i++;
+				pattern = args[i];
+				isOSConvert = true;
 				continue;
 			} else if(temp.equals("-b")) { //Backup the file that will change, or not
 				isBackup = true;
@@ -81,10 +83,8 @@ public class Main {
 				FileProcess.moveFile(srcFileString, desFileString, true);
 				continue ;
 			}
-			if(isDos2Unix) { //Convert from dos to unix
-				OSPattenConvert.dos2Unix(temp,temp);
-			} else if(isUnix2Dox) { //Convert from unix to dos
-				OSPattenConvert.unix2Dos(temp,temp);
+			if(isOSConvert) { //Convert OS pattern
+				OSPattenConvert.osDirConvert(temp, temp, pattern);
 			}
 			
 			if(fromEncoder==null && toEncoder!=null) { //Dectect the encoder of the file
