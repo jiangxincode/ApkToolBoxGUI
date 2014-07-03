@@ -45,6 +45,7 @@ log:
 		同时修复了fileFilter类中的部分bug。
 	Version 0.09 将备份功能从Mail类中分离，单列为一类，以实现结构优化和之后的程序扩展；进一步优化了Main的结构。
 	Version 0.10 将恢复功能从Mail类中分离，单列为一类，以实现结构优化和之后的程序扩展；进一步优化了Main的结构。
+	Version 0.11 优化了Main类和OSPatternConvert类。
 
 将要实现的功能：
 	增强系统鲁棒性

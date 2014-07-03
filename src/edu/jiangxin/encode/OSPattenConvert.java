@@ -132,6 +132,9 @@ public class OSPattenConvert {
 			System.err.println("Error input,can't convert!");
 		}
 	}
+	public static void osFileConvert(String fileString,String pattern) throws IOException {
+		osFileConvert(fileString,fileString,pattern);
+	}
 	
 	/**
 	 * 文件目录转换函数，将其中所有的文件从一个操作系统文件格式转向另一个
@@ -175,6 +178,12 @@ public class OSPattenConvert {
 	 */
 	public static void osDirConvert(String srcDirString,String desDirString,String pattern) throws IOException {
 		osDirConvert(srcDirString, desDirString, pattern, null);
+	}
+	public static void osConvertFiles(ArrayList<File> files,String pattern) throws IOException {
+		Iterator<File> it = files.iterator();
+		while(it.hasNext()) {
+			osFileConvert(it.next().getAbsolutePath(), pattern);
+		}
 	}
 
 }

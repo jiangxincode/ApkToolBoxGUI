@@ -79,7 +79,7 @@ public class Main {
 		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // 循环遍历各个文件
 			System.out.println("Now is processing file: " + fileName[i]);
 			files.addAll(fileFilter.list(fileName[i], suffix));
-			System.out.println("here");
+			//System.out.println("here");
 			File file = new File(fileName[i]);
 			String temp = file.getAbsolutePath().toString();
 			
@@ -91,7 +91,7 @@ public class Main {
 				continue ;
 			}
 			if(isOSConvert) { //Convert OS pattern
-				OSPattenConvert.osDirConvert(temp, temp, pattern);
+				OSPattenConvert.osConvertFiles(files, pattern);
 			}
 			
 			if(fromEncoder==null && toEncoder!=null) { //Dectect the encoder of the file
