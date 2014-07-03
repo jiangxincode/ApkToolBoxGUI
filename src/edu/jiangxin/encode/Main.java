@@ -78,22 +78,16 @@ public class Main {
 		}
 		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // 循环遍历各个文件
 			System.out.println("Now is processing file: " + fileName[i]);
-			ArrayList<File> jiangxin = fileFilter.list(fileName[i], suffix);
-			System.out.println(jiangxin);
 			files.addAll(fileFilter.list(fileName[i], suffix));
 			System.out.println("here");
 			File file = new File(fileName[i]);
 			String temp = file.getAbsolutePath().toString();
 			
 			if(isBackup) { //Backup the file
-				//String srcFileString = temp;
-				//String desFileString = temp + ".backup";
-				//FileProcess.copyFile(srcFileString, desFileString);
 				Backup.backupFiles(files, ".backup");
+				continue ;
 			} else if(isRecovery) { //Recovery the file
-				String srcFileString = temp + ".backup";
-				String desFileString = temp;
-				FileProcess.moveFile(srcFileString, desFileString, true);
+				Recovery.recoveryFiles(files, ".backup");
 				continue ;
 			}
 			if(isOSConvert) { //Convert OS pattern

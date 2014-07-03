@@ -42,7 +42,7 @@ public class fileFilter {
 					list(list[i].toString(), suffix);
 				}
 
-			} else if (file.isFile()) { //如果是文件的话，直接将该文件加入ArrayList
+			} else { //如果是文件的话，直接将该文件加入ArrayList
 				arrayList.add(file);
 			}
 

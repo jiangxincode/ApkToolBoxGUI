@@ -21,22 +21,9 @@ public class Backup {
 
 	}
 
-	public static void backupFile(String srcFileString, String desFileString,String suffix) throws IOException {
-		backupFile(srcFileString, desFileString, suffix,true);
-
-	}
-
 	public static void backupFile(String fileString,String suffix) throws IOException {
 		backupFile(fileString, fileString, suffix, true);
 
-	}
-
-	public static void backupDirectory(String srcDirString,String desDirString) {
-		File srcDirFile = new File(srcDirString);
-		File desDirFile = new File(desDirString);
-		if(!srcDirFile.exists()) {
-			//bad
-		}
 	}
 
 	public static void backupFiles(ArrayList<File> files,String suffix) throws IOException {
