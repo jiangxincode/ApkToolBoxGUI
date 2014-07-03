@@ -49,6 +49,7 @@ public class fileFilter {
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
+		//System.out.println(arrayList);
 		return arrayList;
 
 	}

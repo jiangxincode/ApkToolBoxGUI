@@ -23,13 +23,13 @@ public class FileProcess {
 	 * @param desFileString
 	 * @throws IOException
 	 */
-	public static void copyFile(String srcFileString, String desFileString) throws IOException {
+	public static void copyFile(String srcFileString, String desFileString,boolean isOverload) throws IOException {
 		File srcFileFile = new File(srcFileString);
 		File desFileFile = new File(desFileString);
 		
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(srcFileFile));
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFileFile));
-
+		//ÉÐÎ´½øÐÐ¸²¸ÇÅÐ¶Ï bad
 		byte[] buffer = new byte[BUFFERSIZE]; // »º³åÊý×é
 		int len;
 		while ((len = in.read(buffer)) != -1) {
@@ -39,6 +39,9 @@ public class FileProcess {
 		in.close();
 		out.close();
 		System.out.println("Success to copy " + srcFileString + " to " + desFileString);
+	}
+	public static void copyFile(String srcFileString, String desFileString) throws IOException {
+		copyFile(srcFileString, desFileString,true);
 	}
 
 
