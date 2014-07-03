@@ -18,6 +18,7 @@ public class Main {
 	static boolean isHelp = false; //Display the Usage information, or not
 	static boolean isSum = false; //Sum the code lines, or not
 	static boolean isReName = false; //Rename the file, or not
+	static boolean isRemoveComment = false; //Remove the comment, or not
 	
 	
 	static String fromEncoder = null; //The encoder convert from
@@ -70,6 +71,14 @@ public class Main {
 			} else if(temp.equals("-sum")) { //Sum the code lines,or not
 				isSum = true;
 				continue;
+			} else if(temp.equals("-rename")){
+				isReName = true;
+				continue;
+				
+			} else if(temp.equals("-removecomment") || temp.equals("-rc")) {
+				isRemoveComment = true;
+				System.out.println("here");
+				continue;
 			}
 		}
 		if(isHelp) {
@@ -112,6 +121,10 @@ public class Main {
 			}
 			if(isReName) {
 				ReName.main(null);
+			}
+			if(isRemoveComment) {
+				RemoveComments.removeJavaFilesComment(files, "UTF-8");
+				System.out.println("here");
 			}
 		}
 	}
