@@ -79,9 +79,6 @@ public class Main {
 		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // 循环遍历各个文件
 			System.out.println("Now is processing file: " + fileName[i]);
 			files.addAll(fileFilter.list(fileName[i], suffix));
-			//System.out.println("here");
-			File file = new File(fileName[i]);
-			String temp = file.getAbsolutePath().toString();
 			
 			if(isBackup) { //Backup the file
 				Backup.backupFiles(files, ".backup");
@@ -95,7 +92,8 @@ public class Main {
 			}
 			
 			if(fromEncoder==null && toEncoder!=null) { //Dectect the encoder of the file
-				String fromEncoder = EncoderDetector.judgeFile(temp);
+				fromEncoder = EncoderDetector.judgeFile(files.get(0).getAbsolutePath());
+				System.out.println(files.get(0).getAbsolutePath());
 				if(fromEncoder!=null) {
 					System.out.println("The encoder of the file " + fileName[i] + " is: " + fromEncoder);
 				} else {
@@ -104,11 +102,12 @@ public class Main {
 				}
 			}
 			if(toEncoder!=null) { //Convert the encoder
-				EncoderConvert.encodeFile(temp, fromEncoder, temp, toEncoder);
+				System.out.println(fromEncoder);
+				EncoderConvert.encodeFiles(files, fromEncoder, toEncoder);
+				
 			}
 			if(isSum) {
-				ArrayList<File> myList = fileFilter.list(temp,".java");
-				int sumCode = FileProcess.sumAllFiles(myList);
+				int sumCode = FileProcess.sumAllFiles(files);
 				System.out.println(sumCode);
 			}
 			if(isReName) {

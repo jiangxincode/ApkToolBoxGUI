@@ -51,6 +51,9 @@ public class EncoderConvert {
 			srcFileFile.delete();
 		}
 	}
+	public static void encodeFile(String fileString, String srcEncoder,String desEncoder) throws IOException {
+		encodeFile(fileString, srcEncoder, fileString, desEncoder);
+	}
 
 	public static void encodeDir(String srcDirString, String srcEncoder,
 			String desDirString, String desEncoder,String suffix) throws IOException {
@@ -71,6 +74,13 @@ public class EncoderConvert {
 	public static void encodeDir(String srcDirString, String srcEncoder,
 			String desDirString, String desEncoder) throws IOException {
 		encodeDir(srcDirString, srcEncoder, desDirString, desEncoder,null);
+	}
+	
+	public static void encodeFiles(ArrayList<File> files,String fromEncoder, String toEncoder) throws IOException {
+		Iterator<File> it = files.iterator();
+		while(it.hasNext()) {
+			encodeFile(it.next().getAbsolutePath(), fromEncoder, toEncoder);
+		}
 	}
 	public static void main(String[] args) throws IOException {
 		//encodeFile("temp/test1.txt", "gbk", "temp/test2.txt","UTF-8");

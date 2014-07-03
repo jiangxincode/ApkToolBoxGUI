@@ -46,6 +46,7 @@ log:
 	Version 0.09 将备份功能从Mail类中分离，单列为一类，以实现结构优化和之后的程序扩展；进一步优化了Main的结构。
 	Version 0.10 将恢复功能从Mail类中分离，单列为一类，以实现结构优化和之后的程序扩展；进一步优化了Main的结构。
 	Version 0.11 优化了Main类和OSPatternConvert类。
+	Version 0.12 优化了Main类和检码转码部分。至此Main部分优化大体完成，实现了程序的可读性。
 
 将要实现的功能：
 	增强系统鲁棒性
