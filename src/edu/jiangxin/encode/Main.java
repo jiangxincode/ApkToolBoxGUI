@@ -1,5 +1,5 @@
 /**
- * TextTools÷˜≥Ã–Ú
+ * TextTools‰∏ªÁ®ãÂ∫è
  * @author jiangxin
  */
 
@@ -82,10 +82,10 @@ public class Main {
 			}
 		}
 		if(isHelp) {
-			Info.usage();
+			Info.showUsage();
 			return ;
 		}
-		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // —≠ª∑±È¿˙∏˜∏ˆŒƒº˛
+		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // Âæ™ÁéØÈÅçÂéÜÂêÑ‰∏™Êñá‰ª∂
 			System.out.println("Now is processing file: " + fileName[i]);
 			files.addAll(fileFilter.list(fileName[i], suffix));
 			

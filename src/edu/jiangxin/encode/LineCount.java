@@ -1,5 +1,5 @@
 /**
- * 文件行数统计
+ * 鏂囦欢琛屾暟缁熻
  * @author jiangxin
  */
 package edu.jiangxin.encode;

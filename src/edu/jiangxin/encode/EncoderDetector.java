@@ -1,9 +1,9 @@
 /**
- * ±àÂëÌ½²â¼ì²âÆ÷
+ * ç¼–ç æ¢æµ‹æ£€æµ‹å™¨
  * @author jiangxin
- * Ê¹ÓÃÁËµÚÈı·½µÄ°ü:cpdetector
+ * ä½¿ç”¨äº†ç¬¬ä¸‰æ–¹çš„åŒ…:cpdetector
  * http://cpdetector.sourceforge.net/
- * Ê¹ÓÃËµÃ÷¼°°üÏÂÔØÇë²é¿´¹Ù·½½éÉÜ
+ * ä½¿ç”¨è¯´æ˜åŠåŒ…ä¸‹è½½è¯·æŸ¥çœ‹å®˜æ–¹ä»‹ç»
  */
 
 package edu.jiangxin.encode;
@@ -19,9 +19,9 @@ import java.nio.charset.Charset;
 
 public class EncoderDetector {
 	/**
-	 * ÅĞ¶ÏÎÄ¼ş±àÂëÀàĞÍ
+	 * åˆ¤æ–­æ–‡ä»¶ç¼–ç ç±»å‹
 	 * @param fileName
-	 * @return ±àÂëÀàĞÍ×Ö·û´®
+	 * @return ç¼–ç ç±»å‹å­—ç¬¦ä¸²
 	 */
 	public static String judgeFile(String fileName) {
 
@@ -41,7 +41,7 @@ public class EncoderDetector {
 
 		Charset charset = null;
 		try {
-			charset = detector.detectCodepage(file.toURI().toURL()); // f.toURL()ÒÑ¾­·ÏÆú£¬½¨ÒéÍ¨¹ıtoURI()¼ä½Ó×ª»»
+			charset = detector.detectCodepage(file.toURI().toURL()); // f.toURL()å·²ç»åºŸå¼ƒï¼Œå»ºè®®é€šè¿‡toURI()é—´æ¥è½¬æ¢
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

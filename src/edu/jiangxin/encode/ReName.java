@@ -1,5 +1,5 @@
 /**
- * ÎÄ¼şÖØÃüÃû
+ * æ–‡ä»¶é‡å‘½å
  * @author jiangxin
  */
 package edu.jiangxin.encode;
@@ -17,9 +17,9 @@ public class ReName {
 			System.out.println(temp);
 			boolean flag = files[i].renameTo(new File(temp));
 			if (flag) {
-				System.out.println("ÖØÃüÃû³É¹¦" + (i + 1));
+				System.out.println("é‡å‘½åæˆåŠŸ" + (i + 1));
 			} else {
-				System.out.println("Ê§°Ü");
+				System.out.println("å¤±è´¥");
 			}
 		}
 	}

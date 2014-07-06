@@ -1,4 +1,6 @@
-﻿NAME:
+﻿start copyright
+
+NAME:
 	TextTools
 FUNCTION:
 	编码转换工具
@@ -25,8 +27,28 @@ Neither the name of the jiangxin nor the names of its contributors may be used t
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+end copyright
 
-log:
+start usage
+		Usage: convert [option] filename1 [filename2...]
+			-f The encoder of your file.If you don't know the econder,we will try to detect auto.However we can't ensure the validity!
+			-t The encoder you want to convert
+			-dos2unix Convert your file from Dos to Unix.Can't use with -unix2dos!
+			-unix2dos Convert your file from Unix to Dos.Can't use with -dos2unix!
+			-b Backup your file when Convert.It's recommended!
+			-r Recovey your file..Can't use with other options!
+			
+			-h Display this usage.
+			filename1[,filename2...] The file that you want to convert,at most one file.
+			 
+		For example:
+			convert -f GBK -t UTF-8 test.txt
+			convert -dos2unix test.txt
+			convert -r test.txt
+end usage
+
+start log
+
 	Version 0.01 搭建起基本框架，实现基本功能，包括：
 		备份、恢复文件
 		基本编码转换
@@ -48,7 +70,12 @@ log:
 	Version 0.11 优化了Main类和OSPatternConvert类。
 	Version 0.12 优化了Main类和检码转码部分。至此Main部分优化大体完成，实现了程序的可读性。
 	Version 0.13 实现了消除注释功能。但是此部分编码识别等部分还存在一些bug。此部分代码参考了一些网友的代码。
+	Version 0.14 实现了提示信息的文档化。
 
+end log
+
+start future funtions
 将要实现的功能：
 	增强系统鲁棒性
+end future funtions
 	

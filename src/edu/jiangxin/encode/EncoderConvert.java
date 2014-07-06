@@ -1,5 +1,5 @@
 /**
- * ÎÄ¼ş±àÂë×ª»»
+ * æ–‡ä»¶ç¼–ç è½¬æ¢
  * @author jiangxin
  */
 
@@ -45,7 +45,7 @@ public class EncoderConvert {
 		}
 		reader.close();
 		writer.close();
-		System.out.println("×ª»»Íê³É£¡");
+		System.out.println("è½¬æ¢å®Œæˆï¼");
 		if(srcFileString.equals(desFileString+".temp")) {
 			System.out.println("here");
 			srcFileFile.delete();
@@ -59,7 +59,7 @@ public class EncoderConvert {
 			String desDirString, String desEncoder,String suffix) throws IOException {
 		//File srcDirFile = new File(srcDirString);
 		File desDirFile = new File(desDirString);
-		ArrayList<File> files = fileFilter.list(srcDirString, suffix); // »ñÈ¡ËùÓĞ·ûºÏÌõ¼şµÄÎÄ¼ş
+		ArrayList<File> files = fileFilter.list(srcDirString, suffix); // è·å–æ‰€æœ‰ç¬¦åˆæ¡ä»¶çš„æ–‡ä»¶
 		Iterator<File> it = files.iterator();
 		while(it.hasNext()) {
 			File tempFile = it.next();
@@ -68,7 +68,7 @@ public class EncoderConvert {
 			System.out.println(srcFileString);
 			System.out.println(desFileString);
 			encodeFile(srcFileString, srcEncoder,desFileString, desEncoder);
-			System.out.println("×ª»»Íê³É£¡");
+			System.out.println("è½¬æ¢å®Œæˆï¼");
 		}
 	}
 	public static void encodeDir(String srcDirString, String srcEncoder,

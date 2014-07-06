@@ -1,5 +1,5 @@
 /**
- * ²»Í¬²Ù×÷ÏµÍ³ÎÄ¼ş¸ñÊ½×ª»»
+ * ä¸åŒæ“ä½œç³»ç»Ÿæ–‡ä»¶æ ¼å¼è½¬æ¢
  * @author jiangxin
  */
 package edu.jiangxin.encode;
@@ -26,27 +26,27 @@ public class OSPattenConvert {
 	}
 	
 	/**
-	 * ×ª»»º¯ÊıµÄÕæÕıÊµÏÖº¯Êı£¬ÆäËü×ª»»º¯Êı±ØĞëµ÷ÓÃ´Ëº¯Êı
-	 * @param srcFileString:Ô´ÎÄ¼şµÄÎÄ¼şÃû
-	 * @param desFileString:Ä¿±êÎÄ¼şµÄÎÄ¼şÃû
-	 * @param options:»»ĞĞ·û£¬±ÈÈç:\n,\r,\r\n
+	 * è½¬æ¢å‡½æ•°çš„çœŸæ­£å®ç°å‡½æ•°ï¼Œå…¶å®ƒè½¬æ¢å‡½æ•°å¿…é¡»è°ƒç”¨æ­¤å‡½æ•°
+	 * @param srcFileString:æºæ–‡ä»¶çš„æ–‡ä»¶å
+	 * @param desFileString:ç›®æ ‡æ–‡ä»¶çš„æ–‡ä»¶å
+	 * @param options:æ¢è¡Œç¬¦ï¼Œæ¯”å¦‚:\n,\r,\r\n
 	 * @throws IOException
 	 */
 	private static void convert(String srcFileString,String desFileString,String options) throws IOException {
 		
-		String special = ".OSPattenConvert.temp"; //ÁÙÊ±ÎÄ¼şµÄºó×ºÃû£¬¾¡Á¿±£Ö¤²»»áº¬ÓĞÍ¬ÃûÎÄ¼ş
-		if(srcFileString.equals(desFileString)) { //Èç¹ûÔ´ÎÄ¼şºÍÄ¿±êÎÄ¼şÏàÍ¬£¨°üÀ¨Â·¾¶£©£¬ÔòÊ¹ÓÃÁÙÊ±ÎÄ¼ş½øĞĞ×ª»»
+		String special = ".OSPattenConvert.temp"; //ä¸´æ—¶æ–‡ä»¶çš„åç¼€åï¼Œå°½é‡ä¿è¯ä¸ä¼šå«æœ‰åŒåæ–‡ä»¶
+		if(srcFileString.equals(desFileString)) { //å¦‚æœæºæ–‡ä»¶å’Œç›®æ ‡æ–‡ä»¶ç›¸åŒï¼ˆåŒ…æ‹¬è·¯å¾„ï¼‰ï¼Œåˆ™ä½¿ç”¨ä¸´æ—¶æ–‡ä»¶è¿›è¡Œè½¬æ¢
 			srcFileString = srcFileString + special;
 			FileProcess.copyFile(desFileString, srcFileString);
 		}
 		File srcFileFile = new File(srcFileString);
 		File desFileFile = new File(desFileString);
 		
-		if(!srcFileFile.exists()) { //ÅĞ¶ÏÔ´ÎÄ¼şÊÇ·ñ´æÔÚ
-			System.out.println("Ô´ÎÄ¼ş²»´æÔÚ:" + srcFileFile.getAbsolutePath());
+		if(!srcFileFile.exists()) { //åˆ¤æ–­æºæ–‡ä»¶æ˜¯å¦å­˜åœ¨
+			System.out.println("æºæ–‡ä»¶ä¸å­˜åœ¨:" + srcFileFile.getAbsolutePath());
 			return ;
 		}
-		if(!desFileFile.getParentFile().exists()) { //ÅĞ¶ÏÄ¿±êÎÄ¼şÊÇ·ñ´æÔÚ
+		if(!desFileFile.getParentFile().exists()) { //åˆ¤æ–­ç›®æ ‡æ–‡ä»¶æ˜¯å¦å­˜åœ¨
 			desFileFile.getParentFile().mkdirs();
 		}
 		
@@ -61,7 +61,7 @@ public class OSPattenConvert {
 		writer.close();
 		reader.close();
 		
-		if(srcFileString.equals(desFileString+special)) { //Èç¹û´æÔÚÁÙÊ±ÎÄ¼ş£¬ÔòÉ¾³ı
+		if(srcFileString.equals(desFileString+special)) { //å¦‚æœå­˜åœ¨ä¸´æ—¶æ–‡ä»¶ï¼Œåˆ™åˆ é™¤
 			srcFileFile.delete();
 		}
 	}
@@ -106,18 +106,18 @@ public class OSPattenConvert {
 	}
 	
 	/**
-	 * ÎÄ¼ş×ª»»º¯Êı£¬´ÓÒ»¸ö²Ù×÷ÏµÍ³ÎÄ¼ş¸ñÊ½×ªÏòÁíÒ»¸ö
+	 * æ–‡ä»¶è½¬æ¢å‡½æ•°ï¼Œä»ä¸€ä¸ªæ“ä½œç³»ç»Ÿæ–‡ä»¶æ ¼å¼è½¬å‘å¦ä¸€ä¸ª
 	 * @param srcFileString
 	 * @param desFileString
-	 * @param ×ª»»Ä£Ê½
+	 * @param è½¬æ¢æ¨¡å¼
 	 * @throws IOException
 	 */
 	public static void osFileConvert(String srcFileString,String desFileString,String pattern) throws IOException {
 		
-		pattern = pattern.toLowerCase(); //ÔÊĞíÊäÈë´óĞ´×ÖÄ¸¸ñÊ½µÄ×ª»»Ä£Ê½
-		pattern = pattern.replace("to", "2"); //Ìæ»»patternÖĞµÄto£¬·ÀÖ¹ÎóÊäÈë
-		pattern = pattern.replace("linux", "unix"); //ÓÉÓÚlinuxºÍunixÎÄ¼ş¸ñÊ½ÏàÍ¬£¬ËùÒÔÖ±½ÓÓÃunixÌæ»»linux£¬µ«»á²úÉúunix2unixÀàĞÍ
-		pattern = pattern.replace("bsd", "unix"); //ÓÉÓÚbsdºÍunixÎÄ¼ş¸ñÊ½ÏàÍ¬£¬ËùÒÔÖ±½ÓÓÃunixÌæ»»linux£¬µ«»á²úÉúunix2unixÀàĞÍ
+		pattern = pattern.toLowerCase(); //å…è®¸è¾“å…¥å¤§å†™å­—æ¯æ ¼å¼çš„è½¬æ¢æ¨¡å¼
+		pattern = pattern.replace("to", "2"); //æ›¿æ¢patternä¸­çš„toï¼Œé˜²æ­¢è¯¯è¾“å…¥
+		pattern = pattern.replace("linux", "unix"); //ç”±äºlinuxå’Œunixæ–‡ä»¶æ ¼å¼ç›¸åŒï¼Œæ‰€ä»¥ç›´æ¥ç”¨unixæ›¿æ¢linuxï¼Œä½†ä¼šäº§ç”Ÿunix2unixç±»å‹
+		pattern = pattern.replace("bsd", "unix"); //ç”±äºbsdå’Œunixæ–‡ä»¶æ ¼å¼ç›¸åŒï¼Œæ‰€ä»¥ç›´æ¥ç”¨unixæ›¿æ¢linuxï¼Œä½†ä¼šäº§ç”Ÿunix2unixç±»å‹
 		boolean isToUnix = pattern.equals("2unix") || pattern.equals("mac2unix") ||pattern.equals("dos2unix") || pattern.equals("unix2unix");
 		boolean isToMac = pattern.equals("2mac") ||pattern.equals("dos2mac") || pattern.equals("unix2mac");
 		boolean isToDos = pattern.equals("2dos") ||pattern.equals("mac2dos") || pattern.equals("unix2dos");
@@ -137,31 +137,31 @@ public class OSPattenConvert {
 	}
 	
 	/**
-	 * ÎÄ¼şÄ¿Â¼×ª»»º¯Êı£¬½«ÆäÖĞËùÓĞµÄÎÄ¼ş´ÓÒ»¸ö²Ù×÷ÏµÍ³ÎÄ¼ş¸ñÊ½×ªÏòÁíÒ»¸ö
+	 * æ–‡ä»¶ç›®å½•è½¬æ¢å‡½æ•°ï¼Œå°†å…¶ä¸­æ‰€æœ‰çš„æ–‡ä»¶ä»ä¸€ä¸ªæ“ä½œç³»ç»Ÿæ–‡ä»¶æ ¼å¼è½¬å‘å¦ä¸€ä¸ª
 	 * @param srcDirString
 	 * @param desDirString
 	 * @param pattern
-	 * @param suffix ¹ıÂËÌØ¶¨ÎÄ¼şºó×º
+	 * @param suffix è¿‡æ»¤ç‰¹å®šæ–‡ä»¶åç¼€
 	 * @throws IOException
 	 */
 	public static void osDirConvert(String srcDirString,String desDirString,String pattern,String suffix) throws IOException {
 		File srcDirFile = new File(srcDirString);
 		File desDirFile = new File(desDirString);
 		if(!srcDirFile.exists()) {
-			System.out.println("Ô´Ä¿Â¼²»´æÔÚ" + srcDirFile.getAbsolutePath());
+			System.out.println("æºç›®å½•ä¸å­˜åœ¨" + srcDirFile.getAbsolutePath());
 		}
 		ArrayList<File> arrayList = fileFilter.list(srcDirString, suffix);
 		Iterator<File> it = arrayList.iterator();
 		while(it.hasNext()) {
 			File srcFileFile = it.next();
 			
-			String srcFileString = srcFileFile.getAbsolutePath(); //µÃµ½Ô´ÎÄ¼ş¾ø¶ÔµØÖ·
+			String srcFileString = srcFileFile.getAbsolutePath(); //å¾—åˆ°æºæ–‡ä»¶ç»å¯¹åœ°å€
 			//System.out.println("srcFileString" + srcFileString);
 			
 			String temp = srcFileFile.getAbsolutePath().substring(srcDirFile.getAbsolutePath().toString().length());
 			//System.out.println("temp" + temp);
 			
-			String desFileString = desDirFile.getAbsolutePath() + temp; //µÃµ½Ä¿±êÎÄ¼ş¾ø¶ÔµØÖ·
+			String desFileString = desDirFile.getAbsolutePath() + temp; //å¾—åˆ°ç›®æ ‡æ–‡ä»¶ç»å¯¹åœ°å€
 			//System.out.println("desFileString" + desFileString);
 			
 			osFileConvert(srcFileString, desFileString, pattern);
@@ -170,7 +170,7 @@ public class OSPattenConvert {
 	}
 	
 	/**
-	 * osDirConvert(String srcDirString,String desDirString,String pattern,String suffix)µÄÖØÔØº¯ÊıÄ¬ÈÏsuffixÎªnull
+	 * osDirConvert(String srcDirString,String desDirString,String pattern,String suffix)çš„é‡è½½å‡½æ•°é»˜è®¤suffixä¸ºnull
 	 * @param srcDirString
 	 * @param desDirString
 	 * @param pattern

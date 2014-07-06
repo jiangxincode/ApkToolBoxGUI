@@ -13,15 +13,15 @@ import java.util.Iterator;
 public class RemoveComments {
 
 	/** 
-	 * COMMENCODESÎªÆÕÍ¨´úÂëÄ£Ê½,PRECOMMENTSÎªĞ±¸ÜÄ£Ê½,MORELINECOMMENTSÎª¶àĞĞ×¢ÊÍÄ£Ê½,
-	 * STARMODELÎª¶àĞĞ×¢ÊÍÏÂĞÇºÅÄ£Ê½£¬SINGLELINECOMMENTSÎªµ¥ĞĞ×¢ÊÍÄ£Ê½£¬STRINGMODELÎª×Ö·û´®Ä£Ê½£¬
-	 * TRANSFERMODELÎª×Ö·û´®×ªÒåÄ£Ê½
+	 * COMMENCODESä¸ºæ™®é€šä»£ç æ¨¡å¼,PRECOMMENTSä¸ºæ–œæ æ¨¡å¼,MORELINECOMMENTSä¸ºå¤šè¡Œæ³¨é‡Šæ¨¡å¼,
+	 * STARMODELä¸ºå¤šè¡Œæ³¨é‡Šä¸‹æ˜Ÿå·æ¨¡å¼ï¼ŒSINGLELINECOMMENTSä¸ºå•è¡Œæ³¨é‡Šæ¨¡å¼ï¼ŒSTRINGMODELä¸ºå­—ç¬¦ä¸²æ¨¡å¼ï¼Œ
+	 * TRANSFERMODELä¸ºå­—ç¬¦ä¸²è½¬ä¹‰æ¨¡å¼
 	 */
 	private enum model {
 		COMMENCODES, PRECOMMENTS, MORELINECOMMENTS, STARMODEL, SINGLELINECOMMENTS, STRINGMODEL, TRANSFERMODEL
 	}
 
-	private static model stats = model.COMMENCODES; // stats¼ÇÂ¼×´Ì¬
+	private static model stats = model.COMMENCODES; // statsè®°å½•çŠ¶æ€
 
 	public static String remove(Reader in) throws IOException {
 		StringBuilder s = new StringBuilder();
@@ -29,14 +29,14 @@ public class RemoveComments {
 		while ((n = in.read()) != -1) {
 			switch ((char) n) {
 			case '/':
-				if (stats == model.COMMENCODES) {// Èç¹ûµ±Ç°Î»ÆÕÍ¨´úÂëÄ£Ê½Ôò×ªµ½Ğ±¸ÜÄ£Ê½
+				if (stats == model.COMMENCODES) {// å¦‚æœå½“å‰ä½æ™®é€šä»£ç æ¨¡å¼åˆ™è½¬åˆ°æ–œæ æ¨¡å¼
 					stats = model.PRECOMMENTS;
-				} else if (stats == model.PRECOMMENTS) {// Èç¹ûµ±Ç°ÎªĞ±¸ÜÄ£Ê½Ôò×ªµ½µ¥ĞĞ×¢ÊÍÄ£Ê½
+				} else if (stats == model.PRECOMMENTS) {// å¦‚æœå½“å‰ä¸ºæ–œæ æ¨¡å¼åˆ™è½¬åˆ°å•è¡Œæ³¨é‡Šæ¨¡å¼
 					stats = model.SINGLELINECOMMENTS;
 					s.append("  ");
 				} else if (stats == model.MORELINECOMMENTS) {//
 					s.append(" ");
-				} else if (stats == model.STARMODEL) {// Èç¹ûµ±Ç°ÎªĞÇºÅÄ£Ê½Ôò×ªµ½ÆÕÍ¨´úÂëÄ£Ê½
+				} else if (stats == model.STARMODEL) {// å¦‚æœå½“å‰ä¸ºæ˜Ÿå·æ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ¨¡å¼
 					stats = model.COMMENCODES;
 					s.append(" ");
 				} else if (stats == model.SINGLELINECOMMENTS) {
@@ -51,10 +51,10 @@ public class RemoveComments {
 			case '*':
 				if (stats == model.COMMENCODES) {
 					s.append("*");
-				} else if (stats == model.PRECOMMENTS) {// Èç¹ûÎªĞ±¸ÜÄ£Ê½Ôò×ªµ½¶àĞĞ×¢ÊÍÄ£Ê½
+				} else if (stats == model.PRECOMMENTS) {// å¦‚æœä¸ºæ–œæ æ¨¡å¼åˆ™è½¬åˆ°å¤šè¡Œæ³¨é‡Šæ¨¡å¼
 					stats = model.MORELINECOMMENTS;
 					s.append("  ");
-				} else if (stats == model.MORELINECOMMENTS) {// Èç¹ûµ±Ç°Îª¶àĞĞ×¢ÊÍÄ£Ê½Ôò×ªµ½ĞÇºÅÄ£Ê½
+				} else if (stats == model.MORELINECOMMENTS) {// å¦‚æœå½“å‰ä¸ºå¤šè¡Œæ³¨é‡Šæ¨¡å¼åˆ™è½¬åˆ°æ˜Ÿå·æ¨¡å¼
 					stats = model.STARMODEL;
 					s.append(" ");
 				} else if (stats == model.STARMODEL) {
@@ -68,21 +68,21 @@ public class RemoveComments {
 				}
 				break;
 			case '"':
-				if (stats == model.COMMENCODES) {// Èç¹ûµ±Ç°ÎªÆÕÍ¨´úÂëÄ£Ê½Ôò×ªµ½×Ö·û´®Ä£Ê½
+				if (stats == model.COMMENCODES) {// å¦‚æœå½“å‰ä¸ºæ™®é€šä»£ç æ¨¡å¼åˆ™è½¬åˆ°å­—ç¬¦ä¸²æ¨¡å¼
 					stats = model.STRINGMODEL;
 					s.append("\"");
-				} else if (stats == model.PRECOMMENTS) {// Èç¹ûµ±Ç°ÎªĞ±¸ÜÄ£Ê½Ôò×ªµ½ÆÕÍ¨´úÂëÄ£Ê½
+				} else if (stats == model.PRECOMMENTS) {// å¦‚æœå½“å‰ä¸ºæ–œæ æ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ¨¡å¼
 					stats = model.COMMENCODES;
 					s.append("/\"");
-				} else if (stats == model.STARMODEL) {// Èç¹ûµ±Ç°ÎªĞÇºÅÄ£Ê½Ôò×ªµ½¶àĞĞ×¢ÊÍÄ£Ê½
+				} else if (stats == model.STARMODEL) {// å¦‚æœå½“å‰ä¸ºæ˜Ÿå·æ¨¡å¼åˆ™è½¬åˆ°å¤šè¡Œæ³¨é‡Šæ¨¡å¼
 					stats = model.MORELINECOMMENTS;
 					s.append(" ");
 				} else if (stats == model.SINGLELINECOMMENTS) {
 					s.append(" ");
-				} else if (stats == model.STRINGMODEL) {// Èç¹ûµ±Ç°Îª×Ö·û´®Ä£Ê½Ôò×ªµ½ÆÕÍ¨´úÂëÄ£Ê½
+				} else if (stats == model.STRINGMODEL) {// å¦‚æœå½“å‰ä¸ºå­—ç¬¦ä¸²æ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ¨¡å¼
 					stats = model.COMMENCODES;
 					s.append("\"");
-				} else if (stats == model.TRANSFERMODEL) {// Èç¹ûµ±Ç°Îª×ªÒåÄ£Ê½Ôò×ªµ½×Ö·û´®¸ñÊ½
+				} else if (stats == model.TRANSFERMODEL) {// å¦‚æœå½“å‰ä¸ºè½¬ä¹‰æ¨¡å¼åˆ™è½¬åˆ°å­—ç¬¦ä¸²æ ¼å¼
 					stats = model.STRINGMODEL;
 					s.append("\"");
 				}
@@ -90,20 +90,20 @@ public class RemoveComments {
 			case '\\':
 				if (stats == model.COMMENCODES) {
 					s.append("\\");
-				} else if (stats == model.PRECOMMENTS) {// Èç¹ûµ±Ç°ÎªĞ±¸ÜÄ£Ê½Ôò×ªµ½ÆÕÍ¨´úÂë¸ñÊ½
+				} else if (stats == model.PRECOMMENTS) {// å¦‚æœå½“å‰ä¸ºæ–œæ æ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ ¼å¼
 					stats = model.COMMENCODES;
 					s.append("/\\");
 				} else if (stats == model.MORELINECOMMENTS) {
 					s.append(" ");
-				} else if (stats == model.STARMODEL) {// Èç¹ûµ±Ç°ÎªĞÇºÅÄ£Ê½Ôò×ªµ½¶àĞĞ×¢ÊÍÄ£Ê½
+				} else if (stats == model.STARMODEL) {// å¦‚æœå½“å‰ä¸ºæ˜Ÿå·æ¨¡å¼åˆ™è½¬åˆ°å¤šè¡Œæ³¨é‡Šæ¨¡å¼
 					stats = model.MORELINECOMMENTS;
 					s.append(" ");
 				} else if (stats == model.SINGLELINECOMMENTS) {
 					s.append(" ");
-				} else if (stats == model.STRINGMODEL) {// Èç¹ûµ±Ç°Îª×Ö·û´®Ä£Ê½Ôò×ªµ½×Ö·û´®×ªÒÆÄ£Ê½
+				} else if (stats == model.STRINGMODEL) {// å¦‚æœå½“å‰ä¸ºå­—ç¬¦ä¸²æ¨¡å¼åˆ™è½¬åˆ°å­—ç¬¦ä¸²è½¬ç§»æ¨¡å¼
 					stats = model.TRANSFERMODEL;
 					s.append("\\");
-				} else if (stats == model.TRANSFERMODEL) {// Èç¹ûµ±Ç°Îª×Ö·û´®×ªÒåÄ£Ê½Ôò×ªµ½×Ö·û´®Ä£Ê½
+				} else if (stats == model.TRANSFERMODEL) {// å¦‚æœå½“å‰ä¸ºå­—ç¬¦ä¸²è½¬ä¹‰æ¨¡å¼åˆ™è½¬åˆ°å­—ç¬¦ä¸²æ¨¡å¼
 					stats = model.STRINGMODEL;
 					s.append("\\");
 				}
@@ -111,15 +111,15 @@ public class RemoveComments {
 			case '\n':
 				if (stats == model.COMMENCODES) {
 					s.append("\n");
-				} else if (stats == model.PRECOMMENTS) {// Èç¹ûµ±Ç°ÎªĞ±¸ÜÄ£Ê½Ôò×ªµ½ÆÕÍ¨´úÂë¸ñÊ½
+				} else if (stats == model.PRECOMMENTS) {// å¦‚æœå½“å‰ä¸ºæ–œæ æ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ ¼å¼
 					stats = model.COMMENCODES;
 					s.append("/\n");
 				} else if (stats == model.MORELINECOMMENTS) {
 					s.append("\n");
-				} else if (stats == model.STARMODEL) {// Èç¹ûµ±Ç°ÎªĞÇºÅÄ£Ê½Ôò×ªµ½¶àĞĞ×¢ÊÍÄ£Ê½
+				} else if (stats == model.STARMODEL) {// å¦‚æœå½“å‰ä¸ºæ˜Ÿå·æ¨¡å¼åˆ™è½¬åˆ°å¤šè¡Œæ³¨é‡Šæ¨¡å¼
 					stats = model.MORELINECOMMENTS;
 					s.append("\n");
-				} else if (stats == model.SINGLELINECOMMENTS) {// Èç¹ûµ±Ç°Îªµ¥ĞĞ×¢ÊÍÄ£Ê½Ôò×ªµ½ÆÕÍ¨´úÂë¸ñÊ½
+				} else if (stats == model.SINGLELINECOMMENTS) {// å¦‚æœå½“å‰ä¸ºå•è¡Œæ³¨é‡Šæ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ ¼å¼
 					stats = model.COMMENCODES;
 					s.append("\n");
 				} else if (stats == model.STRINGMODEL) {
@@ -131,17 +131,17 @@ public class RemoveComments {
 			default:
 				if (stats == model.COMMENCODES) {
 					s.append((char) n);
-				} else if (stats == model.PRECOMMENTS) {// Èç¹ûµ±Ç°ÎªĞ±¸ÜÄ£Ê½Ôò×ªµ½ÆÕÍ¨´úÂë¸ñÊ½
+				} else if (stats == model.PRECOMMENTS) {// å¦‚æœå½“å‰ä¸ºæ–œæ æ¨¡å¼åˆ™è½¬åˆ°æ™®é€šä»£ç æ ¼å¼
 					stats = model.COMMENCODES;
 					s.append("/" + (char) n);
-				} else if (stats == model.STARMODEL) {// Èç¹ûµ±Ç°ÎªĞÇºÅÄ£Ê½Ôò×ªµ½¶àĞĞ×¢ÊÍÄ£Ê½
+				} else if (stats == model.STARMODEL) {// å¦‚æœå½“å‰ä¸ºæ˜Ÿå·æ¨¡å¼åˆ™è½¬åˆ°å¤šè¡Œæ³¨é‡Šæ¨¡å¼
 					stats = model.MORELINECOMMENTS;
 					s.append(" ");
 				} else if (stats == model.SINGLELINECOMMENTS) {
 					s.append(" ");
 				} else if (stats == model.STRINGMODEL) {
 					s.append((char) n);
-				} else if (stats == model.TRANSFERMODEL) {// Èç¹ûµ±Ç°Îª×Ö·û´®×ªÒåÄ£Ê½Ôò×ªµ½×Ö·û´®Ä£Ê½
+				} else if (stats == model.TRANSFERMODEL) {// å¦‚æœå½“å‰ä¸ºå­—ç¬¦ä¸²è½¬ä¹‰æ¨¡å¼åˆ™è½¬åˆ°å­—ç¬¦ä¸²æ¨¡å¼
 					stats = model.STRINGMODEL;
 					s.append((char) n);
 				}
@@ -153,8 +153,8 @@ public class RemoveComments {
 		return result;
 	}
 	public static void removeJavaFileComment(String srcFileString,String desFileString,String encoding) throws IOException {
-		String special = ".removeJavaFileComment.temp"; //ÁÙÊ±ÎÄ¼şµÄºó×ºÃû£¬¾¡Á¿±£Ö¤²»»áº¬ÓĞÍ¬ÃûÎÄ¼ş
-		if(srcFileString.equals(desFileString)) { //Èç¹ûÔ´ÎÄ¼şºÍÄ¿±êÎÄ¼şÏàÍ¬£¨°üÀ¨Â·¾¶£©£¬ÔòÊ¹ÓÃÁÙÊ±ÎÄ¼ş½øĞĞ×ª»»
+		String special = ".removeJavaFileComment.temp"; //ä¸´æ—¶æ–‡ä»¶çš„åç¼€åï¼Œå°½é‡ä¿è¯ä¸ä¼šå«æœ‰åŒåæ–‡ä»¶
+		if(srcFileString.equals(desFileString)) { //å¦‚æœæºæ–‡ä»¶å’Œç›®æ ‡æ–‡ä»¶ç›¸åŒï¼ˆåŒ…æ‹¬è·¯å¾„ï¼‰ï¼Œåˆ™ä½¿ç”¨ä¸´æ—¶æ–‡ä»¶è¿›è¡Œè½¬æ¢
 			srcFileString = srcFileString + special;
 			FileProcess.copyFile(desFileString, srcFileString);
 		}
@@ -167,7 +167,7 @@ public class RemoveComments {
 		writer.write(tempString);
 		writer.close();
 		
-		if(srcFileString.equals(desFileString+special)) { //Èç¹û´æÔÚÁÙÊ±ÎÄ¼ş£¬ÔòÉ¾³ı
+		if(srcFileString.equals(desFileString+special)) { //å¦‚æœå­˜åœ¨ä¸´æ—¶æ–‡ä»¶ï¼Œåˆ™åˆ é™¤
 			srcFileFile.delete();
 		}
 	}

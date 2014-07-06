@@ -1,5 +1,5 @@
 /**
- * ÎÄ¼ş»òÎÄ¼ş¼ĞµÄ¼òµ¥´¦Àí
+ * æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹çš„ç®€å•å¤„ç†
  * @author jiangxin
  */
 package edu.jiangxin.encode;
@@ -7,6 +7,7 @@ package edu.jiangxin.encode;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 
 public class FileProcess {
 	final static int BUFFERSIZE = 1024*5; //The size of the buffer
@@ -18,7 +19,7 @@ public class FileProcess {
 	}
 	
 	/**
-	 * ¸´ÖÆÎÄ¼ş
+	 * å¤åˆ¶æ–‡ä»¶
 	 * @param srcFileString
 	 * @param desFileString
 	 * @throws IOException
@@ -29,13 +30,13 @@ public class FileProcess {
 		
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(srcFileFile));
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFileFile));
-		//ÉĞÎ´½øĞĞ¸²¸ÇÅĞ¶Ï bad
-		byte[] buffer = new byte[BUFFERSIZE]; // »º³åÊı×é
+		//å°šæœªè¿›è¡Œè¦†ç›–åˆ¤æ–­ bad
+		byte[] buffer = new byte[BUFFERSIZE]; // ç¼“å†²æ•°ç»„
 		int len;
 		while ((len = in.read(buffer)) != -1) {
 			out.write(buffer, 0, len);
 		}
-		out.flush(); // Ë¢ĞÂ´Ë»º³åµÄÊä³öÁ÷
+		out.flush(); // åˆ·æ–°æ­¤ç¼“å†²çš„è¾“å‡ºæµ
 		in.close();
 		out.close();
 		System.out.println("Success to copy " + srcFileString + " to " + desFileString);
@@ -46,7 +47,7 @@ public class FileProcess {
 
 
 	/**
-	 * ¸´ÖÆÎÄ¼ş¼Ğ
+	 * å¤åˆ¶æ–‡ä»¶å¤¹
 	 * @param srcDirString
 	 * @param desDirString
 	 * @throws IOException
@@ -55,7 +56,7 @@ public class FileProcess {
 		File srcDirFile = new File(srcDirString);
 		File desDirFile = new File(desDirString);
 		if(!desDirFile.exists()) {
-			desDirFile.mkdirs(); // ĞÂ½¨Ä¿±êÄ¿Â¼
+			desDirFile.mkdirs(); // æ–°å»ºç›®æ ‡ç›®å½•
 		}
 		
 		File[] files = srcDirFile.listFiles();
@@ -75,7 +76,7 @@ public class FileProcess {
 	}
 	
 	/**
-	 * ÒÆ¶¯ÎÄ¼ş
+	 * ç§»åŠ¨æ–‡ä»¶
 	 * @param srcFileString
 	 * @param desFileString
 	 * @param isOverride
@@ -99,7 +100,7 @@ public class FileProcess {
 	}
 	
 	/**
-	 * µİ¹éÉ¾³ıÄ¿Â¼
+	 * é€’å½’åˆ é™¤ç›®å½•
 	 * @param dir
 	 * @return
 	 */
@@ -107,7 +108,7 @@ public class FileProcess {
 		File dirFile = new File(dir);
 		if (dirFile.isDirectory()) {
 			String[] files = dirFile.list();
-			for (int i = 0; i < files.length; i++) { //µİ¹éÉ¾³ıÄ¿Â¼ÖĞµÄ×ÓÄ¿Â¼ÏÂ
+			for (int i = 0; i < files.length; i++) { //é€’å½’åˆ é™¤ç›®å½•ä¸­çš„å­ç›®å½•ä¸‹
 				String temp = dirFile.getAbsolutePath() + File.separator.toString() + files[i];
 				boolean success = deleteDir(temp);
 				if (!success) {
@@ -126,7 +127,7 @@ public class FileProcess {
 	}
 	
 	/**
-	 * É¾³ıÄ¿Â¼×é
+	 * åˆ é™¤ç›®å½•ç»„
 	 * @param dirs
 	 * @return
 	 */
@@ -134,7 +135,7 @@ public class FileProcess {
 		for(int i=0;i<dirs.length;i++) {
 			boolean isSuccessful = deleteDir(dirs[i]);
 			if(isSuccessful == true) {
-				System.out.println("³É¹¦É¾³ıÄ¿Â¼£º" + dirs[i]);
+				System.out.println("æˆåŠŸåˆ é™¤ç›®å½•ï¼š" + dirs[i]);
 			}
 		}
 		return false;
@@ -148,5 +149,20 @@ public class FileProcess {
 		}
 		return sum;
 	}
-
+	public static String getString(String fileString,String encode,String startString,String endString) throws IOException {
+		StringBuilder content = new StringBuilder();
+		String temp = null;
+		File fileFile = new File(fileString);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileFile), encode));
+		while((temp=reader.readLine())!=null) {
+			if(temp.contains(startString)) {
+				while(!(temp=reader.readLine()).contains(endString)) {
+					content.append(temp);
+					content.append(System.getProperty("line.separator"));
+				}
+			}
+		}
+		reader.close();
+		return content.toString();
+	}
 }

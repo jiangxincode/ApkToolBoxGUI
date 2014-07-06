@@ -1,5 +1,5 @@
 /**
- * ÎÄ¼ş¹ıÂËÆ÷
+ * æ–‡ä»¶è¿‡æ»¤å™¨
  * @author jiangxin
  */
 package edu.jiangxin.encode;
@@ -26,7 +26,7 @@ public class fileFilter {
 				return null;
 			}
 
-			if (file.isDirectory()) { //Èç¹ûÊÇÄ¿Â¼µÄ»°£¬½«¸ÃÄ¿Â¼ÏÂ·ûºÏÌõ¼şµÄÎÄ¼ş¼ÓÈëArrayList
+			if (file.isDirectory()) { //å¦‚æœæ˜¯ç›®å½•çš„è¯ï¼Œå°†è¯¥ç›®å½•ä¸‹ç¬¦åˆæ¡ä»¶çš„æ–‡ä»¶åŠ å…¥ArrayList
 				File[] list = file.listFiles(getFileExtensionFilter(suffix));
 				for (int i = 0; i < list.length; i++) {
 					if(list[i].isFile()) {
@@ -37,12 +37,12 @@ public class fileFilter {
 				}
 				//System.out.println(list);
 
-				list = file.listFiles(getDirectoryFilter()); // ¹ıÂË³öËùÓĞµÄÄ¿Â¼
+				list = file.listFiles(getDirectoryFilter()); // è¿‡æ»¤å‡ºæ‰€æœ‰çš„ç›®å½•
 				for (int i = 0; i < list.length; i++) {
 					list(list[i].toString(), suffix);
 				}
 
-			} else { //Èç¹ûÊÇÎÄ¼şµÄ»°£¬Ö±½Ó½«¸ÃÎÄ¼ş¼ÓÈëArrayList
+			} else { //å¦‚æœæ˜¯æ–‡ä»¶çš„è¯ï¼Œç›´æ¥å°†è¯¥æ–‡ä»¶åŠ å…¥ArrayList
 				arrayList.add(file);
 			}
 
@@ -54,8 +54,8 @@ public class fileFilter {
 
 	}
 
-	public static FilenameFilter getFileExtensionFilter(final String extension) {// Ö¸¶¨À©Õ¹Ãû¹ıÂË
-		if (extension == null) { //Ã»ÓĞÖ¸¶¨ºó×º£¬Ôò·µ»Ø¸ÃÄ¿Â¼ÏÂËùÓĞµÄÎÄ¼ş
+	public static FilenameFilter getFileExtensionFilter(final String extension) {// æŒ‡å®šæ‰©å±•åè¿‡æ»¤
+		if (extension == null) { //æ²¡æœ‰æŒ‡å®šåç¼€ï¼Œåˆ™è¿”å›è¯¥ç›®å½•ä¸‹æ‰€æœ‰çš„æ–‡ä»¶
 			return new FilenameFilter() {
 
 				@Override
@@ -64,7 +64,7 @@ public class fileFilter {
 					return true;
 				}
 			};
-		} else { //Ö¸¶¨ºó×º£¬Ôò·µ»Ø¸ÃÄ¿Â¼ÏÂÓµÓĞÕâĞ©ºó×ºµÄÎÄ¼ş
+		} else { //æŒ‡å®šåç¼€ï¼Œåˆ™è¿”å›è¯¥ç›®å½•ä¸‹æ‹¥æœ‰è¿™äº›åç¼€çš„æ–‡ä»¶
 			return new FilenameFilter() {
 				public boolean accept(File file, String name) {
 					boolean ret = name.endsWith(extension);
@@ -75,10 +75,10 @@ public class fileFilter {
 
 	}
 
-	public static FileFilter getDirectoryFilter() { // µÃµ½ËùÓĞµÄÄ¿Â¼
+	public static FileFilter getDirectoryFilter() { // å¾—åˆ°æ‰€æœ‰çš„ç›®å½•
 		return new FileFilter() {
 			public boolean accept(File file) {
-				return file.isDirectory();// ¹Ø¼üÅĞ¶Ïµã
+				return file.isDirectory();// å…³é”®åˆ¤æ–­ç‚¹
 			}
 		};
 	}
