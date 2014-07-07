@@ -1,5 +1,4 @@
-
-package edu.jiangxin.encode;
+package edu.jiangxin.common;
 
 import java.io.IOException;
 
@@ -8,32 +7,51 @@ import java.io.IOException;
  * @author jiangxin
  */
 public class Info {
+	
+	/**
+	 * 显示使用方法信息，读取README文件中的usage信息.
+	 * @throws IOException
+	 */
 	public static void showUsage() throws IOException {
 		String content = FileProcess.getString("README.txt", "UTF-8", "start usage", "end usage");
 		System.out.println(content);
 	}
+	
+	/**
+	 * 显示日志信息，读取README文件中的log信息.
+	 * @throws IOException
+	 */
 	public static void showLog() throws IOException {
 		String content = FileProcess.getString("README.txt", "UTF-8", "start log", "end log");
 		System.out.println(content);
 	}
+	
+	/**
+	 * 显示版权信息，读取README文件中的copyright信息.
+	 * @throws IOException
+	 */
 	public static void showCopyright() throws IOException {
 		String content = FileProcess.getString("README.txt", "UTF-8", "start copyright", "end copyright");
 		System.out.println(content);
 	}
+	
+	/**
+	 * 显示未来功能信息，读取README文件中的future functions信息.
+	 * @throws IOException
+	 */
 	public static void showFutureFuntions() throws IOException {
 		String content = FileProcess.getString("README.txt", "UTF-8", "start future funtions", "end future funtions");
 		System.out.println(content);
 	}
+	
+	/**
+	 * 显示所有，读取README文件.
+	 * @throws IOException
+	 */
 	public static void showAll() throws IOException {
 		showUsage();
 		showLog();
 		showCopyright();
-		showFutureFuntions();
-	}
-	public static void main(String[] args) throws IOException {
-		//showUsage();
-		//showLog();
-		//showCopyright();
 		showFutureFuntions();
 	}
 

@@ -1,4 +1,4 @@
-package edu.jiangxin.encode;
+package edu.jiangxin.common;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,20 +15,11 @@ import java.util.Iterator;
  */
 public class OSPattenConvert {
 	
-	public static void main(String[] args) throws IOException {
-		//dos2Unix("temp/test.txt", "temp/unix.txt");
-		//dos2Mac("temp/test.txt", "temp/mac.txt");
-		//unix2Dos("temp/unix.txt", "temp/dos.txt");
-		osDirConvert("temp/temp","temp/tempdos","toDoS");
-		osDirConvert("temp/temp","temp/tempunix","dos2unix");
-		osDirConvert("temp/temp","temp/tempmac","dostomAC");
-		osDirConvert("temp/temp","temp/templinux","toLinux");
-	}
-	
 	/**
-	 * 转换函数的真正实现函数，其它转换函数必须调用此函数
-	 * @param srcFileString:源文件的文件名
-	 * @param desFileString:目标文件的文件名
+	 * 不同操作系统文件格式之间的转换.
+	 * <p style="text-indent:2em">转换函数的真正实现函数，其它转换函数必须调用此函数。</p>
+	 * @param srcFileString 源文件的文件名
+	 * @param desFileString 目标文件的文件名
 	 * @param options:换行符，比如:\n,\r,\r\n
 	 * @throws IOException
 	 */
@@ -66,49 +57,105 @@ public class OSPattenConvert {
 		}
 	}
 	
+	/**
+	 * 其它操作系统文件格式转换成Unix文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	private static void toUnix(String srcFileString,String desFileString) throws IOException {
 		convert(srcFileString, desFileString, "\n");
 		System.out.println("Success to convert " + srcFileString + " to unix");
 	}
 	
+	/**
+	 * 其它操作系统文件格式转换成Dos文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	private static void toDos(String srcFileString,String desFileString) throws IOException {
 		convert(srcFileString, desFileString, "\r\n");
 		System.out.println("Success to convert " + srcFileString + " to dos");
 	}
 	
+	/**
+	 * 其它操作系统文件格式转换成Mac文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	private static void toMac(String srcFileString,String desFileString) throws IOException {
 		convert(srcFileString, desFileString, "\r");
 		System.out.println("Success to convert " + srcFileString + " to mac");
 	}
 	
-	
+	/**
+	 * Dos文件格式转换成Unix文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	public static void dos2Unix(String srcFileString,String desFileString) throws IOException {
 		toUnix(srcFileString, desFileString);
 	}
 	
+	/**
+	 * Dos文件格式转换成Mac文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	public static void dos2Mac(String srcFileString,String desFileString) throws IOException {
 		toMac(srcFileString, desFileString);
 	}
 
+	/**
+	 * Unix文件格式转换成Dos文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	public static void unix2Dos(String srcFileString,String desFileString) throws IOException {
 		toDos(srcFileString, desFileString);
 	}
 	
+	/**
+	 * Unix文件格式转换成Mac文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	public static void unix2Mac(String srcFileString,String desFileString) throws IOException {
 		toMac(srcFileString, desFileString);
 	}
 
+	/**
+	 * Mac文件格式转换成Unix文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	public static void mac2Unix(String srcFileString,String desFileString) throws IOException {
 		toUnix(srcFileString, desFileString);
 	}
+	
+	/**
+	 * Mac文件格式转换成Dos文件格式.
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
+	 * @throws IOException
+	 */
 	public static void mac2Dos(String srcFileString,String desFileString) throws IOException {
 		toDos(srcFileString, desFileString);
 	}
 	
 	/**
-	 * 文件转换函数，从一个操作系统文件格式转向另一个
-	 * @param srcFileString
-	 * @param desFileString
+	 * 不同操作系统文件格式之间的转换.
+	 * <p style="text-indent:2em">从一个操作系统文件格式转向另一个，转换模式有patter指定，pattern的格式为：</p>
+	 * <p style="text-indent:4em">os_a2os_b os_a和os_b的可能取值为linux/dos/windows/mac/unix/bsd等</p>
+	 * @param srcFileString 转换前的文件
+	 * @param desFileString 转换后的文件
 	 * @param pattern 转换模式
 	 * @throws IOException
 	 */
@@ -118,9 +165,10 @@ public class OSPattenConvert {
 		pattern = pattern.replace("to", "2"); //替换pattern中的to，防止误输入
 		pattern = pattern.replace("linux", "unix"); //由于linux和unix文件格式相同，所以直接用unix替换linux，但会产生unix2unix类型
 		pattern = pattern.replace("bsd", "unix"); //由于bsd和unix文件格式相同，所以直接用unix替换linux，但会产生unix2unix类型
+		pattern = pattern.replace("windows", "dos"); //由于windows和dos文件格式相同，所以直接用unix替换linux，但会产生dos2dos类型
 		boolean isToUnix = pattern.equals("2unix") || pattern.equals("mac2unix") ||pattern.equals("dos2unix") || pattern.equals("unix2unix");
 		boolean isToMac = pattern.equals("2mac") ||pattern.equals("dos2mac") || pattern.equals("unix2mac");
-		boolean isToDos = pattern.equals("2dos") ||pattern.equals("mac2dos") || pattern.equals("unix2dos");
+		boolean isToDos = pattern.equals("2dos") ||pattern.equals("mac2dos") || pattern.equals("unix2dos") || pattern.equals("dos2dos");
 		
 		if(isToUnix) {
 			toUnix(srcFileString, desFileString);
@@ -132,15 +180,27 @@ public class OSPattenConvert {
 			System.err.println("Error input,can't convert!");
 		}
 	}
+	
+	/**
+	 * 不同操作系统文件格式之间的转换.
+	 * <p style="text-indent:2em">从一个操作系统文件格式转向另一个，转换模式有patter指定，pattern的格式为：</p>
+	 * <p style="text-indent:4em">os_a2os_b os_a和os_b的可能取值为linux/dos/windows/mac/unix/bsd等</p>
+	 * @param fileString 需要转换的文件
+	 * @param pattern 转换模式
+	 * @see #osFileConvert(String, String, String)
+	 * @throws IOException
+	 */
 	public static void osFileConvert(String fileString,String pattern) throws IOException {
 		osFileConvert(fileString,fileString,pattern);
 	}
 	
 	/**
-	 * 文件目录转换函数，将其中所有的文件从一个操作系统文件格式转向另一个
-	 * @param srcDirString
-	 * @param desDirString
-	 * @param pattern
+	 * 不同操作系统文件格式之间的转换.
+	 * <p style="text-indent:2em">转换的对象为指定目录中的所有以后缀suffix指定的文件</p>
+	 * @param srcDirString 要求转换的目录
+	 * @param desDirString 转化后要存放的目录
+	 * @param pattern 转换模式
+	 * @see #osFileConvert(String, String, String)
 	 * @param suffix 过滤特定文件后缀
 	 * @throws IOException
 	 */
@@ -170,15 +230,26 @@ public class OSPattenConvert {
 	}
 	
 	/**
-	 * osDirConvert(String srcDirString,String desDirString,String pattern,String suffix)的重载函数默认suffix为null
-	 * @param srcDirString
-	 * @param desDirString
-	 * @param pattern
+	 * 不同操作系统文件格式之间的转换.
+	 * <p style="text-indent:2em">转换的对象为指定目录中的所有文件</p>
+	 * @param srcDirString 要求转换的目录
+	 * @param desDirString 转化后要存放的目录
+	 * @param pattern 转换模式
+	 * @see #osFileConvert(String, String, String)
 	 * @throws IOException
 	 */
 	public static void osDirConvert(String srcDirString,String desDirString,String pattern) throws IOException {
 		osDirConvert(srcDirString, desDirString, pattern, null);
 	}
+	
+	/**
+	 * 不同操作系统文件格式之间的转换.
+	 * <p style="text-indent:2em">转换的对象为文件列表</p>
+	 * @param files 要转换是文件列表
+	 * @param pattern 转换模式
+	 * @see #osFileConvert(String, String, String)
+	 * @throws IOException
+	 */
 	public static void osConvertFiles(ArrayList<File> files,String pattern) throws IOException {
 		Iterator<File> it = files.iterator();
 		while(it.hasNext()) {

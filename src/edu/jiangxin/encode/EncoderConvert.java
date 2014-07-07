@@ -11,6 +11,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import edu.jiangxin.common.FileProcess;
+import edu.jiangxin.common.fileFilter;
+
 /**
  * 文件编码转换的工具类.
  * @author jiangxin

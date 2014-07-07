@@ -1,8 +1,11 @@
-package edu.jiangxin.encode;
+package edu.jiangxin.Main;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import edu.jiangxin.common.*;
+import edu.jiangxin.encode.*;
 
 /**
  * TextTools主程序

@@ -50,7 +50,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 end copyright
 
 start usage
-		Usage: convert [option] filename1 [filename2...]
+		Usage: java -jar TestTools [option] filename1 [filename2...]
 			-f The encoder of your file.If you don't know the econder,we will try to detect auto.However we can't ensure the validity!
 			-t The encoder you want to convert
 			-os pattern Convert your file from one os patter to another.pattern includes:dos2mac dos2unix dos2linux mac2dos mac2unix, etc.
@@ -63,9 +63,9 @@ start usage
 			filename1[,filename2...] The file that you want to convert,at most one file.
 			 
 		For example:
-			convert -f GBK -t UTF-8 test.txt
-			convert -dos2unix test.txt
-			convert -r test.txt
+			java -jar TestTools -f GBK -t UTF-8 test.txt
+			java -jar TestTools  -dos2unix test.txt
+			java -jar TestTools -r test.txt
 end usage
 
 start log
@@ -95,6 +95,7 @@ start log
 	Version 0.15 添加随机数据生成功能，能够实现基本的随机数据生成，包括随机英文输出（自定义大小写，自定义固定长度还是随机长度），随机ASCII字符，随机扩展ASCII字符，随机可打印ASCII字符输出，随机中文输出（自定义固定长度还是随机长度），随机Eamil地址输出，随机手机号码输出，随机日期输出等，可看做是Java官方Random类的扩充。
 	Version 0.16 更新的文档说明。
 	Version 0.16 将所有代码文件添加简单注释。优化了程序结构。
+	Version 0.17对文件结构进行了大调整，进一步增加了说明注释，修改了OSPatternConvert类的部分方法。
 
 end log
 
