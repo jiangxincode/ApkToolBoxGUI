@@ -1,7 +1,3 @@
-/**
- * 文件过滤器
- * @author jiangxin
- */
 package edu.jiangxin.encode;
 
 import java.io.File;
@@ -9,6 +5,10 @@ import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
+/**
+ * 文件过滤器
+ * @author jiangxin
+ */
 public class fileFilter {
 	static ArrayList<File> arrayList = new ArrayList<>();
 
@@ -17,6 +17,12 @@ public class fileFilter {
 		System.out.println(mylist);
 	}
 
+	/**
+	 * 实现对指定文件夹的特定文件过滤
+	 * @param name 文件夹名称
+	 * @param suffix 指定后缀
+	 * @return 返回一个文件列表
+	 */
 	public static ArrayList<File> list(String name, String suffix) {
 
 		try {

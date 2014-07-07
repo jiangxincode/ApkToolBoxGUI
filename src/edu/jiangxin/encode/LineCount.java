@@ -1,7 +1,3 @@
-/**
- * 文件行数统计
- * @author jiangxin
- */
 package edu.jiangxin.encode;
 
 import java.io.BufferedInputStream;
@@ -13,6 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
 
+/**
+ * 文件行数统计
+ * @author jiangxin
+ */
 public class LineCount {
     public static void main(String[] args) throws IOException {
         String fileName = "temp/linux.txt";

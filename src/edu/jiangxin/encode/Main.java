@@ -1,14 +1,13 @@
-/**
- * TextTools主程序
- * @author jiangxin
- */
-
 package edu.jiangxin.encode;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * TextTools主程序
+ * @author jiangxin
+ */
 public class Main {
 	final static int MAXFILENUM = 100; //The max num of the files
 	

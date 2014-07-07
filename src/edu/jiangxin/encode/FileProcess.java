@@ -1,14 +1,13 @@
-/**
- * 文件或文件夹的简单处理
- * @author jiangxin
- */
 package edu.jiangxin.encode;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
+/**
+ * 文件或文件夹的简单处理
+ * @author jiangxin
+ */
 public class FileProcess {
 	final static int BUFFERSIZE = 1024*5; //The size of the buffer
 
@@ -102,7 +101,7 @@ public class FileProcess {
 	/**
 	 * 递归删除目录
 	 * @param dir
-	 * @return
+	 * @return 返回是否删除成功
 	 */
 	public static boolean deleteDir(String dir) {
 		File dirFile = new File(dir);
@@ -129,7 +128,7 @@ public class FileProcess {
 	/**
 	 * 删除目录组
 	 * @param dirs
-	 * @return
+	 * @return 返回是否删除成功
 	 */
 	public static boolean deleteDirs(String[] dirs) {
 		for(int i=0;i<dirs.length;i++) {

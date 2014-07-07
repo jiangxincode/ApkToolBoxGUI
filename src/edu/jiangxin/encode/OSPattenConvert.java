@@ -1,7 +1,3 @@
-/**
- * 不同操作系统文件格式转换
- * @author jiangxin
- */
 package edu.jiangxin.encode;
 
 import java.io.BufferedReader;
@@ -13,6 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * 不同操作系统文件格式转换
+ * @author jiangxin
+ */
 public class OSPattenConvert {
 	
 	public static void main(String[] args) throws IOException {
@@ -109,7 +109,7 @@ public class OSPattenConvert {
 	 * 文件转换函数，从一个操作系统文件格式转向另一个
 	 * @param srcFileString
 	 * @param desFileString
-	 * @param 转换模式
+	 * @param pattern 转换模式
 	 * @throws IOException
 	 */
 	public static void osFileConvert(String srcFileString,String desFileString,String pattern) throws IOException {

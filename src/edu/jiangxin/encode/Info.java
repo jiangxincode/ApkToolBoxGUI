@@ -1,11 +1,12 @@
-/**
- * 信息显示
- * @author jiangxin
- */
+
 package edu.jiangxin.encode;
 
 import java.io.IOException;
 
+/**
+ * 信息显示
+ * @author jiangxin
+ */
 public class Info {
 	public static void showUsage() throws IOException {
 		String content = FileProcess.getString("README.txt", "UTF-8", "start usage", "end usage");

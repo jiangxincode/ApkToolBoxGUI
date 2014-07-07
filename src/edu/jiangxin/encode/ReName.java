@@ -1,11 +1,11 @@
-/**
- * 文件重命名
- * @author jiangxin
- */
 package edu.jiangxin.encode;
 
 import java.io.File;
 
+/**
+ * 文件重命名
+ * @author jiangxin
+ */
 public class ReName {
 	public static void reName(String srcDirString,String desDirString) {
 		

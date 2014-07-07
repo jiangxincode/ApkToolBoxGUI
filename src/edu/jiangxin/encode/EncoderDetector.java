@@ -1,11 +1,3 @@
-/**
- * 编码探测检测器
- * @author jiangxin
- * 使用了第三方的包:cpdetector
- * http://cpdetector.sourceforge.net/
- * 使用说明及包下载请查看官方介绍
- */
-
 package edu.jiangxin.encode;
 
 import info.monitorenter.cpdetector.io.ASCIIDetector;
@@ -17,7 +9,15 @@ import info.monitorenter.cpdetector.io.UnicodeDetector;
 import java.io.File;
 import java.nio.charset.Charset;
 
+/**
+ * 编码探测检测器.
+ * 使用了第三方的包:cpdetector<br>
+ * http://cpdetector.sourceforge.net/<br>
+ * 使用说明及包下载请查看官方介绍<br>
+ * @author jiangxin
+ */
 public class EncoderDetector {
+	
 	/**
 	 * 判断文件编码类型
 	 * @param fileName
