@@ -9,7 +9,8 @@ import java.io.IOException;
 public class Info {
 	
 	/**
-	 * 显示使用方法信息，读取README文件中的usage信息.
+	 * 显示使用方法信息.
+	 * <p style="text-indent:2em">读取README文件中的usage信息.</p>
 	 * @throws IOException
 	 */
 	public static void showUsage() throws IOException {
@@ -18,7 +19,8 @@ public class Info {
 	}
 	
 	/**
-	 * 显示日志信息，读取README文件中的log信息.
+	 * 显示日志信息.
+	 * <p style="text-indent:2em">读取README文件中的log信息.</p>
 	 * @throws IOException
 	 */
 	public static void showLog() throws IOException {
@@ -27,7 +29,8 @@ public class Info {
 	}
 	
 	/**
-	 * 显示版权信息，读取README文件中的copyright信息.
+	 * 显示版权信息.
+	 * <p style="text-indent:2em">读取README文件中的copyright信息.</p>
 	 * @throws IOException
 	 */
 	public static void showCopyright() throws IOException {
@@ -36,7 +39,8 @@ public class Info {
 	}
 	
 	/**
-	 * 显示未来功能信息，读取README文件中的future functions信息.
+	 * 显示未来功能信息.
+	 * <p style="text-indent:2em">读取README文件中的future functions信息.</p>
 	 * @throws IOException
 	 */
 	public static void showFutureFuntions() throws IOException {
@@ -45,7 +49,8 @@ public class Info {
 	}
 	
 	/**
-	 * 显示所有，读取README文件.
+	 * 显示所有.
+	 * <p style="text-indent:2em">读取README文件.</p>
 	 * @throws IOException
 	 */
 	public static void showAll() throws IOException {

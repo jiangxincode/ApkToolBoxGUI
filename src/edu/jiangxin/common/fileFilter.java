@@ -6,20 +6,17 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 /**
- * 文件过滤器
+ * 文件过滤器.
+ * <p style="text-indent:2em">过滤出符合要求的目录或者文件夹。</p>
  * @author jiangxin
  */
 public class fileFilter {
+	
 	static ArrayList<File> arrayList = new ArrayList<>();
 
-	public static void main(String[] args) {
-		ArrayList<File> mylist = list("E:/temp/java/Test", ".java");
-		System.out.println(mylist);
-	}
-
 	/**
-	 * 实现对指定文件夹的特定文件过滤
-	 * @param name 文件夹名称
+	 * 实现对指定文件或者目录的过滤
+	 * @param name 文件或者目录名称
 	 * @param suffix 指定后缀
 	 * @return 返回一个文件列表
 	 */
@@ -36,14 +33,13 @@ public class fileFilter {
 				File[] list = file.listFiles(getFileExtensionFilter(suffix));
 				for (int i = 0; i < list.length; i++) {
 					if(list[i].isFile()) {
-						//System.out.println(list[i].toString());
 						arrayList.add(list[i]);
 					}
 					
 				}
-				//System.out.println(list);
 
 				list = file.listFiles(getDirectoryFilter()); // 过滤出所有的目录
+				
 				for (int i = 0; i < list.length; i++) {
 					list(list[i].toString(), suffix);
 				}
@@ -55,12 +51,11 @@ public class fileFilter {
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
-		//System.out.println(arrayList);
 		return arrayList;
 
 	}
 
-	public static FilenameFilter getFileExtensionFilter(final String extension) {// 指定扩展名过滤
+	private static FilenameFilter getFileExtensionFilter(final String extension) {// 指定扩展名过滤
 		if (extension == null) { //没有指定后缀，则返回该目录下所有的文件
 			return new FilenameFilter() {
 
@@ -81,7 +76,7 @@ public class fileFilter {
 
 	}
 
-	public static FileFilter getDirectoryFilter() { // 得到所有的目录
+	private static FileFilter getDirectoryFilter() { // 得到所有的目录
 		return new FileFilter() {
 			public boolean accept(File file) {
 				return file.isDirectory();// 关键判断点

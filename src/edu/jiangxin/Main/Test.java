@@ -1,6 +1,8 @@
 package edu.jiangxin.Main;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import edu.jiangxin.common.*;
@@ -33,6 +35,8 @@ public class Test {
 		//Info.showLog();
 		//Info.showCopyright();
 		Info.showFutureFuntions();
+		ArrayList<File> mylist = fileFilter.list("E:/temp/java/Test", ".java");
+		System.out.println(mylist);
 	}
 
 }

@@ -15,6 +15,7 @@ public class FileProcess {
 		//copyDirectory("test1", "test2");
 		//copyFile("test1/test.txt","test2/test.txt");
 		//deleteDir("temp/temp2");
+		System.out.println(getString("README.md", "UTF-8", null, null));
 	}
 	
 	/**
@@ -153,6 +154,12 @@ public class FileProcess {
 		String temp = null;
 		File fileFile = new File(fileString);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileFile), encode));
+		if((startString == null) || (endString == null)) {
+			while((temp=reader.readLine())!=null) {
+				content.append(temp);
+				content.append(System.getProperty("line.separator"));
+			}
+		}
 		while((temp=reader.readLine())!=null) {
 			if(temp.contains(startString)) {
 				while(!(temp=reader.readLine()).contains(endString)) {
