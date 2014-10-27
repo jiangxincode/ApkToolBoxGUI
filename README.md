@@ -1,9 +1,17 @@
-**NAME:**
+**NAME:** TextTools
 
-	TextTools
+**VERAION:** 0.18
+		
+**AUTHOR:** jiangxin
+
+**WebSite:**
+
+*binary:* https://sourceforge.net/projects/TestTools
+*source:* https://github.com/jiangxincode/TestTools
+*Blog:* http://blog.csdn.net/jiangxinnju
+*Email:* jiangxinnju@163.com
 
 **FUNCTION:**
-
 文本处理工具包，您可以有两种方式使用：
 
 	1. 作为一个文本处理小工具，以实现以下功能：
@@ -18,32 +26,12 @@
 	+ 目录的递归复制、移动、删除；
 	+ 文件过滤（通过该功能您可以将某个目录下符合特定条件的文件进行操作，比如仅针对后缀名为.java的文件进行复制）；
 	+ 随机数据生成，可看做是Java官方Random类的扩充。目前已经实现：
-	+ 随机英文输出（自定义大小写，自定义固定长度还是随机长度）；
-	+ 随机ASCII字符，随机扩展ASCII字符，随机可打印ASCII字符输出；
-	+ 随机中文输出（自定义固定长度还是随机长度）；
-	+ 随机Eamil地址输出，随机手机号码输出，随机日期输出等。
+		+ 随机英文输出（自定义大小写，自定义固定长度还是随机长度）；
+		+ 随机ASCII字符，随机扩展ASCII字符，随机可打印ASCII字符输出；
+		+ 随机中文输出（自定义固定长度还是随机长度）；
+		+ 随机Eamil地址输出，随机手机号码输出，随机日期输出等。
 
 说明：由于使用的是Java进行编程，所以具有平台通用性，您可以同时在Mac,Windows,Linux/Unix等平台上以上述两种方式使用。如果您想以第一种方式对文件进行处理，可以参考下面的用法说明；如果您想以第二种方式使用，您所下载的压缩包里应该有该工具的example和详细的API文档，如果没有请您到下面提供的网站中重新下载。
-			
-**WebSite:**
-
-	软件包:
-	https://sourceforge.net/projects/TestTools
-	源码:
-	https://github.com/jiangxincode/TestTools
-		
-**VERAION:**
-
-	0.16
-**AUTHOR:**
-
-	jiangxin
-**Blog:**
-
-	http://blog.csdn.net/jiangxinnju
-**Email:**
-
-	jiangxinnju@163.com
 
 **Copyright (c) 2014, jiangxin**
 
