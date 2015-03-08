@@ -1,14 +1,17 @@
 **NAME:** TextTools
 
 **VERAION:** 0.18
-		
+
 **AUTHOR:** jiangxin
 
 **WebSite:**
 
 *binary:* https://sourceforge.net/projects/TestTools
+
 *source:* https://github.com/jiangxincode/TestTools
+
 *Blog:* http://blog.csdn.net/jiangxinnju
+
 *Email:* jiangxinnju@163.com
 
 **FUNCTION:**
@@ -33,18 +36,7 @@
 
 说明：由于使用的是Java进行编程，所以具有平台通用性，您可以同时在Mac,Windows,Linux/Unix等平台上以上述两种方式使用。如果您想以第一种方式对文件进行处理，可以参考下面的用法说明；如果您想以第二种方式使用，您所下载的压缩包里应该有该工具的example和详细的API文档，如果没有请您到下面提供的网站中重新下载。
 
-**Copyright (c) 2014, jiangxin**
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-Neither the name of the jiangxin nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License: GPLV3 http://www.gnu.org/licenses/gpl-3.0.txt
 
 Usage:
 ---
@@ -86,8 +78,9 @@ For example:
 	+ Version 0.15 添加随机数据生成功能，能够实现基本的随机数据生成，包括随机英文输出（自定义大小写，自定义固定长度还是随机长度），随机ASCII字符，随机扩展ASCII字符，随机可打印ASCII字符输出，随机中文输出（自定义固定长度还是随机长度），随机Eamil地址输出，随机手机号码输出，随机日期输出等，可看做是Java官方Random类的扩充。
 	+ Version 0.16 更新的文档说明。
 	+ Version 0.16 将所有代码文件添加简单注释。优化了程序结构。
-	+ Version 0.17对文件结构进行了大调整，进一步增加了说明注释，修改了OSPatternConvert类的部分方法。
-	+ Version 0.18利用Markdown重写了README.MD
+	+ Version 0.17 对文件结构进行了大调整，进一步增加了说明注释，修改了OSPatternConvert类的部分方法。
+	+ Version 0.18 利用Markdown重写了README.MD
+	+ Version 0.19 修改了此README.md文件
 ---
 
 将要实现的功能：
@@ -95,4 +88,6 @@ For example:
 	+ 增强系统鲁棒性
 	+ 随机身份证号码输出
 	+ 随机姓氏输出
+	+ 去除不必要的文档信息输出，如果必要，该用xml方式输出，便于扩展
+	+ 使用junit重新进行单元测试
 ---
