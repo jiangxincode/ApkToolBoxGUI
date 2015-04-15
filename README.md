@@ -36,7 +36,10 @@
 
 说明：由于使用的是Java进行编程，所以具有平台通用性，您可以同时在Mac,Windows,Linux/Unix等平台上以上述两种方式使用。如果您想以第一种方式对文件进行处理，可以参考下面的用法说明；如果您想以第二种方式使用，您所下载的压缩包里应该有该工具的example和详细的API文档，如果没有请您到下面提供的网站中重新下载。
 
-License: GPLV3 http://www.gnu.org/licenses/gpl-3.0.txt
+License:
+---
+	GPLV3 http://www.gnu.org/licenses/gpl-3.0.txt
+---
 
 Usage:
 ---
