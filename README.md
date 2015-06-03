@@ -84,6 +84,7 @@ For example:
 	+ Version 0.17 对文件结构进行了大调整，进一步增加了说明注释，修改了OSPatternConvert类的部分方法。
 	+ Version 0.18 利用Markdown重写了README.MD
 	+ Version 0.19 修改了此README.md文件
+	+ Version 0.20 使用junit替换原手工测试
 ---
 
 将要实现的功能：

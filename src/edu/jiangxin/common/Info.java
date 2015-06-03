@@ -14,7 +14,7 @@ public class Info {
 	 * @throws IOException
 	 */
 	public static void showUsage() throws IOException {
-		String content = FileProcess.getString("README.txt", "UTF-8", "start usage", "end usage");
+		String content = FileProcess.getString("README.md", "UTF-8", "start usage", "end usage");
 		System.out.println(content);
 	}
 	
@@ -24,7 +24,7 @@ public class Info {
 	 * @throws IOException
 	 */
 	public static void showLog() throws IOException {
-		String content = FileProcess.getString("README.txt", "UTF-8", "start log", "end log");
+		String content = FileProcess.getString("README.md", "UTF-8", "start log", "end log");
 		System.out.println(content);
 	}
 	
@@ -34,7 +34,7 @@ public class Info {
 	 * @throws IOException
 	 */
 	public static void showCopyright() throws IOException {
-		String content = FileProcess.getString("README.txt", "UTF-8", "start copyright", "end copyright");
+		String content = FileProcess.getString("README.md", "UTF-8", "start copyright", "end copyright");
 		System.out.println(content);
 	}
 	
@@ -44,7 +44,7 @@ public class Info {
 	 * @throws IOException
 	 */
 	public static void showFutureFuntions() throws IOException {
-		String content = FileProcess.getString("README.txt", "UTF-8", "start future funtions", "end future funtions");
+		String content = FileProcess.getString("README.md", "UTF-8", "start future funtions", "end future funtions");
 		System.out.println(content);
 	}
 	
