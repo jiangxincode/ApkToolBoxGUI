@@ -10,40 +10,41 @@
 
 1. 作为一个文本处理小工具，以实现以下功能：
 
-	+ 文本文件的编码格式批量转换（可以自行指定编码亦可以由本工具自行探测）；
-	+ Unix、Mac、Dos等文件格式的批量互转；
-	+ 批量文件重命名，批量文件备份和恢复；
-	+ 批量源代码文件注释删除；
-	+ 批量代码文件行数统计等等。
++ 文本文件的编码格式批量转换（可以自行指定编码亦可以由本工具自行探测）；
++ Unix、Mac、Dos等文件格式的批量互转；
++ 批量文件重命名，批量文件备份和恢复；
++ 批量源代码文件注释删除；
++ 批量代码文件行数统计等等。
 
 2. 作为一个文本工具处理的JAVA封装包，由于上述功能都很好的以包的方式进行封装，您可以直接调用相关功能，另外您还可能使用以下功能：
-	+ 目录的递归复制、移动、删除；
-	+ 文件过滤（通过该功能您可以将某个目录下符合特定条件的文件进行操作，比如仅针对后缀名为.java的文件进行复制）；
-	+ 随机数据生成，可看做是Java官方Random类的扩充。目前已经实现：
-		+ 随机英文输出（自定义大小写，自定义固定长度还是随机长度）；
-		+ 随机ASCII字符，随机扩展ASCII字符，随机可打印ASCII字符输出；
-		+ 随机中文输出（自定义固定长度还是随机长度）；
-		+ 随机Eamil地址输出，随机手机号码输出，随机日期输出等。
+
++ 目录的递归复制、移动、删除；
++ 文件过滤（通过该功能您可以将某个目录下符合特定条件的文件进行操作，比如仅针对后缀名为.java的文件进行复制）；
++ 随机数据生成，可看做是Java官方Random类的扩充。目前已经实现：
+	+ 随机英文输出（自定义大小写，自定义固定长度还是随机长度）；
+	+ 随机ASCII字符，随机扩展ASCII字符，随机可打印ASCII字符输出；
+	+ 随机中文输出（自定义固定长度还是随机长度）；
+	+ 随机Eamil地址输出，随机手机号码输出，随机日期输出等。
 
 ## Usage:
 
 说明：由于使用的是Java进行编程，所以具有平台通用性，您可以同时在Mac,Windows,Linux/Unix等平台上以上述两种方式使用。如果您想以第一种方式对文件进行处理，可以参考下面的用法说明；如果您想以第二种方式使用，您所下载的压缩包里应该有该工具的example和详细的API文档，如果没有请您到下面提供的网站中重新下载。
 
-```
-	java -jar TestTools [option] filename1 [filename2...]
-	-f The encoder of your file.If you don't know the econder,we will try to detect auto.However we can't ensure the validity!
-	-t The encoder you want to convert
-	-os pattern Convert your file from one os patter to another.pattern includes:dos2mac dos2unix dos2linux mac2dos mac2unix, etc.
-	-b Backup your file when Convert.It's recommended!
-	-r Recovey your file..Can't use with other options!
-	-suffix 文件的后缀名 过滤特定后缀的文件进行处理，比如-suffix .txt
-	-sum 统计代码的行数
-	-h Display this usage.
-	filename1[,filename2...] The file that you want to convert,at most one file.
+```Batchfile
+java -jar TestTools [option] filename1 [filename2...]
+-f The encoder of your file.If you don't know the econder,we will try to detect auto.However we can't ensure the validity!
+-t The encoder you want to convert
+-os pattern Convert your file from one os patter to another.pattern includes:dos2mac dos2unix dos2linux mac2dos mac2unix, etc.
+-b Backup your file when Convert.It's recommended!
+-r Recovey your file..Can't use with other options!
+-suffix 文件的后缀名 过滤特定后缀的文件进行处理，比如-suffix .txt
+-sum 统计代码的行数
+-h Display this usage.
+filename1[,filename2...] The file that you want to convert,at most one file.
 ```
 
 For example:
-```
+```Batchfile
 	java -jar TestTools -f GBK -t UTF-8 test.txt
 	java -jar TestTools  -dos2unix test.txt
 	java -jar TestTools -r test.txt
