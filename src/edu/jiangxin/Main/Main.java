@@ -89,7 +89,7 @@ public class Main {
 		}
 		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // 循环遍历各个文件
 			System.out.println("Now is processing file: " + fileName[i]);
-			files.addAll(fileFilter.list(fileName[i], suffix));
+			files.addAll(FileFilterWrapper.list(fileName[i], suffix));
 			
 			if(isBackup) { //Backup the file
 				Backup.backupFiles(files, ".backup");
@@ -99,7 +99,7 @@ public class Main {
 				continue ;
 			}
 			if(isOSConvert) { //Convert OS pattern
-				OSPattenConvert.osConvertFiles(files, pattern);
+				OSPatternConvert.osConvertFiles(files, pattern);
 			}
 			
 			if(fromEncoder==null && toEncoder!=null) { //Dectect the encoder of the file

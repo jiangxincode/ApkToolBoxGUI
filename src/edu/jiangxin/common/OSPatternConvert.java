@@ -13,7 +13,7 @@ import java.util.Iterator;
  * 不同操作系统文件格式转换
  * @author jiangxin
  */
-public class OSPattenConvert {
+public class OSPatternConvert {
 	
 	/**
 	 * 不同操作系统文件格式之间的转换.
@@ -210,7 +210,7 @@ public class OSPattenConvert {
 		if(!srcDirFile.exists()) {
 			System.out.println("源目录不存在" + srcDirFile.getAbsolutePath());
 		}
-		ArrayList<File> arrayList = fileFilter.list(srcDirString, suffix);
+		ArrayList<File> arrayList = FileFilterWrapper.list(srcDirString, suffix);
 		Iterator<File> it = arrayList.iterator();
 		while(it.hasNext()) {
 			File srcFileFile = it.next();

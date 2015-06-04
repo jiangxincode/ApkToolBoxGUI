@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * <p style="text-indent:2em">过滤出符合要求的目录或者文件夹。</p>
  * @author jiangxin
  */
-public class fileFilter {
+public class FileFilterWrapper {
 	
 	static ArrayList<File> arrayList = new ArrayList<>();
 

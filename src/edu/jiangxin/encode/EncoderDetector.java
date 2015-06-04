@@ -51,10 +51,4 @@ public class EncoderDetector {
 			return null;
 		}
 	}
-
-	public static void main(String[] args) {
-
-		String charset = judgeFile("temp/test.txt");
-		System.out.println(charset);
-	}
 }

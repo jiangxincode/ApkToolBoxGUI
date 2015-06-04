@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import edu.jiangxin.common.FileProcess;
-import edu.jiangxin.common.fileFilter;
+import edu.jiangxin.common.FileFilterWrapper;
 
 /**
  * 文件编码转换的工具类.
@@ -85,7 +85,7 @@ public class EncoderConvert {
 			String desDirString, String desEncoder,String suffix) throws IOException {
 		//File srcDirFile = new File(srcDirString);
 		File desDirFile = new File(desDirString);
-		ArrayList<File> files = fileFilter.list(srcDirString, suffix); // 获取所有符合条件的文件
+		ArrayList<File> files = FileFilterWrapper.list(srcDirString, suffix); // 获取所有符合条件的文件
 		Iterator<File> it = files.iterator();
 		while(it.hasNext()) {
 			File tempFile = it.next();
