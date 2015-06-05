@@ -1,4 +1,4 @@
-package edu.jiangxin.Main;
+package edu.jiangxin.main;
 
 import java.io.File;
 import java.io.IOException;
