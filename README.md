@@ -1,6 +1,6 @@
 # TextTools
 
-## jiangxin
+## Author 
 
 + JiangXin jiangxinnju@163.com
 
@@ -81,7 +81,6 @@ For example:
 + 随机身份证号码输出
 + 随机姓氏输出
 + 去除不必要的文档信息输出，如果必要，该用xml方式输出，便于扩展
-+ 使用junit重新进行单元测试
 
 ## License:
 

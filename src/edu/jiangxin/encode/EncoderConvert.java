@@ -20,7 +20,6 @@ import edu.jiangxin.common.FileFilterWrapper;
  *
  */
 public class EncoderConvert {
-	public static final String[] extensions = null;
 
 	/**
 	 * 实现对文件的编码转换.
@@ -124,9 +123,5 @@ public class EncoderConvert {
 		while(it.hasNext()) {
 			encodeFile(it.next().getAbsolutePath(), fromEncoder, toEncoder);
 		}
-	}
-	public static void main(String[] args) throws IOException {
-		//encodeFile("temp/test1.txt", "gbk", "temp/test2.txt","UTF-8");
-		encodeDir("temp/temp", "gbk", "temp/temp2","UTF-8");
 	}
 }
