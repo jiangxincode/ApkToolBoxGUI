@@ -65,10 +65,13 @@ class Coordinate {
 public class IdeologicalReport {
 
 	public static void main(String[] args) throws IOException {
+		
+		String input = "target/test-classes/IdeologicalReportTest/";
+		String output = "target/test-classes/IdeologicalReportTest/result.txt";
 
 		HashMap<Coordinate, String> hashMap = new HashMap<Coordinate, String>();
 
-		File dataDir = new File(args[0]);
+		File dataDir = new File(input);
 
 		int i = 0, j = 0, k = 0;
 
@@ -104,7 +107,7 @@ public class IdeologicalReport {
 		String separator = System.getProperty("line.separator")
 				+ System.getProperty("line.separator");
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(new File(args[1]))));
+				new FileOutputStream(new File(output))));
 		writer.append("思想汇报").append(separator);
 		writer.append("尊敬的党组织").append(separator);
 		int count = 0;

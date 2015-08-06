@@ -210,7 +210,7 @@ public class OSPatternConvert {
 		if(!srcDirFile.exists()) {
 			System.out.println("源目录不存在" + srcDirFile.getAbsolutePath());
 		}
-		ArrayList<File> arrayList = FileFilterWrapper.list(srcDirString, suffix);
+		ArrayList<File> arrayList = new FileFilterWrapper().list(srcDirString, suffix);
 		Iterator<File> it = arrayList.iterator();
 		while(it.hasNext()) {
 			File srcFileFile = it.next();

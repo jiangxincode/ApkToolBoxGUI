@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class FileFilterWrapper {
 	
-	static ArrayList<File> arrayList = new ArrayList<>();
+	ArrayList<File> arrayList = new ArrayList<>();
 
 	/**
 	 * 实现对指定文件或者目录的过滤
@@ -20,7 +20,7 @@ public class FileFilterWrapper {
 	 * @param suffix 指定后缀
 	 * @return 返回一个文件列表
 	 */
-	public static ArrayList<File> list(String name, String suffix) {
+	public ArrayList<File> list(String name, String suffix) {
 
 		try {
 			File file = new File(name);
@@ -55,7 +55,7 @@ public class FileFilterWrapper {
 
 	}
 
-	private static FilenameFilter getFileExtensionFilter(final String extension) {// 指定扩展名过滤
+	private FilenameFilter getFileExtensionFilter(final String extension) {// 指定扩展名过滤
 		if (extension == null) { //没有指定后缀，则返回该目录下所有的文件
 			return new FilenameFilter() {
 
@@ -76,7 +76,7 @@ public class FileFilterWrapper {
 
 	}
 
-	private static FileFilter getDirectoryFilter() { // 得到所有的目录
+	private FileFilter getDirectoryFilter() { // 得到所有的目录
 		return new FileFilter() {
 			public boolean accept(File file) {
 				return file.isDirectory();// 关键判断点

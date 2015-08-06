@@ -84,7 +84,7 @@ public class EncoderConvert {
 			String desDirString, String desEncoder,String suffix) throws IOException {
 		//File srcDirFile = new File(srcDirString);
 		File desDirFile = new File(desDirString);
-		ArrayList<File> files = FileFilterWrapper.list(srcDirString, suffix); // 获取所有符合条件的文件
+		ArrayList<File> files = new FileFilterWrapper().list(srcDirString, suffix); // 获取所有符合条件的文件
 		Iterator<File> it = files.iterator();
 		while(it.hasNext()) {
 			File tempFile = it.next();

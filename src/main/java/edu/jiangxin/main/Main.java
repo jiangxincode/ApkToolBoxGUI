@@ -84,12 +84,12 @@ public class Main {
 			}
 		}
 		if(isHelp) {
-			Info.showUsage();
+			Runtime.getRuntime().exec("notepad.exe README.md");
 			return ;
 		}
 		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // 循环遍历各个文件
 			System.out.println("Now is processing file: " + fileName[i]);
-			files.addAll(FileFilterWrapper.list(fileName[i], suffix));
+			files.addAll(new FileFilterWrapper().list(fileName[i], suffix));
 			
 			if(isBackup) { //Backup the file
 				Backup.backupFiles(files, ".backup");
