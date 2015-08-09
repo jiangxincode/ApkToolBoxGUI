@@ -9,19 +9,19 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <repositories>
-    <repository>
-        <id>ebi-repo</id>
-        <name>The EBI internal repository</name>
-        <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-    </repository>
-  </repositories>
+  <!-- <repositories> -->
+    <!-- <repository> -->
+        <!-- <id>ebi-repo</id> -->
+        <!-- <name>The EBI internal repository</name> -->
+        <!-- <url>http://www.ebi.ac.uk/~maven/m2repo</url> -->
+        <!-- <releases> -->
+            <!-- <enabled>true</enabled> -->
+        <!-- </releases> -->
+        <!-- <snapshots> -->
+            <!-- <enabled>false</enabled> -->
+        <!-- </snapshots> -->
+    <!-- </repository> -->
+  <!-- </repositories> -->
 
   <dependencies>
     <dependency>
@@ -34,6 +34,12 @@
         <groupId>cpdetector</groupId>
         <artifactId>cpdetector</artifactId>
         <version>1.0.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>net.sourceforge.jchardet</groupId>
+        <artifactId>jchardet</artifactId>
+        <version>1.0</version>
     </dependency>
   </dependencies>
 
