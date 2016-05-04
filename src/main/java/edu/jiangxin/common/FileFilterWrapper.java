@@ -61,7 +61,6 @@ public class FileFilterWrapper {
 
 				@Override
 				public boolean accept(File dir, String name) {
-					// TODO Auto-generated method stub
 					return true;
 				}
 			};
