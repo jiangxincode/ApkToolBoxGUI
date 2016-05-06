@@ -2,69 +2,148 @@ package edu.jiangxin.common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ClassVersionTools {
+import org.apache.log4j.Logger;
 
-	public static void getClassVersion(String srcDirString) {
-		File srcDirFile = new File(srcDirString);
-		if (!srcDirFile.exists()) {
-			System.out.println("源目录不存在" + srcDirFile.getAbsolutePath());
+public class ClassVersionTools {
+	private static final Logger LOGGER = Logger.getLogger(ClassVersionTools.class);
+
+	public static void getClassVersion(String pathname) {
+		if (pathname == null) {
+			LOGGER.debug("filePath is null.");
+			return;
 		}
-		ArrayList<File> arrayList = new FileFilterWrapper().list(srcDirString, ".class");
+		File srcDirFile = new File(pathname);
+		if (!srcDirFile.exists()) {
+			LOGGER.warn("Can't find the target file or directory: " + srcDirFile.getAbsolutePath());
+			return;
+		}
+		ArrayList<File> arrayList = new FileFilterWrapper().list(pathname, ".class");
+		if (arrayList.isEmpty()) {
+			LOGGER.warn("Can't find class file.");
+			return;
+		}
 		Iterator<File> it = arrayList.iterator();
 		while (it.hasNext()) {
-			File srcFileFile = it.next();
+			File classFile = it.next();
 
-			byte[] bVersion = new byte[4];
-			FileInputStream fis;
+			byte[] bVersion = new byte[8];
+			FileInputStream fis = null;
 			try {
-				fis = new FileInputStream(srcFileFile);
-				fis.read(bVersion, 0, 4);
-				fis.read(bVersion, 0, 4);
+				fis = new FileInputStream(classFile);
+				fis.read(bVersion, 0, 8);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Some io errors happened.");
+			} finally {
+				if (fis != null) {
+					try {
+						fis.close();
+					} catch (IOException e) {
+						LOGGER.error("Can't close the fis.");
+						continue;
+					}
+				}
 			}
 
-			System.out.println(srcFileFile.getAbsolutePath() + bVersion[0] + bVersion[1] + bVersion[2] + bVersion[3]);
+			String majorVersion = String.valueOf((bVersion[6] << 8 & 0xff00) | bVersion[7]);
+			String minorVersion = String.valueOf((bVersion[4] << 8 & 0xff00) | bVersion[5]);
 
+			LOGGER.debug("majorVersion: " + majorVersion + "; minorVersion: " + minorVersion);
+
+			LOGGER.info("The version of " + classFile.getAbsolutePath() + " is: " + majorVersion + "." + minorVersion);
 		}
 	}
 
-	public static void modifyClassVersion(String srcDirString, String desDirString) throws IOException {
+	/**
+	 *
+	 * @param srcDirString
+	 *            The directory of source
+	 * @param desDirString
+	 *            The directory of target
+	 * @throws IOException
+	 */
+	public static void modifyClassVersion(String srcDirString, String desDirString, byte[] newVersion) {
 		File srcDirFile = new File(srcDirString);
-		File desDirFile = new File(desDirString);
 		if (!srcDirFile.exists()) {
-			System.out.println("源目录不存在" + srcDirFile.getAbsolutePath());
+			LOGGER.error("srcDirString isn't exist: " + srcDirFile.getAbsolutePath());
+			return;
 		}
+
+		if (!srcDirFile.isDirectory()) {
+			LOGGER.error("srcDirString isn't a directory: " + srcDirFile.getAbsolutePath());
+			return;
+		}
+
+		if (newVersion == null || newVersion.length != 4) {
+			LOGGER.error("The param is error: " + newVersion);
+		}
+
 		FileProcess.copyDirectory(srcDirString, desDirString);
-		ArrayList<File> arrayList = new FileFilterWrapper().list(srcDirString, ".class");
+
+		ArrayList<File> arrayList = new FileFilterWrapper().list(desDirString, ".class");
 		Iterator<File> it = arrayList.iterator();
 		while (it.hasNext()) {
-			File srcFileFile = it.next();
 
-			FileInputStream fis = new FileInputStream(srcFileFile);
+			File file = it.next();
+
 			byte[] content = new byte[1024 * 1024];
-			int len = fis.read(content);
-			content[4] = 0x00;
-			content[5] = 0x00;
-			content[6] = 0x00;
-			content[7] = 0x2F;
-			fis.close();
+			int len = 0;
 
-			FileOutputStream fos = new FileOutputStream(srcFileFile);
-			fos.write(content, 0, len);
-			fos.close();
-			System.out.println("Process file success." + srcFileFile.getAbsolutePath());
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				len = fis.read(content);
+			} catch (FileNotFoundException e) {
+				LOGGER.error("Can't find the file: " + file.getName());
+			} catch (IOException e) {
+				LOGGER.error("Some io errors happened.");
+			} finally {
+				if (fis != null) {
+					try {
+						fis.close();
+					} catch (IOException e) {
+						LOGGER.error("Can't close the fis.");
+						continue;
+					}
+				}
+			}
+
+			for (int i = 0; i < 4; i++) {
+				content[i + 4] = newVersion[i];
+			}
+
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream(file);
+				fos.write(content, 0, len);
+			} catch (FileNotFoundException e) {
+				LOGGER.error("Can't find the file: " + file.getName());
+			} catch (IOException e) {
+				LOGGER.error("Some io errors happened.");
+			} finally {
+				if (fos != null) {
+					try {
+						fos.close();
+					} catch (IOException e) {
+						LOGGER.error("Can't close the fos.");
+						continue;
+					}
+				}
+			}
+
+			LOGGER.info("Process file success." + file.getAbsolutePath());
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
-		modifyClassVersion("D:\\xwork-core-2.2.1", "D:\\jiangxin");
 		getClassVersion("D:\\xwork-core-2.2.1");
+		modifyClassVersion("D:\\xwork-core-2.2.1", "D:\\xwork-core-2.2.1-bak", new byte[]{0x00, 0x03, 0x00, 0x2d});
+		getClassVersion("D:\\xwork-core-2.2.1-bak");
 	}
 
 }
