@@ -11,7 +11,6 @@ public class RandomEmailTest {
 		try {
 			System.out.println(RandomEmail.nextEmail());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertTrue(true);

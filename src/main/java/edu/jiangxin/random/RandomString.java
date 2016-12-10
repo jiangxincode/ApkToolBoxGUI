@@ -8,7 +8,7 @@ import java.util.Random;
  * @author jiangxin
  * 
  */
-public class ExtraRandom {
+public class RandomString {
 	
 	/**
 	 * 随机生成字符串.

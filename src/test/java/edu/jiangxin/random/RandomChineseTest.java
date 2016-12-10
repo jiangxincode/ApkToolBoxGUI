@@ -13,7 +13,6 @@ public class RandomChineseTest {
 			System.out.println(RandomChinese.nextString(100));
 			System.out.println(RandomChinese.nextRandomLength(12, 60));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertTrue(true);

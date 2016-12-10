@@ -27,7 +27,7 @@ public class RandomEmail {
 		while(index >= suffix.length) {
 			index = random.nextInt(100);
 		}
-		ret = ExtraRandom.nextRandomLengthString(1, 15, "digit_letter") + "@" + suffix[index];
+		ret = RandomString.nextRandomLengthString(1, 15, "digit_letter") + "@" + suffix[index];
 		return ret;
 	}
 }

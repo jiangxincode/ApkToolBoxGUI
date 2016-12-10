@@ -20,7 +20,6 @@ public class EncoderConvertTest {
 			assertTrue(new File(path+"GB2312.txt").exists());
 			assertEquals("GB2312",EncoderDetector.judgeFile(path+"GB2312.txt"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertTrue(true);
@@ -47,7 +46,6 @@ public class EncoderConvertTest {
 				assertNotEquals("UTF-8",EncoderDetector.judgeFile(path+"testReuslt/" + f.getName()));
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertTrue(true);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author jiangxin
  */
 public class FileFilterWrapper {
-	
+
 	ArrayList<File> arrayList = new ArrayList<>();
 
 	/**
@@ -35,11 +35,11 @@ public class FileFilterWrapper {
 					if(list[i].isFile()) {
 						arrayList.add(list[i]);
 					}
-					
+
 				}
 
 				list = file.listFiles(getDirectoryFilter()); // 过滤出所有的目录
-				
+
 				for (int i = 0; i < list.length; i++) {
 					list(list[i].toString(), suffix);
 				}

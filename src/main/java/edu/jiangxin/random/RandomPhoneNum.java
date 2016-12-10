@@ -23,7 +23,7 @@ public class RandomPhoneNum {
 		while(index >= suffix.length) {
 			index = random.nextInt(10);
 		}
-		ret = suffix[index] + ExtraRandom.nextString(9, "digit");
+		ret = suffix[index] + RandomString.nextString(9, "digit");
 		return ret;
 	}
 

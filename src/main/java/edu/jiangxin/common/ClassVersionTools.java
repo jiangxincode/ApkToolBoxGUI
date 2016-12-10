@@ -140,10 +140,4 @@ public class ClassVersionTools {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		getClassVersion("D:\\xwork-core-2.2.1");
-		modifyClassVersion("D:\\xwork-core-2.2.1", "D:\\xwork-core-2.2.1-bak", new byte[]{0x00, 0x03, 0x00, 0x2d});
-		getClassVersion("D:\\xwork-core-2.2.1-bak");
-	}
-
 }

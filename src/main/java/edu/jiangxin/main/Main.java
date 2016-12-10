@@ -13,7 +13,7 @@ import edu.jiangxin.encode.*;
  */
 public class Main {
 	final static int MAXFILENUM = 100; //The max num of the files
-	
+
 	static boolean isOSConvert = false; //Convert the file from one os pattern to another, or not
 	static boolean isBackup = false; //Backup the file that will change, or not
 	static boolean isRecovery = false; //Recovery the file that has changed, or not
@@ -21,18 +21,18 @@ public class Main {
 	static boolean isSum = false; //Sum the code lines, or not
 	static boolean isReName = false; //Rename the file, or not
 	static boolean isRemoveComment = false; //Remove the comment, or not
-	
-	
+
+
 	static String fromEncoder = null; //The encoder convert from
 	static String toEncoder = null; //The encoder convert to
 	static String pattern = null; //The pattern of OS convert
 	static String suffix = null;
 	static String[] fileName = new String[MAXFILENUM]; //The max num of the files
-	
+
 	static ArrayList<File> files = new ArrayList<>();
-	
+
 	public static void main(String[] args) throws IOException {
-		
+
 		if(args.length == 0) {
 			System.out.println("Hello world");
 		}
@@ -66,7 +66,7 @@ public class Main {
 				i++;
 				pattern = args[i];
 				continue;
-				
+
 			} else if(temp.equals("-r")) { //Recovery the file that has changed, or not
 				isRecovery = true;
 				continue;
@@ -76,7 +76,7 @@ public class Main {
 			} else if(temp.equals("-rename")){
 				isReName = true;
 				continue;
-				
+
 			} else if(temp.equals("-removecomment") || temp.equals("-rc")) {
 				isRemoveComment = true;
 				System.out.println("here");
@@ -90,7 +90,7 @@ public class Main {
 		for(int i=0;(i<fileName.length&&fileName[i]!=null);i++) { // 循环遍历各个文件
 			System.out.println("Now is processing file: " + fileName[i]);
 			files.addAll(new FileFilterWrapper().list(fileName[i], suffix));
-			
+
 			if(isBackup) { //Backup the file
 				Backup.backupFiles(files, ".backup");
 				continue ;
@@ -101,7 +101,7 @@ public class Main {
 			if(isOSConvert) { //Convert OS pattern
 				OSPatternConvert.osConvertFiles(files, pattern);
 			}
-			
+
 			if(fromEncoder==null && toEncoder!=null) { //Dectect the encoder of the file
 				fromEncoder = EncoderDetector.judgeFile(files.get(0).getAbsolutePath());
 				System.out.println(files.get(0).getAbsolutePath());
@@ -115,14 +115,14 @@ public class Main {
 			if(toEncoder!=null) { //Convert the encoder
 				System.out.println(fromEncoder);
 				EncoderConvert.encodeFiles(files, fromEncoder, toEncoder);
-				
+
 			}
 			if(isSum) {
 				int sumCode = FileProcess.sumAllFiles(files);
 				System.out.println(sumCode);
 			}
 			if(isReName) {
-				ReName.main(null);
+				//ReName.main(null);
 			}
 			if(isRemoveComment) {
 				RemoveComments.removeJavaFilesComment(files, "UTF-8");

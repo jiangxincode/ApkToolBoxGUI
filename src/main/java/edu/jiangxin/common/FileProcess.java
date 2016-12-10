@@ -17,7 +17,7 @@ public class FileProcess {
 		//deleteDir("temp/temp2");
 		System.out.println(getString("README.md", "UTF-8", null, null));
 	}
-	
+
 	/**
 	 * 复制文件
 	 * @param srcFileString
@@ -27,7 +27,7 @@ public class FileProcess {
 	public static void copyFile(String srcFileString, String desFileString,boolean isOverload) throws IOException {
 		File srcFileFile = new File(srcFileString);
 		File desFileFile = new File(desFileString);
-		
+
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(srcFileFile));
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFileFile));
 		//尚未进行覆盖判断 bad
@@ -52,19 +52,24 @@ public class FileProcess {
 	 * @param desDirString
 	 * @throws IOException
 	 */
-	public static void copyDirectory(String srcDirString, String desDirString) throws IOException {
+	public static void copyDirectory(String srcDirString, String desDirString) {
 		File srcDirFile = new File(srcDirString);
 		File desDirFile = new File(desDirString);
 		if(!desDirFile.exists()) {
 			desDirFile.mkdirs(); // 新建目标目录
 		}
-		
+
 		File[] files = srcDirFile.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
 				String srcFileTemp = files[i].getAbsolutePath();
 				String desFileTemp = desDirFile.getAbsolutePath()+File.separator+files[i].getName();
-				copyFile(srcFileTemp, desFileTemp);
+				try {
+					copyFile(srcFileTemp, desFileTemp);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			if (files[i].isDirectory()) {
 				String srcDirTemp = files[i].getAbsolutePath();
@@ -74,7 +79,7 @@ public class FileProcess {
 		}
 		System.out.println("Success to copy " + srcDirString + " to " + desDirString);
 	}
-	
+
 	/**
 	 * 移动文件
 	 * @param srcFileString
@@ -96,9 +101,9 @@ public class FileProcess {
 		if(srcFileFile.delete()) {
 			System.out.println("Success to delete srcFile");
 		}
-		
+
 	}
-	
+
 	/**
 	 * 递归删除目录
 	 * @param dir
@@ -125,7 +130,7 @@ public class FileProcess {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 删除目录组
 	 * @param dirs

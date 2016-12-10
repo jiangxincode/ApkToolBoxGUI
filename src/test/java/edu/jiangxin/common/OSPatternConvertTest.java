@@ -22,7 +22,6 @@ public class OSPatternConvertTest {
 			OSPatternConvert.unix2Dos(path+"unix.txt", path+"dos.txt");
 			assertTrue(new File(path+"dos.txt").exists());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -41,7 +40,6 @@ public class OSPatternConvertTest {
 			OSPatternConvert.osDirConvert(path+"test",path+"linux","toLinux");
 			assertTrue(new File(path+"linux").exists());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

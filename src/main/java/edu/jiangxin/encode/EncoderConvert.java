@@ -37,12 +37,12 @@ public class EncoderConvert {
 		}
 		File srcFileFile = new File(srcFileString);
 		File desFileFile = new File(desFileString);
-		
+
 		File parentDir = desFileFile.getParentFile();
 		if(!parentDir.exists()) {
 			parentDir.mkdirs();
 		}
-		
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder));
 		int ch = 0;
@@ -57,7 +57,7 @@ public class EncoderConvert {
 			srcFileFile.delete();
 		}
 	}
-	
+
 	/**
 	 * 实现文件的编码转换.
 	 * see {@link #encodeFile(String, String, String, String)}
@@ -96,7 +96,7 @@ public class EncoderConvert {
 			System.out.println("转换完成！");
 		}
 	}
-	
+
 	/**
 	 * 实现文件夹中特定文件的批量编码转换.
 	 * see {@link #encodeFile(String, String, String, String)}
@@ -110,7 +110,7 @@ public class EncoderConvert {
 			String desDirString, String desEncoder) throws IOException {
 		encodeDir(srcDirString, srcEncoder, desDirString, desEncoder,null);
 	}
-	
+
 	/**
 	 * 实现文件列表批量编码转换.
 	 * see {@link #encodeFile(String, String, String, String)}
