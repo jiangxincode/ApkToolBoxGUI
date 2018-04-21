@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name" msgid="5955735546071433666">"Registratore suoni"</string>
+    <string name="record_your_message" msgid="1583671906691662148">"Registra il messaggio"</string>
+    <string name="message_recorded" msgid="381539460921872233">"Messaggio registrato"</string>
+    <string name="review_message" msgid="201616012287839474">"Controlla messaggio"</string>
+    <string name="recording" msgid="4426791467211376099">"Registrazione in corso"</string>
+    <string name="recording_stopped" msgid="1580278719585249612">"Registrazione interrotta"</string>
+    
+    <string name="max_length_reached" msgid="6398215743584093353">"Lunghezza massima raggiunta"</string>
+    <string name="insert_sd_card" product="nosdcard" msgid="8212754638456591792">"Monta l\'archivio USB"</string>
+    <string name="insert_sd_card" product="default" msgid="2251831579676114197">"Inserisci una scheda SD"</string>
+    <string name="min_available" msgid="5493947690062988925">"<xliff:g id="MINUTES">%d</xliff:g> min a disposizione"</string>
+    <string name="sec_available" msgid="2297020788861694399">"<xliff:g id="SECONDS">%d</xliff:g> s a disposizione"</string>
+    <string name="accept" msgid="7770652589312551402">"Usa questa registrazione"</string>
+    <string name="discard" msgid="761613433029406319">"Ignora"</string>
+    <string name="button_ok" msgid="3004911343723076226">"OK"</string>
+    <string name="press_record" msgid="5039711805290780494">"Premi Registra"</string>
+    <!-- no translation found for audio_db_title_format (7912182366970749312) -->
+    <skip />
+    <string name="audio_db_artist_name" msgid="961640229118120080">"Registrazioni"</string>
+    <string name="audio_db_album_name" msgid="9072588113803264440">"Registrazioni audio"</string>
+    <string name="audio_db_playlist_name" msgid="5592939050047058162">"Registrazioni personali"</string>
+    <string name="error_sdcard_access" product="nosdcard" msgid="7292601458300337571">"Impossibile accedere all\'archivio USB"</string>
+    <string name="error_sdcard_access" product="default" msgid="8005660724361043509">"Impossibile accedere alla scheda SD"</string>
+    <string name="error_app_internal" msgid="2365923237657572011">"Errore interno dell\'applicazione"</string>
+    <string name="error_mediadb_new_record" msgid="2225774949947938064">"Impossibile salvare l\'audio registrato"</string>
+<string name="recording_list">Elenco registrazioni</string>
+ <string name="cannot_record_during_call">Chiamata in corso, riprovare.</string>
+ <string name="share_menu">Condividi</string>
+ <string name="delete_item">Elimina</string>
+ <string name="audio_has_been_saved">Audio salvato in:</string>
+ <string name="empty_list">Nessuna registrazione</string>
+ <string name="ringtone_menu">Usa come suoneria telefono</string>
+ <string name="ringtone_set">\&quot;<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\&quot; impostato come suoneria del telefono.</string>
+ <string name="prefix">&quot;Dimensioni:&quot;</string>
+</resources>
