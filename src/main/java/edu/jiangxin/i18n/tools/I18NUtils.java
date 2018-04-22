@@ -1,13 +1,9 @@
 package edu.jiangxin.i18n.tools;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Map;
-
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -15,14 +11,22 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-public class I18NUtils {
-	private static final String sourceBaseStr = "D:\\temp\\i18nTest\\res1";
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
 
-	private static final String targetBaseStr = "D:\\temp\\i18nTest\\res3";
+public class I18NUtils {
+	private static final String sourceBaseStr = "D:\\temp\\Java\\I18NTools\\src\\test\\resources\\res1";
+
+	private static final String targetBaseStr = "D:\\temp\\Java\\I18NTools\\src\\test\\resources\\res3";
 
 	private static final String itemName = "storage_is_full";
 
 	private static final String charset = "UTF-8";
+
+	private static final Logger logger = LogManager.getLogger(I18NUtils.class);
 
 	public static void main(String[] args) throws JDOMException, IOException {
 
@@ -31,7 +35,6 @@ public class I18NUtils {
 
 		int count = 0;
 		File[] sourceParentFiles = sourceBaseFile.listFiles(new FileFilter() {
-
 			public boolean accept(File pathname) {
 				return pathname.getName().startsWith("values");
 			}
@@ -53,7 +56,7 @@ public class I18NUtils {
 					if (value.equals(itemName)) {
 						File targetParentFile = new File(targetBaseFile, sourceParentFile.getName());
 						File targetFile = new File(targetParentFile, "strings.xml");
-						System.out.println("count: " + (++count) + ", in path: " + sourceFile.getCanonicalPath()
+						logger.info("count: " + (++count) + ", in path: " + sourceFile.getCanonicalPath()
 								+ ", out path: " + targetFile.getCanonicalPath());
 						if (targetFile.exists()) {
 							prePocess(targetFile, replace);
@@ -70,7 +73,7 @@ public class I18NUtils {
 							out.output(targetDoc, new FileOutputStream(targetFile));
 							postProcess(targetFile, replace);
 						} else {
-							System.err.println("output file doesn/t exist.");
+							logger.error("output file doesn/t exist.");
 						}
 						break;
 					}
