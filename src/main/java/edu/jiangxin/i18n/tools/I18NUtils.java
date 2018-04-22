@@ -28,6 +28,8 @@ public class I18NUtils {
 
 	private static final Logger logger = LogManager.getLogger(I18NUtils.class);
 
+	private static final boolean isReplace = true;
+
 	public static void main(String[] args) throws JDOMException, IOException {
 
 		File sourceBaseFile = new File(sourceBaseStr);
@@ -51,9 +53,10 @@ public class I18NUtils {
 				SAXBuilder builder = new SAXBuilder();
 				Document sourceDoc = builder.build(sourceFile);
 				Element sourceRoot = sourceDoc.getRootElement();
-				for (Element child : sourceRoot.getChildren()) {
-					String value = child.getAttributeValue("name");
-					if (value.equals(itemName)) {
+				for (Element sourceChild : sourceRoot.getChildren()) {
+					String sourceValue = sourceChild.getAttributeValue("name");
+					if (sourceValue != null && sourceValue.equals(itemName)) {
+
 						File targetParentFile = new File(targetBaseFile, sourceParentFile.getName());
 						File targetFile = new File(targetParentFile, "strings.xml");
 						logger.info("count: " + (++count) + ", in path: " + sourceFile.getCanonicalPath()
@@ -62,9 +65,25 @@ public class I18NUtils {
 							prePocess(targetFile, replace);
 							Document targetDoc = builder.build(targetFile);
 							Element targetRoot = targetDoc.getRootElement();
-							targetRoot.addContent("    ");
-							targetRoot.addContent((Element) child.clone());
-							targetRoot.addContent("\n");
+							boolean isFinished = false;
+
+							for (Element targetChild : targetRoot.getChildren()) {
+								String targetValue = targetChild.getAttributeValue("name");
+								if (targetValue != null && targetValue.equals(itemName)) {
+									if (isReplace) {
+										targetChild.setText(sourceChild.getText());
+										isFinished = true;
+									}
+									break;
+								}
+							}
+
+							if (!isFinished) {
+								targetRoot.addContent("    ");
+								targetRoot.addContent((Element) sourceChild.clone());
+								targetRoot.addContent("\n");
+							}
+
 							XMLOutputter out = new XMLOutputter();
 							Format format = Format.getRawFormat();
 							format.setEncoding("UTF-8");
