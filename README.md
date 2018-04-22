@@ -11,7 +11,7 @@ I18NTools是一组与Android国际化相关的小工具的集合。目前有如�
 
 ## 使用说明
 
-使用Eclipse或者IDEA等工具导入此Maven项目，根据实际使用情况进行定制。
+使用Eclipse或者IDEA等工具导入此Maven项目，根据实际使用情况进行定制。JDK8+
 
 ## 注意点
 

@@ -72,8 +72,8 @@ public class I18NUtils {
 								if (targetValue != null && targetValue.equals(itemName)) {
 									if (isReplace) {
 										targetChild.setText(sourceChild.getText());
-										isFinished = true;
 									}
+									isFinished = true;
 									break;
 								}
 							}
