@@ -1,14 +1,8 @@
 package edu.jiangxin.apktoolbox.main;
 
 import java.awt.BorderLayout;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
@@ -24,7 +18,9 @@ import javax.swing.JTree;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
-import edu.jiangxin.apktoolbox.about.AddressMouseListener;
+import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
+import edu.jiangxin.apktoolbox.help.AboutMouseListener;
+import edu.jiangxin.apktoolbox.monkey.MonkeyMouseListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenshotMouseListener;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -58,24 +54,36 @@ public class MainFrame extends JFrame {
 		setSize(700, 500);
 		Utils.setJFrameCenterInScreen(this);
 
-		JMenuBar jMenuBar = new JMenuBar();
-		setJMenuBar(jMenuBar);
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
 		
 		
-		JMenu screenshotJMenu = new JMenu("Screnshot");
-		jMenuBar.add(screenshotJMenu);
+		JMenu screenshotMenu = new JMenu("Screnshot");
+		menuBar.add(screenshotMenu);
 		
-		JMenuItem screenShotJMenuItem = new JMenuItem("Screnshot");
-		screenShotJMenuItem.addMouseListener(new ScreenshotMouseListener());
-		screenshotJMenu.add(screenShotJMenuItem);
+		JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
+		screenShotMenuItem.addMouseListener(new ScreenshotMouseListener());
+		screenshotMenu.add(screenShotMenuItem);
+		
+		
+		JMenu testMenu = new JMenu("Test");
+		menuBar.add(testMenu);
+		
+		JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
+		monkeyMenuItem.addMouseListener(new MonkeyMouseListener());
+		testMenu.add(monkeyMenuItem);
 
 		
-		JMenu aboutJMenu = new JMenu("About");
-		jMenuBar.add(aboutJMenu);
+		JMenu helpMenu = new JMenu("Help");
+		menuBar.add(helpMenu);
 		
-		JMenuItem addressAboutMenuItem = new JMenuItem("Address");
-		addressAboutMenuItem.addMouseListener(new AddressMouseListener());
-		aboutJMenu.add(addressAboutMenuItem);
+		JMenuItem contributeMenuItem = new JMenuItem("Contribute");
+		contributeMenuItem.addMouseListener(new ContributeMouseListener());
+		helpMenu.add(contributeMenuItem);
+		
+		JMenuItem aboutMenuItem = new JMenuItem("About");
+		aboutMenuItem.addMouseListener(new AboutMouseListener());
+		helpMenu.add(aboutMenuItem);
 		
 		
 		contentPane = new JPanel();

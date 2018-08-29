@@ -8,7 +8,53 @@
      <properties>
           <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
-     
+     <dependencies>
+          <dependency>
+               <groupId>commons-io</groupId>
+               <artifactId>commons-io</artifactId>
+               <version>2.6</version>
+          </dependency>
+          <dependency>
+               <groupId>org.apache.commons</groupId>
+               <artifactId>commons-collections4</artifactId>
+               <version>4.1</version>
+          </dependency>
+          <dependency>
+               <groupId>org.apache.commons</groupId>
+               <artifactId>commons-lang3</artifactId>
+               <version>3.6</version>
+          </dependency>
+          <dependency>
+               <groupId>org.apache.logging.log4j</groupId>
+               <artifactId>log4j-api</artifactId>
+               <version>2.11.0</version>
+          </dependency>
+          <dependency>
+               <groupId>org.apache.logging.log4j</groupId>
+               <artifactId>log4j-core</artifactId>
+               <version>2.11.0</version>
+          </dependency>
+          <dependency>
+               <groupId>org.apache.commons</groupId>
+               <artifactId>commons-configuration2</artifactId>
+               <version>2.3</version>
+          </dependency>
+          <dependency>
+               <groupId>com.vladsch.flexmark</groupId>
+               <artifactId>flexmark</artifactId>
+               <version>0.34.22</version>
+          </dependency>
+          <dependency>
+               <groupId>com.vladsch.flexmark</groupId>
+               <artifactId>flexmark-util</artifactId>
+               <version>0.34.22</version>
+          </dependency>
+          <dependency>
+               <groupId>com.vladsch.flexmark</groupId>
+               <artifactId>flexmark-ext-tables</artifactId>
+               <version>0.34.22</version>
+          </dependency>
+     </dependencies>
      <build>
           <plugins>
                <plugin>
