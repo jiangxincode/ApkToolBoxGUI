@@ -25,6 +25,8 @@ import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
 import edu.jiangxin.apktoolbox.monkey.MonkeyMouseListener;
 import edu.jiangxin.apktoolbox.reverse.ApktoolDecodeMouseListener;
 import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildMouseListener;
+import edu.jiangxin.apktoolbox.reverse.JADXMouseListener;
+import edu.jiangxin.apktoolbox.reverse.JDMouseListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenshotMouseListener;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -70,7 +72,7 @@ public class MainFrame extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu reverseMenu = new JMenu("Reverse Engineering");
+		JMenu reverseMenu = new JMenu("Reverse");
 		menuBar.add(reverseMenu);
 
 		JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode");
@@ -80,6 +82,14 @@ public class MainFrame extends JFrame {
 		JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
 		apktoolRebuildMenuItem.addMouseListener(new ApktoolRebuildMouseListener());
 		reverseMenu.add(apktoolRebuildMenuItem);
+		
+		JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
+		jDMenuItem.addMouseListener(new JDMouseListener());
+		reverseMenu.add(jDMenuItem);
+		
+		JMenuItem jADXMenuItem = new JMenuItem("JADX");
+		jADXMenuItem.addMouseListener(new JADXMouseListener());
+		reverseMenu.add(jADXMenuItem);
 
 		JMenu screenshotMenu = new JMenu("Screnshot");
 		menuBar.add(screenshotMenu);

@@ -183,7 +183,7 @@ public class ApktoolDecodeFrame extends JFrame {
 					new StreamHandler(process.getInputStream(), 0).start();
 					new StreamHandler(process.getErrorStream(), 1).start();
 				} catch (IOException e1) {
-					logger.error("decode faile", e);
+					logger.error("decode fail", e);
 				}
 			}
 		});

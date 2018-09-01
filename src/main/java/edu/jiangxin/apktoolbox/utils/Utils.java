@@ -110,6 +110,10 @@ public class Utils {
 
 	public static void saveConfiguration() {
 		try {
+			if (builder == null) {
+				logger.info("builder is null");
+				return;
+			}
 			builder.save();
 		} catch (ConfigurationException e) {
 			logger.error("saveConfiguration error", e);

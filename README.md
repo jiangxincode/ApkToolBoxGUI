@@ -18,6 +18,8 @@ A tool for simplify android development.
 | Name | Version | Website |
 | ------ | ------ | ------ |
 | Apktool | v2.3.3 | <https://github.com/iBotPeaches/Apktool> |
+| GD-GUI | 1.4.0 | <http://jd.benow.ca> |
+| JADX-GUI | v0.8.0 | <https://github.com/skylot/jadx> |
 
 ### Contributors
 
