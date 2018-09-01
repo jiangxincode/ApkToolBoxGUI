@@ -13,6 +13,12 @@ A tool for simplify android development.
 3. Ensure tests pass (or hopefully adding tests!)
 4. Submit pull request/issue
 
+## Dependencies
+
+| Name | Version | Website |
+| ------ | ------ | ------ |
+| Apktool | v2.3.3 | <https://github.com/iBotPeaches/Apktool> |
+
 ### Contributors
 
 All contributors will be listed here.

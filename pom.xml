@@ -40,6 +40,11 @@
                <version>2.3</version>
           </dependency>
           <dependency>
+               <groupId>commons-beanutils</groupId>
+               <artifactId>commons-beanutils</artifactId>
+               <version>1.9.3</version>
+          </dependency>
+          <dependency>
                <groupId>com.vladsch.flexmark</groupId>
                <artifactId>flexmark</artifactId>
                <version>0.34.22</version>

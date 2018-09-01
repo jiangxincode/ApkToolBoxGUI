@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -13,30 +11,73 @@ import java.util.Date;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Utils {
 	private static final Logger logger = LogManager.getLogger(Utils.class);
 
-	public static void setJFrameCenterInScreen(JFrame jFrame) {
-		int windowWidth = jFrame.getWidth();
-		int windowHeight = jFrame.getHeight();
+	private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
+
+	public static void setJFrameCenterInScreen(JFrame frame) {
+		if (frame == null) {
+			logger.error("frame is null");
+			return;
+		}
+		int windowWidth = frame.getWidth();
+		int windowHeight = frame.getHeight();
 		Toolkit kit = Toolkit.getDefaultToolkit();
+		if (kit == null) {
+			logger.error("kit is null");
+			return;
+		}
 		Dimension screenSize = kit.getScreenSize();
+		if (screenSize == null) {
+			logger.error("screenSize is null");
+			return;
+		}
 		int screenWidth = screenSize.width;
 		int screenHeight = screenSize.height;
-		jFrame.setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);//设置窗口居中显示 
+		frame.setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
 	}
 
-	public static String loadStream(InputStream in) throws IOException {
-		int ptr = 0;
-		in = new BufferedInputStream(in);
+	public static String loadStream(InputStream in) {
 		StringBuffer buffer = new StringBuffer();
-		while ((ptr = in.read()) != -1) {
-			buffer.append((char) ptr);
+		if (in == null) {
+			logger.error("in is null");
+			return buffer.toString();
+		}
+
+		BufferedInputStream bis = new BufferedInputStream(in);
+		try {
+			int ptr = 0;
+			while ((ptr = bis.read()) != -1) {
+				buffer.append((char) ptr);
+			}
+		} catch (IOException e) {
+			logger.error("read bis error", e);
+		} finally {
+			if (bis != null) {
+				try {
+					bis.close();
+				} catch (IOException e) {
+					logger.error("bis close error", e);
+				}
+			}
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					logger.error("in close error", e);
+				}
+			}
 		}
 		return buffer.toString();
 	}
@@ -46,56 +87,61 @@ public class Utils {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 			return dateFormat.format(new Date());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("getCurrentDateString error", e);
 		}
 		return null;
 	}
 
-	public static String getString(String key, String defaultValue) {
-		String ret = null;
-		try {
-			String configPath;
-			String userProfilePath = System.getenv("USERPROFILE") + File.separator + "apktoolboxgui.properties";
-			File userProfile = new File(userProfilePath);
-			if (userProfile.exists()) {
-				configPath = userProfile.getCanonicalPath();
-				logger.info("user config exists: " + configPath);
-				FileReader reader = new FileReader(configPath);
-				PropertiesConfiguration conf = new PropertiesConfiguration();
-				conf.read(reader);
-				ret = conf.getString(key, defaultValue);
-			} else {
-				return defaultValue;
-			}
-		} catch (ConfigurationException | IOException e1) {
-			logger.error("getString faild: " + e1.getMessage());
-			ret = defaultValue;
+	public static Configuration getConfiguration() {
+		if (builder == null) {
+			logger.info("builder is null, create it");
+			Parameters params = new Parameters();
+			builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+					.configure(params.properties().setFileName("apktoolboxgui.properties"));
 		}
-		return ret;
+		Configuration conf = null;
+		try {
+			conf = builder.getConfiguration();
+		} catch (ConfigurationException e) {
+			logger.error("getConfiguration error", e);
+		}
+		return conf;
 	}
 
-	public static void setString(String key, String value) {
-		FileWriter writer = null;
+	public static void saveConfiguration() {
 		try {
-			String configPath;
-			String userProfilePath = System.getenv("USERPROFILE") + File.separator + "apktoolboxgui.properties";
-			File userProfile = new File(userProfilePath);
-			configPath = userProfile.getCanonicalPath();
-			logger.info("user config exists: " + configPath);
-			writer = new FileWriter(configPath);
-			PropertiesConfiguration conf = new PropertiesConfiguration();
-			conf.setProperty(key, value);
-			conf.write(writer);
-		} catch (ConfigurationException | IOException e1) {
-			logger.error("getString faild: " + e1.getMessage());
-		} finally {
-			if (writer != null) {
+			builder.save();
+		} catch (ConfigurationException e) {
+			logger.error("saveConfiguration error", e);
+		}
+	}
+	
+	public static String getToolsPath () {
+		String tmp = Utils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		if (StringUtils.isEmpty(tmp)) {
+			logger.error("tmp is empty");
+			return null;
+		}
+		File file = new File(tmp);
+		if (!file.exists()) {
+			logger.error("file does not exist");
+			return null;
+		}
+		while (file.getParentFile().exists()) {
+			File parent = file.getParentFile();
+			File tools = new File(parent, "tools");
+			if (tools.exists()) {
 				try {
-					writer.close();
+					return tools.getCanonicalPath();
 				} catch (IOException e) {
-					logger.error("writer close failed.");
+					logger.error("getCanonicalPath fail");
+					return null;
 				}
 			}
+			file = file.getParentFile();
 		}
+		
+		return null;
+		
 	}
 }

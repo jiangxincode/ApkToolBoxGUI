@@ -3,6 +3,8 @@ package edu.jiangxin.apktoolbox.main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
@@ -18,9 +20,11 @@ import javax.swing.JTree;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
-import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
 import edu.jiangxin.apktoolbox.help.AboutMouseListener;
+import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
 import edu.jiangxin.apktoolbox.monkey.MonkeyMouseListener;
+import edu.jiangxin.apktoolbox.reverse.ApktoolDecodeMouseListener;
+import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildMouseListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenshotMouseListener;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -54,38 +58,54 @@ public class MainFrame extends JFrame {
 		setSize(700, 500);
 		Utils.setJFrameCenterInScreen(this);
 
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				Utils.saveConfiguration();
+			}
+		});
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
-		
+
+		JMenu reverseMenu = new JMenu("Reverse Engineering");
+		menuBar.add(reverseMenu);
+
+		JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode");
+		apktoolDecodeMenuItem.addMouseListener(new ApktoolDecodeMouseListener());
+		reverseMenu.add(apktoolDecodeMenuItem);
+
+		JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
+		apktoolRebuildMenuItem.addMouseListener(new ApktoolRebuildMouseListener());
+		reverseMenu.add(apktoolRebuildMenuItem);
+
 		JMenu screenshotMenu = new JMenu("Screnshot");
 		menuBar.add(screenshotMenu);
-		
+
 		JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
 		screenShotMenuItem.addMouseListener(new ScreenshotMouseListener());
 		screenshotMenu.add(screenShotMenuItem);
-		
-		
+
 		JMenu testMenu = new JMenu("Test");
 		menuBar.add(testMenu);
-		
+
 		JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
 		monkeyMenuItem.addMouseListener(new MonkeyMouseListener());
 		testMenu.add(monkeyMenuItem);
 
-		
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
-		
+
 		JMenuItem contributeMenuItem = new JMenuItem("Contribute");
 		contributeMenuItem.addMouseListener(new ContributeMouseListener());
 		helpMenu.add(contributeMenuItem);
-		
+
 		JMenuItem aboutMenuItem = new JMenuItem("About");
 		aboutMenuItem.addMouseListener(new AboutMouseListener());
 		helpMenu.add(aboutMenuItem);
-		
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -111,10 +131,12 @@ public class MainFrame extends JFrame {
 			 *
 			 */
 			private static final long serialVersionUID = 1L;
-			String[] values = new String[] {"1", "4", "5", "6"};
+			String[] values = new String[] { "1", "4", "5", "6" };
+
 			public int getSize() {
 				return values.length;
 			}
+
 			public Object getElementAt(int index) {
 				return values[index];
 			}

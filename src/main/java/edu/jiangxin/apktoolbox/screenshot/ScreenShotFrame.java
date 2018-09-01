@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +32,8 @@ public class ScreenShotFrame extends JFrame {
 	private static final Logger logger = LogManager.getLogger(ScreenShotFrame.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	private Configuration conf = Utils.getConfiguration();
 
 	public ScreenShotFrame() throws HeadlessException {
 		super();
@@ -48,7 +51,7 @@ public class ScreenShotFrame extends JFrame {
 		contentPane.add(directoryPanel);
 
 		JTextField directoryTextField = new JTextField();
-		directoryTextField.setText(Utils.getString("default.screenshot.save.dir", System.getenv("USERPROFILE")));
+		directoryTextField.setText(conf.getString("default.screenshot.save.dir", System.getenv("USERPROFILE")));
 
 		JButton directoryButton = new JButton("Save Directory");
 		directoryButton.addMouseListener(new MouseAdapter() {
@@ -63,7 +66,7 @@ public class ScreenShotFrame extends JFrame {
 				case JFileChooser.APPROVE_OPTION:
 					File file = jfc.getSelectedFile();
 					directoryTextField.setText(file.getAbsolutePath());
-					Utils.setString("default.screenshot.save.dir", file.getAbsolutePath());
+					conf.setProperty("default.screenshot.save.dir", file.getAbsolutePath());
 					break;
 
 				default:
@@ -107,7 +110,7 @@ public class ScreenShotFrame extends JFrame {
 				String dirName = fileNameTextField.getText();
 				if (StringUtils.isEmpty(dirName)) {
 					String defaultDir = System.getenv("USERPROFILE");
-					dirName = Utils.getString("default.screenshot.save.dir", defaultDir);
+					dirName = conf.getString("default.screenshot.save.dir", defaultDir);
 					logger.info("dirName: " + dirName);
 				}
 				String fileName = fileNameTextField.getText();

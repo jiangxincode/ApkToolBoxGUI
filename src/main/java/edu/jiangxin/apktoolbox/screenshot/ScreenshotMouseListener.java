@@ -9,8 +9,8 @@ public class ScreenshotMouseListener extends MouseAdapter {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		super.mouseClicked(e);
-		ScreenShotFrame screenShotJFrame = new ScreenShotFrame();
-		screenShotJFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(screenShotJFrame);
+		ScreenShotFrame screenShotFrame = new ScreenShotFrame();
+		screenShotFrame.setVisible(true);
+		Utils.setJFrameCenterInScreen(screenShotFrame);
 	}
 }
