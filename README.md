@@ -20,6 +20,7 @@ A tool for simplify android development.
 | Apktool | v2.3.3 | <https://github.com/iBotPeaches/Apktool> |
 | GD-GUI | 1.4.0 | <http://jd.benow.ca> |
 | JADX-GUI | v0.8.0 | <https://github.com/skylot/jadx> |
+| ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> |
 
 ### Contributors
 

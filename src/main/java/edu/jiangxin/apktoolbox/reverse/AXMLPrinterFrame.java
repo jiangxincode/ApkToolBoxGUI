@@ -17,26 +17,25 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ApktoolRebuildFrame extends JFrame {
-	
-	private static final Logger logger = LogManager.getLogger(ApktoolRebuildFrame.class);
+public class AXMLPrinterFrame extends JFrame {
+	private static final Logger logger = LogManager.getLogger(ApktoolDecodeFrame.class);
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Configuration conf = Utils.getConfiguration();
-	
-	public ApktoolRebuildFrame() throws HeadlessException {
+
+	public AXMLPrinterFrame() throws HeadlessException {
 		super();
-		setTitle("Apktool Rebuild");
+		setTitle("ARM2ASM");
 		setSize(600, 160);
 		setResizable(false);
 
@@ -51,16 +50,16 @@ public class ApktoolRebuildFrame extends JFrame {
 		contentPane.add(sourcePanel);
 
 		JTextField srcTextField = new JTextField();
-		srcTextField.setText(conf.getString("apktool.rebuild.src.dir"));
+		srcTextField.setText(conf.getString("apktool.decode.src.file"));
 
-		JButton srcButton = new JButton("Source Dir");
+		JLabel srcButton = new JLabel("Source File");
 		srcButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				jfc.setDialogTitle("select a directory");
+				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				jfc.setDialogTitle("select a file");
 				int ret = jfc.showDialog(new JLabel(), null);
 				switch (ret) {
 				case JFileChooser.APPROVE_OPTION:
@@ -82,18 +81,16 @@ public class ApktoolRebuildFrame extends JFrame {
 		contentPane.add(targetPanel);
 
 		JTextField targetTextField = new JTextField();
-		targetTextField.setText(conf.getString("apktool.rebuild.target.file"));
+		targetTextField.setText(conf.getString("apktool.decode.target.dir"));
 
-		JButton targetButton = new JButton("Save File");
+		JButton targetButton = new JButton("Save Dir");
 		targetButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				JFileChooser jfc = new JFileChooser();
-				jfc.setDialogType(JFileChooser.SAVE_DIALOG);
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				jfc.setDialogTitle("save to");
-				jfc.setFileFilter(new APKFileFilter());
 				int ret = jfc.showDialog(new JLabel(), null);
 				switch (ret) {
 				case JFileChooser.APPROVE_OPTION:
@@ -110,29 +107,33 @@ public class ApktoolRebuildFrame extends JFrame {
 
 		targetPanel.add(targetTextField);
 		targetPanel.add(targetButton);
-		
+
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 		contentPane.add(optionPanel);
 
-		JCheckBox signAPK = new JCheckBox("sign APK");
-		signAPK.setSelected(false);
-		optionPanel.add(signAPK);
+		JCheckBox resouceIgnore = new JCheckBox("Ignore res");
+		resouceIgnore.setSelected(false);
+		optionPanel.add(resouceIgnore);
+		
+		JCheckBox override = new JCheckBox("Override");
+		override.setSelected(true);
+		optionPanel.add(override);
 
 		JPanel operationPanel = new JPanel();
 		operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 		contentPane.add(operationPanel);
 
-		JButton sceenshotButton = new JButton("Rebuild");
+		JButton sceenshotButton = new JButton("Decode");
 		sceenshotButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				File srcFile = new File(srcTextField.getText());
-				if (!srcFile.exists() || !srcFile.isDirectory()) {
+				if (!srcFile.exists() || !srcFile.isFile()) {
 					logger.error("srcFile is invalid");
 					Toolkit.getDefaultToolkit().beep();
-					JOptionPane.showMessageDialog(ApktoolRebuildFrame.this, "Source directory is invalid", "ERROR",
+					JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Source file is invalid", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 					srcTextField.requestFocus();
 					return;
@@ -144,13 +145,12 @@ public class ApktoolRebuildFrame extends JFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("apktool.rebuild.src.dir", srcPath);
+				conf.setProperty("apktool.decode.src.file", srcPath);
 				File targetFile = new File(targetTextField.getText());
-				File targetParentFile = targetFile.getParentFile();
-				if (!targetParentFile.exists() || !targetParentFile.isDirectory()) {
+				if (!targetFile.exists() || !targetFile.isDirectory()) {
 					logger.error("targetFile is invalid");
 					Toolkit.getDefaultToolkit().beep();
-					JOptionPane.showMessageDialog(ApktoolRebuildFrame.this, "Target file is invalid", "ERROR",
+					JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Target directory is invalid", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 					targetTextField.requestFocus();
 					return;
@@ -162,56 +162,34 @@ public class ApktoolRebuildFrame extends JFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("apktool.rebuild.target.file", targetPath);
+				conf.setProperty("apktool.decode.target.dir", targetPath);
 				try {
 					StringBuilder sb = new StringBuilder();
 					sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"")
 							.append(" \"").append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"")
-							.append(" b ").append(srcPath)
-							.append(" -o ").append(targetPath);
+							.append(" d ").append(srcPath)
+							.append(" -o ").append(targetPath).append(File.separator)
+							.append(FilenameUtils.getBaseName(srcFile.getCanonicalPath()));
+					if (resouceIgnore.isSelected()) {
+						sb.append(" -r");
+					}
+					if (override.isSelected()) {
+						sb.append(" -f");
+					}
 					String cmd = sb.toString();
 					logger.info(cmd);
-					Process process1 = Runtime.getRuntime().exec(cmd);
-					new StreamHandler(process1.getInputStream(), 0).start();
-					new StreamHandler(process1.getErrorStream(), 1).start();
-					process1.waitFor();
-					logger.info("rebuild finish");
-					if (signAPK.isSelected()) {
-						sb = new StringBuilder();
-						sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"")
-						.append(" \"").append(Utils.getToolsPath()).append(File.separator).append("apksigner.jar\"")
-						.append(" -keystore ").append(Utils.getToolsPath()).append(File.separator).append("debug.keystore")
-						.append(" -alias androiddebugkey -pswd android ").append(targetPath);
-						cmd = sb.toString();
-						logger.info(cmd);
-						Process process2 = Runtime.getRuntime().exec(cmd);
-						new StreamHandler(process2.getInputStream(), 0).start();
-						new StreamHandler(process2.getErrorStream(), 1).start();
-						process1.waitFor();
-						logger.info("apksign finish");
-					}
+					Process process = Runtime.getRuntime().exec(cmd);
+					new StreamHandler(process.getInputStream(), 0).start();
+					new StreamHandler(process.getErrorStream(), 1).start();
+					process.waitFor();
+					logger.info("decode finish");
 				} catch (IOException | InterruptedException e1) {
-					logger.error("rebuild or apksign fail", e);
+					logger.error("decode fail", e);
 				}
 			}
 		});
 
 		operationPanel.add(sceenshotButton);
 	}
-	
-	class APKFileFilter extends FileFilter {
-
-		 @Override
-		 public boolean accept(File f) {
-		  String nameString = f.getName();
-		  return nameString.toLowerCase().endsWith(".apk");
-		 }
-
-		 @Override
-		 public String getDescription() {
-		  return "*.apk";
-		 }
-		 
-		}
 
 }

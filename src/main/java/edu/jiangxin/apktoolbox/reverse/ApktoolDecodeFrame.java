@@ -51,7 +51,7 @@ public class ApktoolDecodeFrame extends JFrame {
 		contentPane.add(sourcePanel);
 
 		JTextField srcTextField = new JTextField();
-		srcTextField.setText(conf.getString("default.apktool.decode.src.file"));
+		srcTextField.setText(conf.getString("apktool.decode.src.file"));
 
 		JButton srcButton = new JButton("Source File");
 		srcButton.addMouseListener(new MouseAdapter() {
@@ -82,7 +82,7 @@ public class ApktoolDecodeFrame extends JFrame {
 		contentPane.add(targetPanel);
 
 		JTextField targetTextField = new JTextField();
-		targetTextField.setText(conf.getString("default.apktool.decode.target.dir"));
+		targetTextField.setText(conf.getString("apktool.decode.target.dir"));
 
 		JButton targetButton = new JButton("Save Dir");
 		targetButton.addMouseListener(new MouseAdapter() {
@@ -146,7 +146,7 @@ public class ApktoolDecodeFrame extends JFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("default.apktool.decode.src.file", srcPath);
+				conf.setProperty("apktool.decode.src.file", srcPath);
 				File targetFile = new File(targetTextField.getText());
 				if (!targetFile.exists() || !targetFile.isDirectory()) {
 					logger.error("targetFile is invalid");
@@ -163,7 +163,7 @@ public class ApktoolDecodeFrame extends JFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("default.apktool.decode.target.dir", targetPath);
+				conf.setProperty("apktool.decode.target.dir", targetPath);
 				try {
 					StringBuilder sb = new StringBuilder();
 					sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"")
@@ -182,7 +182,9 @@ public class ApktoolDecodeFrame extends JFrame {
 					Process process = Runtime.getRuntime().exec(cmd);
 					new StreamHandler(process.getInputStream(), 0).start();
 					new StreamHandler(process.getErrorStream(), 1).start();
-				} catch (IOException e1) {
+					process.waitFor();
+					logger.info("decode finish");
+				} catch (IOException | InterruptedException e1) {
 					logger.error("decode fail", e);
 				}
 			}

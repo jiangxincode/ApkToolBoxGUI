@@ -5,12 +5,12 @@ import java.awt.event.MouseEvent;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ApktoolDecodeMouseListener extends MouseAdapter {
+public class AXMLPrinterMouseListener extends MouseAdapter {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		super.mouseClicked(e);
-		ApktoolDecodeFrame apkSignerFrame = new ApktoolDecodeFrame();
-		apkSignerFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(apkSignerFrame);
+		AXMLPrinterFrame arm2asmFrame = new AXMLPrinterFrame();
+		arm2asmFrame.setVisible(true);
+		Utils.setJFrameCenterInScreen(arm2asmFrame);
 	}
 }

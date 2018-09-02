@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class ScreenShotFrame extends JFrame {
@@ -51,7 +52,7 @@ public class ScreenShotFrame extends JFrame {
 		contentPane.add(directoryPanel);
 
 		JTextField directoryTextField = new JTextField();
-		directoryTextField.setText(conf.getString("default.screenshot.save.dir", System.getenv("USERPROFILE")));
+		directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
 
 		JButton directoryButton = new JButton("Save Directory");
 		directoryButton.addMouseListener(new MouseAdapter() {
@@ -66,7 +67,7 @@ public class ScreenShotFrame extends JFrame {
 				case JFileChooser.APPROVE_OPTION:
 					File file = jfc.getSelectedFile();
 					directoryTextField.setText(file.getAbsolutePath());
-					conf.setProperty("default.screenshot.save.dir", file.getAbsolutePath());
+					conf.setProperty("screenshot.save.dir", file.getAbsolutePath());
 					break;
 
 				default:
@@ -110,7 +111,7 @@ public class ScreenShotFrame extends JFrame {
 				String dirName = fileNameTextField.getText();
 				if (StringUtils.isEmpty(dirName)) {
 					String defaultDir = System.getenv("USERPROFILE");
-					dirName = conf.getString("default.screenshot.save.dir", defaultDir);
+					dirName = conf.getString("screenshot.save.dir", defaultDir);
 					logger.info("dirName: " + dirName);
 				}
 				String fileName = fileNameTextField.getText();
@@ -124,25 +125,31 @@ public class ScreenShotFrame extends JFrame {
 				try {
 					Process process1 = Runtime.getRuntime()
 							.exec("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
-					logger.info(Utils.loadStream(process1.getInputStream()));
-					logger.error(Utils.loadStream(process1.getErrorStream()));
+					new StreamHandler(process1.getInputStream(), 0).start();
+					new StreamHandler(process1.getErrorStream(), 1).start();
+					process1.waitFor();
+					logger.info("screencap finish");
 					Process process2 = Runtime.getRuntime()
 							.exec("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
-					logger.info(Utils.loadStream(process2.getInputStream()));
-					logger.error(Utils.loadStream(process2.getErrorStream()));
+					new StreamHandler(process2.getInputStream(), 0).start();
+					new StreamHandler(process2.getErrorStream(), 1).start();
+					process2.waitFor();
+					logger.info("pull finish");
 					if (openCheckBox.isSelected()) {
-						logger.info("open the directory");
 						Process process3 = Runtime.getRuntime().exec("explorer /e,/select," + file.getCanonicalPath());
-						logger.info(Utils.loadStream(process3.getInputStream()));
-						logger.error(Utils.loadStream(process3.getErrorStream()));
+						new StreamHandler(process3.getInputStream(), 0).start();
+						new StreamHandler(process3.getErrorStream(), 1).start();
+						process3.waitFor();
+						logger.info("open dir finish");
 					}
 					if (copyCheckBox.isSelected()) {
 						logger.info("copy the snapshot");
 						Image image = ImageIO.read(file);
 						setClipboardImage(ScreenShotFrame.this, image);
+						logger.info("copy finish");
 					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} catch (IOException | InterruptedException e1) {
+					logger.error("screenshot fail", e1);
 				}
 			}
 		});
