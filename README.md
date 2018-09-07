@@ -1,6 +1,7 @@
 # ApkToolBoxGUI
 
 [![Build status](https://ci.appveyor.com/api/projects/status/0qhudb0r6pi18l5s?svg=true)](https://ci.appveyor.com/project/jiangxincode/apktoolboxgui)
+[![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 
 A open source tool for simplify android development. It targets to replace all features of these tools:
 
