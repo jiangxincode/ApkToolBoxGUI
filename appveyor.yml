@@ -1,0 +1,25 @@
+##
+## Build with appveyor
+##
+#
+environment:
+  matrix:
+    # - JAVA_HOME: C:\Program Files\Java\jdk1.7.0
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+
+install:
+  - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%
+  - cmd: java -version
+  - cmd: git config --global user.name "jiangxincode"
+  - cmd: git config --global user.email "jiangxinnju@163.com"
+
+platform:
+  # - x86
+  - x64
+
+configuration:
+  - Release
+
+build_script:
+  - mvn -v
+  - mvn clean package

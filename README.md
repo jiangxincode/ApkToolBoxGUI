@@ -1,5 +1,7 @@
 # ApkToolBoxGUI
 
+[![Build status](https://ci.appveyor.com/api/projects/status/0qhudb0r6pi18l5s?svg=true)](https://ci.appveyor.com/project/jiangxincode/apktoolboxgui)
+
 A open source tool for simplify android development. It targets to replace all features of these tools:
 
 * ApkToolBox(C#): <https://github.com/qtfreet00/ApkToolBox>
