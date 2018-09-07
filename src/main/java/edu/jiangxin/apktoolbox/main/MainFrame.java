@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -42,6 +43,7 @@ public class MainFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					MainFrame frame = new MainFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -78,19 +80,19 @@ public class MainFrame extends JFrame {
 		JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
 		apktoolRebuildMenuItem.addMouseListener(new ApktoolRebuildMouseListener());
 		reverseMenu.add(apktoolRebuildMenuItem);
-		
+
 		JMenuItem apkSignMenuItem = new JMenuItem("ApkSigner");
 		apkSignMenuItem.addMouseListener(new ApkSignerMouseListener());
 		reverseMenu.add(apkSignMenuItem);
-		
+
 		JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
 		jDMenuItem.addMouseListener(new JDMouseListener());
 		reverseMenu.add(jDMenuItem);
-		
+
 		JMenuItem jADXMenuItem = new JMenuItem("JADX-GUI");
 		jADXMenuItem.addMouseListener(new JADXMouseListener());
 		reverseMenu.add(jADXMenuItem);
-		
+
 		JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
 		aXMLPrinter.addMouseListener(new AXMLPrinterMouseListener());
 		reverseMenu.add(aXMLPrinter);

@@ -5,11 +5,14 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,7 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,8 +39,8 @@ public class AXMLPrinterFrame extends JFrame {
 
 	public AXMLPrinterFrame() throws HeadlessException {
 		super();
-		setTitle("ARM2ASM");
-		setSize(600, 160);
+		setTitle("AXMLPrinter3");
+		setSize(600, 120);
 		setResizable(false);
 
 		JPanel contentPane = new JPanel();
@@ -50,9 +54,9 @@ public class AXMLPrinterFrame extends JFrame {
 		contentPane.add(sourcePanel);
 
 		JTextField srcTextField = new JTextField();
-		srcTextField.setText(conf.getString("apktool.decode.src.file"));
+		srcTextField.setText(conf.getString("axmlprinter.src.file"));
 
-		JLabel srcButton = new JLabel("Source File");
+		JButton srcButton = new JButton("Source File");
 		srcButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -81,7 +85,7 @@ public class AXMLPrinterFrame extends JFrame {
 		contentPane.add(targetPanel);
 
 		JTextField targetTextField = new JTextField();
-		targetTextField.setText(conf.getString("apktool.decode.target.dir"));
+		targetTextField.setText(conf.getString("axmlprinter.target.dir"));
 
 		JButton targetButton = new JButton("Save Dir");
 		targetButton.addMouseListener(new MouseAdapter() {
@@ -108,23 +112,11 @@ public class AXMLPrinterFrame extends JFrame {
 		targetPanel.add(targetTextField);
 		targetPanel.add(targetButton);
 
-		JPanel optionPanel = new JPanel();
-		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
-		contentPane.add(optionPanel);
-
-		JCheckBox resouceIgnore = new JCheckBox("Ignore res");
-		resouceIgnore.setSelected(false);
-		optionPanel.add(resouceIgnore);
-		
-		JCheckBox override = new JCheckBox("Override");
-		override.setSelected(true);
-		optionPanel.add(override);
-
 		JPanel operationPanel = new JPanel();
 		operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 		contentPane.add(operationPanel);
 
-		JButton sceenshotButton = new JButton("Decode");
+		JButton sceenshotButton = new JButton("Get File");
 		sceenshotButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -145,12 +137,12 @@ public class AXMLPrinterFrame extends JFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("apktool.decode.src.file", srcPath);
+				conf.setProperty("axmlprinter.src.file", srcPath);
 				File targetFile = new File(targetTextField.getText());
 				if (!targetFile.exists() || !targetFile.isDirectory()) {
 					logger.error("targetFile is invalid");
 					Toolkit.getDefaultToolkit().beep();
-					JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Target directory is invalid", "ERROR",
+					JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Target dir is invalid", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 					targetTextField.requestFocus();
 					return;
@@ -162,29 +154,35 @@ public class AXMLPrinterFrame extends JFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("apktool.decode.target.dir", targetPath);
+				conf.setProperty("axmlprinter.target.dir", targetPath);
 				try {
+					ZipFile zip = new ZipFile(srcFile);
+					Enumeration<?> entries = zip.entries();
+					while (entries.hasMoreElements()) {
+						ZipEntry entry = (ZipEntry) entries.nextElement();
+						if (entry.getName().equals("AndroidManifest.xml")) {
+							IOUtils.copy(zip.getInputStream(entry),
+									new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig")));
+							break;
+						}
+
+					}
+
+					zip.close();
 					StringBuilder sb = new StringBuilder();
-					sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"")
-							.append(" \"").append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"")
-							.append(" d ").append(srcPath)
-							.append(" -o ").append(targetPath).append(File.separator)
-							.append(FilenameUtils.getBaseName(srcFile.getCanonicalPath()));
-					if (resouceIgnore.isSelected()) {
-						sb.append(" -r");
-					}
-					if (override.isSelected()) {
-						sb.append(" -f");
-					}
+					sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
+							.append(Utils.getToolsPath()).append(File.separator).append("AXMLPrinter3.jar\"")
+							.append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
 					String cmd = sb.toString();
 					logger.info(cmd);
 					Process process = Runtime.getRuntime().exec(cmd);
-					new StreamHandler(process.getInputStream(), 0).start();
+					String content = Utils.loadStream(process.getInputStream());
+					FileUtils.writeStringToFile(new File(targetFile, "AndroidManifest.xml"), content, "UTF-8", true);
 					new StreamHandler(process.getErrorStream(), 1).start();
 					process.waitFor();
-					logger.info("decode finish");
+					logger.info("axmlprinter finish");
 				} catch (IOException | InterruptedException e1) {
-					logger.error("decode fail", e);
+					logger.error("axmlprinter fail", e);
 				}
 			}
 		});
