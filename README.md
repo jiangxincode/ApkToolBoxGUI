@@ -4,6 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/0qhudb0r6pi18l5s?svg=true)](https://ci.appveyor.com/project/jiangxincode/apktoolboxgui)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Code Climate](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/gpa.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
+[![Issue Count](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/issue_count.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 
 A open source tool for simplify android development. It targets to replace all features of these tools:
 
