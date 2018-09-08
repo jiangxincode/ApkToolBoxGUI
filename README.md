@@ -1,5 +1,7 @@
 # TextTools
 
+**[deprecated] All main feature has been replaced by ApkToolBoxGUI(https://github.com/jiangxincode/ApkToolBoxGUI)**
+
 ## Author 
 
 + JiangXin jiangxinnju@163.com
