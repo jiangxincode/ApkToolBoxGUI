@@ -1,6 +1,6 @@
 # I18NTools
 
-[deprecated] All feature has been replaced by ApkToolBoxGUI(https://github.com/jiangxincode/ApkToolBoxGUI)
+**[deprecated] All feature has been replaced by ApkToolBoxGUI(https://github.com/jiangxincode/ApkToolBoxGUI)**
 
 ## 功能描述
 
