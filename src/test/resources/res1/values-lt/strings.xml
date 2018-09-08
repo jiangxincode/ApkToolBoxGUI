@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name" msgid="5955735546071433666">"Garso įrašymo priemonė"</string>
+    <string name="record_your_message" msgid="1583671906691662148">"Įrašykite savo pranešimą"</string>
+    <string name="message_recorded" msgid="381539460921872233">"Pranešimas įrašytas"</string>
+    <string name="review_message" msgid="201616012287839474">"Peržiūrėti pranešimą"</string>
+    <string name="recording" msgid="4426791467211376099">"Įrašoma"</string>
+    <string name="recording_stopped" msgid="1580278719585249612">"Įrašas sustabdytas"</string>
+    <string name="storage_is_full" msgid="416039755956726221">"Saugykla pilna"</string>
+    <string name="max_length_reached" msgid="6398215743584093353">"Pasiektas didžiausias galimas ilgis"</string>
+    <string name="insert_sd_card" product="nosdcard" msgid="8212754638456591792">"Prijunkite USB atmintinę"</string>
+    <string name="insert_sd_card" product="default" msgid="2251831579676114197">"Įdėkite SD kortelę"</string>
+    <string name="min_available" msgid="5493947690062988925">"Galima <xliff:g id="MINUTES">%d</xliff:g> min."</string>
+    <string name="sec_available" msgid="2297020788861694399">"Galima <xliff:g id="SECONDS">%d</xliff:g> sek."</string>
+    <string name="accept" msgid="7770652589312551402">"Naudoti šį įrašą"</string>
+    <string name="discard" msgid="761613433029406319">"Atmesti"</string>
+    <string name="button_ok" msgid="3004911343723076226">"Gerai"</string>
+    <string name="press_record" msgid="5039711805290780494">"Paspauskite „Įrašyti“"</string>
+    <!-- no translation found for audio_db_title_format (7912182366970749312) -->
+    <skip />
+    <string name="audio_db_artist_name" msgid="961640229118120080">"Jūsų įrašai"</string>
+    <string name="audio_db_album_name" msgid="9072588113803264440">"Garso įrašai"</string>
+    <string name="audio_db_playlist_name" msgid="5592939050047058162">"Mano įrašai"</string>
+    <string name="error_sdcard_access" product="nosdcard" msgid="7292601458300337571">"Nepavyksta pasiekti USB atmintinės"</string>
+    <string name="error_sdcard_access" product="default" msgid="8005660724361043509">"Neįmanoma pasiekti SD kortelės"</string>
+    <string name="error_app_internal" msgid="2365923237657572011">"Vidinė programos klaida"</string>
+    <string name="error_mediadb_new_record" msgid="2225774949947938064">"Neįmanoma išsaugoti įrašyto garso"</string>
+</resources>
