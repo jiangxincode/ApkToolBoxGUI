@@ -14,6 +14,7 @@ A open source tool for simplify android development. It targets to replace all f
 * APKIDE(改之理): <http://hrtsea.com/15759.html>
 * ApkToolkit: <https://www.52pojie.cn/thread-263925-1-1.html>
 * Android Killer: <https://www.52pojie.cn/thread-319641-1-1.html>
+* I18NTools(All features have been replaced): <https://github.com/jiangxincode/I18NTools>
 
 ## Why you should try
 
@@ -21,6 +22,19 @@ A open source tool for simplify android development. It targets to replace all f
 * More powerful features
 * Easier to use
 * Update more frequently
+
+## Features
+
+### Reverse
+
+### SnapShot
+
+### Test
+
+### I18N
+
+* Copy or replace some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.
+* Find the longest translation of a `<string />`. Primarily for finding cuts or line breaks.
 
 ## License
 

@@ -23,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.help.AboutMouseListener;
 import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
+import edu.jiangxin.apktoolbox.i18n.I18NAddMouseListener;
 import edu.jiangxin.apktoolbox.monkey.MonkeyMouseListener;
 import edu.jiangxin.apktoolbox.reverse.AXMLPrinterMouseListener;
 import edu.jiangxin.apktoolbox.reverse.ApkSignerMouseListener;
@@ -110,6 +111,13 @@ public class MainFrame extends JFrame {
 		JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
 		monkeyMenuItem.addMouseListener(new MonkeyMouseListener());
 		testMenu.add(monkeyMenuItem);
+		
+		JMenu i18nMenu = new JMenu("I18N");
+		menuBar.add(i18nMenu);
+
+		JMenuItem i18nAddMenuItem = new JMenuItem("Add/Replace");
+		i18nAddMenuItem.addMouseListener(new I18NAddMouseListener());
+		i18nMenu.add(i18nAddMenuItem);
 
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);

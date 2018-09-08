@@ -2,4 +2,4 @@ target/
 .settings/
 .classpath
 .project
-/*.db
+*.db
