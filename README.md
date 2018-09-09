@@ -65,9 +65,7 @@ All contributors will be listed here.
 
 * Jiangxin <jiangxinnju@gmail.com>
 
-如果觉得还可以的话，欢迎Star/Fork
+Thanks a lot if you can reward me a cup of coffee!
 
-打赏一下的话就更好了~
-
-![微信支付](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/WeChatQR.png)
-![支付宝支付](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/AliPayQR.jpg)
+![WeChat](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/WeChatQR.png)
+![AliPay](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/AliPayQR.jpg)
