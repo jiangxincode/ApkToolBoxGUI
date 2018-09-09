@@ -115,6 +115,7 @@ public class Utils {
 				return;
 			}
 			builder.save();
+			logger.info("saveConfiguration success");
 		} catch (ConfigurationException e) {
 			logger.error("saveConfiguration error", e);
 		}

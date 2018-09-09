@@ -3,8 +3,6 @@ package edu.jiangxin.apktoolbox.main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -19,7 +17,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -35,11 +32,12 @@ import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildMouseListener;
 import edu.jiangxin.apktoolbox.reverse.JADXMouseListener;
 import edu.jiangxin.apktoolbox.reverse.JDMouseListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenshotMouseListener;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 import edu.jiangxin.apktoolbox.text.EncodeConvertMouseListener;
 import edu.jiangxin.apktoolbox.text.OSConvertMouseListener;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JEasyFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -65,15 +63,6 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(700, 500);
 		Utils.setJFrameCenterInScreen(this);
-
-		addWindowListener(new WindowAdapter() {
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-				super.windowClosing(e);
-				Utils.saveConfiguration();
-			}
-		});
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

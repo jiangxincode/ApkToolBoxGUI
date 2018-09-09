@@ -23,23 +23,18 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class MonkeyFrame extends JFrame {
+public class MonkeyFrame extends JEasyFrame {
 
 	private static final long serialVersionUID = 1L;
-
-	Logger logger = LogManager.getLogger(MonkeyFrame.class);
 
 	Thread threadTimeType = null;
 	Thread threadMonkey = null;

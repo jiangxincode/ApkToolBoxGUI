@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -22,7 +21,9 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.ParserEmulationProfile;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 
-public class AboutFrame extends JFrame {
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+
+public class AboutFrame extends JEasyFrame {
 
 	private static final long serialVersionUID = 1L;
 

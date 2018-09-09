@@ -21,20 +21,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ScreenShotFrame extends JFrame {
-	private static final Logger logger = LogManager.getLogger(ScreenShotFrame.class);
-
+public class ScreenShotFrame extends JEasyFrame {
 	private static final long serialVersionUID = 1L;
-	
-	private Configuration conf = Utils.getConfiguration();
 
 	public ScreenShotFrame() throws HeadlessException {
 		super();

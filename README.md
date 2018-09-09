@@ -31,6 +31,11 @@ A open source tool for simplify android development. It targets to replace all f
 
 ### Test
 
+### Text
+
+* Convert between different character encoding
++ Convert between different OS type
+
 ### I18N
 
 * Copy or replace some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.

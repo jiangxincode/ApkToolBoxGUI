@@ -12,27 +12,19 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jdom2.JDOMException;
 
 import edu.jiangxin.apktoolbox.i18n.core.I18NUtils;
-import edu.jiangxin.apktoolbox.utils.Utils;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 
-public class I18NAddFrame extends JFrame {
-	private static final Logger logger = LogManager.getLogger(I18NAddFrame.class);
-
+public class I18NAddFrame extends JEasyFrame {
 	private static final long serialVersionUID = 1L;
-
-	private Configuration conf = Utils.getConfiguration();
 
 	public I18NAddFrame() throws HeadlessException {
 		super();

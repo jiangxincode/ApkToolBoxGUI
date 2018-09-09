@@ -19,32 +19,23 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import edu.jiangxin.apktoolbox.swing.extend.JAutoCompleteComboBox;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
 import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class EncodeConvertFrame extends JFrame {
-	private static final Logger logger = LogManager.getLogger(EncodeConvertFrame.class);
-
+public class EncodeConvertFrame extends JEasyFrame {
 	private static final long serialVersionUID = 1L;
 
 	private static final int CONTENT_WIDTH = 500;
-
-	private Configuration conf = Utils.getConfiguration();
 
 	public EncodeConvertFrame() throws HeadlessException {
 		super();
@@ -133,7 +124,7 @@ public class EncodeConvertFrame extends JFrame {
 		JLabel toLabel = new JLabel("To:");
 		JAutoCompleteComboBox<String> toComboBox = new JAutoCompleteComboBox<String>();
 		toComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HGIGHT));
-		toComboBox.setText(conf.getString("encodeconvert.to"));
+		toComboBox.setSelectedItem(conf.getString("encodeconvert.to"));
 
 		for (String charset : charsets) {
 			fromComboBox.addItem(charset);
@@ -178,7 +169,7 @@ public class EncodeConvertFrame extends JFrame {
 				conf.setProperty("encodeconvert.src.dir", srcPath);
 				conf.setProperty("encodeconvert.suffix", suffixTextField.getText());
 				conf.setProperty("encodeconvert.to", toComboBox.getSelectedItem().toString());
-				
+
 				try {
 					ArrayList<File> files = new ArrayList<File>();
 					files.addAll(new FileFilterWrapper().list(srcPath, suffixTextField.getText()));
@@ -194,8 +185,7 @@ public class EncodeConvertFrame extends JFrame {
 						String toEncoder = toComboBox.getSelectedItem().toString();
 						EncoderConvert.encodeFile(file.getCanonicalPath(), fromEncoder, toEncoder);
 					}
-					
-					
+
 					logger.info("convert finish");
 				} catch (IOException e1) {
 					logger.error("convert fail", e1);

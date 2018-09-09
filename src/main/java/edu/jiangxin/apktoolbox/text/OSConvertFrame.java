@@ -12,28 +12,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import edu.jiangxin.apktoolbox.reverse.ApktoolDecodeFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.text.core.OSPatternConvert;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class OSConvertFrame extends JFrame {
-	private static final Logger logger = LogManager.getLogger(ApktoolDecodeFrame.class);
-
+public class OSConvertFrame extends JEasyFrame {
 	private static final long serialVersionUID = 1L;
-
-	private Configuration conf = Utils.getConfiguration();
 
 	public OSConvertFrame() throws HeadlessException {
 		super();
