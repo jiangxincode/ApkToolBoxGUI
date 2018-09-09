@@ -8,6 +8,12 @@
      <properties>
           <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
+     <repositories>
+          <repository>
+               <id>EBI Repository</id>
+               <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
+          </repository>
+     </repositories>
      <dependencies>
           <dependency>
                <groupId>commons-io</groupId>
@@ -64,6 +70,17 @@
                <artifactId>flexmark-ext-tables</artifactId>
                <version>0.34.22</version>
           </dependency>
+          <dependency>
+               <groupId>cpdetector</groupId>
+               <artifactId>cpdetector</artifactId>
+               <version>1.0.7</version>
+          </dependency>
+          <dependency>
+               <groupId>junit</groupId>
+               <artifactId>junit</artifactId>
+               <version>4.12</version>
+               <scope>compile</scope>
+          </dependency>
      </dependencies>
      <build>
           <plugins>
@@ -111,6 +128,19 @@
                          <maxmem>256m</maxmem>
                          <aggregate>true</aggregate>
                     </configuration>
+               </plugin>
+               <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>templating-maven-plugin</artifactId>
+                    <version>1.0.0</version>
+                    <executions>
+                         <execution>
+                              <id>filter-src</id>
+                              <goals>
+                                   <goal>filter-sources</goal>
+                              </goals>
+                         </execution>
+                    </executions>
                </plugin>
           </plugins>
      </build>

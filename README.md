@@ -14,7 +14,7 @@ A open source tool for simplify android development. It targets to replace all f
 * APKIDE(改之理): <http://hrtsea.com/15759.html>
 * ApkToolkit: <https://www.52pojie.cn/thread-263925-1-1.html>
 * Android Killer: <https://www.52pojie.cn/thread-319641-1-1.html>
-* I18NTools(All features have been replaced): <https://github.com/jiangxincode/I18NTools>
+* I18NTools(**All features have been replaced**): <https://github.com/jiangxincode/I18NTools>
 
 ## Why you should try
 

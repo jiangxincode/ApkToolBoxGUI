@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
@@ -21,6 +23,7 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.help.AboutMouseListener;
 import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
 import edu.jiangxin.apktoolbox.i18n.I18NAddMouseListener;
@@ -32,6 +35,8 @@ import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildMouseListener;
 import edu.jiangxin.apktoolbox.reverse.JADXMouseListener;
 import edu.jiangxin.apktoolbox.reverse.JDMouseListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenshotMouseListener;
+import edu.jiangxin.apktoolbox.text.EncodeConvertMouseListener;
+import edu.jiangxin.apktoolbox.text.OSConvertMouseListener;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MainFrame extends JFrame {
@@ -39,12 +44,13 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField searchTextField;
+	private ResourceBundle bundle = ResourceBundle.getBundle("apktoolbox");
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					/*UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());*/
 					MainFrame frame = new MainFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -55,6 +61,7 @@ public class MainFrame extends JFrame {
 	}
 
 	public MainFrame() {
+		setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(700, 500);
 		Utils.setJFrameCenterInScreen(this);
@@ -111,6 +118,17 @@ public class MainFrame extends JFrame {
 		JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
 		monkeyMenuItem.addMouseListener(new MonkeyMouseListener());
 		testMenu.add(monkeyMenuItem);
+		
+		JMenu textMenu = new JMenu("Text");
+		menuBar.add(textMenu);
+
+		JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
+		osConvertMenuItem.addMouseListener(new OSConvertMouseListener());
+		textMenu.add(osConvertMenuItem);
+		
+		JMenuItem encodeConvertMenuItem = new JMenuItem("Encode Convert");
+		encodeConvertMenuItem.addMouseListener(new EncodeConvertMouseListener());
+		textMenu.add(encodeConvertMenuItem);
 		
 		JMenu i18nMenu = new JMenu("I18N");
 		menuBar.add(i18nMenu);
