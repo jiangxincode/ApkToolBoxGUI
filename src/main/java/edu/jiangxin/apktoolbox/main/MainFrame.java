@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.help.AboutMouseListener;
+import edu.jiangxin.apktoolbox.help.CheckUpdateMouseListener;
 import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
 import edu.jiangxin.apktoolbox.i18n.I18NAddMouseListener;
 import edu.jiangxin.apktoolbox.monkey.MonkeyMouseListener;
@@ -128,6 +129,10 @@ public class MainFrame extends JEasyFrame {
 
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
+		
+		JMenuItem checkUpdateMenuItem = new JMenuItem("Check for Updates");
+		checkUpdateMenuItem.addMouseListener(new CheckUpdateMouseListener(this));
+		helpMenu.add(checkUpdateMenuItem);
 
 		JMenuItem contributeMenuItem = new JMenuItem("Contribute");
 		contributeMenuItem.addMouseListener(new ContributeMouseListener());

@@ -94,6 +94,15 @@ public class Utils {
 
 	public static Configuration getConfiguration() {
 		if (builder == null) {
+			File confiFile = new File(System.getenv("USERPROFILE") + File.separator + "apktoolboxgui.properties");
+			if (!confiFile.exists()) {
+				try {
+					logger.info("confiFile does not exist");
+					confiFile.createNewFile();
+				} catch (IOException e) {
+					logger.error("createNewFile fail", e);
+				}
+			}
 			logger.info("builder is null, create it");
 			Parameters params = new Parameters();
 			builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
