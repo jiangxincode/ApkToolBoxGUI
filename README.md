@@ -5,6 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Code Climate](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/gpa.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 [![Issue Count](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/issue_count.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
+[![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
 
 A open source tool for simplify android development. It targets to replace all features of these tools:
 
@@ -15,6 +16,9 @@ A open source tool for simplify android development. It targets to replace all f
 * ApkToolkit: <https://www.52pojie.cn/thread-263925-1-1.html>
 * Android Killer: <https://www.52pojie.cn/thread-319641-1-1.html>
 * I18NTools(**All features have been replaced**): <https://github.com/jiangxincode/I18NTools>
+* TextTools(**All main features have been replaced**): <https://github.com/jiangxincode/TextTools>
+* 元宝文件编码转换器(**All features have been replaced**): <http://www.jz5u.com/Soft/apply/Conve/131917.html>
+* UltraCodingSwitch(**All main features have been replaced**): <https://www.jb51.net/softs/21331.html>
 
 ## Why you should try
 

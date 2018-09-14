@@ -40,6 +40,7 @@ public class EncoderConvert {
 			parentDir.mkdirs();
 		}
 
+		//TODO see http://akini.mbnet.fi/java/unicodereader/
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder));
 		int ch = 0;
