@@ -7,6 +7,8 @@
 [![Issue Count](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/issue_count.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
 
+* Project Documentation: <https://jiangxincode.github.io/ApkToolBoxGUI/>
+
 A open source tool for simplify android development. It targets to replace all features of these tools:
 
 * ApkToolBox(C#): <https://github.com/qtfreet00/ApkToolBox>
@@ -57,6 +59,9 @@ Any contributing is welcomed.
 2. Make changes
 3. Ensure tests pass (or hopefully adding tests!)
 4. Submit pull request/issue
+
+* build binary: mvn clean package
+* build project documentation: mvn clean package site scm-publish:publish-scm -B
 
 ## Dependencies
 
