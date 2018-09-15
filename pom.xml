@@ -161,6 +161,7 @@
                          <pubScmUrl>scm:git:https://github.com/jiangxincode/ApkToolBoxGUI.git</pubScmUrl>
                          <scmBranch>gh-pages</scmBranch>
                          <content>${project.build.directory}/site</content>
+                         <tryUpdate>true</tryUpdate>
                     </configuration>
                </plugin>
                <plugin>
@@ -212,7 +213,11 @@
                                    <artifactId>maven-javadoc-plugin</artifactId>
                                    <version>2.10.4</version>
                                    <configuration>
-                                        <excludePackageNames>com.*:edu.*:org.*:cn.*</excludePackageNames>
+                                        <encoding>${chartset.UTF8}</encoding>
+                                        <aggregate>true</aggregate>
+                                        <charset>${chartset.UTF8}</charset>
+                                        <docencoding>${chartset.UTF8}</docencoding>
+                                        <additionalparam>-Xdoclint:none</additionalparam>
                                    </configuration>
                               </plugin>
                               <plugin>
