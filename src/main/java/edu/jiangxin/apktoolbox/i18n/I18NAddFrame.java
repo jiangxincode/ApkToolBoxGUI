@@ -182,7 +182,13 @@ public class I18NAddFrame extends JEasyFrame {
 
 				for (String targetPath : targetPaths) {
 					for (String item : items) {
-						innerProcessor(srcPath, targetPath, item);
+						int ret = innerProcessor(srcPath, targetPath, item);
+						if (ret != 0) {
+							Toolkit.getDefaultToolkit().beep();
+							JOptionPane.showMessageDialog(I18NAddFrame.this, "Failed, please see the log", "ERROR",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 					}
 				}
 			}
@@ -246,8 +252,8 @@ public class I18NAddFrame extends JEasyFrame {
 				}
 			}
 			if (sourceElement == null) {
-				logger.error("find sourceElement failed: " + getCanonicalPath(sourceFile));
-				return -1;
+				logger.warn("sourceElement is null: " + getCanonicalPath(sourceFile));
+				continue;
 			}
 
 			File targetFile = new File(new File(targetBaseFile, sourceParentFile.getName()), "strings.xml");
