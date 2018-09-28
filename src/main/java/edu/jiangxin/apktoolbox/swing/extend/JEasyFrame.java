@@ -3,6 +3,7 @@ package edu.jiangxin.apktoolbox.swing.extend;
 import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 
@@ -17,11 +18,13 @@ public class JEasyFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	protected Logger logger;
 	protected Configuration conf;
+	protected ResourceBundle bundle;
 
 	public JEasyFrame() throws HeadlessException {
 		super();
 		logger = LogManager.getLogger(this.getClass());
 		conf = Utils.getConfiguration();
+		bundle = ResourceBundle.getBundle("apktoolbox");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {

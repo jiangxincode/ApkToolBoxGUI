@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
@@ -43,7 +42,6 @@ public class MainFrame extends JEasyFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField searchTextField;
-	private ResourceBundle bundle = ResourceBundle.getBundle("apktoolbox");
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -120,25 +118,25 @@ public class MainFrame extends JEasyFrame {
 		encodeConvertMenuItem.addMouseListener(new EncodeConvertMouseListener());
 		textMenu.add(encodeConvertMenuItem);
 		
-		JMenu i18nMenu = new JMenu("I18N");
+		JMenu i18nMenu = new JMenu(bundle.getString("i18n.title"));
 		menuBar.add(i18nMenu);
 
-		JMenuItem i18nAddMenuItem = new JMenuItem("Add/Replace");
+		JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
 		i18nAddMenuItem.addMouseListener(new I18NAddMouseListener());
 		i18nMenu.add(i18nAddMenuItem);
 
-		JMenu helpMenu = new JMenu("Help");
+		JMenu helpMenu = new JMenu(bundle.getString("help.title"));
 		menuBar.add(helpMenu);
 		
-		JMenuItem checkUpdateMenuItem = new JMenuItem("Check for Updates");
+		JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
 		checkUpdateMenuItem.addMouseListener(new CheckUpdateMouseListener(this));
 		helpMenu.add(checkUpdateMenuItem);
 
-		JMenuItem contributeMenuItem = new JMenuItem("Contribute");
+		JMenuItem contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
 		contributeMenuItem.addMouseListener(new ContributeMouseListener());
 		helpMenu.add(contributeMenuItem);
 
-		JMenuItem aboutMenuItem = new JMenuItem("About");
+		JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
 		aboutMenuItem.addMouseListener(new AboutMouseListener());
 		helpMenu.add(aboutMenuItem);
 

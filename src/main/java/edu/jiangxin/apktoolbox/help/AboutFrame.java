@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
@@ -13,14 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import com.vladsch.flexmark.Extension;
-import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.parser.ParserEmulationProfile;
-import com.vladsch.flexmark.util.options.MutableDataSet;
-
+import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 
 public class AboutFrame extends JEasyFrame {
@@ -29,7 +21,7 @@ public class AboutFrame extends JEasyFrame {
 
 	public AboutFrame() throws HeadlessException {
 		super();
-		setTitle("About");
+		setTitle(bundle.getString("help.about.title"));
 		setSize(600, 400);
 		setResizable(false);
 
@@ -39,30 +31,40 @@ public class AboutFrame extends JEasyFrame {
 		contentPane.setLayout(boxLayout);
 		setContentPane(contentPane);
 
-		InputStream inputStream = AboutFrame.class.getResourceAsStream("/README.md");
-		BufferedReader in;
-		StringBuffer buffer = new StringBuffer();
+		InputStream inputStream = null;
+		BufferedReader bufferedReader = null;
+		StringBuffer stringBuffer = new StringBuffer();
 		try {
-			in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+			inputStream = AboutFrame.class.getResourceAsStream("/about.html");
+			bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 			String line = "";
-			while ((line = in.readLine()) != null) {
-				buffer.append(line);
-				buffer.append("\n");
+			while ((line = bufferedReader.readLine()) != null) {
+				stringBuffer.append(line);
+				stringBuffer.append("\n");
 			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (IOException ex) {
+			logger.error("processing file failed", ex);
+		} finally {
+			try {
+				if (bufferedReader != null) {
+					bufferedReader.close();
+				}
+			} catch (Exception ex) {
+				logger.error("close bufferedReader failed", ex);
+			}
+
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (Exception ex) {
+				logger.error("close inputStream failed", ex);
+			}
+
 		}
 
-		MutableDataSet options = new MutableDataSet();
-		options.setFrom(ParserEmulationProfile.MARKDOWN);
-		options.set(Parser.EXTENSIONS, Arrays.asList(new Extension[] { TablesExtension.create() }));
-		Parser parser = Parser.builder(options).build();
-		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-
-		Node document = parser.parse(buffer.toString());
-		String html = renderer.render(document);
-
-		JEditorPane editorPane = new JEditorPane("text/html", html);
+		JEditorPane editorPane = new JEditorPane("text/html",
+				stringBuffer.toString().replace("{VERSION}", Version.VERSION));
 
 		JScrollPane scrollPane = new JScrollPane(editorPane);
 
