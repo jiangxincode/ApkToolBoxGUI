@@ -2,46 +2,44 @@ package edu.jiangxin.apktoolbox.main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 
 import javax.swing.AbstractListModel;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.border.BevelBorder;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.Version;
-import edu.jiangxin.apktoolbox.help.AboutMouseListener;
-import edu.jiangxin.apktoolbox.help.CheckUpdateMouseListener;
-import edu.jiangxin.apktoolbox.help.ContributeMouseListener;
-import edu.jiangxin.apktoolbox.i18n.I18NAddMouseListener;
-import edu.jiangxin.apktoolbox.monkey.MonkeyMouseListener;
-import edu.jiangxin.apktoolbox.reverse.AXMLPrinterMouseListener;
-import edu.jiangxin.apktoolbox.reverse.ApkSignerMouseListener;
-import edu.jiangxin.apktoolbox.reverse.ApktoolDecodeMouseListener;
-import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildMouseListener;
-import edu.jiangxin.apktoolbox.reverse.JADXMouseListener;
-import edu.jiangxin.apktoolbox.reverse.JDMouseListener;
-import edu.jiangxin.apktoolbox.screenshot.ScreenshotMouseListener;
+import edu.jiangxin.apktoolbox.help.AboutActionListener;
+import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
+import edu.jiangxin.apktoolbox.help.ContributeActionListener;
+import edu.jiangxin.apktoolbox.i18n.I18NAddActionListener;
+import edu.jiangxin.apktoolbox.monkey.MonkeyActionListener;
+import edu.jiangxin.apktoolbox.reverse.AXMLPrinterActionListener;
+import edu.jiangxin.apktoolbox.reverse.ApkSignerActionListener;
+import edu.jiangxin.apktoolbox.reverse.ApktoolDecodeActionListener;
+import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildActionListener;
+import edu.jiangxin.apktoolbox.reverse.JADXActionListener;
+import edu.jiangxin.apktoolbox.reverse.JDActionListener;
+import edu.jiangxin.apktoolbox.screenshot.ScreenshotActionListener;
 import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
-import edu.jiangxin.apktoolbox.text.EncodeConvertMouseListener;
-import edu.jiangxin.apktoolbox.text.OSConvertMouseListener;
+import edu.jiangxin.apktoolbox.text.EncodeConvertActionListener;
+import edu.jiangxin.apktoolbox.text.OSConvertActionListener;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MainFrame extends JEasyFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField searchTextField;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -67,77 +65,80 @@ public class MainFrame extends JEasyFrame {
 		setJMenuBar(menuBar);
 
 		JMenu reverseMenu = new JMenu("Reverse");
+		reverseMenu.setMnemonic(KeyEvent.VK_R);
 		menuBar.add(reverseMenu);
 
-		JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode");
-		apktoolDecodeMenuItem.addMouseListener(new ApktoolDecodeMouseListener());
+		JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
+		apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
+		apktoolDecodeMenuItem.addActionListener(new ApktoolDecodeActionListener());
 		reverseMenu.add(apktoolDecodeMenuItem);
 
 		JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
-		apktoolRebuildMenuItem.addMouseListener(new ApktoolRebuildMouseListener());
+		apktoolRebuildMenuItem.addActionListener(new ApktoolRebuildActionListener());
 		reverseMenu.add(apktoolRebuildMenuItem);
 
 		JMenuItem apkSignMenuItem = new JMenuItem("ApkSigner");
-		apkSignMenuItem.addMouseListener(new ApkSignerMouseListener());
+		apkSignMenuItem.addActionListener(new ApkSignerActionListener());
 		reverseMenu.add(apkSignMenuItem);
 
 		JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
-		jDMenuItem.addMouseListener(new JDMouseListener());
+		jDMenuItem.addActionListener(new JDActionListener());
 		reverseMenu.add(jDMenuItem);
 
 		JMenuItem jADXMenuItem = new JMenuItem("JADX-GUI");
-		jADXMenuItem.addMouseListener(new JADXMouseListener());
+		jADXMenuItem.addActionListener(new JADXActionListener());
 		reverseMenu.add(jADXMenuItem);
 
 		JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
-		aXMLPrinter.addMouseListener(new AXMLPrinterMouseListener());
+		aXMLPrinter.addActionListener(new AXMLPrinterActionListener());
 		reverseMenu.add(aXMLPrinter);
 
 		JMenu screenshotMenu = new JMenu("Screnshot");
 		menuBar.add(screenshotMenu);
 
 		JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
-		screenShotMenuItem.addMouseListener(new ScreenshotMouseListener());
+		screenShotMenuItem.addActionListener(new ScreenshotActionListener());
+		screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 		screenshotMenu.add(screenShotMenuItem);
 
 		JMenu testMenu = new JMenu("Test");
 		menuBar.add(testMenu);
 
 		JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
-		monkeyMenuItem.addMouseListener(new MonkeyMouseListener());
+		monkeyMenuItem.addActionListener(new MonkeyActionListener());
 		testMenu.add(monkeyMenuItem);
 		
 		JMenu textMenu = new JMenu("Text");
 		menuBar.add(textMenu);
 
 		JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
-		osConvertMenuItem.addMouseListener(new OSConvertMouseListener());
+		osConvertMenuItem.addActionListener(new OSConvertActionListener());
 		textMenu.add(osConvertMenuItem);
 		
 		JMenuItem encodeConvertMenuItem = new JMenuItem("Encode Convert");
-		encodeConvertMenuItem.addMouseListener(new EncodeConvertMouseListener());
+		encodeConvertMenuItem.addActionListener(new EncodeConvertActionListener());
 		textMenu.add(encodeConvertMenuItem);
 		
 		JMenu i18nMenu = new JMenu(bundle.getString("i18n.title"));
 		menuBar.add(i18nMenu);
 
 		JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-		i18nAddMenuItem.addMouseListener(new I18NAddMouseListener());
+		i18nAddMenuItem.addActionListener(new I18NAddActionListener());
 		i18nMenu.add(i18nAddMenuItem);
 
 		JMenu helpMenu = new JMenu(bundle.getString("help.title"));
 		menuBar.add(helpMenu);
 		
 		JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
-		checkUpdateMenuItem.addMouseListener(new CheckUpdateMouseListener(this));
+		checkUpdateMenuItem.addActionListener(new CheckUpdateActionListener(this));
 		helpMenu.add(checkUpdateMenuItem);
 
 		JMenuItem contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
-		contributeMenuItem.addMouseListener(new ContributeMouseListener());
+		contributeMenuItem.addActionListener(new ContributeActionListener());
 		helpMenu.add(contributeMenuItem);
 
 		JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
-		aboutMenuItem.addMouseListener(new AboutMouseListener());
+		aboutMenuItem.addActionListener(new AboutActionListener());
 		helpMenu.add(aboutMenuItem);
 
 		contentPane = new JPanel();
@@ -181,19 +182,7 @@ public class MainFrame extends JEasyFrame {
 		JPanel statusPanel = new JPanel();
 		contentPane.add(statusPanel, BorderLayout.SOUTH);
 
-		JPanel searchPanel = new JPanel();
-		searchPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		contentPane.add(searchPanel, BorderLayout.NORTH);
-
-		searchTextField = new JTextField();
-		searchTextField.setPreferredSize(new Dimension(6, 20));
-		searchTextField.setToolTipText("");
-		searchTextField.setColumns(10);
-
-		JButton searchButton = new JButton("Search");
-		searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
-		searchPanel.add(searchTextField);
-		searchPanel.add(searchButton);
+		
 	}
 
 }

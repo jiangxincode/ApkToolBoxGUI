@@ -1,15 +1,14 @@
 package edu.jiangxin.apktoolbox.monkey;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class MonkeyMouseListener extends MouseAdapter {
-	
+public class MonkeyActionListener implements ActionListener {
+
 	@Override
-	public void mousePressed(MouseEvent e) {
-		super.mouseClicked(e);
+	public void actionPerformed(ActionEvent e) {
 		MonkeyFrame monkeyJFrame = new MonkeyFrame();
 		monkeyJFrame.setVisible(true);
 		Utils.setJFrameCenterInScreen(monkeyJFrame);

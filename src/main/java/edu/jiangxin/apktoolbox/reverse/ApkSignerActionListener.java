@@ -1,14 +1,14 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ApkSignerMouseListener extends MouseAdapter {
+public class ApkSignerActionListener implements ActionListener {
+
 	@Override
-	public void mousePressed(MouseEvent e) {
-		super.mouseClicked(e);
+	public void actionPerformed(ActionEvent e) {
 		ApkSignerFrame apktoolDecodeFrame = new ApkSignerFrame();
 		apktoolDecodeFrame.setVisible(true);
 		Utils.setJFrameCenterInScreen(apktoolDecodeFrame);

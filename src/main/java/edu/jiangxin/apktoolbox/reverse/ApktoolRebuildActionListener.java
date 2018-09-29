@@ -1,14 +1,14 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ApktoolRebuildMouseListener extends MouseAdapter {
+public class ApktoolRebuildActionListener implements ActionListener {
+
 	@Override
-	public void mousePressed(MouseEvent e) {
-		super.mouseClicked(e);
+	public void actionPerformed(ActionEvent e) {
 		ApktoolRebuildFrame apktoolRebuildFrame = new ApktoolRebuildFrame();
 		apktoolRebuildFrame.setVisible(true);
 		Utils.setJFrameCenterInScreen(apktoolRebuildFrame);

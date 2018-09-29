@@ -1,14 +1,14 @@
 package edu.jiangxin.apktoolbox.screenshot;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ScreenshotMouseListener extends MouseAdapter {
+public class ScreenshotActionListener implements ActionListener {
+
 	@Override
-	public void mousePressed(MouseEvent e) {
-		super.mouseClicked(e);
+	public void actionPerformed(ActionEvent e) {
 		ScreenShotFrame screenShotFrame = new ScreenShotFrame();
 		screenShotFrame.setVisible(true);
 		Utils.setJFrameCenterInScreen(screenShotFrame);

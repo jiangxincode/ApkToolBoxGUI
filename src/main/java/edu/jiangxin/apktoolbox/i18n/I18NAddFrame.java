@@ -127,7 +127,7 @@ public class I18NAddFrame extends JEasyFrame {
 		operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 		contentPane.add(operationPanel);
 
-		JButton sceenshotButton = new JButton("Add/Replace");
+		JButton sceenshotButton = new JButton(bundle.getString("i18n.add.title"));
 		sceenshotButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -150,7 +150,6 @@ public class I18NAddFrame extends JEasyFrame {
 				}
 				conf.setProperty("i18n.add.src.dir", srcPath);
 
-				List<File> targetFiles = new ArrayList<>();
 				List<String> targetPaths = new ArrayList<>();
 				String[] tmps = targetTextField.getText().split(";");
 				for (String tmp : tmps) {
@@ -163,7 +162,6 @@ public class I18NAddFrame extends JEasyFrame {
 						targetTextField.requestFocus();
 						return;
 					}
-					targetFiles.add(targetFile);
 					try {
 						targetPaths.add(targetFile.getCanonicalPath());
 					} catch (IOException e1) {

@@ -2,8 +2,8 @@ package edu.jiangxin.apktoolbox.help;
 
 import java.awt.Component;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -24,22 +24,53 @@ import org.json.JSONObject;
 
 import edu.jiangxin.apktoolbox.Version;
 
-public class CheckUpdateMouseListener extends MouseAdapter {
+public class CheckUpdateActionListener implements ActionListener {
 	private static final String URI = "https://api.github.com/repos/jiangxincode/ApkToolBoxGUI/releases/latest";
-	private static Logger logger = LogManager.getLogger(CheckUpdateMouseListener.class);
+	private static Logger logger = LogManager.getLogger(CheckUpdateActionListener.class);
 	private Component parent;
 	private CloseableHttpClient closeableHttpClient;
 	private CloseableHttpResponse closeableHttpResponse;
 
-	public CheckUpdateMouseListener(Component component) {
+	public CheckUpdateActionListener(Component component) {
 		super();
 		parent = component;
 	}
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		super.mouseClicked(e);
+	private void processException(Exception ex) {
+		logger.error("checking for updates failed: ", ex);
+		Toolkit.getDefaultToolkit().beep();
+		JOptionPane.showMessageDialog(parent, "checking for updates failed", "ERROR", JOptionPane.ERROR_MESSAGE);
+		releaseResource();
+	}
 
+	private void processResult(String latestVersion) {
+		logger.info("checking for updates successed");
+		Toolkit.getDefaultToolkit().beep();
+		JOptionPane.showMessageDialog(parent,
+				"Latest version: " + latestVersion + "\nLocal version: " + Version.VERSION, "Update",
+				JOptionPane.INFORMATION_MESSAGE);
+		releaseResource();
+	}
+
+	private void releaseResource() {
+		if (closeableHttpResponse != null) {
+			try {
+				closeableHttpResponse.close();
+			} catch (IOException e) {
+				logger.error("closeableHttpResponse close failed", e);
+			}
+		}
+		if (closeableHttpClient != null) {
+			try {
+				closeableHttpClient.close();
+			} catch (IOException e) {
+				logger.error("closeableHttpClient close failed", e);
+			}
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
 		String responseString = null;
 
 		closeableHttpClient = HttpClients.createDefault();
@@ -84,39 +115,6 @@ public class CheckUpdateMouseListener extends MouseAdapter {
 			return;
 		}
 		processResult(latestVersion);
-	}
-
-	private void processException(Exception ex) {
-		logger.error("checking for updates failed: ", ex);
-		Toolkit.getDefaultToolkit().beep();
-		JOptionPane.showMessageDialog(parent, "checking for updates failed", "ERROR", JOptionPane.ERROR_MESSAGE);
-		releaseResource();
-	}
-
-	private void processResult(String latestVersion) {
-		logger.info("checking for updates successed");
-		Toolkit.getDefaultToolkit().beep();
-		JOptionPane.showMessageDialog(parent,
-				"Latest version: " + latestVersion + "\nLocal version: " + Version.VERSION, "Update",
-				JOptionPane.INFORMATION_MESSAGE);
-		releaseResource();
-	}
-
-	private void releaseResource() {
-		if (closeableHttpResponse != null) {
-			try {
-				closeableHttpResponse.close();
-			} catch (IOException e) {
-				logger.error("closeableHttpResponse close failed", e);
-			}
-		}
-		if (closeableHttpClient != null) {
-			try {
-				closeableHttpClient.close();
-			} catch (IOException e) {
-				logger.error("closeableHttpClient close failed", e);
-			}
-		}
 	}
 
 }
