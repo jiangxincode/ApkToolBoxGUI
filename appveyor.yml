@@ -22,4 +22,4 @@ configuration:
 
 build_script:
   - mvn -v
-  - mvn clean package site scm-publish:publish-scm -B
+  - mvn clean package
