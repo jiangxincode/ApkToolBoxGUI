@@ -22,7 +22,7 @@ public class JEasyFrame extends JFrame {
 
 	public JEasyFrame() throws HeadlessException {
 		super();
-		logger = LogManager.getLogger(this.getClass());
+		logger = LogManager.getLogger(this.getClass().getSimpleName());
 		conf = Utils.getConfiguration();
 		bundle = ResourceBundle.getBundle("apktoolbox");
 		addWindowListener(new WindowAdapter() {

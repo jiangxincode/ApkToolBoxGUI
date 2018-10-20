@@ -62,6 +62,11 @@
             <version>1.0.7</version>
         </dependency>
         <dependency>
+            <groupId>com.googlecode.juniversalchardet</groupId>
+            <artifactId>juniversalchardet</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.6</version>
@@ -161,6 +166,20 @@
                     <outputDirectory>${project.build.directory}/site</outputDirectory>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.0.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>redhill</groupId>
+                        <artifactId>simian</artifactId>
+                        <version>2.5.10</version>
+                        <scope>system</scope>
+                        <systemPath>${project.basedir}/lib/simian-2.5.10.jar</systemPath>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
     <reporting>
@@ -193,9 +212,10 @@
                 <version>3.0.0</version>
                 <configuration>
                     <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                    <configLocation>checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
-            <plugin>
+	    <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
                 <version>2.0</version>

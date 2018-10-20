@@ -25,6 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.commons.lang3.StringUtils;
+
 import edu.jiangxin.apktoolbox.swing.extend.JAutoCompleteComboBox;
 import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
@@ -39,7 +41,7 @@ public class EncodeConvertFrame extends JEasyFrame {
 
 	public EncodeConvertFrame() throws HeadlessException {
 		super();
-		setTitle("Character Encoding Convert");
+		setTitle(bundle.getString("text.encode.convert"));
 		setResizable(false);
 
 		JPanel contentPane = new JPanel();
@@ -64,17 +66,26 @@ public class EncodeConvertFrame extends JEasyFrame {
 		operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 		contentPane.add(operationPanel);
 
+		String lastPath = conf.getString("encodeconvert.src");
 		JTextField srcTextField = new JTextField();
-		srcTextField.setText(conf.getString("encodeconvert.src.dir"));
+		if (StringUtils.isNotEmpty(lastPath)) {
+			srcTextField.setText(lastPath);
+		}
 
-		JButton srcButton = new JButton("Source Directory");
+		JButton srcButton = new JButton("File/Directory");
 		srcButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				jfc.setDialogTitle("select a directory");
+				jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				jfc.setDialogTitle("select file or directory");
+				if (StringUtils.isNotEmpty(lastPath)) {
+					File lastFile = new File(lastPath);
+					if (lastFile.exists()) {
+						jfc.setSelectedFile(lastFile);
+					}
+				}
 				int ret = jfc.showDialog(new JLabel(), null);
 				switch (ret) {
 				case JFileChooser.APPROVE_OPTION:
@@ -151,7 +162,7 @@ public class EncodeConvertFrame extends JEasyFrame {
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				File srcFile = new File(srcTextField.getText());
-				if (!srcFile.exists() || !srcFile.isDirectory()) {
+				if (!srcFile.exists()) {
 					logger.error("srcFile is invalid");
 					Toolkit.getDefaultToolkit().beep();
 					JOptionPane.showMessageDialog(EncodeConvertFrame.this, "Source file is invalid", "ERROR",
@@ -166,7 +177,7 @@ public class EncodeConvertFrame extends JEasyFrame {
 					logger.error("getCanonicalPath fail");
 					return;
 				}
-				conf.setProperty("encodeconvert.src.dir", srcPath);
+				conf.setProperty("encodeconvert.src", srcPath);
 				conf.setProperty("encodeconvert.suffix", suffixTextField.getText());
 				conf.setProperty("encodeconvert.to", toComboBox.getSelectedItem().toString());
 

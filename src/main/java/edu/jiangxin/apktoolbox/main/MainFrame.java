@@ -109,14 +109,14 @@ public class MainFrame extends JEasyFrame {
 		monkeyMenuItem.addActionListener(new MonkeyActionListener());
 		testMenu.add(monkeyMenuItem);
 		
-		JMenu textMenu = new JMenu("Text");
+		JMenu textMenu = new JMenu(bundle.getString("text.title"));
 		menuBar.add(textMenu);
 
 		JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
 		osConvertMenuItem.addActionListener(new OSConvertActionListener());
 		textMenu.add(osConvertMenuItem);
 		
-		JMenuItem encodeConvertMenuItem = new JMenuItem("Encode Convert");
+		JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert"));
 		encodeConvertMenuItem.addActionListener(new EncodeConvertActionListener());
 		textMenu.add(encodeConvertMenuItem);
 		
