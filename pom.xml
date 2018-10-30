@@ -170,15 +170,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.0.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>redhill</groupId>
-                        <artifactId>simian</artifactId>
-                        <version>2.5.10</version>
-                        <scope>system</scope>
-                        <systemPath>${project.basedir}/lib/simian-2.5.10.jar</systemPath>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -212,7 +203,6 @@
                 <version>3.0.0</version>
                 <configuration>
                     <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-                    <configLocation>checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
             <plugin>
@@ -297,6 +287,14 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>com.github.jiangxincode</groupId>
+                <artifactId>simian-maven-plugin</artifactId>
+                <version>0.0.3</version>
+                <configuration>
+                    <threshold>3</threshold>
+                </configuration>
             </plugin>
         </plugins>
     </reporting>
