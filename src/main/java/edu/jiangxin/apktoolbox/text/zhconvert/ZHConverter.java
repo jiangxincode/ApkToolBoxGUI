@@ -71,13 +71,6 @@ public class ZHConverter {
 		}
 	}
 
-	/**
-	 * 静态转换方法
-	 *
-	 * @param text
-	 * @param converterType
-	 * @return
-	 */
 	public static String convert(String text, int converterType) {
 		ZHConverter instance = getInstance(converterType);
 		return instance.convert(text);
