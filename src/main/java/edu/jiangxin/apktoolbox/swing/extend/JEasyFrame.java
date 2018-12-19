@@ -1,6 +1,8 @@
 package edu.jiangxin.apktoolbox.swing.extend;
 
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
@@ -33,6 +35,9 @@ public class JEasyFrame extends JFrame {
 				logger.info("Frame stop: " + JEasyFrame.this.getClass().getSimpleName());
 			}
 		});
+		Toolkit tk=Toolkit.getDefaultToolkit();
+		Image image=tk.createImage(this.getClass().getResource("/icon.jpg"));
+		setIconImage(image);
 		logger.info("Frame start: " + this.getClass().getSimpleName());
 	}
 }
