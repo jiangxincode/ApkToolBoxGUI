@@ -7,10 +7,10 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class ScreenshotActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		ScreenShotFrame screenShotFrame = new ScreenShotFrame();
-		screenShotFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(screenShotFrame);
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        ScreenShotFrame screenShotFrame = new ScreenShotFrame();
+        screenShotFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(screenShotFrame);
+    }
 }

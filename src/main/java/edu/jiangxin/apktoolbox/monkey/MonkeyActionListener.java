@@ -7,11 +7,11 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MonkeyActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		MonkeyFrame monkeyJFrame = new MonkeyFrame();
-		monkeyJFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(monkeyJFrame);
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        MonkeyFrame monkeyJFrame = new MonkeyFrame();
+        monkeyJFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(monkeyJFrame);
+    }
 
 }

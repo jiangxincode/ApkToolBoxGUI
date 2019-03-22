@@ -8,9 +8,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -21,23 +21,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 
 import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
 
-public class I18NFindLongestFrame extends JEasyFrame {
+public class I18NRemoveFrame extends JEasyFrame {
     private static final long serialVersionUID = 1L;
 
     List<I18NInfo> infos = new ArrayList<I18NInfo>();
 
-    public I18NFindLongestFrame() throws HeadlessException {
+    private static final String charset = "UTF-8";
+
+    public I18NRemoveFrame() throws HeadlessException {
         super();
-        setTitle(bundle.getString("i18n.longest.title"));
+        setTitle(bundle.getString("i18n.remove.title"));
         setSize(600, 160);
         setResizable(false);
 
@@ -52,7 +50,7 @@ public class I18NFindLongestFrame extends JEasyFrame {
         contentPane.add(sourcePanel);
 
         JTextField srcTextField = new JTextField();
-        srcTextField.setText(conf.getString("i18n.longest.src.dir"));
+        srcTextField.setText(conf.getString("i18n.remove.src.dir"));
 
         JButton srcButton = new JButton("Source Directory");
         srcButton.addMouseListener(new MouseAdapter() {
@@ -83,7 +81,7 @@ public class I18NFindLongestFrame extends JEasyFrame {
         contentPane.add(itemPanel);
 
         JTextField itemTextField = new JTextField();
-        itemTextField.setText(conf.getString("i18n.longest.items"));
+        itemTextField.setText(conf.getString("i18n.remove.items"));
 
         JLabel itemLabel = new JLabel("Items");
 
@@ -94,7 +92,7 @@ public class I18NFindLongestFrame extends JEasyFrame {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         contentPane.add(operationPanel);
 
-        JButton sceenshotButton = new JButton(bundle.getString("i18n.longest.find"));
+        JButton sceenshotButton = new JButton(bundle.getString("i18n.remove.title"));
         sceenshotButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -104,7 +102,7 @@ public class I18NFindLongestFrame extends JEasyFrame {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestFrame.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18NRemoveFrame.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -116,55 +114,27 @@ public class I18NFindLongestFrame extends JEasyFrame {
                     logger.error("getCanonicalPath fail");
                     return;
                 }
-                conf.setProperty("i18n.longest.src.dir", srcPath);
+                conf.setProperty("i18n.remove.src.dir", srcPath);
 
                 String item = itemTextField.getText();
                 if (StringUtils.isEmpty(item)) {
                     logger.error("item is empty");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestFrame.this, "item is empty", "ERROR",
+                    JOptionPane.showMessageDialog(I18NRemoveFrame.this, "item is empty", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     itemTextField.requestFocus();
                     return;
                 }
 
-                conf.setProperty("i18n.longest.items", item);
-                sort(srcPath, itemTextField.getText());
-                if (CollectionUtils.isEmpty(infos)) {
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestFrame.this, "Failed, please see the log", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    I18NInfo info = infos.get(0);
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("length: ").append(info.length).append(System.getProperty("line.separator"))
-                            .append("text: ").append(info.text).append(System.getProperty("line.separator"))
-                            .append("path: ").append(info.path);
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestFrame.this, sb.toString(), "INFO",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-
+                conf.setProperty("i18n.remove.items", item);
+                remove(srcPath, itemTextField.getText());
             }
         });
 
         operationPanel.add(sceenshotButton);
     }
 
-    private String getCanonicalPath(File file) {
-        if (file == null) {
-            logger.error("file is null");
-            return null;
-        }
-        try {
-            return file.getCanonicalPath();
-        } catch (IOException e) {
-            logger.error("getCanonicalPath failed: " + file.getAbsolutePath(), e);
-            return null;
-        }
-    }
-
-    private void sort(String sourceBaseStr, String itemName) {
+    private void remove(String sourceBaseStr, String itemName) {
         File[] sourceParentFiles = new File(sourceBaseStr).listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -175,62 +145,23 @@ public class I18NFindLongestFrame extends JEasyFrame {
             logger.error("None valid directory found");
             return;
         }
+        int count = 0;
         for (File sourceParentFile : sourceParentFiles) {
             File sourceFile = new File(sourceParentFile, "strings.xml");
             if (sourceFile.exists()) {
-                SAXBuilder builder = new SAXBuilder();
-                Document sourceDoc;
                 try {
-                    sourceDoc = builder.build(sourceFile);
-                } catch (JDOMException | IOException e) {
-                    logger.error("build failed: " + sourceFile, e);
+                    System.out.println("read from: " + sourceFile.getCanonicalPath());
+                    String content = FileUtils.readFileToString(sourceFile, charset);
+                    Pattern pattern = Pattern.compile("\\s*<string name=\"" + itemName + "\".*>.*</string>");
+                    Matcher matcher = pattern.matcher(content);
+                    String resultString = matcher.replaceAll("");
+                    FileUtils.writeStringToFile(sourceFile, resultString, charset);
+                    logger.info("remove success, count: " + (++count) + ", and file: " + sourceFile);
+                } catch (IOException e) {
+                    logger.error("remove exception: " + sourceFile, e);
                     continue;
                 }
-                Element sourceRoot = sourceDoc.getRootElement();
-                for (Element child : sourceRoot.getChildren()) {
-                    String value = child.getAttributeValue("name");
-                    if (value != null && value.equals(itemName)) {
-                        String text = child.getText();
-                        if (text != null) {
-                            I18NInfo info = new I18NInfo(getCanonicalPath(sourceFile), text, text.length());
-                            infos.add(info);
-                            break;
-                        }
-                    }
-                }
-
             }
-
         }
-        Collections.sort(infos, new Comparator<I18NInfo>() {
-            @Override
-            public int compare(I18NInfo o1, I18NInfo o2) {
-                return o2.length - o1.length;
-            }
-        });
-
-        logger.info(infos);
-    }
-}
-
-class I18NInfo {
-    String path;
-    String text;
-    int length;
-
-    public I18NInfo(String path, String text, int length) {
-        this.path = path;
-        this.text = text;
-        this.length = length;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "I18NInfo [path=" + path + ", text=" + text + ", length=" + length + "]";
     }
 }

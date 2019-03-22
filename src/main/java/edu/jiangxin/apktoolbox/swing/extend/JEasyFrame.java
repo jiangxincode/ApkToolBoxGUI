@@ -17,27 +17,27 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class JEasyFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	protected Logger logger;
-	protected Configuration conf;
-	protected ResourceBundle bundle;
+    private static final long serialVersionUID = 1L;
+    protected Logger logger;
+    protected Configuration conf;
+    protected ResourceBundle bundle;
 
-	public JEasyFrame() throws HeadlessException {
-		super();
-		logger = LogManager.getLogger(this.getClass().getSimpleName());
-		conf = Utils.getConfiguration();
-		bundle = ResourceBundle.getBundle("apktoolbox");
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				super.windowClosing(e);
-				Utils.saveConfiguration();
-				logger.info("Frame stop: " + JEasyFrame.this.getClass().getSimpleName());
-			}
-		});
-		Toolkit tk=Toolkit.getDefaultToolkit();
-		Image image=tk.createImage(this.getClass().getResource("/icon.jpg"));
-		setIconImage(image);
-		logger.info("Frame start: " + this.getClass().getSimpleName());
-	}
+    public JEasyFrame() throws HeadlessException {
+        super();
+        logger = LogManager.getLogger(this.getClass().getSimpleName());
+        conf = Utils.getConfiguration();
+        bundle = ResourceBundle.getBundle("apktoolbox");
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                Utils.saveConfiguration();
+                logger.info("Frame stop: " + JEasyFrame.this.getClass().getSimpleName());
+            }
+        });
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Image image = tk.createImage(this.getClass().getResource("/icon.jpg"));
+        setIconImage(image);
+        logger.info("Frame start: " + this.getClass().getSimpleName());
+    }
 }

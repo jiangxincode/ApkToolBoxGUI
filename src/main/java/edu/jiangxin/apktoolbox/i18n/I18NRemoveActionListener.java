@@ -5,13 +5,12 @@ import java.awt.event.ActionListener;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class I18NAddActionListener implements ActionListener {
+public class I18NRemoveActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        I18NAddFrame i18NAddFrame = new I18NAddFrame();
-        i18NAddFrame.setVisible(true);
-        Utils.setJFrameCenterInScreen(i18NAddFrame);
-
+        I18NRemoveFrame i18NRemoveFrame = new I18NRemoveFrame();
+        i18NRemoveFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(i18NRemoveFrame);
     }
 }

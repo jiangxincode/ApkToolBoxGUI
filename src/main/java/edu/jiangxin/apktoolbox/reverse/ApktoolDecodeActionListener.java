@@ -7,10 +7,10 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class ApktoolDecodeActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		ApktoolDecodeFrame apkSignerFrame = new ApktoolDecodeFrame();
-		apkSignerFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(apkSignerFrame);
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        ApktoolDecodeFrame apkSignerFrame = new ApktoolDecodeFrame();
+        apkSignerFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(apkSignerFrame);
+    }
 }

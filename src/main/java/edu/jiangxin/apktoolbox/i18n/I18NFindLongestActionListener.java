@@ -7,12 +7,12 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class I18NFindLongestActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		I18NFindLongestFrame i18NGetLongestFrame = new I18NFindLongestFrame();
-		i18NGetLongestFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(i18NGetLongestFrame);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        I18NFindLongestFrame i18NGetLongestFrame = new I18NFindLongestFrame();
+        i18NGetLongestFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(i18NGetLongestFrame);
 
-	}
+    }
 
 }

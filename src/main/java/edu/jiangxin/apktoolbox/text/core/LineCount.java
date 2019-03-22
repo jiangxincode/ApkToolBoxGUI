@@ -11,6 +11,7 @@ import java.io.LineNumberReader;
 
 /**
  * 文件行数统计
+ * 
  * @author jiangxin
  */
 public class LineCount {
@@ -26,7 +27,7 @@ public class LineCount {
         System.out.println("BufferedInputStream" + count(fileName));
         System.out.println(System.currentTimeMillis() - time);
     }
-   
+
     public static int getTotalLines(String fileName) throws IOException {
         FileReader in = new FileReader(fileName);
         LineNumberReader reader = new LineNumberReader(in);
@@ -40,17 +41,19 @@ public class LineCount {
         in.close();
         return totalLines;
     }
+
     public static int getTotalLines2(String fileName) throws IOException {
-    	BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
-    	String strLine = in.readLine();
-    	int totalLines = 0;
-    	while (strLine != null) {
+        BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
+        String strLine = in.readLine();
+        int totalLines = 0;
+        while (strLine != null) {
             totalLines++;
             strLine = in.readLine();
         }
-    	in.close();
-		return totalLines;
+        in.close();
+        return totalLines;
     }
+
     public static int count(String filename) throws IOException {
         InputStream is = new BufferedInputStream(new FileInputStream(filename));
         byte[] c = new byte[1024];

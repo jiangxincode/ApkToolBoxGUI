@@ -28,163 +28,163 @@ import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class ScreenShotFrame extends JEasyFrame {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ScreenShotFrame() throws HeadlessException {
-		super();
-		setTitle("Screenshot");
-		setSize(600, 130);
-		setResizable(false);
+    public ScreenShotFrame() throws HeadlessException {
+        super();
+        setTitle("Screenshot");
+        setSize(600, 130);
+        setResizable(false);
 
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-		BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-		contentPane.setLayout(boxLayout);
-		setContentPane(contentPane);
+        JPanel contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
+        contentPane.setLayout(boxLayout);
+        setContentPane(contentPane);
 
-		JPanel directoryPanel = new JPanel();
-		contentPane.add(directoryPanel);
+        JPanel directoryPanel = new JPanel();
+        contentPane.add(directoryPanel);
 
-		JTextField directoryTextField = new JTextField();
-		directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
+        JTextField directoryTextField = new JTextField();
+        directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
 
-		JButton directoryButton = new JButton("Save Directory");
-		directoryButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				super.mousePressed(e);
-				JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				jfc.setDialogTitle("select a directory");
-				int ret = jfc.showDialog(new JLabel(), null);
-				switch (ret) {
-				case JFileChooser.APPROVE_OPTION:
-					File file = jfc.getSelectedFile();
-					directoryTextField.setText(file.getAbsolutePath());
-					conf.setProperty("screenshot.save.dir", file.getAbsolutePath());
-					break;
+        JButton directoryButton = new JButton("Save Directory");
+        directoryButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                jfc.setDialogTitle("select a directory");
+                int ret = jfc.showDialog(new JLabel(), null);
+                switch (ret) {
+                case JFileChooser.APPROVE_OPTION:
+                    File file = jfc.getSelectedFile();
+                    directoryTextField.setText(file.getAbsolutePath());
+                    conf.setProperty("screenshot.save.dir", file.getAbsolutePath());
+                    break;
 
-				default:
-					break;
-				}
+                default:
+                    break;
+                }
 
-			}
-		});
+            }
+        });
 
-		directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
-		directoryPanel.add(directoryTextField);
-		directoryPanel.add(directoryButton);
+        directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
+        directoryPanel.add(directoryTextField);
+        directoryPanel.add(directoryButton);
 
-		JPanel fileNamePanel = new JPanel();
-		contentPane.add(fileNamePanel);
+        JPanel fileNamePanel = new JPanel();
+        contentPane.add(fileNamePanel);
 
-		JTextField fileNameTextField = new JTextField();
-		fileNameTextField.setToolTipText("timestamp default(for example: 20180101122345.png)");
+        JTextField fileNameTextField = new JTextField();
+        fileNameTextField.setToolTipText("timestamp default(for example: 20180101122345.png)");
 
-		JButton fileNameButton = new JButton("File name");
+        JButton fileNameButton = new JButton("File name");
 
-		fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
-		fileNamePanel.add(fileNameTextField);
-		fileNamePanel.add(fileNameButton);
+        fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
+        fileNamePanel.add(fileNameTextField);
+        fileNamePanel.add(fileNameButton);
 
-		JPanel sceenshotPanel = new JPanel();
-		sceenshotPanel.setLayout(new BoxLayout(sceenshotPanel, BoxLayout.X_AXIS));
-		contentPane.add(sceenshotPanel);
+        JPanel sceenshotPanel = new JPanel();
+        sceenshotPanel.setLayout(new BoxLayout(sceenshotPanel, BoxLayout.X_AXIS));
+        contentPane.add(sceenshotPanel);
 
-		JCheckBox openCheckBox = new JCheckBox("Open Dir");
-		openCheckBox.setSelected(false);
+        JCheckBox openCheckBox = new JCheckBox("Open Dir");
+        openCheckBox.setSelected(false);
 
-		JCheckBox copyCheckBox = new JCheckBox("Copy Pic");
-		copyCheckBox.setSelected(false);
+        JCheckBox copyCheckBox = new JCheckBox("Copy Pic");
+        copyCheckBox.setSelected(false);
 
-		JButton sceenshotButton = new JButton("Sceenshot");
-		sceenshotButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				super.mousePressed(e);
-				String dirName = fileNameTextField.getText();
-				if (StringUtils.isEmpty(dirName)) {
-					String defaultDir = System.getenv("USERPROFILE");
-					dirName = conf.getString("screenshot.save.dir", defaultDir);
-					logger.info("dirName: " + dirName);
-				}
-				String fileName = fileNameTextField.getText();
-				if (StringUtils.isEmpty(fileName)) {
-					fileName = Utils.getCurrentDateString() + ".png";
-				}
-				File file = new File(dirName, fileName);
-				if (file.exists()) {
+        JButton sceenshotButton = new JButton("Sceenshot");
+        sceenshotButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                String dirName = fileNameTextField.getText();
+                if (StringUtils.isEmpty(dirName)) {
+                    String defaultDir = System.getenv("USERPROFILE");
+                    dirName = conf.getString("screenshot.save.dir", defaultDir);
+                    logger.info("dirName: " + dirName);
+                }
+                String fileName = fileNameTextField.getText();
+                if (StringUtils.isEmpty(fileName)) {
+                    fileName = Utils.getCurrentDateString() + ".png";
+                }
+                File file = new File(dirName, fileName);
+                if (file.exists()) {
 
-				}
-				try {
-					Process process1 = Runtime.getRuntime()
-							.exec("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
-					new StreamHandler(process1.getInputStream(), 0).start();
-					new StreamHandler(process1.getErrorStream(), 1).start();
-					process1.waitFor();
-					logger.info("screencap finish");
-					Process process2 = Runtime.getRuntime()
-							.exec("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
-					new StreamHandler(process2.getInputStream(), 0).start();
-					new StreamHandler(process2.getErrorStream(), 1).start();
-					process2.waitFor();
-					logger.info("pull finish");
-					if (openCheckBox.isSelected()) {
-						Process process3 = Runtime.getRuntime().exec("explorer /e,/select," + file.getCanonicalPath());
-						new StreamHandler(process3.getInputStream(), 0).start();
-						new StreamHandler(process3.getErrorStream(), 1).start();
-						process3.waitFor();
-						logger.info("open dir finish");
-					}
-					if (copyCheckBox.isSelected()) {
-						logger.info("copy the snapshot");
-						Image image = ImageIO.read(file);
-						setClipboardImage(ScreenShotFrame.this, image);
-						logger.info("copy finish");
-					}
-				} catch (IOException | InterruptedException e1) {
-					logger.error("screenshot fail", e1);
-				}
-			}
-		});
+                }
+                try {
+                    Process process1 = Runtime.getRuntime()
+                            .exec("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
+                    new StreamHandler(process1.getInputStream(), 0).start();
+                    new StreamHandler(process1.getErrorStream(), 1).start();
+                    process1.waitFor();
+                    logger.info("screencap finish");
+                    Process process2 = Runtime.getRuntime()
+                            .exec("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
+                    new StreamHandler(process2.getInputStream(), 0).start();
+                    new StreamHandler(process2.getErrorStream(), 1).start();
+                    process2.waitFor();
+                    logger.info("pull finish");
+                    if (openCheckBox.isSelected()) {
+                        Process process3 = Runtime.getRuntime().exec("explorer /e,/select," + file.getCanonicalPath());
+                        new StreamHandler(process3.getInputStream(), 0).start();
+                        new StreamHandler(process3.getErrorStream(), 1).start();
+                        process3.waitFor();
+                        logger.info("open dir finish");
+                    }
+                    if (copyCheckBox.isSelected()) {
+                        logger.info("copy the snapshot");
+                        Image image = ImageIO.read(file);
+                        setClipboardImage(ScreenShotFrame.this, image);
+                        logger.info("copy finish");
+                    }
+                } catch (IOException | InterruptedException e1) {
+                    logger.error("screenshot fail", e1);
+                }
+            }
+        });
 
-		JButton getExistButton = new JButton("Get Exist");
-		getExistButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				super.mousePressed(e);
-				System.out.println("Get Exist");
-			}
-		});
+        JButton getExistButton = new JButton("Get Exist");
+        getExistButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                System.out.println("Get Exist");
+            }
+        });
 
-		sceenshotPanel.add(openCheckBox);
-		sceenshotPanel.add(copyCheckBox);
-		sceenshotPanel.add(sceenshotButton);
-		sceenshotPanel.add(getExistButton);
+        sceenshotPanel.add(openCheckBox);
+        sceenshotPanel.add(copyCheckBox);
+        sceenshotPanel.add(sceenshotButton);
+        sceenshotPanel.add(getExistButton);
 
-	}
+    }
 
-	public static void setClipboardImage(JFrame frame, final Image image) {
-		Transferable trans = new Transferable() {
-			@Override
-			public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-				if (isDataFlavorSupported(flavor)) {
-					return image;
-				}
-				throw new UnsupportedFlavorException(flavor);
-			}
+    public static void setClipboardImage(JFrame frame, final Image image) {
+        Transferable trans = new Transferable() {
+            @Override
+            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                if (isDataFlavorSupported(flavor)) {
+                    return image;
+                }
+                throw new UnsupportedFlavorException(flavor);
+            }
 
-			@Override
-			public DataFlavor[] getTransferDataFlavors() {
-				return new DataFlavor[] { DataFlavor.imageFlavor };
-			}
+            @Override
+            public DataFlavor[] getTransferDataFlavors() {
+                return new DataFlavor[] { DataFlavor.imageFlavor };
+            }
 
-			@Override
-			public boolean isDataFlavorSupported(DataFlavor flavor) {
-				return DataFlavor.imageFlavor.equals(flavor);
-			}
-		};
+            @Override
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+                return DataFlavor.imageFlavor.equals(flavor);
+            }
+        };
 
-		frame.getToolkit().getSystemClipboard().setContents(trans, null);
-	}
+        frame.getToolkit().getSystemClipboard().setContents(trans, null);
+    }
 }

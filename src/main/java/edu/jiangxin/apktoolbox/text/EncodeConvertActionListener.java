@@ -7,12 +7,12 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class EncodeConvertActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		EncodeConvertFrame encodeConvertFrame = new EncodeConvertFrame();
-		encodeConvertFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(encodeConvertFrame);
-		encodeConvertFrame.pack();
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        EncodeConvertFrame encodeConvertFrame = new EncodeConvertFrame();
+        encodeConvertFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(encodeConvertFrame);
+        encodeConvertFrame.pack();
+    }
 
 }

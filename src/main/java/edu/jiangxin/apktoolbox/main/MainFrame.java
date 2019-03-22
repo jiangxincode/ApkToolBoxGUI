@@ -24,6 +24,7 @@ import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
 import edu.jiangxin.apktoolbox.help.ContributeActionListener;
 import edu.jiangxin.apktoolbox.i18n.I18NAddActionListener;
 import edu.jiangxin.apktoolbox.i18n.I18NFindLongestActionListener;
+import edu.jiangxin.apktoolbox.i18n.I18NRemoveActionListener;
 import edu.jiangxin.apktoolbox.monkey.MonkeyActionListener;
 import edu.jiangxin.apktoolbox.reverse.AXMLPrinterActionListener;
 import edu.jiangxin.apktoolbox.reverse.ApkSignerActionListener;
@@ -39,155 +40,158 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MainFrame extends JEasyFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					/*UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());*/
-					MainFrame frame = new MainFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    /* UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); */
+                    MainFrame frame = new MainFrame();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	public MainFrame() {
-		setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(700, 500);
-		Utils.setJFrameCenterInScreen(this);
+    public MainFrame() {
+        setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(700, 500);
+        Utils.setJFrameCenterInScreen(this);
 
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
 
-		JMenu reverseMenu = new JMenu("Reverse");
-		reverseMenu.setMnemonic(KeyEvent.VK_R);
-		menuBar.add(reverseMenu);
+        JMenu reverseMenu = new JMenu("Reverse");
+        reverseMenu.setMnemonic(KeyEvent.VK_R);
+        menuBar.add(reverseMenu);
 
-		JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
-		apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
-		apktoolDecodeMenuItem.addActionListener(new ApktoolDecodeActionListener());
-		reverseMenu.add(apktoolDecodeMenuItem);
+        JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
+        apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
+        apktoolDecodeMenuItem.addActionListener(new ApktoolDecodeActionListener());
+        reverseMenu.add(apktoolDecodeMenuItem);
 
-		JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
-		apktoolRebuildMenuItem.addActionListener(new ApktoolRebuildActionListener());
-		reverseMenu.add(apktoolRebuildMenuItem);
+        JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
+        apktoolRebuildMenuItem.addActionListener(new ApktoolRebuildActionListener());
+        reverseMenu.add(apktoolRebuildMenuItem);
 
-		JMenuItem apkSignMenuItem = new JMenuItem("ApkSigner");
-		apkSignMenuItem.addActionListener(new ApkSignerActionListener());
-		reverseMenu.add(apkSignMenuItem);
+        JMenuItem apkSignMenuItem = new JMenuItem("ApkSigner");
+        apkSignMenuItem.addActionListener(new ApkSignerActionListener());
+        reverseMenu.add(apkSignMenuItem);
 
-		JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
-		jDMenuItem.addActionListener(new JDActionListener());
-		reverseMenu.add(jDMenuItem);
+        JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
+        jDMenuItem.addActionListener(new JDActionListener());
+        reverseMenu.add(jDMenuItem);
 
-		JMenuItem jADXMenuItem = new JMenuItem("JADX-GUI");
-		jADXMenuItem.addActionListener(new JADXActionListener());
-		reverseMenu.add(jADXMenuItem);
+        JMenuItem jADXMenuItem = new JMenuItem("JADX-GUI");
+        jADXMenuItem.addActionListener(new JADXActionListener());
+        reverseMenu.add(jADXMenuItem);
 
-		JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
-		aXMLPrinter.addActionListener(new AXMLPrinterActionListener());
-		reverseMenu.add(aXMLPrinter);
+        JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
+        aXMLPrinter.addActionListener(new AXMLPrinterActionListener());
+        reverseMenu.add(aXMLPrinter);
 
-		JMenu screenshotMenu = new JMenu("Screnshot");
-		menuBar.add(screenshotMenu);
+        JMenu screenshotMenu = new JMenu("Screnshot");
+        menuBar.add(screenshotMenu);
 
-		JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
-		screenShotMenuItem.addActionListener(new ScreenshotActionListener());
-		screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
-		screenshotMenu.add(screenShotMenuItem);
+        JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
+        screenShotMenuItem.addActionListener(new ScreenshotActionListener());
+        screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+        screenshotMenu.add(screenShotMenuItem);
 
-		JMenu testMenu = new JMenu("Test");
-		menuBar.add(testMenu);
+        JMenu testMenu = new JMenu("Test");
+        menuBar.add(testMenu);
 
-		JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
-		monkeyMenuItem.addActionListener(new MonkeyActionListener());
-		testMenu.add(monkeyMenuItem);
-		
-		JMenu textMenu = new JMenu(bundle.getString("text.title"));
-		menuBar.add(textMenu);
+        JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
+        monkeyMenuItem.addActionListener(new MonkeyActionListener());
+        testMenu.add(monkeyMenuItem);
 
-		JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
-		osConvertMenuItem.addActionListener(new OSConvertActionListener());
-		textMenu.add(osConvertMenuItem);
-		
-		JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert"));
-		encodeConvertMenuItem.addActionListener(new EncodeConvertActionListener());
-		textMenu.add(encodeConvertMenuItem);
-		
-		JMenu i18nMenu = new JMenu(bundle.getString("i18n.title"));
-		menuBar.add(i18nMenu);
+        JMenu textMenu = new JMenu(bundle.getString("text.title"));
+        menuBar.add(textMenu);
 
-		JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-		i18nAddMenuItem.addActionListener(new I18NAddActionListener());
-		i18nMenu.add(i18nAddMenuItem);
-		
-		JMenuItem i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
-		i18nFindLongestMenuItem.addActionListener(new I18NFindLongestActionListener());
-		i18nMenu.add(i18nFindLongestMenuItem);
+        JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
+        osConvertMenuItem.addActionListener(new OSConvertActionListener());
+        textMenu.add(osConvertMenuItem);
 
-		JMenu helpMenu = new JMenu(bundle.getString("help.title"));
-		menuBar.add(helpMenu);
-		
-		JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
-		checkUpdateMenuItem.addActionListener(new CheckUpdateActionListener(this));
-		helpMenu.add(checkUpdateMenuItem);
+        JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert"));
+        encodeConvertMenuItem.addActionListener(new EncodeConvertActionListener());
+        textMenu.add(encodeConvertMenuItem);
 
-		JMenuItem contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
-		contributeMenuItem.addActionListener(new ContributeActionListener());
-		helpMenu.add(contributeMenuItem);
+        JMenu i18nMenu = new JMenu(bundle.getString("i18n.title"));
+        menuBar.add(i18nMenu);
 
-		JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
-		aboutMenuItem.addActionListener(new AboutActionListener());
-		helpMenu.add(aboutMenuItem);
+        JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
+        i18nAddMenuItem.addActionListener(new I18NAddActionListener());
+        i18nMenu.add(i18nAddMenuItem);
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+        JMenuItem i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
+        i18nFindLongestMenuItem.addActionListener(new I18NFindLongestActionListener());
+        i18nMenu.add(i18nFindLongestMenuItem);
 
-		JPanel leftPanel = new JPanel();
-		contentPane.add(leftPanel, BorderLayout.WEST);
+        JMenuItem i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
+        i18nRemoveMenuItem.addActionListener(new I18NRemoveActionListener());
+        i18nMenu.add(i18nRemoveMenuItem);
 
-		JTree contentTree = new JTree();
-		leftPanel.add(contentTree);
+        JMenu helpMenu = new JMenu(bundle.getString("help.title"));
+        menuBar.add(helpMenu);
 
-		JPanel centerPanel = new JPanel();
-		centerPanel.setMinimumSize(new Dimension(5, 5));
-		centerPanel.setSize(new Dimension(60, 80));
-		centerPanel.setAlignmentY(0.3f);
-		centerPanel.setAlignmentX(0.3f);
-		contentPane.add(centerPanel, BorderLayout.CENTER);
-		centerPanel.setLayout(new BorderLayout(0, 0));
+        JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
+        checkUpdateMenuItem.addActionListener(new CheckUpdateActionListener(this));
+        helpMenu.add(checkUpdateMenuItem);
 
-		JList contentList = new JList();
-		contentList.setModel(new AbstractListModel() {
-			/**
-			 *
-			 */
-			private static final long serialVersionUID = 1L;
-			String[] values = new String[] { "1", "4", "5", "6" };
+        JMenuItem contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
+        contributeMenuItem.addActionListener(new ContributeActionListener());
+        helpMenu.add(contributeMenuItem);
 
-			public int getSize() {
-				return values.length;
-			}
+        JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
+        aboutMenuItem.addActionListener(new AboutActionListener());
+        helpMenu.add(aboutMenuItem);
 
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		contentList.setSelectedIndex(0);
-		centerPanel.add(contentList);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setLayout(new BorderLayout(0, 0));
+        setContentPane(contentPane);
 
-		JPanel statusPanel = new JPanel();
-		contentPane.add(statusPanel, BorderLayout.SOUTH);
+        JPanel leftPanel = new JPanel();
+        contentPane.add(leftPanel, BorderLayout.WEST);
 
-		
-	}
+        JTree contentTree = new JTree();
+        leftPanel.add(contentTree);
+
+        JPanel centerPanel = new JPanel();
+        centerPanel.setMinimumSize(new Dimension(5, 5));
+        centerPanel.setSize(new Dimension(60, 80));
+        centerPanel.setAlignmentY(0.3f);
+        centerPanel.setAlignmentX(0.3f);
+        contentPane.add(centerPanel, BorderLayout.CENTER);
+        centerPanel.setLayout(new BorderLayout(0, 0));
+
+        JList contentList = new JList();
+        contentList.setModel(new AbstractListModel() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
+            String[] values = new String[] { "1", "4", "5", "6" };
+
+            public int getSize() {
+                return values.length;
+            }
+
+            public Object getElementAt(int index) {
+                return values[index];
+            }
+        });
+        contentList.setSelectedIndex(0);
+        centerPanel.add(contentList);
+
+        JPanel statusPanel = new JPanel();
+        contentPane.add(statusPanel, BorderLayout.SOUTH);
+
+    }
 
 }

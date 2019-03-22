@@ -7,11 +7,11 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class AboutActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		AboutFrame aboutFrame = new AboutFrame();
-		aboutFrame.setVisible(true);
-		Utils.setJFrameCenterInScreen(aboutFrame);
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        AboutFrame aboutFrame = new AboutFrame();
+        aboutFrame.setVisible(true);
+        Utils.setJFrameCenterInScreen(aboutFrame);
+    }
 
 }

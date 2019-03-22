@@ -9,17 +9,17 @@ import java.net.URISyntaxException;
 
 public class ContributeActionListener implements ActionListener {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		URI uri;
-		try {
-			uri = new URI("https://github.com/jiangxincode/ApkToolBoxGUI");
-			Desktop.getDesktop().browse(uri);
-		} catch (URISyntaxException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        URI uri;
+        try {
+            uri = new URI("https://github.com/jiangxincode/ApkToolBoxGUI");
+            Desktop.getDesktop().browse(uri);
+        } catch (URISyntaxException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
 }

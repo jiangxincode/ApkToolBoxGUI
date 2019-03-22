@@ -28,159 +28,159 @@ import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class AXMLPrinterFrame extends JEasyFrame {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AXMLPrinterFrame() throws HeadlessException {
-		super();
-		setTitle("AXMLPrinter3");
-		setSize(600, 120);
-		setResizable(false);
+    public AXMLPrinterFrame() throws HeadlessException {
+        super();
+        setTitle("AXMLPrinter3");
+        setSize(600, 120);
+        setResizable(false);
 
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-		BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-		contentPane.setLayout(boxLayout);
-		setContentPane(contentPane);
+        JPanel contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
+        contentPane.setLayout(boxLayout);
+        setContentPane(contentPane);
 
-		JPanel sourcePanel = new JPanel();
-		sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-		contentPane.add(sourcePanel);
+        JPanel sourcePanel = new JPanel();
+        sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
+        contentPane.add(sourcePanel);
 
-		JTextField srcTextField = new JTextField();
-		srcTextField.setText(conf.getString("axmlprinter.src.file"));
+        JTextField srcTextField = new JTextField();
+        srcTextField.setText(conf.getString("axmlprinter.src.file"));
 
-		JButton srcButton = new JButton("Source File");
-		srcButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				super.mousePressed(e);
-				JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				jfc.setDialogTitle("select a file");
-				int ret = jfc.showDialog(new JLabel(), null);
-				switch (ret) {
-				case JFileChooser.APPROVE_OPTION:
-					File file = jfc.getSelectedFile();
-					srcTextField.setText(file.getAbsolutePath());
-					break;
-				default:
-					break;
-				}
+        JButton srcButton = new JButton("Source File");
+        srcButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                jfc.setDialogTitle("select a file");
+                int ret = jfc.showDialog(new JLabel(), null);
+                switch (ret) {
+                case JFileChooser.APPROVE_OPTION:
+                    File file = jfc.getSelectedFile();
+                    srcTextField.setText(file.getAbsolutePath());
+                    break;
+                default:
+                    break;
+                }
 
-			}
-		});
+            }
+        });
 
-		sourcePanel.add(srcTextField);
-		sourcePanel.add(srcButton);
+        sourcePanel.add(srcTextField);
+        sourcePanel.add(srcButton);
 
-		JPanel targetPanel = new JPanel();
-		targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
-		contentPane.add(targetPanel);
+        JPanel targetPanel = new JPanel();
+        targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+        contentPane.add(targetPanel);
 
-		JTextField targetTextField = new JTextField();
-		targetTextField.setText(conf.getString("axmlprinter.target.dir"));
+        JTextField targetTextField = new JTextField();
+        targetTextField.setText(conf.getString("axmlprinter.target.dir"));
 
-		JButton targetButton = new JButton("Save Dir");
-		targetButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				super.mousePressed(e);
-				JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				jfc.setDialogTitle("save to");
-				int ret = jfc.showDialog(new JLabel(), null);
-				switch (ret) {
-				case JFileChooser.APPROVE_OPTION:
-					File file = jfc.getSelectedFile();
-					targetTextField.setText(file.getAbsolutePath());
-					break;
+        JButton targetButton = new JButton("Save Dir");
+        targetButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                jfc.setDialogTitle("save to");
+                int ret = jfc.showDialog(new JLabel(), null);
+                switch (ret) {
+                case JFileChooser.APPROVE_OPTION:
+                    File file = jfc.getSelectedFile();
+                    targetTextField.setText(file.getAbsolutePath());
+                    break;
 
-				default:
-					break;
-				}
+                default:
+                    break;
+                }
 
-			}
-		});
+            }
+        });
 
-		targetPanel.add(targetTextField);
-		targetPanel.add(targetButton);
+        targetPanel.add(targetTextField);
+        targetPanel.add(targetButton);
 
-		JPanel operationPanel = new JPanel();
-		operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-		contentPane.add(operationPanel);
+        JPanel operationPanel = new JPanel();
+        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        contentPane.add(operationPanel);
 
-		JButton sceenshotButton = new JButton("Get File");
-		sceenshotButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				super.mousePressed(e);
-				File srcFile = new File(srcTextField.getText());
-				if (!srcFile.exists() || !srcFile.isFile()) {
-					logger.error("srcFile is invalid");
-					Toolkit.getDefaultToolkit().beep();
-					JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Source file is invalid", "ERROR",
-							JOptionPane.ERROR_MESSAGE);
-					srcTextField.requestFocus();
-					return;
-				}
-				String srcPath;
-				try {
-					srcPath = srcFile.getCanonicalPath();
-				} catch (IOException e2) {
-					logger.error("getCanonicalPath fail");
-					return;
-				}
-				conf.setProperty("axmlprinter.src.file", srcPath);
-				File targetFile = new File(targetTextField.getText());
-				if (!targetFile.exists() || !targetFile.isDirectory()) {
-					logger.error("targetFile is invalid");
-					Toolkit.getDefaultToolkit().beep();
-					JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Target dir is invalid", "ERROR",
-							JOptionPane.ERROR_MESSAGE);
-					targetTextField.requestFocus();
-					return;
-				}
-				String targetPath;
-				try {
-					targetPath = targetFile.getCanonicalPath();
-				} catch (IOException e2) {
-					logger.error("getCanonicalPath fail");
-					return;
-				}
-				conf.setProperty("axmlprinter.target.dir", targetPath);
-				try {
-					ZipFile zip = new ZipFile(srcFile);
-					Enumeration<?> entries = zip.entries();
-					while (entries.hasMoreElements()) {
-						ZipEntry entry = (ZipEntry) entries.nextElement();
-						if (entry.getName().equals("AndroidManifest.xml")) {
-							IOUtils.copy(zip.getInputStream(entry),
-									new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig")));
-							break;
-						}
+        JButton sceenshotButton = new JButton("Get File");
+        sceenshotButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                File srcFile = new File(srcTextField.getText());
+                if (!srcFile.exists() || !srcFile.isFile()) {
+                    logger.error("srcFile is invalid");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Source file is invalid", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                    srcTextField.requestFocus();
+                    return;
+                }
+                String srcPath;
+                try {
+                    srcPath = srcFile.getCanonicalPath();
+                } catch (IOException e2) {
+                    logger.error("getCanonicalPath fail");
+                    return;
+                }
+                conf.setProperty("axmlprinter.src.file", srcPath);
+                File targetFile = new File(targetTextField.getText());
+                if (!targetFile.exists() || !targetFile.isDirectory()) {
+                    logger.error("targetFile is invalid");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Target dir is invalid", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                    targetTextField.requestFocus();
+                    return;
+                }
+                String targetPath;
+                try {
+                    targetPath = targetFile.getCanonicalPath();
+                } catch (IOException e2) {
+                    logger.error("getCanonicalPath fail");
+                    return;
+                }
+                conf.setProperty("axmlprinter.target.dir", targetPath);
+                try {
+                    ZipFile zip = new ZipFile(srcFile);
+                    Enumeration<?> entries = zip.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = (ZipEntry) entries.nextElement();
+                        if (entry.getName().equals("AndroidManifest.xml")) {
+                            IOUtils.copy(zip.getInputStream(entry),
+                                    new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig")));
+                            break;
+                        }
 
-					}
+                    }
 
-					zip.close();
-					StringBuilder sb = new StringBuilder();
-					sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-							.append(Utils.getToolsPath()).append(File.separator).append("AXMLPrinter3.jar\"")
-							.append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
-					String cmd = sb.toString();
-					logger.info(cmd);
-					Process process = Runtime.getRuntime().exec(cmd);
-					String content = Utils.loadStream(process.getInputStream());
-					FileUtils.writeStringToFile(new File(targetFile, "AndroidManifest.xml"), content, "UTF-8", true);
-					new StreamHandler(process.getErrorStream(), 1).start();
-					process.waitFor();
-					logger.info("axmlprinter finish");
-				} catch (IOException | InterruptedException e1) {
-					logger.error("axmlprinter fail", e);
-				}
-			}
-		});
+                    zip.close();
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
+                            .append(Utils.getToolsPath()).append(File.separator).append("AXMLPrinter3.jar\"")
+                            .append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
+                    String cmd = sb.toString();
+                    logger.info(cmd);
+                    Process process = Runtime.getRuntime().exec(cmd);
+                    String content = Utils.loadStream(process.getInputStream());
+                    FileUtils.writeStringToFile(new File(targetFile, "AndroidManifest.xml"), content, "UTF-8", true);
+                    new StreamHandler(process.getErrorStream(), 1).start();
+                    process.waitFor();
+                    logger.info("axmlprinter finish");
+                } catch (IOException | InterruptedException e1) {
+                    logger.error("axmlprinter fail", e);
+                }
+            }
+        });
 
-		operationPanel.add(sceenshotButton);
-	}
+        operationPanel.add(sceenshotButton);
+    }
 
 }
