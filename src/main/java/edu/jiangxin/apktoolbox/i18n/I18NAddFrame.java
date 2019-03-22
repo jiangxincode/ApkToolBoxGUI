@@ -189,6 +189,8 @@ public class I18NAddFrame extends JEasyFrame {
 						}
 					}
 				}
+				// release all anonymous file stream(#22)
+				System.gc();
 			}
 		});
 
