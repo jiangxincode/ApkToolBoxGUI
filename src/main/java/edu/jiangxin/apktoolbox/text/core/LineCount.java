@@ -2,11 +2,10 @@ package edu.jiangxin.apktoolbox.text.core;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
 /**
@@ -29,8 +28,8 @@ public class LineCount {
     }
 
     public static int getTotalLines(String fileName) throws IOException {
-        FileReader in = new FileReader(fileName);
-        LineNumberReader reader = new LineNumberReader(in);
+        // 目前仅支持UTF-8
+        LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
         String strLine = reader.readLine();
         int totalLines = 0;
         while (strLine != null) {
@@ -38,12 +37,12 @@ public class LineCount {
             strLine = reader.readLine();
         }
         reader.close();
-        in.close();
         return totalLines;
     }
 
     public static int getTotalLines2(String fileName) throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
+        // 目前仅支持UTF-8
+        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
         String strLine = in.readLine();
         int totalLines = 0;
         while (strLine != null) {

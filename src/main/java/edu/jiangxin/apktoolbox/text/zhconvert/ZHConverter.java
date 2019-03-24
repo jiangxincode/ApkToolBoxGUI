@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.text.zhconvert;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,17 +53,17 @@ public class ZHConverter {
         if (is != null) {
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new InputStreamReader(is));
+                // 目前仅支持"UTF-8"
+                reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 charMap.load(reader);
-            } catch (FileNotFoundException e) {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    if (reader != null)
+                    if (reader != null) {
                         reader.close();
-                    if (is != null)
-                        is.close();
+                    }
+                    is.close();
                 } catch (IOException e) {
                 }
             }

@@ -72,7 +72,7 @@ public class EncoderDetector {
             public void run() {
                 UniversalDetector universalDetector = new UniversalDetector(null);
                 byte[] buf = new byte[4096];
-                FileInputStream fis;
+                FileInputStream fis = null;
                 try {
                     fis = new FileInputStream(file);
                     int nread;
@@ -84,6 +84,14 @@ public class EncoderDetector {
                 } catch (IOException e) {
                     logger.error("universalDetector failed", e);
                     detectorCharset[1] = null;
+                } finally {
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            logger.error("close fis failed", e);
+                        }
+                    }
                 }
                 countDownLatch.countDown();
             }

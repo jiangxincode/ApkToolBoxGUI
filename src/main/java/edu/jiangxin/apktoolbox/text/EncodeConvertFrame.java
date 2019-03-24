@@ -41,7 +41,7 @@ public class EncodeConvertFrame extends JEasyFrame {
 
     public EncodeConvertFrame() throws HeadlessException {
         super();
-        setTitle(bundle.getString("text.encode.convert"));
+        setTitle(bundle.getString("text.encode.convert.title"));
         setResizable(false);
 
         JPanel contentPane = new JPanel();

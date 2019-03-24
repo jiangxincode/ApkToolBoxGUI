@@ -71,12 +71,10 @@ public class Utils {
                     logger.error("bis close error", e);
                 }
             }
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error("in close error", e);
-                }
+            try {
+                in.close();
+            } catch (IOException e) {
+                logger.error("in close error", e);
             }
         }
         return buffer.toString();
@@ -98,7 +96,10 @@ public class Utils {
             if (!confiFile.exists()) {
                 try {
                     logger.info("confiFile does not exist");
-                    confiFile.createNewFile();
+                    boolean ret = confiFile.createNewFile();
+                    if (!ret) {
+                        logger.error("createNewFile fail");
+                    }
                 } catch (IOException e) {
                     logger.error("createNewFile fail", e);
                 }
