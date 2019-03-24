@@ -16,9 +16,6 @@ public class Common {
     public static final String Minute = "分";
     public static final String Second = "秒";
 
-    public static final String CMD_Devices = "adb devices";
-    public static final String CMD_Program_A = "adb -s ";
-    public static final String CMD_Program_B = " shell ls data/data";
     public static final String CMD_PS_A = "adb -s ";
     public static final String CMD_PS_B = " shell ps";
     public static final String CMD_Kill_A = "adb -s ";

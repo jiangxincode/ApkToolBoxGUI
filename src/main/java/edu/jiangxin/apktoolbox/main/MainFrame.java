@@ -103,10 +103,10 @@ public class MainFrame extends JEasyFrame {
         screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
         screenshotMenu.add(screenShotMenuItem);
 
-        JMenu testMenu = new JMenu("Test");
+        JMenu testMenu = new JMenu(bundle.getString("test.title"));
         menuBar.add(testMenu);
 
-        JMenuItem monkeyMenuItem = new JMenuItem("Monkey Test");
+        JMenuItem monkeyMenuItem = new JMenuItem(bundle.getString("test.monkey.title"));
         monkeyMenuItem.addActionListener(new MonkeyActionListener());
         testMenu.add(monkeyMenuItem);
 
@@ -117,7 +117,7 @@ public class MainFrame extends JEasyFrame {
         osConvertMenuItem.addActionListener(new OSConvertActionListener());
         textMenu.add(osConvertMenuItem);
 
-        JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert"));
+        JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
         encodeConvertMenuItem.addActionListener(new EncodeConvertActionListener());
         textMenu.add(encodeConvertMenuItem);
 

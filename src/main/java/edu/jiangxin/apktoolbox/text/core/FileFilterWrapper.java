@@ -34,20 +34,21 @@ public class FileFilterWrapper {
             }
 
             if (file.isDirectory()) { // 如果是目录的话，将该目录下符合条件的文件加入ArrayList
-                File[] list = file.listFiles(getFileExtensionFilter(suffix));
-                for (int i = 0; i < list.length; i++) {
-                    if (list[i].isFile()) {
-                        arrayList.add(list[i]);
+                File[] files = file.listFiles(getFileExtensionFilter(suffix));
+                if (files != null) {
+                    for (int i = 0; i < files.length; i++) {
+                        if (files[i].isFile()) {
+                            arrayList.add(files[i]);
+                        }
+
                     }
-
                 }
-
-                list = file.listFiles(getDirectoryFilter()); // 过滤出所有的目录
-
-                for (int i = 0; i < list.length; i++) {
-                    list(list[i].toString(), suffix);
+                files = file.listFiles(getDirectoryFilter()); // 过滤出所有的目录
+                if (files != null) {
+                    for (int i = 0; i < files.length; i++) {
+                        list(files[i].toString(), suffix);
+                    }
                 }
-
             } else { // 如果是文件的话，直接将该文件加入ArrayList
                 arrayList.add(file);
             }

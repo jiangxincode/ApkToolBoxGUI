@@ -7,17 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -30,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MonkeyFrame extends JEasyFrame {
@@ -40,14 +36,19 @@ public class MonkeyFrame extends JEasyFrame {
     Thread threadMonkey = null;
 
     JPanel panel = new JPanel();
+
+    JLabel labelDevices = new JLabel("设备列表");
+    JComboBox<String> comboBoxDevices = new JComboBox<String>();
+    JButton refreshButton = new JButton("刷新");
+
     JFileChooser fileChooser = new JFileChooser();
     JButton logPathButton = new JButton("选择路径");
     JButton excuteButton = new JButton("运行命令");
-    JButton refreshButton = new JButton("刷新");
+
     JButton resetButton = new JButton("重置页面");
     JButton interruptButton = new JButton("终止运行");
     JButton exitButton = new JButton("退出运行");
-    JLabel labelDevices = new JLabel("设备列表");
+
     JLabel labelProgram = new JLabel("应用程序");
     JLabel labelSpace = new JLabel("事件间隔");
     JLabel labelMillisecond = new JLabel("毫秒");
@@ -60,9 +61,9 @@ public class MonkeyFrame extends JEasyFrame {
     JTextField textMillisecond = new JTextField(30);
     JTextField textTime = new JTextField(30);
     JTextField textLogPath = new JTextField(90);
-    JComboBox comboBoxDevices = new JComboBox();
-    JComboBox comboBoxProgram = new JComboBox();
-    JComboBox comboBoxTime = new JComboBox();
+
+    JComboBox<String> comboBoxProgram = new JComboBox<String>();
+    JComboBox<String> comboBoxTime = new JComboBox<String>();
     // --dbg-no-events：初始化启动的activity，但是不产生任何事件
     JCheckBox checkBoxDbgNoEvents = new JCheckBox("初始化启动的activity，但是不产生任何事件");
     // --hprof：指定该项后在事件序列发送前后会立即生成分析报告（一般建议指定该项）
@@ -103,18 +104,80 @@ public class MonkeyFrame extends JEasyFrame {
 
     public MonkeyFrame() {
         super();
-        setTitle("Monkey Test");
+        setTitle(bundle.getString("test.monkey.title"));
         add(panel, "Center");
         setSize(700, 400);
         setResizable(false);
 
         panel.setLayout(null);
+
+        initDevicesAndProgram();
+
+        initRestrainCondition();
+
+        initTimeSetting();
+
+        initLogSetting();
+
+        initOperation();
+
+        registListener();
+
+    }
+
+    private void initDevicesAndProgram() {
+        labelDevices.setBounds(30, 25, 60, 20);
+        comboBoxDevices.setBounds(90, 25, 240, 20);
+        refreshButton.setBounds(340, 25, 60, 20);
+
+        labelProgram.setBounds(30, 55, 60, 20);
+        comboBoxProgram.setBounds(90, 55, 240, 20);
+        comboBoxProgram.setEditable(true);
+        comboBoxProgram.setSelectedItem("com.shinow.*");
+
         panel.add(labelDevices);
         panel.add(comboBoxDevices);
         panel.add(refreshButton);
 
         panel.add(labelProgram);
         panel.add(comboBoxProgram);
+
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comboBoxDevices.removeAllItems();
+                List<String> devices = getDevices();
+                for (String device : devices) {
+                    comboBoxDevices.addItem(device);
+                }
+            }
+        });
+
+        comboBoxDevices.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comboBoxProgram.removeAllItems();
+                comboBoxProgram.setSelectedItem("com.shinow.*");
+                List<String> programs = getProgram(comboBoxDevices.getSelectedItem().toString());
+                for (String program : programs) {
+                    comboBoxProgram.addItem(program);
+                }
+
+            }
+
+        });
+
+    }
+
+    private void initRestrainCondition() {
+        labelRestrain.setBounds(30, 85, 56, 20);
+        checkBoxCrashes.setBounds(86, 85, 100, 20);
+        checkBoxTimeouts.setBounds(186, 85, 100, 20);
+        checkBoxExceptions.setBounds(286, 85, 110, 20);
+        checkBoxNativeCrashes.setBounds(400, 85, 180, 20);
+        checkBoxKill.setBounds(86, 115, 180, 20);
+        checkBoxWaitDbg.setBounds(286, 115, 280, 20);
+        checkBoxHprof.setBounds(86, 145, 280, 20);
 
         panel.add(labelRestrain);
         panel.add(checkBoxCrashes);
@@ -125,57 +188,62 @@ public class MonkeyFrame extends JEasyFrame {
         panel.add(checkBoxWaitDbg);
         panel.add(checkBoxHprof);
 
-        panel.add(labelSpace);
-        panel.add(labelHour);// 时
-        panel.add(labelMinute);// 分
-        panel.add(labelSecond);// 秒
-        panel.add(textMillisecond);
-        panel.add(labelMillisecond);
+        checkBoxCrashes.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    ignoreCrashes = Common.Ignore_Crashes;
+                } else {
+                    ignoreCrashes = "";
+                }
+            }
+        });
 
-        panel.add(labelTime);
-        panel.add(textTime);
-        panel.add(comboBoxTime);
+        checkBoxTimeouts.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    ignoreTimeouts = Common.Ignore_Timeouts;
+                } else {
+                    ignoreTimeouts = "";
+                }
+            }
+        });
 
-        panel.add(labelLogLevel);
-        panel.add(radioButton0);
-        panel.add(radioButton1);
-        panel.add(radioButton2);
+        checkBoxExceptions.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    ignoreSecurityExceptions = Common.Ignore_Security_Exceptions;
+                } else {
+                    ignoreSecurityExceptions = "";
+                }
+            }
+        });
 
-        panel.add(logPathButton);
-        panel.add(textLogPath);
+        checkBoxNativeCrashes.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    monitorNativeCrashes = Common.Monitor_Native_Crashes;
+                } else {
+                    monitorNativeCrashes = "";
+                }
+            }
+        });
 
-        panel.add(excuteButton);
-        panel.add(resetButton);
-        panel.add(interruptButton);
-        panel.add(exitButton);
+    }
 
-        labelDevices.setBounds(30, 25, 60, 20);
-        comboBoxDevices.setBounds(90, 25, 240, 20);
-        refreshButton.setBounds(340, 25, 60, 20);
-
-        labelProgram.setBounds(30, 55, 60, 20);
-        comboBoxProgram.setBounds(90, 55, 240, 20);
-        comboBoxProgram.setEditable(true);
-        comboBoxProgram.setSelectedItem("com.shinow.*");
-        labelRestrain.setBounds(30, 85, 56, 20);
-
-        checkBoxCrashes.setBounds(86, 85, 100, 20);
-        checkBoxTimeouts.setBounds(186, 85, 100, 20);
-        checkBoxExceptions.setBounds(286, 85, 110, 20);
-        checkBoxNativeCrashes.setBounds(400, 85, 180, 20);
-        checkBoxKill.setBounds(86, 115, 180, 20);
-        checkBoxWaitDbg.setBounds(286, 115, 280, 20);
-        checkBoxHprof.setBounds(86, 145, 280, 20);
-
+    private void initTimeSetting() {
         labelSpace.setBounds(30, 175, 60, 20);
         textMillisecond.setBounds(90, 175, 150, 20);
-        textMillisecond.setDocument(new NumberLenghtLimitedDmt(7));
+        textMillisecond.setDocument(new NumberPlainDocument(7));
         textMillisecond.setText("500");
         labelMillisecond.setBounds(245, 175, 40, 20);
 
         labelTime.setBounds(30, 205, 60, 20);
         textTime.setBounds(90, 205, 150, 20);
-        textTime.setDocument(new NumberLenghtLimitedDmt(7));
+        textTime.setDocument(new NumberPlainDocument(7));
         textTime.setText("1");
         comboBoxTime.setBounds(245, 205, 50, 20);
         comboBoxTime.addItem(Common.Hour);
@@ -186,6 +254,21 @@ public class MonkeyFrame extends JEasyFrame {
         labelMinute.setBounds(475, 205, 50, 20);
         labelSecond.setBounds(545, 205, 50, 20);
 
+        panel.add(labelSpace);
+        panel.add(textMillisecond);
+        panel.add(labelMillisecond);
+
+        panel.add(labelTime);
+        panel.add(textTime);
+        panel.add(comboBoxTime);
+
+        panel.add(labelHour); // 时
+        panel.add(labelMinute); // 分
+        panel.add(labelSecond); // 秒
+
+    }
+
+    private void initLogSetting() {
         labelLogLevel.setBounds(30, 235, 60, 20);
 
         group.add(radioButton0);
@@ -201,27 +284,15 @@ public class MonkeyFrame extends JEasyFrame {
         textLogPath.setEditable(false);
         textLogPath.setText("D:");
 
-        excuteButton.setBounds(30, 305, 100, 20);
-        resetButton.setBounds(140, 305, 100, 20);
-        interruptButton.setBounds(250, 305, 100, 20);
-        exitButton.setBounds(360, 305, 100, 20);
+        panel.add(labelLogLevel);
+        panel.add(radioButton0);
+        panel.add(radioButton1);
+        panel.add(radioButton2);
 
-        interruptButton.setEnabled(false);
-
-        registListener();
-
-    }
-
-    /**
-     * 运行
-     */
-    private void registListener() {
+        panel.add(logPathButton);
+        panel.add(textLogPath);
 
         logPathButton.addActionListener(new ActionListener() {
-
-            /**
-             * 弹出窗体，选择文件夹
-             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == logPathButton) {
@@ -231,51 +302,27 @@ public class MonkeyFrame extends JEasyFrame {
                         textLogPath.setText(fileChooser.getSelectedFile().getPath());
                     }
                 }
-
             }
         });
 
-        /**
-         * 刷新按钮点击时间监听
-         */
-        refreshButton.addActionListener(new ActionListener() {
+    }
 
-            public void actionPerformed(ActionEvent e) {
+    private void initOperation() {
+        excuteButton.setBounds(30, 305, 100, 20);
+        resetButton.setBounds(140, 305, 100, 20);
+        interruptButton.setBounds(250, 305, 100, 20);
+        exitButton.setBounds(360, 305, 100, 20);
 
-                // 从项列表中移除所有项
-                comboBoxDevices.removeAllItems();
+        panel.add(excuteButton);
+        panel.add(resetButton);
+        panel.add(interruptButton);
+        panel.add(exitButton);
 
-                // 执行Dos命令获取设备列表
-                getDevices(Common.CMD_Devices);
+        interruptButton.setEnabled(false);
 
-            }
-
-        });
-
-        /**
-         * 下拉框点击事件监听
-         */
-        comboBoxDevices.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-                // 从项列表中移除所有项
-                comboBoxProgram.removeAllItems();
-                comboBoxProgram.setSelectedItem("com.shinow.*");
-                // 选择设备，自动加载对应的应用程序列表，并在应用程序下拉框中显示
-                getProgram(Common.CMD_Program_A + comboBoxDevices.getSelectedItem() + Common.CMD_Program_B);
-
-            }
-
-        });
-
-        /**
-         * 运行命令监听
-         */
         excuteButton.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
-
                 // 获取约束条件
                 if (checkBoxCrashes.isSelected()) {
                     ignoreCrashes = Common.Ignore_Crashes;
@@ -398,155 +445,55 @@ public class MonkeyFrame extends JEasyFrame {
                         threadTimeType = new Thread(new ThreadExcuteTime(time));
                         threadTimeType.start();
                     }
-
                 }
-
             }
-
         });
 
-        /**
-         * 重置页面监听
-         */
         resetButton.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
-
                 // 重置约束条件
                 checkBoxCrashes.setSelected(true);
                 checkBoxTimeouts.setSelected(true);
                 checkBoxExceptions.setSelected(true);
                 checkBoxNativeCrashes.setSelected(true);
-
                 // 重置日志级别
                 radioButton0.setSelected(false);
                 radioButton1.setSelected(false);
                 radioButton2.setSelected(true);
-
                 // 重置事件间隔
                 textMillisecond.setText("500");
-
                 // 重置运行时长
                 textTime.setText("1");
-
             }
-
         });
 
-        /**
-         * 中断操作监听
-         */
         interruptButton.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
-
                 // 杀掉Monkey执行进程
                 interruptThread();
-
                 excuteButton.setEnabled(true);
                 resetButton.setEnabled(true);
                 interruptButton.setEnabled(false);
                 exitButton.setEnabled(true);
-
-                System.gc();
-
+                //System.gc();
             }
-
         });
-
-        /**
-         * 退出
-         */
 
         exitButton.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
-
                 logger.info("已退出系统（Exit）");
-
-                System.exit(0);
-
-                // 如果虚拟机因崩溃等问题造成关闭，进程中会少2条adb.exe
-
+                MonkeyFrame.this.dispose();
             }
-
         });
+    }
 
-        /**
-         * 是否忽略崩溃
-         */
-        checkBoxCrashes.addItemListener(new ItemListener() {
-
-            public void itemStateChanged(ItemEvent e) {
-
-                if (e.getStateChange() == ItemEvent.SELECTED)
-
-                    ignoreCrashes = Common.Ignore_Crashes;
-
-                else
-
-                    ignoreCrashes = "";
-
-            }
-
-        });
-
-        /**
-         * 是否忽略超时
-         */
-        checkBoxTimeouts.addItemListener(new ItemListener() {
-
-            public void itemStateChanged(ItemEvent e) {
-
-                if (e.getStateChange() == ItemEvent.SELECTED)
-
-                    ignoreTimeouts = Common.Ignore_Timeouts;
-
-                else
-
-                    ignoreTimeouts = "";
-
-            }
-
-        });
-
-        /**
-         * 是否跟踪本地方法的崩溃问题
-         */
-        checkBoxExceptions.addItemListener(new ItemListener() {
-
-            public void itemStateChanged(ItemEvent e) {
-
-                if (e.getStateChange() == ItemEvent.SELECTED)
-
-                    ignoreSecurityExceptions = Common.Ignore_Security_Exceptions;
-
-                else
-
-                    ignoreSecurityExceptions = "";
-
-            }
-
-        });
-
-        /**
-         * 是否忽略安全异常
-         */
-        checkBoxNativeCrashes.addItemListener(new ItemListener() {
-
-            public void itemStateChanged(ItemEvent e) {
-
-                if (e.getStateChange() == ItemEvent.SELECTED)
-
-                    monitorNativeCrashes = Common.Monitor_Native_Crashes;
-
-                else
-
-                    monitorNativeCrashes = "";
-
-            }
-
-        });
+    /**
+     * 运行
+     */
+    private void registListener() {
 
     }
 
@@ -591,43 +538,27 @@ public class MonkeyFrame extends JEasyFrame {
      * 
      * @param cmd
      */
-    public void getDevices(String cmd) {
-
+    private List<String> getDevices() {
+        List<String> devices = new ArrayList<>();
         logger.info("获取设备列表......开始");
-
         try {
-            Process process = Runtime.getRuntime().exec(cmd);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
+            Process process = Runtime.getRuntime().exec("adb devices");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String line = null;
-
             while ((line = reader.readLine()) != null) {
-
-                if (line.indexOf("List") < 0 && line.length() != 0) {
-
+                if (line.contains("device") && !line.contains("List of")) {
                     line = line.substring(0, line.length() - 7);
-
                     logger.info("获取的设备名称：" + line);
-
-                    comboBoxDevices.addItem(line);
-
+                    devices.add(line);
                 }
-
             }
-
-            // process.waitFor();
-
+            reader.close();
             process.getOutputStream().close(); // 不要忘记了一定要关
-
         } catch (Exception e) {
-
             logger.error("获取设备列表异常", e);
-
         }
-
         logger.info("获取设备列表......结束");
-
+        return devices;
     }
 
     /**
@@ -635,41 +566,27 @@ public class MonkeyFrame extends JEasyFrame {
      * 
      * @param cmd
      */
-    public void getProgram(String cmd) {
-
+    private List<String> getProgram(String device) {
+        List<String> programs = new ArrayList<>();
         logger.info("获取应用程序列表......开始");
-
         try {
+            String cmd = "adb -s " + device + " shell pm list packages";
             Process process = Runtime.getRuntime().exec(cmd);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String line = null;
-
             while ((line = reader.readLine()) != null) {
-
-                // if (line.indexOf(Common.Shinow) >= 0 && line.length() != 0) {
-
-                logger.info("获取应用程序名称：" + line);
-
-                comboBoxProgram.addItem(line);
-
-                // }
-
+                if (line.contains("package:")) {
+                    logger.info("获取应用程序名称：" + line);
+                    programs.add(line.replace("package:", ""));
+                }
             }
-
-            // process.waitFor();
-
+            reader.close();
             process.getOutputStream().close(); // 不要忘记了一定要关
-
         } catch (Exception e) {
-
             logger.error("获取应用程序列表异常", e);
-
         }
-
         logger.info("获取应用程序列表......结束");
-
+        return programs;
     }
 
     /**
@@ -679,88 +596,33 @@ public class MonkeyFrame extends JEasyFrame {
      * @param keyValue 关键字
      */
     public void excuteCommand(String[] cmd, String keyValue) {
-
         logger.info("运行Dos命令......开始");
-
         list = new ArrayList<String>();
-
         try {
-
             Process process = Runtime.getRuntime().exec(cmd);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String line = null;
-
             while ((line = reader.readLine()) != null) {
-
                 if (line.indexOf(keyValue) >= 0) {
-
                     line = line.replace(" ", ":");
-
                     System.out.println("[" + keyValue + "][" + line + "]");
-
                     String[] str = line.split(":");
-
                     System.out.println(str.length);
-
                     for (int i = 1; i < str.length; i++) {
-
                         if (str[i].length() > 0) {
-
                             logger.info("Pid的值：" + str[i]);
-
                             list.add(str[i]);
-
                             break;
-
                         }
-
                     }
-
                 }
-
             }
-
-            // System.out.println("0表示正常终止：" + process.waitFor());
-
+            reader.close();
             process.getOutputStream().close(); // 不要忘记了一定要关
-
         } catch (Exception e) {
-
             logger.error("获取应用程序列表异常", e);
-
         }
-
         logger.info("运行Dos命令......结束");
-
-    }
-
-    /**
-     * 运行Monkey命令
-     */
-    class ThreadExcuteMonkey implements Runnable {
-
-        private String[] cmd;
-
-        public ThreadExcuteMonkey(String[] cmd) {
-            this.cmd = cmd;
-        }
-
-        public void run() {
-
-            try {
-
-                Runtime.getRuntime().exec(cmd);
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
-            }
-
-        }
-
     }
 
     /**
@@ -927,101 +789,25 @@ public class MonkeyFrame extends JEasyFrame {
          * @param keyValue App的进程名称
          */
         public void moniterApp(long time, String keyValue) {
-
             if ((time - 1) % 120 == 0) {
-
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---开始");
-
                 logger.info("每60秒监听一次，此时time的值：" + (time - 1));
-
                 String[] cmd = new String[] { "cmd.exe", "/c",
                         Common.CMD_PS_A + comboBoxDevices.getSelectedItem() + Common.CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
-
                 excuteCommand(cmd, keyValue);
-
                 logger.info("当前线程数：" + list.size());
-
                 if (list.size() == 0) {
-
                     logger.info("[" + keyValue + "]已经关闭或崩溃，无法继续执行Monkey，退出系统");
-
                     logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
-
                     // 杀掉Monkey执行进程
                     interruptThread();
-
-                    System.gc();
-
-                    // 退出系统
-                    System.exit(0);
-
+                    //System.gc();
+                    MonkeyFrame.this.dispose();
                 }
-
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
-
             }
-
         }
-
-    }
-
-    /**
-     * 执行提示Dialog
-     * 
-     * @author Administrator
-     * 
-     */
-    class Dialog1 extends JDialog {
-
-        private static final long serialVersionUID = 1L;
-
-        JDialog dialog1 = new JDialog(this, "JDialog窗体", true);
-
-        // dialog.setUndecorated(true);
-
-        Dialog1(String msg) {
-
-            dialog1.setSize(320, 180);
-
-            Container container = dialog1.getContentPane();
-
-            container.setLayout(null);
-
-            JLabel jl = new JLabel(msg);
-
-            jl.setBounds(110, 1, 100, 100);
-
-            JButton jbb = new JButton("确    定");
-
-            jbb.setBounds(97, 80, 100, 25);
-
-            container.add(jl);
-
-            container.add(jbb);
-
-            // 设置位置
-            int w = (Toolkit.getDefaultToolkit().getScreenSize().width - 320) / 2;
-            int h = (Toolkit.getDefaultToolkit().getScreenSize().height - 180) / 2;
-
-            dialog1.setLocation(w, h);
-
-            jbb.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-                    // dialog.dispose();
-
-                    logger.info("Already Closed");
-
-                    System.exit(0);
-                }
-
-            });
-
-            dialog1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        }
-
     }
 
     /**
@@ -1071,240 +857,26 @@ public class MonkeyFrame extends JEasyFrame {
                 }
 
             });
-
             dialog2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
         }
-
     }
-
-    /**
-     * 执行提示Dialog
-     * 
-     * @author Administrator
-     * 
-     */
-    class Dialog3 extends JDialog {
-
-        private static final long serialVersionUID = 1L;
-
-        JDialog dialog3 = new JDialog(this, "JDialog窗体", true);
-
-        Dialog3(String msg4) {
-
-            dialog3.setSize(320, 180);
-
-            Container container = dialog3.getContentPane();
-
-            container.setLayout(null);
-
-            JLabel jl = new JLabel(msg4);
-
-            jl.setBounds(70, 1, 200, 100);
-
-            JButton jbb = new JButton("确    定");
-
-            jbb.setBounds(97, 80, 100, 25);
-
-            container.add(jl);
-
-            container.add(jbb);
-
-            // 设置位置
-            int w = (Toolkit.getDefaultToolkit().getScreenSize().width - 320) / 2;
-            int h = (Toolkit.getDefaultToolkit().getScreenSize().height - 180) / 2;
-
-            dialog3.setLocation(w, h);
-
-            jbb.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-
-                    dialog3.dispose();
-
-                }
-
-            });
-
-            dialog3.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        }
-
-    }
-
 }
 
 /**
- * 自动完成器。自动找到最匹配的项目，并排在列表的最前面。
+ * 运行Monkey命令
  */
-class AutoCompleter3 implements KeyListener, ItemListener {
+class ThreadExcuteMonkey implements Runnable {
+    private String[] cmd;
 
-    private JComboBox owner = null;
-    private JTextField editor = null;
-    private ComboBoxModel model = null;
-
-    public AutoCompleter3(JComboBox comboBox) {
-        owner = comboBox;
-        editor = (JTextField) comboBox.getEditor().getEditorComponent();
-        editor.addKeyListener(this);
-
-        // 返回 JComboBox 当前使用的数据模型，也就是获取下拉列表个数
-        model = comboBox.getModel();
-
-        owner.addItemListener(this);
+    public ThreadExcuteMonkey(String[] cmd) {
+        this.cmd = cmd;
     }
 
-    public void keyTyped(KeyEvent e) {
-    }
-
-    public void keyPressed(KeyEvent e) {
-    }
-
-    public void keyReleased(KeyEvent e) {
-        char ch = e.getKeyChar();
-        if (ch == KeyEvent.CHAR_UNDEFINED || Character.isISOControl(ch) || ch == KeyEvent.VK_DELETE)
-            return;
-
-        // 返回文本组件的文本插入符的位置
-        int caretPosition = editor.getCaretPosition();
-
-        // 返回此 TextComponent 中包含的文本
-        String str = editor.getText();
-
-        System.out.println("str" + str);
-        System.out.println("car" + caretPosition);
-
-        if (str.length() == 0)
-            return;
-        autoComplete(str, caretPosition);
-    }
-
-    /**
-     * 自动完成。根据输入的内容，在列表中找到相似的项目.
-     */
-    protected void autoComplete(String strf, int caretPosition) {
-
-        Object[] opts;
-
-        opts = getMatchingOptions(strf.substring(0, caretPosition));
-
-        // 给owner赋值
-        if (owner != null) {
-
-            model = new DefaultComboBoxModel(opts);
-
-            // 设置 JComboBox 用于获取项列表的数据模型
-            owner.setModel(model);
-
+    public void run() {
+        try {
+            Runtime.getRuntime().exec(cmd);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if (opts.length > 0) {
-
-            // 设置 TextComponent 的文本插入符的位置
-            editor.setCaretPosition(caretPosition);
-
-            if (owner != null) {
-
-                try {
-
-                    // 促使组合框显示其弹出窗口
-                    owner.showPopup();
-
-                } catch (Exception ex) {
-
-                    ex.printStackTrace();
-
-                }
-
-            }
-
-        }
-
     }
-
-    /**
-     * 
-     * 找到相似的项目, 并且将之排列到数组的最前面。
-     * 
-     * @param str
-     * @return 返回所有项目的列表。
-     */
-    @SuppressWarnings("unchecked")
-    protected Object[] getMatchingOptions(String str) {
-
-        System.out.println("substr:" + str);
-
-        List v = new Vector();
-        List v1 = new Vector();
-
-        System.out.println("modelSize:" + model.getSize());
-
-        for (int k = 0; k < model.getSize(); k++) {
-
-            // 返回指定索引处的值
-            Object itemObj = model.getElementAt(k);
-
-            if (itemObj != null) {
-
-                String item = itemObj.toString().toLowerCase();
-
-                // 测试此字符串是否以指定的前缀开始
-                if (item.startsWith(str.toLowerCase())) {
-                    System.out.println("v前缀开始" + item.startsWith(str.toLowerCase()));
-                    v.add(itemObj);
-
-                } else {
-                    System.out.println("v1前缀开始" + item.startsWith(str.toLowerCase()));
-                    v1.add(itemObj);
-                }
-            } else {
-
-                System.out.println("下拉框有null数据");
-                v1.add(itemObj);
-            }
-        }
-
-        System.out.println("v1.size():" + v1.size());
-
-        // 这样循环写的目的是将数据在数组中按顺序排序，符合条件在头，不符合在后
-        for (int i = 0; i < v1.size(); i++) {
-
-            v.add(v1.get(i));
-
-        }
-
-        if (v.isEmpty())
-
-            v.add(str);
-
-        System.out.println("v.size():" + v.size());
-
-        return v.toArray();
-
-    }
-
-    public void itemStateChanged(ItemEvent event) {
-
-        if (event.getStateChange() == ItemEvent.SELECTED) {
-
-            int caretPosition = editor.getCaretPosition();
-
-            if (caretPosition != -1) {
-
-                try {
-
-                    editor.moveCaretPosition(caretPosition);
-
-                } catch (IllegalArgumentException ex) {
-
-                    ex.printStackTrace();
-
-                }
-
-            }
-
-        }
-
-    }
-
 }

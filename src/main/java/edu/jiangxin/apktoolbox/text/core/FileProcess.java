@@ -1,8 +1,18 @@
 package edu.jiangxin.apktoolbox.text.core;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.jiangxin.apktoolbox.utils.StreamHandler;
 
 /**
  * 文件或文件夹的简单处理
@@ -10,6 +20,8 @@ import java.util.Iterator;
  * @author jiangxin
  */
 public class FileProcess {
+    
+    private static final Logger logger = LogManager.getLogger(StreamHandler.class);
     final static int BUFFERSIZE = 1024 * 5; // The size of the buffer
 
     public static void main(String args[]) throws IOException {
@@ -59,10 +71,17 @@ public class FileProcess {
         File srcDirFile = new File(srcDirString);
         File desDirFile = new File(desDirString);
         if (!desDirFile.exists()) {
-            desDirFile.mkdirs(); // 新建目标目录
+            boolean ret= desDirFile.mkdirs();
+            if (!ret) {
+                logger.error("mkidrs failed: " + desDirFile);
+                return;
+            }
         }
 
         File[] files = srcDirFile.listFiles();
+        if (files == null) {
+            return;
+        }
         for (int i = 0; i < files.length; i++) {
             if (files[i].isFile()) {
                 String srcFileTemp = files[i].getAbsolutePath();
@@ -118,12 +137,14 @@ public class FileProcess {
         File dirFile = new File(dir);
         if (dirFile.isDirectory()) {
             String[] files = dirFile.list();
-            for (int i = 0; i < files.length; i++) { // 递归删除目录中的子目录下
-                String temp = dirFile.getAbsolutePath() + File.separator.toString() + files[i];
-                boolean success = deleteDir(temp);
-                if (!success) {
-                    System.out.println("Something error!");
-                    return false;
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) { // 递归删除目录中的子目录下
+                    String temp = dirFile.getAbsolutePath() + File.separator.toString() + files[i];
+                    boolean success = deleteDir(temp);
+                    if (!success) {
+                        System.out.println("Something error!");
+                        return false;
+                    }
                 }
             }
         }
@@ -166,9 +187,11 @@ public class FileProcess {
         }
         while ((temp = reader.readLine()) != null) {
             if (temp.contains(startString)) {
-                while (!(temp = reader.readLine()).contains(endString)) {
-                    content.append(temp);
-                    content.append(System.getProperty("line.separator"));
+                while ((temp = reader.readLine()) != null) {
+                    if (!temp.contains(endString)) {
+                        content.append(temp);
+                        content.append(System.getProperty("line.separator"));
+                    }
                 }
             }
         }

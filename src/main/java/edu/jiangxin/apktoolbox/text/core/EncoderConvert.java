@@ -11,6 +11,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * 文件编码转换的工具类.
  * 
@@ -18,6 +21,8 @@ import java.util.Iterator;
  *
  */
 public class EncoderConvert {
+    
+    private static final Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
 
     /**
      * 实现对文件的编码转换.
@@ -39,7 +44,11 @@ public class EncoderConvert {
 
         File parentDir = desFileFile.getParentFile();
         if (!parentDir.exists()) {
-            parentDir.mkdirs();
+            boolean success = parentDir.mkdirs();
+            if (!success) {
+                logger.error("delete srcFileFile failed");
+                return;
+            }
         }
 
         // TODO see http://akini.mbnet.fi/java/unicodereader/
@@ -55,7 +64,10 @@ public class EncoderConvert {
         System.out.println("转换完成！");
         if (srcFileString.equals(desFileString + ".temp")) {
             System.out.println("here");
-            srcFileFile.delete();
+            boolean success = srcFileFile.delete();
+            if (!success) {
+                logger.error("delete srcFileFile failed");
+            }
         }
     }
 

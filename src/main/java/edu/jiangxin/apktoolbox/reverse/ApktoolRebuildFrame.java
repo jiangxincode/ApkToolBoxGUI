@@ -190,20 +190,19 @@ public class ApktoolRebuildFrame extends JEasyFrame {
 
         operationPanel.add(sceenshotButton);
     }
+}
 
-    class APKFileFilter extends FileFilter {
+class APKFileFilter extends FileFilter {
 
-        @Override
-        public boolean accept(File f) {
-            String nameString = f.getName();
-            return nameString.toLowerCase().endsWith(".apk");
-        }
+    @Override
+    public boolean accept(File f) {
+        String nameString = f.getName();
+        return nameString.toLowerCase().endsWith(".apk");
+    }
 
-        @Override
-        public String getDescription() {
-            return "*.apk";
-        }
-
+    @Override
+    public String getDescription() {
+        return "*.apk";
     }
 
 }

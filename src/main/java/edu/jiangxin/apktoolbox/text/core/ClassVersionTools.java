@@ -37,7 +37,10 @@ public class ClassVersionTools {
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(classFile);
-                fis.read(bVersion, 0, 8);
+                int ret = fis.read(bVersion, 0, 8);
+                if (ret <= 0) {
+                    logger.error("read version byte failed");
+                }
             } catch (IOException e) {
                 logger.error("Some io errors happened.");
             } finally {
@@ -51,8 +54,8 @@ public class ClassVersionTools {
                 }
             }
 
-            String majorVersion = String.valueOf((bVersion[6] << 8 & 0xff00) | bVersion[7]);
-            String minorVersion = String.valueOf((bVersion[4] << 8 & 0xff00) | bVersion[5]);
+            String majorVersion = String.valueOf((bVersion[6] << 8 & 0xff00) | bVersion[7] & 0x00ff);
+            String minorVersion = String.valueOf((bVersion[4] << 8 & 0xff00) | bVersion[5] & 0x00ff);
 
             logger.debug("majorVersion: " + majorVersion + "; minorVersion: " + minorVersion);
 
@@ -79,7 +82,7 @@ public class ClassVersionTools {
         }
 
         if (newVersion == null || newVersion.length != 4) {
-            logger.error("The param is error: " + newVersion);
+            logger.error("The newVersion is error");
         }
 
         FileProcess.copyDirectory(srcDirString, desDirString);

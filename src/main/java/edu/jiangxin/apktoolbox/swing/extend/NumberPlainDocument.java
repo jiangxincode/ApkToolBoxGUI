@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.monkey;
+package edu.jiangxin.apktoolbox.swing.extend;
 
 import javax.swing.text.*;
 
@@ -8,13 +8,13 @@ import javax.swing.text.*;
  * @author Administrator
  *
  */
-public class NumberLenghtLimitedDmt extends PlainDocument {
+public class NumberPlainDocument extends PlainDocument {
 
     private static final long serialVersionUID = 1L;
 
     private int limit;
 
-    public NumberLenghtLimitedDmt(int limit) {
+    public NumberPlainDocument(int limit) {
         super();
         this.limit = limit;
     }

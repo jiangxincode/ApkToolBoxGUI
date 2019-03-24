@@ -3,11 +3,16 @@ package edu.jiangxin.apktoolbox.text.core;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 不同操作系统文件格式转换
@@ -15,6 +20,8 @@ import java.util.Iterator;
  * @author jiangxin
  */
 public class OSPatternConvert {
+    
+    private static final Logger logger = LogManager.getLogger("OSPatternConvert");
 
     /**
      * 不同操作系统文件格式之间的转换.
@@ -42,11 +49,15 @@ public class OSPatternConvert {
             return;
         }
         if (!desFileFile.getParentFile().exists()) { // 判断目标文件是否存在
-            desFileFile.getParentFile().mkdirs();
+            boolean ret = desFileFile.getParentFile().mkdirs();
+            if (!ret) {
+                logger.error("mkdirs failed: " + desFileFile.getParentFile());
+            }
         }
 
-        BufferedReader reader = new BufferedReader(new FileReader(srcFileFile));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(desFileFile));
+        // 仅支持UTF-8编码
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), "UTF-8"));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), "UTF-8"));
 
         String temp = null;
         while ((temp = reader.readLine()) != null) {
@@ -57,7 +68,10 @@ public class OSPatternConvert {
         reader.close();
 
         if (srcFileString.equals(desFileString + special)) { // 如果存在临时文件，则删除
-            srcFileFile.delete();
+            boolean ret = srcFileFile.delete();
+            if (!ret) {
+                logger.error("delete tmp file failed: " + srcFileFile);
+            }
         }
     }
 
@@ -243,16 +257,9 @@ public class OSPatternConvert {
         Iterator<File> it = arrayList.iterator();
         while (it.hasNext()) {
             File srcFileFile = it.next();
-
             String srcFileString = srcFileFile.getAbsolutePath(); // 得到源文件绝对地址
-            // System.out.println("srcFileString" + srcFileString);
-
             String temp = srcFileFile.getAbsolutePath().substring(srcDirFile.getAbsolutePath().toString().length());
-            // System.out.println("temp" + temp);
-
             String desFileString = desDirFile.getAbsolutePath() + temp; // 得到目标文件绝对地址
-            // System.out.println("desFileString" + desFileString);
-
             osFileConvert(srcFileString, desFileString, pattern);
         }
 

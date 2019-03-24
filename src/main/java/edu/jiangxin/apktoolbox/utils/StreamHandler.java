@@ -38,8 +38,12 @@ public class StreamHandler extends Thread {
             logger.error("read bis error", e);
         } finally {
             try {
-                br.close();
-                isr.close();
+                if (br != null) {
+                    br.close();
+                }
+                if (isr != null) {
+                    isr.close();
+                }
             } catch (IOException ex) {
                 logger.error("close error", ex);
             }
