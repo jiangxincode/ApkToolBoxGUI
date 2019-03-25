@@ -102,6 +102,8 @@ public class ScreenShotFrame extends JEasyFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
+                String title = getTitle();
+                setTitle(title + "    [Processing]");
                 String dirName = fileNameTextField.getText();
                 if (StringUtils.isEmpty(dirName)) {
                     String defaultDir = System.getenv("USERPROFILE");
@@ -144,6 +146,8 @@ public class ScreenShotFrame extends JEasyFrame {
                     }
                 } catch (IOException | InterruptedException e1) {
                     logger.error("screenshot fail", e1);
+                } finally {
+                    setTitle(title);
                 }
             }
         });

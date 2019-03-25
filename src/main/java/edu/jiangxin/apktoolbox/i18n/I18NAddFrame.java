@@ -130,8 +130,8 @@ public class I18NAddFrame extends JEasyFrame {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         contentPane.add(operationPanel);
 
-        JButton sceenshotButton = new JButton(bundle.getString("i18n.add.title"));
-        sceenshotButton.addMouseListener(new MouseAdapter() {
+        JButton addButton = new JButton(bundle.getString("i18n.add.title"));
+        addButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -195,7 +195,7 @@ public class I18NAddFrame extends JEasyFrame {
             }
         });
 
-        operationPanel.add(sceenshotButton);
+        operationPanel.add(addButton);
     }
 
     private static final String charset = "UTF-8";
