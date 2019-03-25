@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.StatusLine;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -81,7 +82,11 @@ public class CheckUpdateActionListener implements ActionListener {
         closeableHttpClient = HttpClients.createDefault();
 
         try {
-            closeableHttpResponse = closeableHttpClient.execute(new HttpGet(URI));
+            HttpGet httpGet = new HttpGet(URI);
+            // 设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(4000).setConnectTimeout(4000).build();
+            httpGet.setConfig(requestConfig);
+            closeableHttpResponse = closeableHttpClient.execute(httpGet);
             logger.info("execute request finished");
         } catch (IOException ex) {
             processException(ex);
