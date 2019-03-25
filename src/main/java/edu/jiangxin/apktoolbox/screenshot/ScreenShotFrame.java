@@ -14,11 +14,13 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +49,39 @@ public class ScreenShotFrame extends JEasyFrame {
 
         JTextField directoryTextField = new JTextField();
         directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
+        directoryTextField.setTransferHandler(new TransferHandler() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public boolean importData(JComponent comp, Transferable t) {
+                try {
+                    Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
+
+                    String filepath = o.toString();
+                    if (filepath.startsWith("[")) {
+                        filepath = filepath.substring(1);
+                    }
+                    if (filepath.endsWith("]")) {
+                        filepath = filepath.substring(0, filepath.length() - 1);
+                    }
+                    directoryTextField.setText(filepath);
+                    return true;
+                } catch (Exception e) {
+                    logger.error("import data excetion", e);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean canImport(JComponent jComponent, DataFlavor[] dataFlavors) {
+                for (int i = 0; i < dataFlavors.length; i++) {
+                    if (DataFlavor.javaFileListFlavor.equals(dataFlavors[i])) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         JButton directoryButton = new JButton("Save Directory");
         directoryButton.addMouseListener(new MouseAdapter() {
