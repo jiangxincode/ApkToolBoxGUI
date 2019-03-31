@@ -22,6 +22,7 @@ import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.help.AboutActionListener;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
 import edu.jiangxin.apktoolbox.help.ContributeActionListener;
+import edu.jiangxin.apktoolbox.help.FeedbackActionListener;
 import edu.jiangxin.apktoolbox.i18n.I18NAddActionListener;
 import edu.jiangxin.apktoolbox.i18n.I18NFindLongestActionListener;
 import edu.jiangxin.apktoolbox.i18n.I18NRemoveActionListener;
@@ -138,6 +139,10 @@ public class MainFrame extends JEasyFrame {
 
         JMenu helpMenu = new JMenu(bundle.getString("help.title"));
         menuBar.add(helpMenu);
+        
+        JMenuItem feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
+        feedbackMenuItem.addActionListener(new FeedbackActionListener());
+        helpMenu.add(feedbackMenuItem);
 
         JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
         checkUpdateMenuItem.addActionListener(new CheckUpdateActionListener(this));
