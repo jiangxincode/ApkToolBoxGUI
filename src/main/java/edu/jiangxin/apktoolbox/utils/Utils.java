@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import org.apache.commons.configuration2.Configuration;
@@ -158,5 +159,11 @@ public class Utils {
 
         return null;
 
+    }
+    
+    public static void setJComponentSize(JComponent component, int width, int height) {
+        component.setMinimumSize(new Dimension(width, height));
+        component.setMaximumSize(new Dimension(width, height));
+        component.setPreferredSize(new Dimension(width, height));
     }
 }

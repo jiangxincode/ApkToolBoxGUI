@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.screenshot;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
@@ -21,31 +22,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
-import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.lang3.StringUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class ScreenShotFrame extends JEasyFrame {
+public class ScreenShotPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
-    public ScreenShotFrame() throws HeadlessException {
-        super();
-        setTitle("Screenshot");
-        setSize(600, 130);
-        setResizable(false);
+    public ScreenShotPanel(JFrame frame) throws HeadlessException {
+        super(frame);
+        setPreferredSize(new Dimension(600, 130));
+        setMaximumSize(new Dimension(600, 130));
 
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-        contentPane.setLayout(boxLayout);
-        setContentPane(contentPane);
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
         JPanel directoryPanel = new JPanel();
-        contentPane.add(directoryPanel);
+        add(directoryPanel);
 
         JTextField directoryTextField = new JTextField();
         directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
@@ -111,7 +107,7 @@ public class ScreenShotFrame extends JEasyFrame {
         directoryPanel.add(directoryButton);
 
         JPanel fileNamePanel = new JPanel();
-        contentPane.add(fileNamePanel);
+        add(fileNamePanel);
 
         JTextField fileNameTextField = new JTextField();
         fileNameTextField.setToolTipText("timestamp default(for example: 20180101122345.png)");
@@ -124,7 +120,7 @@ public class ScreenShotFrame extends JEasyFrame {
 
         JPanel sceenshotPanel = new JPanel();
         sceenshotPanel.setLayout(new BoxLayout(sceenshotPanel, BoxLayout.X_AXIS));
-        contentPane.add(sceenshotPanel);
+        add(sceenshotPanel);
 
         JCheckBox openCheckBox = new JCheckBox("Open Dir");
         openCheckBox.setSelected(false);
@@ -137,8 +133,8 @@ public class ScreenShotFrame extends JEasyFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                String title = getTitle();
-                setTitle(title + "    [Processing]");
+                String title = frame.getTitle();
+                frame.setTitle(title + "    [Processing]");
                 String dirName = fileNameTextField.getText();
                 if (StringUtils.isEmpty(dirName)) {
                     String defaultDir = System.getenv("USERPROFILE");
@@ -176,13 +172,13 @@ public class ScreenShotFrame extends JEasyFrame {
                     if (copyCheckBox.isSelected()) {
                         logger.info("copy the snapshot");
                         Image image = ImageIO.read(file);
-                        setClipboardImage(ScreenShotFrame.this, image);
+                        setClipboardImage(ScreenShotPanel.this, image);
                         logger.info("copy finish");
                     }
                 } catch (IOException | InterruptedException e1) {
                     logger.error("screenshot fail", e1);
                 } finally {
-                    setTitle(title);
+                    frame.setTitle(title);
                 }
             }
         });
@@ -203,7 +199,7 @@ public class ScreenShotFrame extends JEasyFrame {
 
     }
 
-    public static void setClipboardImage(JFrame frame, final Image image) {
+    public static void setClipboardImage(JPanel frame, final Image image) {
         Transferable trans = new Transferable() {
             @Override
             public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {

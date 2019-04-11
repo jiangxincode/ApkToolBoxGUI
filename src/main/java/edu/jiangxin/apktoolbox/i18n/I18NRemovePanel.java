@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.i18n;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -19,35 +20,30 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 
-public class I18NRemoveFrame extends JEasyFrame {
+public class I18NRemovePanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
     List<I18NInfo> infos = new ArrayList<I18NInfo>();
 
     private static final String charset = "UTF-8";
 
-    public I18NRemoveFrame() throws HeadlessException {
+    public I18NRemovePanel() throws HeadlessException {
         super();
-        setTitle(bundle.getString("i18n.remove.title"));
-        setSize(600, 160);
-        setResizable(false);
+        setPreferredSize(new Dimension(600, 160));
+        setMaximumSize(new Dimension(600, 160));
 
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-        contentPane.setLayout(boxLayout);
-        setContentPane(contentPane);
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-        contentPane.add(sourcePanel);
+        add(sourcePanel);
 
         JTextField srcTextField = new JTextField();
         srcTextField.setText(conf.getString("i18n.remove.src.dir"));
@@ -78,7 +74,7 @@ public class I18NRemoveFrame extends JEasyFrame {
 
         JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-        contentPane.add(itemPanel);
+        add(itemPanel);
 
         JTextField itemTextField = new JTextField();
         itemTextField.setText(conf.getString("i18n.remove.items"));
@@ -90,7 +86,7 @@ public class I18NRemoveFrame extends JEasyFrame {
 
         JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        contentPane.add(operationPanel);
+        add(operationPanel);
 
         JButton sceenshotButton = new JButton(bundle.getString("i18n.remove.title"));
         sceenshotButton.addMouseListener(new MouseAdapter() {
@@ -102,7 +98,7 @@ public class I18NRemoveFrame extends JEasyFrame {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NRemoveFrame.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18NRemovePanel.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -120,7 +116,7 @@ public class I18NRemoveFrame extends JEasyFrame {
                 if (StringUtils.isEmpty(item)) {
                     logger.error("item is empty");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NRemoveFrame.this, "item is empty", "ERROR",
+                    JOptionPane.showMessageDialog(I18NRemovePanel.this, "item is empty", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     itemTextField.requestFocus();
                     return;

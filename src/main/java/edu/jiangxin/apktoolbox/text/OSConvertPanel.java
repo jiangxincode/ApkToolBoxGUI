@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.text;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -16,30 +17,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.text.core.OSPatternConvert;
 
-public class OSConvertFrame extends JEasyFrame {
+public class OSConvertPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
-    public OSConvertFrame() throws HeadlessException {
+    public OSConvertPanel() throws HeadlessException {
         super();
-        setTitle("OS Convert");
-        setSize(600, 120);
-        setResizable(false);
+        setPreferredSize(new Dimension(600, 120));
+        setMaximumSize(new Dimension(600, 120));
 
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-        contentPane.setLayout(boxLayout);
-        setContentPane(contentPane);
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-        contentPane.add(sourcePanel);
+        add(sourcePanel);
 
         JTextField srcTextField = new JTextField();
         srcTextField.setText(conf.getString("osconvert.src.dir"));
@@ -70,7 +66,7 @@ public class OSConvertFrame extends JEasyFrame {
 
         JPanel optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
-        contentPane.add(optionPanel);
+        add(optionPanel);
 
         JLabel suffixLabel = new JLabel("suffix");
         JTextField suffixTextField = new JTextField();
@@ -89,7 +85,7 @@ public class OSConvertFrame extends JEasyFrame {
 
         JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        contentPane.add(operationPanel);
+        add(operationPanel);
 
         JButton sceenshotButton = new JButton("Convert");
         sceenshotButton.addMouseListener(new MouseAdapter() {
@@ -100,7 +96,7 @@ public class OSConvertFrame extends JEasyFrame {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(OSConvertFrame.this, "Source file is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(OSConvertPanel.this, "Source file is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;

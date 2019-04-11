@@ -1,5 +1,9 @@
+/**
+ * 
+ */
 package edu.jiangxin.apktoolbox.i18n;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -22,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -34,26 +37,26 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 
-public class I18NAddFrame extends JEasyFrame {
+/**
+ * @author jiangxin
+ *
+ */
+public class I18NAddPanel extends JEasyPanel {
+    
     private static final long serialVersionUID = 1L;
 
-    public I18NAddFrame() throws HeadlessException {
+    public I18NAddPanel() throws HeadlessException {
         super();
-        setTitle(bundle.getString("i18n.add.title"));
-        setSize(600, 160);
-        setResizable(false);
-
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-        contentPane.setLayout(boxLayout);
-        setContentPane(contentPane);
+        setPreferredSize(new Dimension(600, 160));
+        setMaximumSize(new Dimension(600, 160));
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-        contentPane.add(sourcePanel);
+        add(sourcePanel);
 
         JTextField srcTextField = new JTextField();
         srcTextField.setText(conf.getString("i18n.add.src.dir"));
@@ -84,7 +87,7 @@ public class I18NAddFrame extends JEasyFrame {
 
         JPanel targetPanel = new JPanel();
         targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
-        contentPane.add(targetPanel);
+        add(targetPanel);
 
         JTextField targetTextField = new JTextField();
         targetTextField.setText(conf.getString("i18n.add.target.dir"));
@@ -116,7 +119,7 @@ public class I18NAddFrame extends JEasyFrame {
 
         JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-        contentPane.add(itemPanel);
+        add(itemPanel);
 
         JTextField itemTextField = new JTextField();
         itemTextField.setText(conf.getString("i18n.add.items"));
@@ -128,7 +131,7 @@ public class I18NAddFrame extends JEasyFrame {
 
         JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        contentPane.add(operationPanel);
+        add(operationPanel);
 
         JButton addButton = new JButton(bundle.getString("i18n.add.title"));
         addButton.addMouseListener(new MouseAdapter() {
@@ -139,7 +142,7 @@ public class I18NAddFrame extends JEasyFrame {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NAddFrame.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18NAddPanel.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -160,7 +163,7 @@ public class I18NAddFrame extends JEasyFrame {
                     if (!targetFile.exists() || !targetFile.isDirectory()) {
                         logger.error("targetFile is invalid");
                         Toolkit.getDefaultToolkit().beep();
-                        JOptionPane.showMessageDialog(I18NAddFrame.this, "Target directory is invalid", "ERROR",
+                        JOptionPane.showMessageDialog(I18NAddPanel.this, "Target directory is invalid", "ERROR",
                                 JOptionPane.ERROR_MESSAGE);
                         targetTextField.requestFocus();
                         return;
@@ -186,7 +189,7 @@ public class I18NAddFrame extends JEasyFrame {
                         int ret = innerProcessor(srcPath, targetPath, item);
                         if (ret != 0) {
                             Toolkit.getDefaultToolkit().beep();
-                            JOptionPane.showMessageDialog(I18NAddFrame.this, "Failed, please see the log", "ERROR",
+                            JOptionPane.showMessageDialog(I18NAddPanel.this, "Failed, please see the log", "ERROR",
                                     JOptionPane.ERROR_MESSAGE);
                             return;
                         }
@@ -368,4 +371,5 @@ public class I18NAddFrame extends JEasyFrame {
         }
         FileUtils.writeStringToFile(file, content, charset);
     }
+
 }

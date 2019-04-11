@@ -1,42 +1,42 @@
 package edu.jiangxin.apktoolbox.main;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 
-import javax.swing.AbstractListModel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.Version;
-import edu.jiangxin.apktoolbox.help.AboutActionListener;
+import edu.jiangxin.apktoolbox.help.AboutPanel;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
 import edu.jiangxin.apktoolbox.help.ContributeActionListener;
 import edu.jiangxin.apktoolbox.help.FeedbackActionListener;
-import edu.jiangxin.apktoolbox.i18n.I18NAddActionListener;
-import edu.jiangxin.apktoolbox.i18n.I18NFindLongestActionListener;
-import edu.jiangxin.apktoolbox.i18n.I18NRemoveActionListener;
-import edu.jiangxin.apktoolbox.monkey.MonkeyActionListener;
-import edu.jiangxin.apktoolbox.reverse.AXMLPrinterActionListener;
-import edu.jiangxin.apktoolbox.reverse.ApkSignerActionListener;
-import edu.jiangxin.apktoolbox.reverse.ApktoolDecodeActionListener;
-import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildActionListener;
+import edu.jiangxin.apktoolbox.i18n.I18NAddPanel;
+import edu.jiangxin.apktoolbox.i18n.I18NFindLongestPanel;
+import edu.jiangxin.apktoolbox.i18n.I18NRemovePanel;
+import edu.jiangxin.apktoolbox.monkey.MonkeyPanel;
+import edu.jiangxin.apktoolbox.reverse.AXMLPrinterPanel;
+import edu.jiangxin.apktoolbox.reverse.ApkSignerPanel;
+import edu.jiangxin.apktoolbox.reverse.ApktoolDecodePanel;
+import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildPanel;
 import edu.jiangxin.apktoolbox.reverse.JADXActionListener;
 import edu.jiangxin.apktoolbox.reverse.JDActionListener;
-import edu.jiangxin.apktoolbox.screenshot.ScreenshotActionListener;
+import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
-import edu.jiangxin.apktoolbox.text.EncodeConvertActionListener;
-import edu.jiangxin.apktoolbox.text.OSConvertActionListener;
+import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
+import edu.jiangxin.apktoolbox.text.OSConvertPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MainFrame extends JEasyFrame {
@@ -61,9 +61,19 @@ public class MainFrame extends JEasyFrame {
     public MainFrame() {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(700, 500);
+        setSize(Constants.DEFAULT_WIDTH, 500);
+        setResizable(false);
         Utils.setJFrameCenterInScreen(this);
 
+        setMenuBar();
+
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        setContentPane(contentPane);
+    }
+
+    private void setMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
@@ -73,15 +83,15 @@ public class MainFrame extends JEasyFrame {
 
         JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
         apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
-        apktoolDecodeMenuItem.addActionListener(new ApktoolDecodeActionListener());
+        apktoolDecodeMenuItem.addActionListener(new changePanelListener(new ApktoolDecodePanel()));
         reverseMenu.add(apktoolDecodeMenuItem);
 
         JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
-        apktoolRebuildMenuItem.addActionListener(new ApktoolRebuildActionListener());
+        apktoolRebuildMenuItem.addActionListener(new changePanelListener(new ApktoolRebuildPanel()));
         reverseMenu.add(apktoolRebuildMenuItem);
 
         JMenuItem apkSignMenuItem = new JMenuItem("ApkSigner");
-        apkSignMenuItem.addActionListener(new ApkSignerActionListener());
+        apkSignMenuItem.addActionListener(new changePanelListener(new ApkSignerPanel()));
         reverseMenu.add(apkSignMenuItem);
 
         JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
@@ -93,14 +103,14 @@ public class MainFrame extends JEasyFrame {
         reverseMenu.add(jADXMenuItem);
 
         JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
-        aXMLPrinter.addActionListener(new AXMLPrinterActionListener());
+        aXMLPrinter.addActionListener(new changePanelListener(new AXMLPrinterPanel()));
         reverseMenu.add(aXMLPrinter);
 
         JMenu screenshotMenu = new JMenu("Screnshot");
         menuBar.add(screenshotMenu);
 
         JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
-        screenShotMenuItem.addActionListener(new ScreenshotActionListener());
+        screenShotMenuItem.addActionListener(new changePanelListener(new ScreenShotPanel(this)));
         screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
         screenshotMenu.add(screenShotMenuItem);
 
@@ -108,38 +118,38 @@ public class MainFrame extends JEasyFrame {
         menuBar.add(testMenu);
 
         JMenuItem monkeyMenuItem = new JMenuItem(bundle.getString("test.monkey.title"));
-        monkeyMenuItem.addActionListener(new MonkeyActionListener());
+        monkeyMenuItem.addActionListener(new changePanelListener(new MonkeyPanel()));
         testMenu.add(monkeyMenuItem);
 
         JMenu textMenu = new JMenu(bundle.getString("text.title"));
         menuBar.add(textMenu);
 
         JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
-        osConvertMenuItem.addActionListener(new OSConvertActionListener());
+        osConvertMenuItem.addActionListener(new changePanelListener(new OSConvertPanel()));
         textMenu.add(osConvertMenuItem);
 
         JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
-        encodeConvertMenuItem.addActionListener(new EncodeConvertActionListener());
+        encodeConvertMenuItem.addActionListener(new changePanelListener(new EncodeConvertPanel()));
         textMenu.add(encodeConvertMenuItem);
 
         JMenu i18nMenu = new JMenu(bundle.getString("i18n.title"));
         menuBar.add(i18nMenu);
 
         JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-        i18nAddMenuItem.addActionListener(new I18NAddActionListener());
+        i18nAddMenuItem.addActionListener(new changePanelListener(new I18NAddPanel()));
         i18nMenu.add(i18nAddMenuItem);
 
         JMenuItem i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
-        i18nFindLongestMenuItem.addActionListener(new I18NFindLongestActionListener());
+        i18nFindLongestMenuItem.addActionListener(new changePanelListener(new I18NFindLongestPanel()));
         i18nMenu.add(i18nFindLongestMenuItem);
 
         JMenuItem i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
-        i18nRemoveMenuItem.addActionListener(new I18NRemoveActionListener());
+        i18nRemoveMenuItem.addActionListener(new changePanelListener(new I18NRemovePanel()));
         i18nMenu.add(i18nRemoveMenuItem);
 
         JMenu helpMenu = new JMenu(bundle.getString("help.title"));
         menuBar.add(helpMenu);
-        
+
         JMenuItem feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
         feedbackMenuItem.addActionListener(new FeedbackActionListener());
         helpMenu.add(feedbackMenuItem);
@@ -153,50 +163,34 @@ public class MainFrame extends JEasyFrame {
         helpMenu.add(contributeMenuItem);
 
         JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
-        aboutMenuItem.addActionListener(new AboutActionListener());
+        aboutMenuItem.addActionListener(new changePanelListener(new AboutPanel()));
         helpMenu.add(aboutMenuItem);
-
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(new BorderLayout(0, 0));
-        setContentPane(contentPane);
-
-        JPanel leftPanel = new JPanel();
-        contentPane.add(leftPanel, BorderLayout.WEST);
-
-        JTree contentTree = new JTree();
-        leftPanel.add(contentTree);
-
-        JPanel centerPanel = new JPanel();
-        centerPanel.setMinimumSize(new Dimension(5, 5));
-        centerPanel.setSize(new Dimension(60, 80));
-        centerPanel.setAlignmentY(0.3f);
-        centerPanel.setAlignmentX(0.3f);
-        contentPane.add(centerPanel, BorderLayout.CENTER);
-        centerPanel.setLayout(new BorderLayout(0, 0));
-
-        JList contentList = new JList();
-        contentList.setModel(new AbstractListModel() {
-            /**
-             *
-             */
-            private static final long serialVersionUID = 1L;
-            String[] values = new String[] { "1", "4", "5", "6" };
-
-            public int getSize() {
-                return values.length;
-            }
-
-            public Object getElementAt(int index) {
-                return values[index];
-            }
-        });
-        contentList.setSelectedIndex(0);
-        centerPanel.add(contentList);
-
-        JPanel statusPanel = new JPanel();
-        contentPane.add(statusPanel, BorderLayout.SOUTH);
-
     }
+    
+    class changePanelListener implements ActionListener {
+        
+        JPanel panel;
 
+        public changePanelListener(JPanel panel) {
+            this.panel = panel;
+        }
+
+        /* (non-Javadoc)
+         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Utils.saveConfiguration();
+            contentPane.removeAll();
+            contentPane.add(Box.createVerticalGlue());
+            contentPane.add(panel);
+            contentPane.add(Box.createVerticalGlue());
+            contentPane.revalidate();
+            contentPane.repaint();
+        }
+        
+    }
+    
 }
+
+

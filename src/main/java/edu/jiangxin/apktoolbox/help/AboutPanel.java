@@ -1,6 +1,8 @@
+/**
+ * 
+ */
 package edu.jiangxin.apktoolbox.help;
 
-import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,34 +10,31 @@ import java.io.InputStreamReader;
 
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.Version;
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 
-public class AboutFrame extends JEasyFrame {
+/**
+ * @author jiangxin
+ *
+ */
+public class AboutPanel extends JEasyPanel {
 
     private static final long serialVersionUID = 1L;
 
-    public AboutFrame() throws HeadlessException {
+    public AboutPanel() {
         super();
-        setTitle(bundle.getString("help.about.title"));
-        setSize(600, 400);
-        setResizable(false);
-
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-        contentPane.setLayout(boxLayout);
-        setContentPane(contentPane);
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
         InputStream inputStream = null;
         BufferedReader bufferedReader = null;
         StringBuffer stringBuffer = new StringBuffer();
         try {
-            inputStream = AboutFrame.class.getResourceAsStream("/about.html");
+            inputStream = AboutPanel.class.getResourceAsStream("/about.html");
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
@@ -68,7 +67,7 @@ public class AboutFrame extends JEasyFrame {
 
         JScrollPane scrollPane = new JScrollPane(editorPane);
 
-        contentPane.add(scrollPane);
+        add(scrollPane);
     }
 
 }

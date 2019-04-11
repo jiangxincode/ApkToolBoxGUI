@@ -23,48 +23,42 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.lang3.StringUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.JAutoCompleteComboBox;
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
 import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
-public class EncodeConvertFrame extends JEasyFrame {
+public class EncodeConvertPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
     private static final int CONTENT_WIDTH = 500;
 
-    public EncodeConvertFrame() throws HeadlessException {
+    public EncodeConvertPanel() throws HeadlessException {
         super();
-        setTitle(bundle.getString("text.encode.convert.title"));
-        setResizable(false);
 
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(Constants.BORDER, Constants.BORDER, Constants.BORDER, Constants.BORDER));
-        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-        setContentPane(contentPane);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel sourcePanel = new JPanel();
         sourcePanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HGIGHT));
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-        contentPane.add(sourcePanel);
-        contentPane.add(Box.createVerticalStrut(10));
+        add(sourcePanel);
+        add(Box.createVerticalStrut(10));
 
         JPanel optionPanel = new JPanel();
         optionPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HGIGHT));
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
-        contentPane.add(optionPanel);
-        contentPane.add(Box.createVerticalStrut(10));
+        add(optionPanel);
+        add(Box.createVerticalStrut(10));
 
         JPanel operationPanel = new JPanel();
         operationPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HGIGHT));
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        contentPane.add(operationPanel);
+        add(operationPanel);
 
         String lastPath = conf.getString("encodeconvert.src");
         JTextField srcTextField = new JTextField();
@@ -165,7 +159,7 @@ public class EncodeConvertFrame extends JEasyFrame {
                 if (!srcFile.exists()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(EncodeConvertFrame.this, "Source file is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(EncodeConvertPanel.this, "Source file is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;

@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.reverse;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -18,33 +19,28 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class AXMLPrinterFrame extends JEasyFrame {
+public class AXMLPrinterPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
-    public AXMLPrinterFrame() throws HeadlessException {
+    public AXMLPrinterPanel() throws HeadlessException {
         super();
-        setTitle("AXMLPrinter3");
-        setSize(600, 120);
-        setResizable(false);
+        setPreferredSize(new Dimension(600, 120));
+        setMaximumSize(new Dimension(600, 120));
 
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        BoxLayout boxLayout = new BoxLayout(contentPane, BoxLayout.Y_AXIS);
-        contentPane.setLayout(boxLayout);
-        setContentPane(contentPane);
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-        contentPane.add(sourcePanel);
+        add(sourcePanel);
 
         JTextField srcTextField = new JTextField();
         srcTextField.setText(conf.getString("axmlprinter.src.file"));
@@ -75,7 +71,7 @@ public class AXMLPrinterFrame extends JEasyFrame {
 
         JPanel targetPanel = new JPanel();
         targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
-        contentPane.add(targetPanel);
+        add(targetPanel);
 
         JTextField targetTextField = new JTextField();
         targetTextField.setText(conf.getString("axmlprinter.target.dir"));
@@ -107,7 +103,7 @@ public class AXMLPrinterFrame extends JEasyFrame {
 
         JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        contentPane.add(operationPanel);
+        add(operationPanel);
 
         JButton sceenshotButton = new JButton("Get File");
         sceenshotButton.addMouseListener(new MouseAdapter() {
@@ -118,7 +114,7 @@ public class AXMLPrinterFrame extends JEasyFrame {
                 if (!srcFile.exists() || !srcFile.isFile()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Source file is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(AXMLPrinterPanel.this, "Source file is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -135,7 +131,7 @@ public class AXMLPrinterFrame extends JEasyFrame {
                 if (!targetFile.exists() || !targetFile.isDirectory()) {
                     logger.error("targetFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(AXMLPrinterFrame.this, "Target dir is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(AXMLPrinterPanel.this, "Target dir is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     targetTextField.requestFocus();
                     return;

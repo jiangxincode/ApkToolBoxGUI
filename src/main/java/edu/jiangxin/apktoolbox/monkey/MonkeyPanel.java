@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.monkey;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -19,23 +20,20 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
-public class MonkeyFrame extends JEasyFrame {
+public class MonkeyPanel extends JEasyPanel {
 
     private static final long serialVersionUID = 1L;
 
     Thread threadTimeType = null;
     Thread threadMonkey = null;
-
-    JPanel panel = new JPanel();
 
     JLabel labelDevices = new JLabel("设备列表");
     JComboBox<String> comboBoxDevices = new JComboBox<String>();
@@ -102,14 +100,11 @@ public class MonkeyFrame extends JEasyFrame {
     // String logFolder = "";
     String[] monkeyCmd = null;
 
-    public MonkeyFrame() {
+    public MonkeyPanel() {
         super();
-        setTitle(bundle.getString("test.monkey.title"));
-        add(panel, "Center");
-        setSize(700, 400);
-        setResizable(false);
+        setSize(new Dimension(800, 800));
 
-        panel.setLayout(null);
+        setLayout(null);
 
         initDevicesAndProgram();
 
@@ -135,12 +130,12 @@ public class MonkeyFrame extends JEasyFrame {
         comboBoxProgram.setEditable(true);
         comboBoxProgram.setSelectedItem("com.shinow.*");
 
-        panel.add(labelDevices);
-        panel.add(comboBoxDevices);
-        panel.add(refreshButton);
+        add(labelDevices);
+        add(comboBoxDevices);
+        add(refreshButton);
 
-        panel.add(labelProgram);
-        panel.add(comboBoxProgram);
+        add(labelProgram);
+        add(comboBoxProgram);
 
         refreshButton.addActionListener(new ActionListener() {
             @Override
@@ -179,14 +174,14 @@ public class MonkeyFrame extends JEasyFrame {
         checkBoxWaitDbg.setBounds(286, 115, 280, 20);
         checkBoxHprof.setBounds(86, 145, 280, 20);
 
-        panel.add(labelRestrain);
-        panel.add(checkBoxCrashes);
-        panel.add(checkBoxTimeouts);
-        panel.add(checkBoxExceptions);
-        panel.add(checkBoxNativeCrashes);
-        panel.add(checkBoxKill);
-        panel.add(checkBoxWaitDbg);
-        panel.add(checkBoxHprof);
+        add(labelRestrain);
+        add(checkBoxCrashes);
+        add(checkBoxTimeouts);
+        add(checkBoxExceptions);
+        add(checkBoxNativeCrashes);
+        add(checkBoxKill);
+        add(checkBoxWaitDbg);
+        add(checkBoxHprof);
 
         checkBoxCrashes.addItemListener(new ItemListener() {
             @Override
@@ -254,17 +249,17 @@ public class MonkeyFrame extends JEasyFrame {
         labelMinute.setBounds(475, 205, 50, 20);
         labelSecond.setBounds(545, 205, 50, 20);
 
-        panel.add(labelSpace);
-        panel.add(textMillisecond);
-        panel.add(labelMillisecond);
+        add(labelSpace);
+        add(textMillisecond);
+        add(labelMillisecond);
 
-        panel.add(labelTime);
-        panel.add(textTime);
-        panel.add(comboBoxTime);
+        add(labelTime);
+        add(textTime);
+        add(comboBoxTime);
 
-        panel.add(labelHour); // 时
-        panel.add(labelMinute); // 分
-        panel.add(labelSecond); // 秒
+        add(labelHour); // 时
+        add(labelMinute); // 分
+        add(labelSecond); // 秒
 
     }
 
@@ -284,13 +279,13 @@ public class MonkeyFrame extends JEasyFrame {
         textLogPath.setEditable(false);
         textLogPath.setText("D:");
 
-        panel.add(labelLogLevel);
-        panel.add(radioButton0);
-        panel.add(radioButton1);
-        panel.add(radioButton2);
+        add(labelLogLevel);
+        add(radioButton0);
+        add(radioButton1);
+        add(radioButton2);
 
-        panel.add(logPathButton);
-        panel.add(textLogPath);
+        add(logPathButton);
+        add(textLogPath);
 
         logPathButton.addActionListener(new ActionListener() {
             @Override
@@ -313,10 +308,10 @@ public class MonkeyFrame extends JEasyFrame {
         interruptButton.setBounds(250, 305, 100, 20);
         exitButton.setBounds(360, 305, 100, 20);
 
-        panel.add(excuteButton);
-        panel.add(resetButton);
-        panel.add(interruptButton);
-        panel.add(exitButton);
+        add(excuteButton);
+        add(resetButton);
+        add(interruptButton);
+        add(exitButton);
 
         interruptButton.setEnabled(false);
 
@@ -481,13 +476,6 @@ public class MonkeyFrame extends JEasyFrame {
             }
         });
 
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logger.info("已退出系统（Exit）");
-                MonkeyFrame.this.dispose();
-            }
-        });
     }
 
     /**
@@ -803,7 +791,6 @@ public class MonkeyFrame extends JEasyFrame {
                     // 杀掉Monkey执行进程
                     interruptThread();
                     //System.gc();
-                    MonkeyFrame.this.dispose();
                 }
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
             }
