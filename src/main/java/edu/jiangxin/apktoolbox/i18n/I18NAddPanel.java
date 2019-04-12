@@ -3,7 +3,6 @@
  */
 package edu.jiangxin.apktoolbox.i18n;
 
-import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -38,6 +38,8 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
@@ -46,94 +48,82 @@ import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 public class I18NAddPanel extends JEasyPanel {
     
     private static final long serialVersionUID = 1L;
+    
+    private static final String charset = "UTF-8";
 
+    private static final boolean isRemoveLastLF = true;
+
+    private static Map<String, String> replace = new HashedMap<String, String>();
+    
+    private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
+
+    private static final int PANEL_HIGHT = 150;
+    
+    private static final int CHILD_PANEL_HIGHT = 30;
+    
+    private static final int CHILD_PANEL_LEFT_WIDTH = 600;
+    
+    private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
+
+    private JPanel sourcePanel;
+
+    private JTextField srcTextField;
+
+    private JButton srcButton;
+
+    private JPanel targetPanel;
+
+    private JTextField targetTextField;
+
+    private JButton targetButton;
+
+    private JPanel itemPanel;
+
+    private JTextField itemTextField;
+
+    private JLabel itemLabel;
+
+    private JPanel operationPanel;
+
+    private JButton addButton;
+
+    static {
+        replace.put("&quot;", "jiangxin001");
+        replace.put("&#160;", "jiangxin002");
+    }
+    
     public I18NAddPanel() throws HeadlessException {
         super();
-        setPreferredSize(new Dimension(600, 160));
-        setMaximumSize(new Dimension(600, 160));
+        Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
-        JPanel sourcePanel = new JPanel();
-        sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
+        createSourcePanel();
         add(sourcePanel);
+        
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JTextField srcTextField = new JTextField();
-        srcTextField.setText(conf.getString("i18n.add.src.dir"));
-
-        JButton srcButton = new JButton("Source Directory");
-        srcButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                JFileChooser jFileChooser = new JFileChooser();
-                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jFileChooser.setDialogTitle("select a directory");
-                int ret = jFileChooser.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jFileChooser.getSelectedFile();
-                    srcTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-                }
-
-            }
-        });
-
-        sourcePanel.add(srcTextField);
-        sourcePanel.add(srcButton);
-
-        JPanel targetPanel = new JPanel();
-        targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+        createTargetPanel();
         add(targetPanel);
+        
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JTextField targetTextField = new JTextField();
-        targetTextField.setText(conf.getString("i18n.add.target.dir"));
-
-        JButton targetButton = new JButton("Save Directory");
-        targetButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jfc.setDialogTitle("save to");
-                int ret = jfc.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    targetTextField.setText(file.getAbsolutePath());
-                    break;
-
-                default:
-                    break;
-                }
-
-            }
-        });
-
-        targetPanel.add(targetTextField);
-        targetPanel.add(targetButton);
-
-        JPanel itemPanel = new JPanel();
-        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+        createItemPanel();
         add(itemPanel);
+        
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JTextField itemTextField = new JTextField();
-        itemTextField.setText(conf.getString("i18n.add.items"));
-
-        JLabel itemLabel = new JLabel("Items");
-
-        itemPanel.add(itemTextField);
-        itemPanel.add(itemLabel);
-
-        JPanel operationPanel = new JPanel();
-        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        createOperationPanel();
         add(operationPanel);
+    }
 
-        JButton addButton = new JButton(bundle.getString("i18n.add.title"));
+    private void createOperationPanel() {
+        operationPanel = new JPanel();
+        Utils.setJComponentSize(operationPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        
+        addButton = new JButton(bundle.getString("i18n.add.title"));
+        Utils.setJComponentSize(addButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         addButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -201,15 +191,94 @@ public class I18NAddPanel extends JEasyPanel {
         operationPanel.add(addButton);
     }
 
-    private static final String charset = "UTF-8";
+    private void createItemPanel() {
+        itemPanel = new JPanel();
+        Utils.setJComponentSize(itemPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+        
+        itemTextField = new JTextField();
+        Utils.setJComponentSize(itemTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        itemTextField.setText(conf.getString("i18n.add.items"));
 
-    private static final boolean isRemoveLastLF = true;
+        itemLabel = new JLabel("Items");
+        Utils.setJComponentSize(itemLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
 
-    private static Map<String, String> replace = new HashedMap<String, String>();
+        itemPanel.add(itemTextField);
+        itemPanel.add(Box.createHorizontalGlue());
+        itemPanel.add(itemLabel);
+    }
 
-    static {
-        replace.put("&quot;", "jiangxin001");
-        replace.put("&#160;", "jiangxin002");
+    private void createTargetPanel() {
+        targetPanel = new JPanel();
+        Utils.setJComponentSize(targetPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+        
+        targetTextField = new JTextField();
+        Utils.setJComponentSize(targetTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        targetTextField.setText(conf.getString("i18n.add.target.dir"));
+
+        targetButton = new JButton("Save Directory");
+        Utils.setJComponentSize(targetButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
+        targetButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                jfc.setDialogTitle("save to");
+                int ret = jfc.showDialog(new JLabel(), null);
+                switch (ret) {
+                case JFileChooser.APPROVE_OPTION:
+                    File file = jfc.getSelectedFile();
+                    targetTextField.setText(file.getAbsolutePath());
+                    break;
+
+                default:
+                    break;
+                }
+
+            }
+        });
+
+        targetPanel.add(targetTextField);
+        targetPanel.add(Box.createHorizontalGlue());
+        targetPanel.add(targetButton);
+    }
+
+    private void createSourcePanel() {
+        sourcePanel = new JPanel();
+        Utils.setJComponentSize(sourcePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
+        
+        srcTextField = new JTextField();
+        Utils.setJComponentSize(srcTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        srcTextField.setText(conf.getString("i18n.add.src.dir"));
+
+        srcButton = new JButton("Source Directory");
+        Utils.setJComponentSize(srcButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
+        srcButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                jFileChooser.setDialogTitle("select a directory");
+                int ret = jFileChooser.showDialog(new JLabel(), null);
+                switch (ret) {
+                case JFileChooser.APPROVE_OPTION:
+                    File file = jFileChooser.getSelectedFile();
+                    srcTextField.setText(file.getAbsolutePath());
+                    break;
+                default:
+                    break;
+                }
+
+            }
+        });
+
+        sourcePanel.add(srcTextField);
+        sourcePanel.add(Box.createHorizontalGlue());
+        sourcePanel.add(srcButton);
     }
 
     private int innerProcessor(String sourceBaseStr, String targetBaseStr, String itemName) {

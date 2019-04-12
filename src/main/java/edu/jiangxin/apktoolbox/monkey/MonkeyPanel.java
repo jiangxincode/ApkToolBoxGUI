@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.monkey;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -26,6 +25,7 @@ import javax.swing.WindowConstants;
 
 import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
+import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 public class MonkeyPanel extends JEasyPanel {
@@ -102,7 +102,7 @@ public class MonkeyPanel extends JEasyPanel {
 
     public MonkeyPanel() {
         super();
-        setSize(new Dimension(800, 800));
+        Utils.setJComponentSize(this, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HIGHT);
 
         setLayout(null);
 

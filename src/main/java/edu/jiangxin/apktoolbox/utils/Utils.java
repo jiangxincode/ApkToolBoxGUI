@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.utils;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
@@ -165,5 +166,27 @@ public class Utils {
         component.setMinimumSize(new Dimension(width, height));
         component.setMaximumSize(new Dimension(width, height));
         component.setPreferredSize(new Dimension(width, height));
+    }
+    
+    public static String getFrameTitle(JComponent component) {
+        Container container = component.getParent();
+        while(container != null) {
+            if (container instanceof JFrame) {
+                return ((JFrame) container).getTitle();
+            }
+            container = container.getParent();
+        }
+        return "";
+    }
+    
+    public static void setFrameTitle(JComponent component, String title) {
+        Container container = component.getParent();
+        while(container != null) {
+            if (container instanceof JFrame) {
+                ((JFrame) container).setTitle(title);
+                return;
+            }
+            container = container.getParent();
+        }
     }
 }

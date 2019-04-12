@@ -44,19 +44,19 @@ public class EncodeConvertPanel extends JEasyPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel sourcePanel = new JPanel();
-        sourcePanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HGIGHT));
+        sourcePanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HIGHT));
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
         add(sourcePanel);
         add(Box.createVerticalStrut(10));
 
         JPanel optionPanel = new JPanel();
-        optionPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HGIGHT));
+        optionPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HIGHT));
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
         add(optionPanel);
         add(Box.createVerticalStrut(10));
 
         JPanel operationPanel = new JPanel();
-        operationPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HGIGHT));
+        operationPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HIGHT));
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         add(operationPanel);
 
@@ -102,14 +102,14 @@ public class EncodeConvertPanel extends JEasyPanel {
         JLabel suffixLabel = new JLabel("Suffix:");
         JTextField suffixTextField = new JTextField();
         suffixTextField.setText(conf.getString("encodeconvert.suffix"));
-        suffixTextField.setPreferredSize(new Dimension(60, Constants.BUTTON_HGIGHT));
-        suffixTextField.setMaximumSize(new Dimension(60, Constants.BUTTON_HGIGHT));
+        suffixTextField.setPreferredSize(new Dimension(60, Constants.BUTTON_HIGHT));
+        suffixTextField.setMaximumSize(new Dimension(60, Constants.BUTTON_HIGHT));
 
         Set<String> charsets = Charset.availableCharsets().keySet();
 
         JLabel fromLabel = new JLabel("From:");
         JAutoCompleteComboBox<String> fromComboBox = new JAutoCompleteComboBox<String>();
-        fromComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HGIGHT));
+        fromComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HIGHT));
         fromComboBox.setEnabled(false);
 
         JCheckBox autoDetectCheckBox = new JCheckBox("Auto Detect");
@@ -128,7 +128,7 @@ public class EncodeConvertPanel extends JEasyPanel {
 
         JLabel toLabel = new JLabel("To:");
         JAutoCompleteComboBox<String> toComboBox = new JAutoCompleteComboBox<String>();
-        toComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HGIGHT));
+        toComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HIGHT));
         toComboBox.setSelectedItem(conf.getString("encodeconvert.to"));
 
         for (String charset : charsets) {

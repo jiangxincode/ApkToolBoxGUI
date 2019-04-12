@@ -6,7 +6,6 @@ package edu.jiangxin.apktoolbox.swing.extend;
 import java.awt.HeadlessException;
 import java.util.ResourceBundle;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.commons.configuration2.Configuration;
@@ -25,7 +24,6 @@ public class JEasyPanel extends JPanel {
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
-    protected JFrame frame;
     
     public JEasyPanel() throws HeadlessException {
         super();
@@ -34,16 +32,4 @@ public class JEasyPanel extends JPanel {
         bundle = ResourceBundle.getBundle("apktoolbox");
         logger.info("Panel start: " + this.getClass().getSimpleName());
     }
-
-    public JEasyPanel(JFrame frame) throws HeadlessException {
-        super();
-        logger = LogManager.getLogger(this.getClass().getSimpleName());
-        conf = Utils.getConfiguration();
-        bundle = ResourceBundle.getBundle("apktoolbox");
-        logger.info("Panel start: " + this.getClass().getSimpleName());
-        this.frame = frame;
-    }
-    
-    
-
 }

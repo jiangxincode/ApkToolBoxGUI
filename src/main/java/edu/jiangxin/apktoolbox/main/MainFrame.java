@@ -61,7 +61,7 @@ public class MainFrame extends JEasyFrame {
     public MainFrame() {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(Constants.DEFAULT_WIDTH, 500);
+        setSize(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HIGHT);
         setResizable(false);
         Utils.setJFrameCenterInScreen(this);
 
@@ -106,11 +106,11 @@ public class MainFrame extends JEasyFrame {
         aXMLPrinter.addActionListener(new changePanelListener(new AXMLPrinterPanel()));
         reverseMenu.add(aXMLPrinter);
 
-        JMenu screenshotMenu = new JMenu("Screnshot");
+        JMenu screenshotMenu = new JMenu(bundle.getString("screenshot.title"));
         menuBar.add(screenshotMenu);
 
-        JMenuItem screenShotMenuItem = new JMenuItem("Screnshot");
-        screenShotMenuItem.addActionListener(new changePanelListener(new ScreenShotPanel(this)));
+        JMenuItem screenShotMenuItem = new JMenuItem(bundle.getString("screenshot.screenshot.title"));
+        screenShotMenuItem.addActionListener(new changePanelListener(new ScreenShotPanel()));
         screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
         screenshotMenu.add(screenShotMenuItem);
 
@@ -184,6 +184,7 @@ public class MainFrame extends JEasyFrame {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
             contentPane.add(panel);
+            logger.info("Panel changed: " + panel.getClass().getSimpleName());
             contentPane.add(Box.createVerticalGlue());
             contentPane.revalidate();
             contentPane.repaint();
