@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-30
+ *
+ */
 public class ContributeActionListener implements ActionListener {
 
     @Override

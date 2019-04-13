@@ -12,6 +12,7 @@ import java.io.LineNumberReader;
  * 文件行数统计
  * 
  * @author jiangxin
+ * @author 2018-09-09
  */
 public class LineCount {
     public static void main(String[] args) throws IOException {

@@ -18,6 +18,11 @@ import javax.swing.plaf.basic.ComboPopup;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class JAutoCompleteComboBox<E> extends JComboBox<E> {
 
     private static final long serialVersionUID = 1L;

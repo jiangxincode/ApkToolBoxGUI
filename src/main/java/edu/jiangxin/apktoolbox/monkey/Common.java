@@ -1,5 +1,10 @@
 package edu.jiangxin.apktoolbox.monkey;
 
+/**
+ * @author jiangxin
+ * @author 2018-08-29
+ *
+ */
 public class Common {
 
     /**

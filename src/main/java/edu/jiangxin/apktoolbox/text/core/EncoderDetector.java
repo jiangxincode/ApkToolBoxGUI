@@ -17,6 +17,11 @@ import info.monitorenter.cpdetector.io.JChardetFacade;
 import info.monitorenter.cpdetector.io.ParsingDetector;
 import info.monitorenter.cpdetector.io.UnicodeDetector;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class EncoderDetector {
     private static Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
 

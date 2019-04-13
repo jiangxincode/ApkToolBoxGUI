@@ -4,6 +4,11 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author jiangxin
+ * @author 2018-10-28
+ *
+ */
 public class ZHUtils {
 
     public static String convert2Traditional(String in) {

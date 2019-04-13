@@ -29,6 +29,11 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
+/**
+ * @author jiangxin
+ * @author 2019-04-12
+ *
+ */
 public class ScreenShotPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
     

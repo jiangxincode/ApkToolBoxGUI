@@ -18,10 +18,11 @@ import org.apache.logging.log4j.Logger;
  * 文件编码转换的工具类.
  * 
  * @author jiangxin
+ * @author 2018-09-09
  *
  */
 public class EncoderConvert {
-    
+
     private static final Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
 
     /**

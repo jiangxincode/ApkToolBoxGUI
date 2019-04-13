@@ -11,6 +11,11 @@ import org.apache.logging.log4j.Logger;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-30
+ *
+ */
 public class JDActionListener implements ActionListener {
 
     private static final Logger logger = LogManager.getLogger(JDActionListener.class);

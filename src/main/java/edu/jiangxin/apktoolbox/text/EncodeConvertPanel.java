@@ -33,6 +33,11 @@ import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
+/**
+ * @author jiangxin
+ * @author 2019-04-12
+ *
+ */
 public class EncodeConvertPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 

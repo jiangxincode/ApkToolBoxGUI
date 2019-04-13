@@ -9,6 +9,11 @@ import org.junit.Test;
 
 import edu.jiangxin.apktoolbox.text.core.OSPatternConvert;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class OSPatternConvertTest {
 
     String path = "target/test-classes/OSPatternConvertTest/";

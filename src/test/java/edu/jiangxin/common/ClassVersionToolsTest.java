@@ -5,6 +5,11 @@ import org.junit.Test;
 
 import edu.jiangxin.apktoolbox.text.core.ClassVersionTools;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class ClassVersionToolsTest {
 
     String path = "target/test-classes/ClassVersionTest/";

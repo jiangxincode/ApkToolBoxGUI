@@ -15,6 +15,11 @@ import org.apache.logging.log4j.Logger;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class JEasyFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;

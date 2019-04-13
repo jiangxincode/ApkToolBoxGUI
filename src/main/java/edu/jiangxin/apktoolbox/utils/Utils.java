@@ -23,6 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author jiangxin
+ * @author 2018-08-19
+ *
+ */
 public class Utils {
     private static final Logger logger = LogManager.getLogger(Utils.class);
 

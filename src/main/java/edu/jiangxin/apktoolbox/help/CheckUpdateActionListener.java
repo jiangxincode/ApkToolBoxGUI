@@ -26,8 +26,8 @@ import org.json.JSONObject;
 import edu.jiangxin.apktoolbox.Version;
 
 /**
- * 
  * @author jiangxin
+ * @author 2018-09-30
  *
  */
 public class CheckUpdateActionListener implements ActionListener {

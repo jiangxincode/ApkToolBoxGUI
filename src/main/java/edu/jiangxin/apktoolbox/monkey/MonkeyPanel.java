@@ -28,6 +28,11 @@ import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
+/**
+ * @author jiangxin
+ * @author 2019-04-12
+ *
+ */
 public class MonkeyPanel extends JEasyPanel {
 
     private static final long serialVersionUID = 1L;

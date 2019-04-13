@@ -22,6 +22,11 @@ import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
+/**
+ * @author jiangxin
+ * @author 2019-04-12
+ *
+ */
 public class ApktoolRebuildPanel extends JEasyPanel {
 
     private static final long serialVersionUID = 1L;

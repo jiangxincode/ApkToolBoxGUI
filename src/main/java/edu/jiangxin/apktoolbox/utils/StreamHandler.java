@@ -8,6 +8,11 @@ import java.io.InputStreamReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-01
+ *
+ */
 public class StreamHandler extends Thread {
 
     private static final Logger logger = LogManager.getLogger(StreamHandler.class);

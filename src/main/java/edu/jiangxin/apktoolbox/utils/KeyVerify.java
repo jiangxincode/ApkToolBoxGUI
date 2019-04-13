@@ -9,6 +9,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+
+/**
+ * @author jiangxin
+ * @author 2018-09-02
+ *
+ */
 public class KeyVerify {
 
     public static String verify(String keyStorePath, char[] password, String alias, char[] aliasPassword) {

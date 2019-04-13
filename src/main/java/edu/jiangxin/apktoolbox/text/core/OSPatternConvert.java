@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
  * 不同操作系统文件格式转换
  * 
  * @author jiangxin
+ * @author 2018-09-09
  */
 public class OSPatternConvert {
     

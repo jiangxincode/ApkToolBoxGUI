@@ -39,6 +39,11 @@ import edu.jiangxin.apktoolbox.text.OSConvertPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
+/**
+ * @author jiangxin
+ * @author 2018-08-19
+ *
+ */
 public class MainFrame extends JEasyFrame {
 
     private static final long serialVersionUID = 1L;

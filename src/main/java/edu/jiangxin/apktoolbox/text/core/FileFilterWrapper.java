@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * </p>
  * 
  * @author jiangxin
+ * @author 2018-09-09
  */
 public class FileFilterWrapper {
 

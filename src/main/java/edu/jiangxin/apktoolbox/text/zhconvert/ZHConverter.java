@@ -8,6 +8,11 @@ import java.util.Properties;
 
 /**
  * 中文简体繁体转换工具
+ * 
+ * @author jiangxin
+ * @author 2018-10-28
+ * @version
+ *
  */
 public class ZHConverter {
 

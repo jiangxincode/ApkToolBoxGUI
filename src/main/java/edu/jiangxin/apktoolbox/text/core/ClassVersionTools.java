@@ -11,6 +11,11 @@ import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class ClassVersionTools {
     private static final Logger logger = LogManager.getLogger(ClassVersionTools.class);
 

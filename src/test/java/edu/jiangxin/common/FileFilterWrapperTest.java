@@ -10,6 +10,11 @@ import org.junit.Test;
 
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class FileFilterWrapperTest {
 
     FileFilterWrapper fileFilterWrapper = null;

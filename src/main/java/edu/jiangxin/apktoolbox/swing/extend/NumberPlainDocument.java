@@ -5,7 +5,8 @@ import javax.swing.text.*;
 /**
  * 实现JTextfield只能输入数字并限制长度
  * 
- * @author Administrator
+ * @author jiangxin
+ * @author 2019-03-24
  *
  */
 public class NumberPlainDocument extends PlainDocument {

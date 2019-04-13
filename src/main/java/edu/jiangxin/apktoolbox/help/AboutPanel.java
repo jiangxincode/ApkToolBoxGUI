@@ -18,6 +18,7 @@ import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 
 /**
  * @author jiangxin
+ * @author 2019-04-12
  *
  */
 public class AboutPanel extends JEasyPanel {

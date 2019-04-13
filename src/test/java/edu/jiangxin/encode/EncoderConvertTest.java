@@ -10,6 +10,11 @@ import org.junit.Test;
 import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
 import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class EncoderConvertTest {
 
     // 测试文件如果太小可能无法准确判断编码

@@ -43,6 +43,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
+ * @author 2019-04-12
  *
  */
 public class I18NAddPanel extends JEasyPanel {

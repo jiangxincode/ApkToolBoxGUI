@@ -1,5 +1,10 @@
 package edu.jiangxin.apktoolbox.utils;
 
+/**
+ * @author jiangxin
+ * @author 2018-09-09
+ *
+ */
 public class Constants {
     
     public static final int DEFAULT_WIDTH = 800;

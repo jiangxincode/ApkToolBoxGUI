@@ -22,6 +22,11 @@ import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.text.core.OSPatternConvert;
 
+/**
+ * @author jiangxin
+ * @author 2019-04-12
+ *
+ */
 public class OSConvertPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
