@@ -69,8 +69,9 @@ public class JAutoCompleteComboBox<E> extends JComboBox<E> {
     public boolean containsItem(String itemString) {
         for (int i = 0; i < this.getModel().getSize(); i++) {
             String _item = " " + this.getModel().getElementAt(i);
-            if (_item.equals(itemString))
+            if (_item.equals(itemString)) {
                 return true;
+            }
         }
         return false;
     }

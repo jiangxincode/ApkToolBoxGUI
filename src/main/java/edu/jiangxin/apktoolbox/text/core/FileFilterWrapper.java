@@ -72,6 +72,7 @@ public class FileFilterWrapper {
             };
         } else { // 指定后缀，则返回该目录下拥有这些后缀的文件
             return new FilenameFilter() {
+                @Override
                 public boolean accept(File file, String name) {
                     boolean ret = name.endsWith(extension);
                     return ret;
@@ -83,6 +84,7 @@ public class FileFilterWrapper {
 
     private FileFilter getDirectoryFilter() { // 得到所有的目录
         return new FileFilter() {
+            @Override
             public boolean accept(File file) {
                 return file.isDirectory();// 关键判断点
             }

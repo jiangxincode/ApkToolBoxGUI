@@ -37,7 +37,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class I18NFindLongestPanel extends JEasyPanel {
+public class I18nFindLongestPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
     
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
@@ -68,7 +68,7 @@ public class I18NFindLongestPanel extends JEasyPanel {
 
     private JButton findButton;
 
-    public I18NFindLongestPanel() throws HeadlessException {
+    public I18nFindLongestPanel() throws HeadlessException {
         super();
         Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -104,7 +104,7 @@ public class I18NFindLongestPanel extends JEasyPanel {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestPanel.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -122,7 +122,7 @@ public class I18NFindLongestPanel extends JEasyPanel {
                 if (StringUtils.isEmpty(item)) {
                     logger.error("item is empty");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestPanel.this, "item is empty", "ERROR",
+                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "item is empty", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     itemTextField.requestFocus();
                     return;
@@ -132,7 +132,7 @@ public class I18NFindLongestPanel extends JEasyPanel {
                 sort(srcPath, itemTextField.getText());
                 if (CollectionUtils.isEmpty(infos)) {
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestPanel.this, "Failed, please see the log", "ERROR",
+                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "Failed, please see the log", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     I18NInfo info = infos.get(0);
@@ -141,7 +141,7 @@ public class I18NFindLongestPanel extends JEasyPanel {
                             .append("text: ").append(info.text).append(System.getProperty("line.separator"))
                             .append("path: ").append(info.path);
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NFindLongestPanel.this, sb.toString(), "INFO",
+                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, sb.toString(), "INFO",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
 

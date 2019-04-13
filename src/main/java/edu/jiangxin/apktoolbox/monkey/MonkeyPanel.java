@@ -632,6 +632,7 @@ public class MonkeyPanel extends JEasyPanel {
             this.times = times;
         }
 
+        @Override
         public void run() {
 
             long time = 1 * times; // 自定义倒计时时间
@@ -841,7 +842,7 @@ public class MonkeyPanel extends JEasyPanel {
             dialog2.setLocation(w, h);
 
             jbb.addActionListener(new ActionListener() {
-
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     dialog2.dispose();
@@ -864,6 +865,7 @@ class ThreadExcuteMonkey implements Runnable {
         this.cmd = cmd;
     }
 
+    @Override
     public void run() {
         try {
             Runtime.getRuntime().exec(cmd);

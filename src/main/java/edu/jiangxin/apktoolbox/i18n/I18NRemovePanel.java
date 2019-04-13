@@ -33,7 +33,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class I18NRemovePanel extends JEasyPanel {
+public class I18nRemovePanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
     List<I18NInfo> infos = new ArrayList<I18NInfo>();
@@ -66,7 +66,7 @@ public class I18NRemovePanel extends JEasyPanel {
 
     private JButton removeButton;
 
-    public I18NRemovePanel() throws HeadlessException {
+    public I18nRemovePanel() throws HeadlessException {
         super();
         Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
 
@@ -103,7 +103,7 @@ public class I18NRemovePanel extends JEasyPanel {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NRemovePanel.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18nRemovePanel.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -121,7 +121,7 @@ public class I18NRemovePanel extends JEasyPanel {
                 if (StringUtils.isEmpty(item)) {
                     logger.error("item is empty");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NRemovePanel.this, "item is empty", "ERROR",
+                    JOptionPane.showMessageDialog(I18nRemovePanel.this, "item is empty", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     itemTextField.requestFocus();
                     return;

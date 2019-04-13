@@ -32,10 +32,10 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class AXMLPrinterPanel extends JEasyPanel {
+public class AxmlPrinterPanel extends JEasyPanel {
     private static final long serialVersionUID = 1L;
 
-    public AXMLPrinterPanel() throws HeadlessException {
+    public AxmlPrinterPanel() throws HeadlessException {
         super();
         setPreferredSize(new Dimension(600, 120));
         setMaximumSize(new Dimension(600, 120));
@@ -119,7 +119,7 @@ public class AXMLPrinterPanel extends JEasyPanel {
                 if (!srcFile.exists() || !srcFile.isFile()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(AXMLPrinterPanel.this, "Source file is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(AxmlPrinterPanel.this, "Source file is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -136,7 +136,7 @@ public class AXMLPrinterPanel extends JEasyPanel {
                 if (!targetFile.exists() || !targetFile.isDirectory()) {
                     logger.error("targetFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(AXMLPrinterPanel.this, "Target dir is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(AxmlPrinterPanel.this, "Target dir is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     targetTextField.requestFocus();
                     return;

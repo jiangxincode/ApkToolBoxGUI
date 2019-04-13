@@ -22,11 +22,11 @@ import edu.jiangxin.apktoolbox.help.AboutPanel;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
 import edu.jiangxin.apktoolbox.help.ContributeActionListener;
 import edu.jiangxin.apktoolbox.help.FeedbackActionListener;
-import edu.jiangxin.apktoolbox.i18n.I18NAddPanel;
-import edu.jiangxin.apktoolbox.i18n.I18NFindLongestPanel;
-import edu.jiangxin.apktoolbox.i18n.I18NRemovePanel;
+import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
+import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
+import edu.jiangxin.apktoolbox.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.monkey.MonkeyPanel;
-import edu.jiangxin.apktoolbox.reverse.AXMLPrinterPanel;
+import edu.jiangxin.apktoolbox.reverse.AxmlPrinterPanel;
 import edu.jiangxin.apktoolbox.reverse.ApkSignerPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolDecodePanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildPanel;
@@ -51,6 +51,7 @@ public class MainFrame extends JEasyFrame {
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     /* UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); */
@@ -108,7 +109,7 @@ public class MainFrame extends JEasyFrame {
         reverseMenu.add(jADXMenuItem);
 
         JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
-        aXMLPrinter.addActionListener(new changePanelListener(new AXMLPrinterPanel()));
+        aXMLPrinter.addActionListener(new changePanelListener(new AxmlPrinterPanel()));
         reverseMenu.add(aXMLPrinter);
 
         JMenu screenshotMenu = new JMenu(bundle.getString("screenshot.title"));
@@ -141,15 +142,15 @@ public class MainFrame extends JEasyFrame {
         menuBar.add(i18nMenu);
 
         JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-        i18nAddMenuItem.addActionListener(new changePanelListener(new I18NAddPanel()));
+        i18nAddMenuItem.addActionListener(new changePanelListener(new I18nAddPanel()));
         i18nMenu.add(i18nAddMenuItem);
 
         JMenuItem i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
-        i18nFindLongestMenuItem.addActionListener(new changePanelListener(new I18NFindLongestPanel()));
+        i18nFindLongestMenuItem.addActionListener(new changePanelListener(new I18nFindLongestPanel()));
         i18nMenu.add(i18nFindLongestMenuItem);
 
         JMenuItem i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
-        i18nRemoveMenuItem.addActionListener(new changePanelListener(new I18NRemovePanel()));
+        i18nRemoveMenuItem.addActionListener(new changePanelListener(new I18nRemovePanel()));
         i18nMenu.add(i18nRemoveMenuItem);
 
         JMenu helpMenu = new JMenu(bundle.getString("help.title"));

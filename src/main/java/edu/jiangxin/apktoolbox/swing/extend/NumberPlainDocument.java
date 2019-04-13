@@ -19,7 +19,8 @@ public class NumberPlainDocument extends PlainDocument {
         super();
         this.limit = limit;
     }
-
+    
+    @Override
     public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
         if (str == null) {
             return;

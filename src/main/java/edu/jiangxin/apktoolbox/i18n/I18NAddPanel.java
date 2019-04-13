@@ -46,7 +46,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class I18NAddPanel extends JEasyPanel {
+public class I18nAddPanel extends JEasyPanel {
     
     private static final long serialVersionUID = 1L;
     
@@ -93,7 +93,7 @@ public class I18NAddPanel extends JEasyPanel {
         replace.put("&#160;", "jiangxin002");
     }
     
-    public I18NAddPanel() throws HeadlessException {
+    public I18nAddPanel() throws HeadlessException {
         super();
         Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -133,7 +133,7 @@ public class I18NAddPanel extends JEasyPanel {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18NAddPanel.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18nAddPanel.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -154,7 +154,7 @@ public class I18NAddPanel extends JEasyPanel {
                     if (!targetFile.exists() || !targetFile.isDirectory()) {
                         logger.error("targetFile is invalid");
                         Toolkit.getDefaultToolkit().beep();
-                        JOptionPane.showMessageDialog(I18NAddPanel.this, "Target directory is invalid", "ERROR",
+                        JOptionPane.showMessageDialog(I18nAddPanel.this, "Target directory is invalid", "ERROR",
                                 JOptionPane.ERROR_MESSAGE);
                         targetTextField.requestFocus();
                         return;
@@ -180,7 +180,7 @@ public class I18NAddPanel extends JEasyPanel {
                         int ret = innerProcessor(srcPath, targetPath, item);
                         if (ret != 0) {
                             Toolkit.getDefaultToolkit().beep();
-                            JOptionPane.showMessageDialog(I18NAddPanel.this, "Failed, please see the log", "ERROR",
+                            JOptionPane.showMessageDialog(I18nAddPanel.this, "Failed, please see the log", "ERROR",
                                     JOptionPane.ERROR_MESSAGE);
                             return;
                         }
