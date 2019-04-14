@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -33,12 +33,12 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class I18nRemovePanel extends JEasyPanel {
+public class I18nRemovePanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    List<I18NInfo> infos = new ArrayList<I18NInfo>();
+    List<I18nInfo> infos = new ArrayList<I18nInfo>();
 
-    private static final String charset = "UTF-8";
+    private static final String CHARSET = "UTF-8";
     
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
 
@@ -205,11 +205,11 @@ public class I18nRemovePanel extends JEasyPanel {
             if (sourceFile.exists()) {
                 try {
                     System.out.println("read from: " + sourceFile.getCanonicalPath());
-                    String content = FileUtils.readFileToString(sourceFile, charset);
+                    String content = FileUtils.readFileToString(sourceFile, CHARSET);
                     Pattern pattern = Pattern.compile("\\s*<string name=\"" + itemName + "\".*>.*</string>");
                     Matcher matcher = pattern.matcher(content);
                     String resultString = matcher.replaceAll("");
-                    FileUtils.writeStringToFile(sourceFile, resultString, charset);
+                    FileUtils.writeStringToFile(sourceFile, resultString, CHARSET);
                     logger.info("remove success, count: " + (++count) + ", and file: " + sourceFile);
                 } catch (IOException e) {
                     logger.error("remove exception: " + sourceFile, e);

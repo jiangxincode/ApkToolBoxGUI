@@ -37,7 +37,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -46,13 +46,13 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class I18nAddPanel extends JEasyPanel {
+public class I18nAddPanel extends EasyPanel {
     
     private static final long serialVersionUID = 1L;
     
-    private static final String charset = "UTF-8";
+    private static final String CHARSET = "UTF-8";
 
-    private static final boolean isRemoveLastLF = true;
+    private static final boolean REMOVE_LAST_LF_OPEN = true;
 
     private static Map<String, String> replace = new HashedMap<String, String>();
     
@@ -424,22 +424,22 @@ public class I18nAddPanel extends JEasyPanel {
     }
 
     private static void prePocess(File file) throws IOException {
-        String content = FileUtils.readFileToString(file, charset);
+        String content = FileUtils.readFileToString(file, CHARSET);
         for (Map.Entry<String, String> entry : replace.entrySet()) {
             content = content.replaceAll(entry.getKey(), entry.getValue());
         }
-        FileUtils.writeStringToFile(file, content, charset);
+        FileUtils.writeStringToFile(file, content, CHARSET);
     }
 
     private static void postProcess(File file) throws IOException {
-        String content = FileUtils.readFileToString(file, charset);
+        String content = FileUtils.readFileToString(file, CHARSET);
         for (Map.Entry<String, String> entry : replace.entrySet()) {
             content = content.replaceAll(entry.getValue(), entry.getKey());
         }
-        if (isRemoveLastLF) {
+        if (REMOVE_LAST_LF_OPEN) {
             content = StringUtils.removeEnd(content, "\n");
         }
-        FileUtils.writeStringToFile(file, content, charset);
+        FileUtils.writeStringToFile(file, content, CHARSET);
     }
 
 }

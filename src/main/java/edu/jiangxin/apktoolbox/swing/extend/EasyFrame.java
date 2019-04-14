@@ -20,14 +20,14 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2018-09-09
  *
  */
-public class JEasyFrame extends JFrame {
+public class EasyFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
 
-    public JEasyFrame() throws HeadlessException {
+    public EasyFrame() throws HeadlessException {
         super();
         logger = LogManager.getLogger(this.getClass().getSimpleName());
         conf = Utils.getConfiguration();
@@ -37,7 +37,7 @@ public class JEasyFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 Utils.saveConfiguration();
-                logger.info("Frame stop: " + JEasyFrame.this.getClass().getSimpleName());
+                logger.info("Frame stop: " + EasyFrame.this.getClass().getSimpleName());
             }
         });
         Toolkit tk = Toolkit.getDefaultToolkit();

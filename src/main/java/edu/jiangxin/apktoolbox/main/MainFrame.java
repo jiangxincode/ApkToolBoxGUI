@@ -30,12 +30,12 @@ import edu.jiangxin.apktoolbox.reverse.AxmlPrinterPanel;
 import edu.jiangxin.apktoolbox.reverse.ApkSignerPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolDecodePanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildPanel;
-import edu.jiangxin.apktoolbox.reverse.JADXActionListener;
-import edu.jiangxin.apktoolbox.reverse.JDActionListener;
+import edu.jiangxin.apktoolbox.reverse.JadxActionListener;
+import edu.jiangxin.apktoolbox.reverse.JdActionListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
-import edu.jiangxin.apktoolbox.swing.extend.JEasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
-import edu.jiangxin.apktoolbox.text.OSConvertPanel;
+import edu.jiangxin.apktoolbox.text.OsConvertPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -44,10 +44,34 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2018-08-19
  *
  */
-public class MainFrame extends JEasyFrame {
+public class MainFrame extends EasyFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+    private JMenuBar menuBar;
+    private JMenu reverseMenu;
+    private JMenuItem apktoolDecodeMenuItem;
+    private JMenuItem apktoolRebuildMenuItem;
+    private JMenuItem apkSignMenuItem;
+    private JMenuItem jDMenuItem;
+    private JMenuItem jADXMenuItem;
+    private JMenuItem aXMLPrinter;
+    private JMenu screenshotMenu;
+    private JMenuItem screenShotMenuItem;
+    private JMenu testMenu;
+    private JMenuItem monkeyMenuItem;
+    private JMenu textMenu;
+    private JMenuItem osConvertMenuItem;
+    private JMenuItem encodeConvertMenuItem;
+    private JMenu i18nMenu;
+    private JMenuItem i18nAddMenuItem;
+    private JMenuItem i18nFindLongestMenuItem;
+    private JMenuItem i18nRemoveMenuItem;
+    private JMenu helpMenu;
+    private JMenuItem feedbackMenuItem;
+    private JMenuItem checkUpdateMenuItem;
+    private JMenuItem contributeMenuItem;
+    private JMenuItem aboutMenuItem;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -80,110 +104,131 @@ public class MainFrame extends JEasyFrame {
     }
 
     private void setMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
+        menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
-        JMenu reverseMenu = new JMenu("Reverse");
-        reverseMenu.setMnemonic(KeyEvent.VK_R);
-        menuBar.add(reverseMenu);
+        createReverseMenu();
 
-        JMenuItem apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
-        apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
-        apktoolDecodeMenuItem.addActionListener(new changePanelListener(new ApktoolDecodePanel()));
-        reverseMenu.add(apktoolDecodeMenuItem);
+        createScreenshotMenu();
 
-        JMenuItem apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
-        apktoolRebuildMenuItem.addActionListener(new changePanelListener(new ApktoolRebuildPanel()));
-        reverseMenu.add(apktoolRebuildMenuItem);
+        createTestMenu();
 
-        JMenuItem apkSignMenuItem = new JMenuItem("ApkSigner");
-        apkSignMenuItem.addActionListener(new changePanelListener(new ApkSignerPanel()));
-        reverseMenu.add(apkSignMenuItem);
+        createTextMenu();
 
-        JMenuItem jDMenuItem = new JMenuItem("JD-GUI");
-        jDMenuItem.addActionListener(new JDActionListener());
-        reverseMenu.add(jDMenuItem);
+        createI18nMenu();
 
-        JMenuItem jADXMenuItem = new JMenuItem("JADX-GUI");
-        jADXMenuItem.addActionListener(new JADXActionListener());
-        reverseMenu.add(jADXMenuItem);
+        createHelpMenu();
+    }
 
-        JMenuItem aXMLPrinter = new JMenuItem("AXMLPrinter");
-        aXMLPrinter.addActionListener(new changePanelListener(new AxmlPrinterPanel()));
-        reverseMenu.add(aXMLPrinter);
-
-        JMenu screenshotMenu = new JMenu(bundle.getString("screenshot.title"));
-        menuBar.add(screenshotMenu);
-
-        JMenuItem screenShotMenuItem = new JMenuItem(bundle.getString("screenshot.screenshot.title"));
-        screenShotMenuItem.addActionListener(new changePanelListener(new ScreenShotPanel()));
-        screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
-        screenshotMenu.add(screenShotMenuItem);
-
-        JMenu testMenu = new JMenu(bundle.getString("test.title"));
-        menuBar.add(testMenu);
-
-        JMenuItem monkeyMenuItem = new JMenuItem(bundle.getString("test.monkey.title"));
-        monkeyMenuItem.addActionListener(new changePanelListener(new MonkeyPanel()));
-        testMenu.add(monkeyMenuItem);
-
-        JMenu textMenu = new JMenu(bundle.getString("text.title"));
-        menuBar.add(textMenu);
-
-        JMenuItem osConvertMenuItem = new JMenuItem("OS Convert");
-        osConvertMenuItem.addActionListener(new changePanelListener(new OSConvertPanel()));
-        textMenu.add(osConvertMenuItem);
-
-        JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
-        encodeConvertMenuItem.addActionListener(new changePanelListener(new EncodeConvertPanel()));
-        textMenu.add(encodeConvertMenuItem);
-
-        JMenu i18nMenu = new JMenu(bundle.getString("i18n.title"));
-        menuBar.add(i18nMenu);
-
-        JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-        i18nAddMenuItem.addActionListener(new changePanelListener(new I18nAddPanel()));
-        i18nMenu.add(i18nAddMenuItem);
-
-        JMenuItem i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
-        i18nFindLongestMenuItem.addActionListener(new changePanelListener(new I18nFindLongestPanel()));
-        i18nMenu.add(i18nFindLongestMenuItem);
-
-        JMenuItem i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
-        i18nRemoveMenuItem.addActionListener(new changePanelListener(new I18nRemovePanel()));
-        i18nMenu.add(i18nRemoveMenuItem);
-
-        JMenu helpMenu = new JMenu(bundle.getString("help.title"));
+    private void createHelpMenu() {
+        helpMenu = new JMenu(bundle.getString("help.title"));
         menuBar.add(helpMenu);
 
-        JMenuItem feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
+        feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
         feedbackMenuItem.addActionListener(new FeedbackActionListener());
         helpMenu.add(feedbackMenuItem);
 
-        JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
+        checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
         checkUpdateMenuItem.addActionListener(new CheckUpdateActionListener(this));
         helpMenu.add(checkUpdateMenuItem);
 
-        JMenuItem contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
+        contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
         contributeMenuItem.addActionListener(new ContributeActionListener());
         helpMenu.add(contributeMenuItem);
 
-        JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
-        aboutMenuItem.addActionListener(new changePanelListener(new AboutPanel()));
+        aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
+        aboutMenuItem.addActionListener(new ChangePanelListener(new AboutPanel()));
         helpMenu.add(aboutMenuItem);
     }
+
+    private void createI18nMenu() {
+        i18nMenu = new JMenu(bundle.getString("i18n.title"));
+        menuBar.add(i18nMenu);
+
+        i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
+        i18nAddMenuItem.addActionListener(new ChangePanelListener(new I18nAddPanel()));
+        i18nMenu.add(i18nAddMenuItem);
+
+        i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
+        i18nFindLongestMenuItem.addActionListener(new ChangePanelListener(new I18nFindLongestPanel()));
+        i18nMenu.add(i18nFindLongestMenuItem);
+
+        i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
+        i18nRemoveMenuItem.addActionListener(new ChangePanelListener(new I18nRemovePanel()));
+        i18nMenu.add(i18nRemoveMenuItem);
+    }
+
+    private void createTextMenu() {
+        textMenu = new JMenu(bundle.getString("text.title"));
+        menuBar.add(textMenu);
+
+        osConvertMenuItem = new JMenuItem("OS Convert");
+        osConvertMenuItem.addActionListener(new ChangePanelListener(new OsConvertPanel()));
+        textMenu.add(osConvertMenuItem);
+
+        encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
+        encodeConvertMenuItem.addActionListener(new ChangePanelListener(new EncodeConvertPanel()));
+        textMenu.add(encodeConvertMenuItem);
+    }
+
+    private void createTestMenu() {
+        testMenu = new JMenu(bundle.getString("test.title"));
+        menuBar.add(testMenu);
+
+        monkeyMenuItem = new JMenuItem(bundle.getString("test.monkey.title"));
+        monkeyMenuItem.addActionListener(new ChangePanelListener(new MonkeyPanel()));
+        testMenu.add(monkeyMenuItem);
+    }
+
+    private void createScreenshotMenu() {
+        screenshotMenu = new JMenu(bundle.getString("screenshot.title"));
+        menuBar.add(screenshotMenu);
+
+        screenShotMenuItem = new JMenuItem(bundle.getString("screenshot.screenshot.title"));
+        screenShotMenuItem.addActionListener(new ChangePanelListener(new ScreenShotPanel()));
+        screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+        screenshotMenu.add(screenShotMenuItem);
+    }
+
+    private void createReverseMenu() {
+        reverseMenu = new JMenu("Reverse");
+        reverseMenu.setMnemonic(KeyEvent.VK_R);
+        menuBar.add(reverseMenu);
+
+        apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
+        apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
+        apktoolDecodeMenuItem.addActionListener(new ChangePanelListener(new ApktoolDecodePanel()));
+        reverseMenu.add(apktoolDecodeMenuItem);
+
+        apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
+        apktoolRebuildMenuItem.addActionListener(new ChangePanelListener(new ApktoolRebuildPanel()));
+        reverseMenu.add(apktoolRebuildMenuItem);
+
+        apkSignMenuItem = new JMenuItem("ApkSigner");
+        apkSignMenuItem.addActionListener(new ChangePanelListener(new ApkSignerPanel()));
+        reverseMenu.add(apkSignMenuItem);
+
+        jDMenuItem = new JMenuItem("JD-GUI");
+        jDMenuItem.addActionListener(new JdActionListener());
+        reverseMenu.add(jDMenuItem);
+
+        jADXMenuItem = new JMenuItem("JADX-GUI");
+        jADXMenuItem.addActionListener(new JadxActionListener());
+        reverseMenu.add(jADXMenuItem);
+
+        aXMLPrinter = new JMenuItem("AXMLPrinter");
+        aXMLPrinter.addActionListener(new ChangePanelListener(new AxmlPrinterPanel()));
+        reverseMenu.add(aXMLPrinter);
+    }
     
-    class changePanelListener implements ActionListener {
+    class ChangePanelListener implements ActionListener {
         
         JPanel panel;
 
-        public changePanelListener(JPanel panel) {
+        public ChangePanelListener(JPanel panel) {
             this.panel = panel;
         }
 
-        /* (non-Javadoc)
-         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-         */
         @Override
         public void actionPerformed(ActionEvent e) {
             Utils.saveConfiguration();

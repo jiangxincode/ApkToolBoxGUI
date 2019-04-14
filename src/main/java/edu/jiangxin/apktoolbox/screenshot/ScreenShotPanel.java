@@ -24,7 +24,7 @@ import javax.swing.TransferHandler;
 
 import org.apache.commons.lang3.StringUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -34,7 +34,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class ScreenShotPanel extends JEasyPanel {
+public class ScreenShotPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
     
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
@@ -106,59 +106,7 @@ public class ScreenShotPanel extends JEasyPanel {
 
         sceenshotButton = new JButton("Sceenshot");
         Utils.setJComponentSize(sceenshotButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
-        sceenshotButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                String title = Utils.getFrameTitle(ScreenShotPanel.this);
-                Utils.setFrameTitle(ScreenShotPanel.this, title + "    [Processing]");
-                String dirName = fileNameTextField.getText();
-                if (StringUtils.isEmpty(dirName)) {
-                    String defaultDir = System.getenv("USERPROFILE");
-                    dirName = conf.getString("screenshot.save.dir", defaultDir);
-                    logger.info("dirName: " + dirName);
-                }
-                String fileName = fileNameTextField.getText();
-                if (StringUtils.isEmpty(fileName)) {
-                    fileName = Utils.getCurrentDateString() + ".png";
-                }
-                File file = new File(dirName, fileName);
-                if (file.exists()) {
-
-                }
-                try {
-                    Process process1 = Runtime.getRuntime()
-                            .exec("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
-                    new StreamHandler(process1.getInputStream(), 0).start();
-                    new StreamHandler(process1.getErrorStream(), 1).start();
-                    process1.waitFor();
-                    logger.info("screencap finish");
-                    Process process2 = Runtime.getRuntime()
-                            .exec("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
-                    new StreamHandler(process2.getInputStream(), 0).start();
-                    new StreamHandler(process2.getErrorStream(), 1).start();
-                    process2.waitFor();
-                    logger.info("pull finish");
-                    if (openCheckBox.isSelected()) {
-                        Process process3 = Runtime.getRuntime().exec("explorer /e,/select," + file.getCanonicalPath());
-                        new StreamHandler(process3.getInputStream(), 0).start();
-                        new StreamHandler(process3.getErrorStream(), 1).start();
-                        process3.waitFor();
-                        logger.info("open dir finish");
-                    }
-                    if (copyCheckBox.isSelected()) {
-                        logger.info("copy the snapshot");
-                        Image image = ImageIO.read(file);
-                        setClipboardImage(ScreenShotPanel.this, image);
-                        logger.info("copy finish");
-                    }
-                } catch (IOException | InterruptedException e1) {
-                    logger.error("screenshot fail", e1);
-                } finally {
-                    Utils.setFrameTitle(ScreenShotPanel.this, title);
-                }
-            }
-        });
+        sceenshotButton.addMouseListener(new ScreenshotButtonMouseAdapter());
 
         getExistButton = new JButton("Get Exist");
         Utils.setJComponentSize(getExistButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
@@ -208,14 +156,8 @@ public class ScreenShotPanel extends JEasyPanel {
             public boolean importData(JComponent comp, Transferable t) {
                 try {
                     Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
-
                     String filepath = o.toString();
-                    if (filepath.startsWith("[")) {
-                        filepath = filepath.substring(1);
-                    }
-                    if (filepath.endsWith("]")) {
-                        filepath = filepath.substring(0, filepath.length() - 1);
-                    }
+                    filepath = filepath.substring(1, filepath.length() - 1);
                     directoryTextField.setText(filepath);
                     return true;
                 } catch (Exception e) {
@@ -287,5 +229,56 @@ public class ScreenShotPanel extends JEasyPanel {
         };
 
         frame.getToolkit().getSystemClipboard().setContents(trans, null);
+    }
+    
+    private final class ScreenshotButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            String title = Utils.getFrameTitle(ScreenShotPanel.this);
+            Utils.setFrameTitle(ScreenShotPanel.this, title + "    [Processing]");
+            String dirName = fileNameTextField.getText();
+            if (StringUtils.isEmpty(dirName)) {
+                String defaultDir = System.getenv("USERPROFILE");
+                dirName = conf.getString("screenshot.save.dir", defaultDir);
+                logger.info("dirName: " + dirName);
+            }
+            String fileName = fileNameTextField.getText();
+            if (StringUtils.isEmpty(fileName)) {
+                fileName = Utils.getCurrentDateString() + ".png";
+            }
+            File file = new File(dirName, fileName);
+            try {
+                Process process1 = Runtime.getRuntime()
+                        .exec("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
+                new StreamHandler(process1.getInputStream(), 0).start();
+                new StreamHandler(process1.getErrorStream(), 1).start();
+                process1.waitFor();
+                logger.info("screencap finish");
+                Process process2 = Runtime.getRuntime()
+                        .exec("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
+                new StreamHandler(process2.getInputStream(), 0).start();
+                new StreamHandler(process2.getErrorStream(), 1).start();
+                process2.waitFor();
+                logger.info("pull finish");
+                if (openCheckBox.isSelected()) {
+                    Process process3 = Runtime.getRuntime().exec("explorer /e,/select," + file.getCanonicalPath());
+                    new StreamHandler(process3.getInputStream(), 0).start();
+                    new StreamHandler(process3.getErrorStream(), 1).start();
+                    process3.waitFor();
+                    logger.info("open dir finish");
+                }
+                if (copyCheckBox.isSelected()) {
+                    logger.info("copy the snapshot");
+                    Image image = ImageIO.read(file);
+                    setClipboardImage(ScreenShotPanel.this, image);
+                    logger.info("copy finish");
+                }
+            } catch (IOException | InterruptedException e1) {
+                logger.error("screenshot fail", e1);
+            } finally {
+                Utils.setFrameTitle(ScreenShotPanel.this, title);
+            }
+        }
     }
 }

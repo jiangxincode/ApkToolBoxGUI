@@ -14,14 +14,14 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.Version;
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 
 /**
  * @author jiangxin
  * @author 2019-04-12
  *
  */
-public class AboutPanel extends JEasyPanel {
+public class AboutPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
 

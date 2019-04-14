@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -27,7 +27,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class ApktoolRebuildPanel extends JEasyPanel {
+public class ApktoolRebuildPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -86,7 +86,7 @@ public class ApktoolRebuildPanel extends JEasyPanel {
                 jfc.setDialogType(JFileChooser.SAVE_DIALOG);
                 jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 jfc.setDialogTitle("save to");
-                jfc.setFileFilter(new APKFileFilter());
+                jfc.setFileFilter(new ApkFileFilter());
                 int ret = jfc.showDialog(new JLabel(), null);
                 switch (ret) {
                 case JFileChooser.APPROVE_OPTION:
@@ -193,7 +193,7 @@ public class ApktoolRebuildPanel extends JEasyPanel {
     }
 }
 
-class APKFileFilter extends FileFilter {
+class ApkFileFilter extends FileFilter {
 
     @Override
     public boolean accept(File f) {

@@ -23,28 +23,28 @@ import org.apache.commons.lang3.StringUtils;
  * @author 2018-09-09
  *
  */
-public class JAutoCompleteComboBox<E> extends JComboBox<E> {
+public class AutoCompleteComboBox<E> extends JComboBox<E> {
 
     private static final long serialVersionUID = 1L;
     private AutoCompleter<E> completer;
 
-    public JAutoCompleteComboBox() {
+    public AutoCompleteComboBox() {
         super();
         setUI(new ScrollBasicComboBoxUI());
         addCompleter();
     }
 
-    public JAutoCompleteComboBox(ComboBoxModel<E> cm) {
+    public AutoCompleteComboBox(ComboBoxModel<E> cm) {
         super(cm);
         addCompleter();
     }
 
-    public JAutoCompleteComboBox(E[] items) {
+    public AutoCompleteComboBox(E[] items) {
         super(items);
         addCompleter();
     }
 
-    public JAutoCompleteComboBox(Vector<E> v) {
+    public AutoCompleteComboBox(Vector<E> v) {
         super(v);
         addCompleter();
     }
@@ -68,8 +68,8 @@ public class JAutoCompleteComboBox<E> extends JComboBox<E> {
 
     public boolean containsItem(String itemString) {
         for (int i = 0; i < this.getModel().getSize(); i++) {
-            String _item = " " + this.getModel().getElementAt(i);
-            if (_item.equals(itemString)) {
+            String item = " " + this.getModel().getElementAt(i);
+            if (item.equals(itemString)) {
                 return true;
             }
         }

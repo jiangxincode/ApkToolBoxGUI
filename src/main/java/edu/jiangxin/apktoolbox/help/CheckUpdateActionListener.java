@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.StatusLine;
 import org.apache.http.client.config.RequestConfig;
@@ -32,9 +33,17 @@ import edu.jiangxin.apktoolbox.Version;
  */
 public class CheckUpdateActionListener implements ActionListener {
     private static final String URI = "https://api.github.com/repos/jiangxincode/ApkToolBoxGUI/releases/latest";
+
+    private static final int SOCKET_TIMEOUT_TIME = 4000;
+    
+    private static final int CONNECT_TIMEOUT_TIME = 4000;
+
     private static Logger logger = LogManager.getLogger(CheckUpdateActionListener.class);
+
     private Component parent;
+
     private CloseableHttpClient closeableHttpClient;
+
     private CloseableHttpResponse closeableHttpResponse;
 
     public CheckUpdateActionListener(Component component) {
@@ -84,7 +93,8 @@ public class CheckUpdateActionListener implements ActionListener {
         try {
             HttpGet httpGet = new HttpGet(URI);
             // 设置请求和传输超时时间
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(4000).setConnectTimeout(4000).build();
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SOCKET_TIMEOUT_TIME)
+                    .setConnectTimeout(CONNECT_TIMEOUT_TIME).build();
             httpGet.setConfig(requestConfig);
             closeableHttpResponse = closeableHttpClient.execute(httpGet);
             logger.info("execute request finished");
@@ -99,7 +109,7 @@ public class CheckUpdateActionListener implements ActionListener {
             return;
         }
 
-        if (statusLine.getStatusCode() == 200) {
+        if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity entity = closeableHttpResponse.getEntity();
             try {
                 responseString = EntityUtils.toString(entity);

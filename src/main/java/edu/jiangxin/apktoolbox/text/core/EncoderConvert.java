@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class EncoderConvert {
 
+    private static final String TMP_SUFFIX = ".temp";
     private static final Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
 
     /**
@@ -37,7 +38,7 @@ public class EncoderConvert {
     public static void encodeFile(String srcFileString, String srcEncoder, String desFileString, String desEncoder)
             throws IOException {
         if (srcFileString.equals(desFileString)) {
-            srcFileString = srcFileString + ".temp";
+            srcFileString = srcFileString + EncoderConvert.TMP_SUFFIX;
             FileProcess.copyFile(desFileString, srcFileString);
         }
         File srcFileFile = new File(srcFileString);
@@ -63,7 +64,7 @@ public class EncoderConvert {
         reader.close();
         writer.close();
         System.out.println("转换完成！");
-        if (srcFileString.equals(desFileString + ".temp")) {
+        if (srcFileString.equals(desFileString + EncoderConvert.TMP_SUFFIX)) {
             System.out.println("here");
             boolean success = srcFileFile.delete();
             if (!success) {
@@ -98,7 +99,8 @@ public class EncoderConvert {
             String suffix) throws IOException {
         // File srcDirFile = new File(srcDirString);
         File desDirFile = new File(desDirString);
-        ArrayList<File> files = new FileFilterWrapper().list(srcDirString, suffix); // 获取所有符合条件的文件
+        // 获取所有符合条件的文件
+        ArrayList<File> files = new FileFilterWrapper().list(srcDirString, suffix);
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             File tempFile = it.next();

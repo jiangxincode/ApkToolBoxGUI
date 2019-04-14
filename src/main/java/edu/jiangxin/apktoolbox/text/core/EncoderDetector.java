@@ -24,6 +24,8 @@ import info.monitorenter.cpdetector.io.UnicodeDetector;
  */
 public class EncoderDetector {
     private static Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
+    private static String[] detectorCharsets;
+    private static CountDownLatch countDownLatch;
 
     /**
      * Detect the charset of some file
@@ -32,19 +34,16 @@ public class EncoderDetector {
      * @return charset
      */
     public static String judgeFile(String fileName) {
-
         File file = new File(fileName);
         if (!file.exists()) {
             logger.error("Can't find the file: " + fileName);
             return null;
         }
 
-        final String[] detectorCharset = new String[2];
-
-        CountDownLatch countDownLatch = new CountDownLatch(2);
+        detectorCharsets = new String[2];
+        countDownLatch = new CountDownLatch(2);
 
         Thread cpDetectorThread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 CodepageDetectorProxy cpDetectorProxy = CodepageDetectorProxy.getInstance();
@@ -56,23 +55,22 @@ public class EncoderDetector {
                 cpDetectorProxy.add(UnicodeDetector.getInstance());
                 Charset charset = null;
                 try {
-                    charset = cpDetectorProxy.detectCodepage(file.toURI().toURL()); // f.toURL()已经废弃，建议通过toURI()间接转换
+                    // f.toURL()已经废弃，建议通过toURI()间接转换
+                    charset = cpDetectorProxy.detectCodepage(file.toURI().toURL());
                 } catch (IOException e) {
                     logger.error("cpDetector failed", e);
-                    detectorCharset[0] = null;
+                    detectorCharsets[0] = null;
                 }
                 if (charset != null) {
-                    detectorCharset[0] = charset.name();
+                    detectorCharsets[0] = charset.name();
                 } else {
-                    detectorCharset[0] = null;
+                    detectorCharsets[0] = null;
                 }
                 countDownLatch.countDown();
             }
-
         });
 
         Thread universalDetectorThread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 UniversalDetector universalDetector = new UniversalDetector(null);
@@ -85,10 +83,10 @@ public class EncoderDetector {
                         universalDetector.handleData(buf, 0, nread);
                     }
                     universalDetector.dataEnd();
-                    detectorCharset[1] = universalDetector.getDetectedCharset();
+                    detectorCharsets[1] = universalDetector.getDetectedCharset();
                 } catch (IOException e) {
                     logger.error("universalDetector failed", e);
-                    detectorCharset[1] = null;
+                    detectorCharsets[1] = null;
                 } finally {
                     if (fis != null) {
                         try {
@@ -100,36 +98,38 @@ public class EncoderDetector {
                 }
                 countDownLatch.countDown();
             }
-
         });
-
         cpDetectorThread.start();
         universalDetectorThread.start();
-
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
             logger.error("await failed", e);
             return null;
         }
+        return electBestCharset();
+    }
 
+    private static String electBestCharset() {
         StringBuilder sb = new StringBuilder();
-        sb.append("cpDetector: ").append(detectorCharset[0]).append(", universalDetector: ").append(detectorCharset[1]);
-        if (StringUtils.isEmpty(detectorCharset[0]) && StringUtils.isEmpty(detectorCharset[1])) {
+        sb.append("cpDetector: ").append(detectorCharsets[0]).append(", universalDetector: ")
+                .append(detectorCharsets[1]);
+        if (StringUtils.isEmpty(detectorCharsets[0]) && StringUtils.isEmpty(detectorCharsets[1])) {
             logger.warn(sb.toString());
             return null;
-        } else if (StringUtils.isEmpty(detectorCharset[0]) && StringUtils.isNotEmpty(detectorCharset[1])) {
+        } else if (StringUtils.isEmpty(detectorCharsets[0]) && StringUtils.isNotEmpty(detectorCharsets[1])) {
             logger.info(sb.toString());
-            return detectorCharset[1];
-        } else if (StringUtils.isNotEmpty(detectorCharset[0]) && StringUtils.isEmpty(detectorCharset[1])) {
+            return detectorCharsets[1];
+        } else if (StringUtils.isNotEmpty(detectorCharsets[0]) && StringUtils.isEmpty(detectorCharsets[1])) {
             logger.info(sb.toString());
-            return detectorCharset[0];
-        } else if (detectorCharset[0].equals(detectorCharset[1])) {
+            return detectorCharsets[0];
+        } else if (detectorCharsets[0].equals(detectorCharsets[1])) {
             logger.info(sb.toString());
-            return detectorCharset[1];
+            return detectorCharsets[1];
         } else {
             logger.warn(sb.toString());
-            return detectorCharset[1];
+            return detectorCharsets[1];
         }
+
     }
 }

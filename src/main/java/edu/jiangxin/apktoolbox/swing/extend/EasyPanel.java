@@ -16,14 +16,14 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class JEasyPanel extends JPanel {
+public class EasyPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
     
-    public JEasyPanel() throws HeadlessException {
+    public EasyPanel() throws HeadlessException {
         super();
         logger = LogManager.getLogger(this.getClass().getSimpleName());
         conf = Utils.getConfiguration();

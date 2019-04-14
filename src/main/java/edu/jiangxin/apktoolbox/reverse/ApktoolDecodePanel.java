@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 
 import org.apache.commons.io.FilenameUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -28,7 +28,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class ApktoolDecodePanel extends JEasyPanel {
+public class ApktoolDecodePanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
 

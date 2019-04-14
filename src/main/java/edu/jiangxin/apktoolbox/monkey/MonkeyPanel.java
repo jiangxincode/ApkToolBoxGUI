@@ -23,7 +23,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -33,9 +33,59 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class MonkeyPanel extends JEasyPanel {
+public class MonkeyPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 日志文件名称
+     */
+    private static final String LOG_NAME = "java_monkey_log";
+
+    private static final String HOUR = "时";
+    private static final String MINUTE = "分";
+    private static final String SECOND = "秒";
+
+    private static final String CMD_PS_A = "adb -s ";
+    private static final String CMD_PS_B = " shell ps";
+    private static final String CMD_KILL_A = "adb -s ";
+    private static final String CMD_KILL_B = " shell kill ";
+
+    private static final String MONKEY = "com.android.commands.monkey";
+
+    private static final String IGNORE_CRASHES = " --ignore-crashes";
+    private static final String IGNORE_TIMEOUTS = " --ignore-timeouts";
+    private static final String MONITOR_NATIVE_CRASHES = " --monitor-native-crashes";
+    private static final String IGNORE_SECURITY_EXCEPTIONS = " --ignore-security-exceptions";
+    private static final String KILL_PROCESS_AFTER_ERROR = " --kill-process-after-error";
+    private static final String WAIT_DBG = " --wait-dbg";
+    private static final String HPROF = " --hprof";
+
+    private static final String LEVEL_0 = " -v ";
+    private static final String LEVEL_1 = " -v -v ";
+    private static final String LEVEL_2 = " -v -v -v ";
+
+    private static final String TRANSACTIONCOUNT = "9999";
+
+    /**
+     * 设备列表不能为空！
+     */
+    private static final String MSG4 = "设备列表不能为空！请[刷新]！";
+
+    /**
+     * 应用程序不能为空！
+     */
+    private static final String MSG5 = "应用程序不能为空！请选其他设备！";
+
+    /**
+     * 事件间隔或时间数量不能为空！
+     */
+    private static final String MSG2 = "事件间隔或时间数量不能为空！";
+
+    /**
+     * 日志保存路径不能为空！
+     */
+    private static final String MSG6 = "日志保存路径不能为空！";
 
     Thread threadTimeType = null;
     Thread threadMonkey = null;
@@ -67,27 +117,63 @@ public class MonkeyPanel extends JEasyPanel {
 
     JComboBox<String> comboBoxProgram = new JComboBox<String>();
     JComboBox<String> comboBoxTime = new JComboBox<String>();
-    // --dbg-no-events：初始化启动的activity，但是不产生任何事件
+
+    /**
+     * --dbg-no-events：初始化启动的activity，但是不产生任何事件
+     */
     JCheckBox checkBoxDbgNoEvents = new JCheckBox("初始化启动的activity，但是不产生任何事件");
-    // --hprof：指定该项后在事件序列发送前后会立即生成分析报告（一般建议指定该项）
+
+    /**
+     * --hprof：指定该项后在事件序列发送前后会立即生成分析报告（一般建议指定该项）
+     */
     JCheckBox checkBoxHprof = new JCheckBox("在事件序列发送前后会立即生成分析报告");
-    // --ignore-crashes：忽略崩溃
+
+    /**
+     * --ignore-crashes：忽略崩溃
+     */
     JCheckBox checkBoxCrashes = new JCheckBox("忽略崩溃", true);
-    // --ignore-timeouts：忽略超时
+
+    /**
+     * --ignore-timeouts：忽略超时
+     */
     JCheckBox checkBoxTimeouts = new JCheckBox("忽略超时", true);
-    // --monitor-native-crashes：跟踪本地方法的崩溃问题
+
+    /**
+     * --monitor-native-crashes：跟踪本地方法的崩溃问题
+     */
     JCheckBox checkBoxNativeCrashes = new JCheckBox("跟踪本地方法的崩溃问题", true);
-    // --ignore-security-exceptions：忽略安全异常
+
+    /**
+     * --ignore-security-exceptions：忽略安全异常
+     */
     JCheckBox checkBoxExceptions = new JCheckBox("忽略安全异常", true);
-    // --kill-process-after-error：发生错误后直接杀掉进程
+
+    /**
+     * --kill-process-after-error：发生错误后直接杀掉进程
+     */
     JCheckBox checkBoxKill = new JCheckBox("发生错误后直接杀掉进程");
-    // --wait-dbg：知道连接了调试器才执行monkey测试
+
+    /**
+     * --wait-dbg：知道连接了调试器才执行monkey测试
+     */
     JCheckBox checkBoxWaitDbg = new JCheckBox("停止Monkey执行，直到有调试器与其连接");
 
     ButtonGroup group = new ButtonGroup();
-    JRadioButton radioButton0 = new JRadioButton("基本信息");// 缺省值
-    JRadioButton radioButton1 = new JRadioButton("比较详细");// 比较详细
-    JRadioButton radioButton2 = new JRadioButton("非常详细", true);// 非常详细//默认选中
+
+    /**
+     * 缺省值
+     */
+    JRadioButton radioButton0 = new JRadioButton("基本信息");
+
+    /**
+     * 比较详细
+     */
+    JRadioButton radioButton1 = new JRadioButton("比较详细");
+
+    /**
+     * 非常详细(默认选中)
+     */
+    JRadioButton radioButton2 = new JRadioButton("非常详细", true);
 
     String dbgNoEvents = "";
     String hprof = "";
@@ -102,7 +188,6 @@ public class MonkeyPanel extends JEasyPanel {
     ArrayList<String> list;
     ArrayList<String> arrayList = new ArrayList<String>();
     int flag = 0;
-    // String logFolder = "";
     String[] monkeyCmd = null;
 
     public MonkeyPanel() {
@@ -192,7 +277,7 @@ public class MonkeyPanel extends JEasyPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    ignoreCrashes = Common.Ignore_Crashes;
+                    ignoreCrashes = IGNORE_CRASHES;
                 } else {
                     ignoreCrashes = "";
                 }
@@ -203,7 +288,7 @@ public class MonkeyPanel extends JEasyPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    ignoreTimeouts = Common.Ignore_Timeouts;
+                    ignoreTimeouts = IGNORE_TIMEOUTS;
                 } else {
                     ignoreTimeouts = "";
                 }
@@ -214,7 +299,7 @@ public class MonkeyPanel extends JEasyPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    ignoreSecurityExceptions = Common.Ignore_Security_Exceptions;
+                    ignoreSecurityExceptions = IGNORE_SECURITY_EXCEPTIONS;
                 } else {
                     ignoreSecurityExceptions = "";
                 }
@@ -225,7 +310,7 @@ public class MonkeyPanel extends JEasyPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    monitorNativeCrashes = Common.Monitor_Native_Crashes;
+                    monitorNativeCrashes = MONITOR_NATIVE_CRASHES;
                 } else {
                     monitorNativeCrashes = "";
                 }
@@ -246,9 +331,9 @@ public class MonkeyPanel extends JEasyPanel {
         textTime.setDocument(new NumberPlainDocument(7));
         textTime.setText("1");
         comboBoxTime.setBounds(245, 205, 50, 20);
-        comboBoxTime.addItem(Common.Hour);
-        comboBoxTime.addItem(Common.Minute);
-        comboBoxTime.addItem(Common.Second);
+        comboBoxTime.addItem(HOUR);
+        comboBoxTime.addItem(MINUTE);
+        comboBoxTime.addItem(SECOND);
 
         labelHour.setBounds(405, 205, 50, 20);
         labelMinute.setBounds(475, 205, 50, 20);
@@ -262,9 +347,9 @@ public class MonkeyPanel extends JEasyPanel {
         add(textTime);
         add(comboBoxTime);
 
-        add(labelHour); // 时
-        add(labelMinute); // 分
-        add(labelSecond); // 秒
+        add(labelHour);
+        add(labelMinute);
+        add(labelSecond);
 
     }
 
@@ -320,134 +405,7 @@ public class MonkeyPanel extends JEasyPanel {
 
         interruptButton.setEnabled(false);
 
-        excuteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 获取约束条件
-                if (checkBoxCrashes.isSelected()) {
-                    ignoreCrashes = Common.Ignore_Crashes;
-                }
-                if (checkBoxTimeouts.isSelected()) {
-                    ignoreTimeouts = Common.Ignore_Timeouts;
-                }
-                if (checkBoxNativeCrashes.isSelected()) {
-                    monitorNativeCrashes = Common.Monitor_Native_Crashes;
-                }
-                if (checkBoxExceptions.isSelected()) {
-                    ignoreSecurityExceptions = Common.Ignore_Security_Exceptions;
-                }
-                if (checkBoxHprof.isSelected()) {
-                    hprof = Common.Hprof;
-                }
-                if (checkBoxKill.isSelected()) {
-                    killProcessAfterError = Common.Kill_Process_After_Error;
-                }
-                if (checkBoxWaitDbg.isSelected()) {
-                    waitDbg = Common.Wait_Dbg;
-                }
-
-                // 自定义参数，是否能够执行Monkey？[0不可以][1可以]
-                int start = 0;
-
-                // 判断设备列表和应用程序是否为空
-                if (comboBoxDevices.getItemCount() == 0) {
-                    new Dialog2(Common.Msg4).dialog2.setVisible(true);// 弹出对话框
-                    refreshButton.requestFocus();
-                } else {
-                    if (comboBoxProgram.getItemCount() == 0) {
-                        new Dialog2(Common.Msg5).dialog2.setVisible(true);// 弹出对话框
-                    } else {
-                        // 判断事件间隔和运行时长是否为空
-                        if (textMillisecond.getText().length() == 0) {
-                            new Dialog2(Common.Msg2).dialog2.setVisible(true);// 弹出对话框
-                            textMillisecond.requestFocus();
-                        } else {
-                            if (textTime.getText().length() == 0) {
-                                new Dialog2(Common.Msg2).dialog2.setVisible(true);// 弹出对话框
-                                textTime.requestFocus();
-                            } else {
-                                if (textLogPath.getText().length() == 0) {
-                                    new Dialog2(Common.Msg6).dialog2.setVisible(true);// 弹出对话框
-                                    logPathButton.requestFocus();
-                                } else {
-                                    start = 1;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // 获取日志级别
-                if (radioButton0.isSelected()) {
-                    logLevel = Common.Level_0;
-                }
-                if (radioButton1.isSelected()) {
-                    logLevel = Common.Level_1;
-                }
-                if (radioButton2.isSelected()) {
-                    logLevel = Common.Level_2;
-                }
-
-                if (start == 1) {
-
-                    // 日志文件路径
-                    String logFile = textLogPath.getText() + "\\" + Common.Log_name + Utils.getCurrentDateString()
-                            + ".txt";
-
-                    // logFolder = textLogPath.getText();
-
-                    // textLogPath.setText(logFile);
-
-                    // Dos执行命令
-                    monkeyCmd = new String[] { "cmd.exe", "/C",
-                            "adb -s " + comboBoxDevices.getSelectedItem() + " shell monkey -p "
-                                    + comboBoxProgram.getSelectedItem() + "" + ignoreCrashes + "" + ignoreTimeouts + ""
-                                    + ignoreSecurityExceptions + "" + monitorNativeCrashes + " --throttle "
-                                    + textMillisecond.getText() + "" + logLevel + "" + Common.TransactionCount + " > "
-                                    + logFile };
-
-                    logger.info("Monkey:" + monkeyCmd[2]);
-
-                    flag = 0;
-
-                    // 执行
-                    // new Thread(new CmdThread(monkeyCmd)).start();
-                    threadMonkey = new Thread(new ThreadExcuteMonkey(monkeyCmd));
-                    threadMonkey.start();
-
-                    excuteButton.setEnabled(false);
-                    resetButton.setEnabled(false);
-                    interruptButton.setEnabled(true);
-                    exitButton.setEnabled(false);
-
-                    // 倒计时文本
-                    labelHour.setVisible(true);
-                    labelMinute.setVisible(true);
-                    labelSecond.setVisible(true);
-
-                    // 获取时间类型
-                    String timeType = (String) comboBoxTime.getSelectedItem();
-
-                    long time = Long.parseLong(textTime.getText());
-
-                    if (timeType == Common.Hour) {
-                        // new Thread(new MyThread(time * 3600)).start();
-                        threadTimeType = new Thread(new ThreadExcuteTime(time * 3600));
-                        threadTimeType.start();
-                    }
-                    if (timeType == Common.Minute) {
-                        // new Thread(new MyThread(time * 60)).start();
-                        threadTimeType = new Thread(new ThreadExcuteTime(time * 60));
-                        threadTimeType.start();
-                    }
-                    if (timeType == Common.Second) {
-                        // new Thread(new MyThread(time)).start();
-                        threadTimeType = new Thread(new ThreadExcuteTime(time));
-                        threadTimeType.start();
-                    }
-                }
-            }
-        });
+        excuteButton.addActionListener(new ExcuteButtonActionListener());
 
         resetButton.addActionListener(new ActionListener() {
             @Override
@@ -477,7 +435,6 @@ public class MonkeyPanel extends JEasyPanel {
                 resetButton.setEnabled(true);
                 interruptButton.setEnabled(false);
                 exitButton.setEnabled(true);
-                //System.gc();
             }
         });
 
@@ -497,9 +454,8 @@ public class MonkeyPanel extends JEasyPanel {
 
         logger.info("中断Monkey命令--开始");
 
-        String[] cmd1 = new String[] { "cmd.exe", "/c",
-                Common.CMD_PS_A + comboBoxDevices.getSelectedItem() + Common.CMD_PS_B };
-        excuteCommand(cmd1, Common.Monkey);
+        String[] cmd1 = new String[] { "cmd.exe", "/c", CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
+        excuteCommand(cmd1, MONKEY);
 
         List<String> listPid = list;
         logger.info("获取的中断Monkey进程数量：" + listPid.size());
@@ -508,9 +464,8 @@ public class MonkeyPanel extends JEasyPanel {
         String pid = "";
         for (int i = 0; i < listPid.size(); i++) {
             pid = listPid.get(i);
-            cmd2 = new String[] { "cmd.exe", "/c",
-                    Common.CMD_Kill_A + comboBoxDevices.getSelectedItem() + Common.CMD_Kill_B + pid };
-            excuteCommand(cmd2, Common.Monkey);
+            cmd2 = new String[] { "cmd.exe", "/c", CMD_KILL_A + comboBoxDevices.getSelectedItem() + CMD_KILL_B + pid };
+            excuteCommand(cmd2, MONKEY);
         }
 
         flag = 1;
@@ -621,99 +576,65 @@ public class MonkeyPanel extends JEasyPanel {
     /**
      * 倒计时
      * 
-     * @author Administrator
-     * 
      */
-    class ThreadExcuteTime implements Runnable {
-
+    class CountdownRunnable implements Runnable {
         private long times;
 
-        public ThreadExcuteTime(long times) {
+        public CountdownRunnable(long times) {
             this.times = times;
         }
 
         @Override
         public void run() {
-
-            long time = 1 * times; // 自定义倒计时时间
+            // 自定义倒计时时间
+            long time = 1 * times;
             long hour = 0;
             long minute = 0;
             long seconds = 0;
 
             if (time >= 0) {
-
                 for (int i = 0; i <= time; i++) {
-
                     // 监控Monkey命令
-                    moniterMonkey(time, Common.Monkey);
-
+                    moniterMonkey(time, MONKEY);
                     // 监控Monkey命令操作的App
                     moniterApp(time, comboBoxProgram.getSelectedItem().toString());
-
                     // 判断标识，是否中断操作
                     System.out.println("flag==1?Interrupt:Continue:" + flag);
-
                     if (flag == 1) {
                         break;
                     }
-
                     hour = time / 3600;
-
                     minute = (time - hour * 3600) / 60;
-
                     seconds = time - hour * 3600 - minute * 60;
-
-                    labelHour.setText(hour + Common.Hour);
-
-                    labelMinute.setText(minute + Common.Minute);
-
-                    labelSecond.setText(seconds + Common.Second);
-
+                    labelHour.setText(hour + HOUR);
+                    labelMinute.setText(minute + MINUTE);
+                    labelSecond.setText(seconds + SECOND);
                     try {
-
                         Thread.sleep(1000);
-
                     } catch (Exception e) {
-
                         e.printStackTrace();
-
                     }
-
                     // 正常结束
                     if (time == 0) {
-
                         Thread.currentThread().interrupt();
-
                         interruptThread();
-
                         excuteButton.setEnabled(true);
                         resetButton.setEnabled(true);
                         interruptButton.setEnabled(false);
                         exitButton.setEnabled(true);
-
                     }
-
                     i--;
-
                     time--;
-
                 }
-
                 if (flag == 1) {
-
                     Thread.currentThread().interrupt();
-
                     threadTimeType.interrupt();
-
                     excuteButton.setEnabled(true);
                     resetButton.setEnabled(true);
                     interruptButton.setEnabled(false);
                     exitButton.setEnabled(true);
-
                 }
-
             }
-
         }
 
         /**
@@ -722,58 +643,35 @@ public class MonkeyPanel extends JEasyPanel {
          * @param time     当前剩余执行时间
          * @param keyValue Monkey命令的进程名称
          */
-        public void moniterMonkey(long time, String keyValue) {
-
+        private void moniterMonkey(long time, String keyValue) {
             if ((time - 1) % 120 == 0) {
-
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---开始");
-
                 logger.info("每60秒监听一次，此时time的值：" + (time - 1));
-
                 String[] cmd = new String[] { "cmd.exe", "/c",
-                        Common.CMD_PS_A + comboBoxDevices.getSelectedItem() + Common.CMD_PS_B };
+                        CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
-
                 excuteCommand(cmd, keyValue);
-
                 logger.info("当前线程数：" + list.size());
-
                 if (list.size() == 0) {
-
                     String log = textLogPath.getText();
-
                     System.out.println(textLogPath.getText());
-
                     String getDate = Utils.getCurrentDateString();
-
                     // 日志文件路径
-                    String logFile = log.substring(0, log.indexOf("java_monkey_log")) + Common.Log_name + getDate
-                            + ".txt";
-
+                    String logFile = log.substring(0, log.indexOf("java_monkey_log")) + LOG_NAME + getDate + ".txt";
                     textLogPath.setText(logFile);
-
                     System.out.println("monkeyCmd[2];" + monkeyCmd[2]);
-
                     monkeyCmd[2] = monkeyCmd[2].substring(0, monkeyCmd[2].indexOf("java_monkey_log"))
                             + "java_monkey_log" + getDate + ".txt";
-
                     logger.info("Monkey命令已经停止，再次执行");
                     logger.info("monkeyCmd[2];" + monkeyCmd[2]);
-
                     String[] monkeyCommand = new String[] { "cmd.exe", "/c", monkeyCmd[2] };
-
                     logger.info("执行");
-
                     // 再次执行
-                    threadMonkey = new Thread(new ThreadExcuteMonkey(monkeyCommand));
+                    threadMonkey = new Thread(new ExcuteMonkeyRunnable(monkeyCommand));
                     threadMonkey.start();
-
                 }
-
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
-
             }
-
         }
 
         /**
@@ -782,12 +680,12 @@ public class MonkeyPanel extends JEasyPanel {
          * @param time     当前剩余执行时间
          * @param keyValue App的进程名称
          */
-        public void moniterApp(long time, String keyValue) {
+        private void moniterApp(long time, String keyValue) {
             if ((time - 1) % 120 == 0) {
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---开始");
                 logger.info("每60秒监听一次，此时time的值：" + (time - 1));
                 String[] cmd = new String[] { "cmd.exe", "/c",
-                        Common.CMD_PS_A + comboBoxDevices.getSelectedItem() + Common.CMD_PS_B };
+                        CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
                 excuteCommand(cmd, keyValue);
                 logger.info("当前线程数：" + list.size());
@@ -796,7 +694,7 @@ public class MonkeyPanel extends JEasyPanel {
                     logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
                     // 杀掉Monkey执行进程
                     interruptThread();
-                    //System.gc();
+                    // System.gc();
                 }
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
             }
@@ -853,15 +751,99 @@ public class MonkeyPanel extends JEasyPanel {
             dialog2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         }
     }
+
+    class ExcuteButtonActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ignoreCrashes = checkBoxCrashes.isSelected() ? IGNORE_CRASHES : "";
+            ignoreTimeouts = checkBoxTimeouts.isSelected() ? IGNORE_TIMEOUTS : "";
+            monitorNativeCrashes = checkBoxNativeCrashes.isSelected() ? MONITOR_NATIVE_CRASHES : "";
+            ignoreSecurityExceptions = checkBoxExceptions.isSelected() ? IGNORE_SECURITY_EXCEPTIONS : "";
+            hprof = checkBoxHprof.isSelected() ? HPROF : "";
+            killProcessAfterError = checkBoxKill.isSelected() ? KILL_PROCESS_AFTER_ERROR : "";
+            waitDbg = checkBoxWaitDbg.isSelected() ? WAIT_DBG : "";
+
+            // 判断设备列表和应用程序是否为空
+            if (comboBoxDevices.getItemCount() == 0) {
+                new Dialog2(MSG4).dialog2.setVisible(true);
+                refreshButton.requestFocus();
+                return;
+            }
+            if (comboBoxProgram.getItemCount() == 0) {
+                new Dialog2(MSG5).dialog2.setVisible(true);
+                return;
+            }
+            // 判断事件间隔和运行时长是否为空
+            if (textMillisecond.getText().length() == 0) {
+                new Dialog2(MSG2).dialog2.setVisible(true);
+                textMillisecond.requestFocus();
+                return;
+            }
+            if (textTime.getText().length() == 0) {
+                new Dialog2(MSG2).dialog2.setVisible(true);
+                textTime.requestFocus();
+                return;
+            }
+            if (textLogPath.getText().length() == 0) {
+                new Dialog2(MSG6).dialog2.setVisible(true);
+                logPathButton.requestFocus();
+                return;
+            }
+
+            // 获取日志级别
+            if (radioButton0.isSelected()) {
+                logLevel = LEVEL_0;
+            } else if (radioButton1.isSelected()) {
+                logLevel = LEVEL_1;
+            } else if (radioButton2.isSelected()) {
+                logLevel = LEVEL_2;
+            }
+            String logFile = textLogPath.getText() + "\\" + LOG_NAME + Utils.getCurrentDateString() + ".txt";
+
+            monkeyCmd = new String[] { "cmd.exe", "/C",
+                    "adb -s " + comboBoxDevices.getSelectedItem() + " shell monkey -p "
+                            + comboBoxProgram.getSelectedItem() + "" + ignoreCrashes + "" + ignoreTimeouts + ""
+                            + ignoreSecurityExceptions + "" + monitorNativeCrashes + " --throttle "
+                            + textMillisecond.getText() + "" + logLevel + "" + TRANSACTIONCOUNT + " > " + logFile };
+
+            logger.info("Monkey:" + monkeyCmd[2]);
+
+            flag = 0;
+
+            threadMonkey = new Thread(new ExcuteMonkeyRunnable(monkeyCmd));
+            threadMonkey.start();
+
+            excuteButton.setEnabled(false);
+            resetButton.setEnabled(false);
+            interruptButton.setEnabled(true);
+            exitButton.setEnabled(false);
+
+            // 倒计时文本
+            labelHour.setVisible(true);
+            labelMinute.setVisible(true);
+            labelSecond.setVisible(true);
+
+            // 获取时间类型
+            String timeType = (String) comboBoxTime.getSelectedItem();
+            long time = Long.parseLong(textTime.getText());
+            if (timeType == HOUR) {
+                time *= 3600;
+            } else if (timeType == MINUTE) {
+                time *= 60;
+            }
+            threadTimeType = new Thread(new CountdownRunnable(time));
+            threadTimeType.start();
+        }
+    }
 }
 
 /**
  * 运行Monkey命令
  */
-class ThreadExcuteMonkey implements Runnable {
+class ExcuteMonkeyRunnable implements Runnable {
     private String[] cmd;
 
-    public ThreadExcuteMonkey(String[] cmd) {
+    public ExcuteMonkeyRunnable(String[] cmd) {
         this.cmd = cmd;
     }
 

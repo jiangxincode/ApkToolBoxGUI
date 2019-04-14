@@ -34,7 +34,8 @@ public class FileFilterWrapper {
                 return null;
             }
 
-            if (file.isDirectory()) { // 如果是目录的话，将该目录下符合条件的文件加入ArrayList
+            if (file.isDirectory()) {
+                // 如果是目录的话，将该目录下符合条件的文件加入ArrayList
                 File[] files = file.listFiles(getFileExtensionFilter(suffix));
                 if (files != null) {
                     for (int i = 0; i < files.length; i++) {
@@ -44,13 +45,15 @@ public class FileFilterWrapper {
 
                     }
                 }
-                files = file.listFiles(getDirectoryFilter()); // 过滤出所有的目录
+                // 过滤出所有的目录
+                files = file.listFiles(getDirectoryFilter());
                 if (files != null) {
                     for (int i = 0; i < files.length; i++) {
                         list(files[i].toString(), suffix);
                     }
                 }
-            } else { // 如果是文件的话，直接将该文件加入ArrayList
+            } else {
+                // 如果是文件的话，直接将该文件加入ArrayList
                 arrayList.add(file);
             }
 
@@ -61,8 +64,9 @@ public class FileFilterWrapper {
 
     }
 
-    private FilenameFilter getFileExtensionFilter(final String extension) {// 指定扩展名过滤
-        if (extension == null) { // 没有指定后缀，则返回该目录下所有的文件
+    private FilenameFilter getFileExtensionFilter(final String extension) {
+        if (extension == null) {
+            // 没有指定后缀，则返回该目录下所有的文件
             return new FilenameFilter() {
 
                 @Override
@@ -70,7 +74,8 @@ public class FileFilterWrapper {
                     return true;
                 }
             };
-        } else { // 指定后缀，则返回该目录下拥有这些后缀的文件
+        } else {
+            // 指定后缀，则返回该目录下拥有这些后缀的文件
             return new FilenameFilter() {
                 @Override
                 public boolean accept(File file, String name) {
@@ -82,11 +87,11 @@ public class FileFilterWrapper {
 
     }
 
-    private FileFilter getDirectoryFilter() { // 得到所有的目录
+    private FileFilter getDirectoryFilter() {
         return new FileFilter() {
             @Override
             public boolean accept(File file) {
-                return file.isDirectory();// 关键判断点
+                return file.isDirectory();
             }
         };
     }

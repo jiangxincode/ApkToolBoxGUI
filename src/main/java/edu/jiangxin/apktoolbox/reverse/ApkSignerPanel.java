@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -29,7 +29,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class ApkSignerPanel extends JEasyPanel {
+public class ApkSignerPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
     
@@ -123,111 +123,11 @@ public class ApkSignerPanel extends JEasyPanel {
         
         recoverButton = new JButton("recover");
         Utils.setJComponentSize(recoverButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
-        recoverButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                keyStorePathTextField.setText(conf.getString("default.apksigner.keystore.path"));
-                keyStorePasswordField.setText(conf.getString("default.apksigner.keystore.password"));
-                aliasTextField.setText(conf.getString("default.apksigner.alias"));
-                aliasPasswordField.setText("default.apksigner.alias.password");
-            }
-        });
+        recoverButton.addMouseListener(new RecoverButtonMouseAdapter());
 
         sceenshotButton = new JButton("apksigner");
         Utils.setJComponentSize(sceenshotButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
-        sceenshotButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                File apkFile = new File(apkPathTextField.getText());
-                if (!apkFile.exists()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApkSignerPanel.this, "apk file is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    apkPathTextField.requestFocus();
-                    return;
-                }
-                String apkPath;
-                try {
-                    apkPath = apkFile.getCanonicalPath();
-                } catch (IOException e2) {
-                    logger.error("getCanonicalPath fail");
-                    return;
-                }
-                conf.setProperty("apksigner.apk.path", apkPath);
-
-                File keystoreFile = new File(keyStorePathTextField.getText());
-                if (!keystoreFile.exists()) {
-                    logger.error("keystoreFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystore file is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    keyStorePathTextField.requestFocus();
-                    return;
-                }
-                String keystorePath;
-                try {
-                    keystorePath = keystoreFile.getCanonicalPath();
-                } catch (IOException e2) {
-                    logger.error("getCanonicalPath fail");
-                    return;
-                }
-                conf.setProperty("apksigner.keystore.path", keystorePath);
-
-                String keystorePassword = keyStorePasswordField.getText();
-                if (StringUtils.isEmpty(keystorePassword)) {
-                    logger.error("keystorePassword is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystorePassword is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    keyStorePasswordField.requestFocus();
-                    return;
-                }
-                conf.setProperty("apksigner.keystore.password", keystorePassword);
-
-                String alias = aliasTextField.getText();
-                if (StringUtils.isEmpty(alias)) {
-                    logger.error("alias is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApkSignerPanel.this, "alias is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    aliasTextField.requestFocus();
-                    return;
-                }
-                conf.setProperty("apksigner.alias", alias);
-
-                String alisaPassword = aliasPasswordField.getText();
-                if (StringUtils.isEmpty(alisaPassword)) {
-                    logger.error("alisaPassword is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApkSignerPanel.this, "alisaPassword is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    aliasPasswordField.requestFocus();
-                    return;
-                }
-                conf.setProperty("apksigner.alias.password", alisaPassword);
-
-                try {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                            .append(Utils.getToolsPath()).append(File.separator).append("apksigner.jar\"")
-                            .append(" -keystore ").append(keystorePath).append(" -pswd ").append(keystorePassword)
-                            .append(" -alias ").append(alias).append(" -aliaspswd ").append(alisaPassword).append(" ")
-                            .append(apkPath);
-                    String cmd = sb.toString();
-                    logger.info(cmd);
-                    Process process = Runtime.getRuntime().exec(cmd);
-                    new StreamHandler(process.getInputStream(), 0).start();
-                    new StreamHandler(process.getErrorStream(), 1).start();
-                    process.waitFor();
-                    logger.info("apksigner finish");
-                } catch (IOException | InterruptedException e1) {
-                    logger.error("apksigner fail", e);
-                }
-            }
-        });
+        sceenshotButton.addMouseListener(new ScreenshotButtonMouseAdapter());
 
         operationPanel.add(recoverButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -357,4 +257,114 @@ public class ApkSignerPanel extends JEasyPanel {
         apkPathPanel.add(apkPathButton);
     }
     
+    private final class RecoverButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            keyStorePathTextField.setText(conf.getString("default.apksigner.keystore.path"));
+            keyStorePasswordField.setText(conf.getString("default.apksigner.keystore.password"));
+            aliasTextField.setText(conf.getString("default.apksigner.alias"));
+            aliasPasswordField.setText("default.apksigner.alias.password");
+        }
+    }
+
+    private final class ScreenshotButtonMouseAdapter extends MouseAdapter {
+        private File apkFile;
+        private String apkPath;
+        private File keystoreFile;
+        private String keystorePath;
+        private String keystorePassword;
+        private String alias;
+        private String alisaPassword;
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            apkFile = new File(apkPathTextField.getText());
+            if (!apkFile.exists()) {
+                logger.error("srcFile is invalid");
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "apk file is invalid", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+                apkPathTextField.requestFocus();
+                return;
+            }
+
+            keystoreFile = new File(keyStorePathTextField.getText());
+            if (!keystoreFile.exists()) {
+                logger.error("keystoreFile is invalid");
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystore file is invalid", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+                keyStorePathTextField.requestFocus();
+                return;
+            }
+            
+            try {
+                apkPath = apkFile.getCanonicalPath();
+                keystorePath = keystoreFile.getCanonicalPath();
+            } catch (IOException e2) {
+                logger.error("getCanonicalPath fail");
+                return;
+            }
+            
+            conf.setProperty("apksigner.apk.path", apkPath);
+            conf.setProperty("apksigner.keystore.path", keystorePath);
+
+            keystorePassword = keyStorePasswordField.getText();
+            if (StringUtils.isEmpty(keystorePassword)) {
+                logger.error("keystorePassword is invalid");
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystorePassword is invalid", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+                keyStorePasswordField.requestFocus();
+                return;
+            }
+            conf.setProperty("apksigner.keystore.password", keystorePassword);
+
+            alias = aliasTextField.getText();
+            if (StringUtils.isEmpty(alias)) {
+                logger.error("alias is invalid");
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alias is invalid", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+                aliasTextField.requestFocus();
+                return;
+            }
+            conf.setProperty("apksigner.alias", alias);
+
+            alisaPassword = aliasPasswordField.getText();
+            if (StringUtils.isEmpty(alisaPassword)) {
+                logger.error("alisaPassword is invalid");
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alisaPassword is invalid", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+                aliasPasswordField.requestFocus();
+                return;
+            }
+            conf.setProperty("apksigner.alias.password", alisaPassword);
+
+            try {
+                String cmd = getCmd();
+                logger.info(cmd);
+                Process process = Runtime.getRuntime().exec(cmd);
+                new StreamHandler(process.getInputStream(), 0).start();
+                new StreamHandler(process.getErrorStream(), 1).start();
+                process.waitFor();
+                logger.info("apksigner finish");
+            } catch (IOException | InterruptedException e1) {
+                logger.error("apksigner fail", e);
+            }
+        }
+
+        private String getCmd() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
+                    .append(Utils.getToolsPath()).append(File.separator).append("apksigner.jar\"")
+                    .append(" -keystore ").append(keystorePath).append(" -pswd ").append(keystorePassword)
+                    .append(" -alias ").append(alias).append(" -aliaspswd ").append(alisaPassword).append(" ")
+                    .append(apkPath);
+            return sb.toString();
+        }
+    }
 }

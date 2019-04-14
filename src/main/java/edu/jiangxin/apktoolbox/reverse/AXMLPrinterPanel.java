@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -32,7 +32,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class AxmlPrinterPanel extends JEasyPanel {
+public class AxmlPrinterPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
     public AxmlPrinterPanel() throws HeadlessException {
@@ -154,7 +154,7 @@ public class AxmlPrinterPanel extends JEasyPanel {
                     Enumeration<?> entries = zip.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
-                        if (entry.getName().equals("AndroidManifest.xml")) {
+                        if ("AndroidManifest.xml".equals(entry.getName())) {
                             IOUtils.copy(zip.getInputStream(entry),
                                     new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig")));
                             break;

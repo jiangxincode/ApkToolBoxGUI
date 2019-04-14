@@ -26,8 +26,8 @@ import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 
-import edu.jiangxin.apktoolbox.swing.extend.JAutoCompleteComboBox;
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.AutoCompleteComboBox;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
 import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
@@ -38,7 +38,7 @@ import edu.jiangxin.apktoolbox.utils.Constants;
  * @author 2019-04-12
  *
  */
-public class EncodeConvertPanel extends JEasyPanel {
+public class EncodeConvertPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
     private static final int CONTENT_WIDTH = 500;
@@ -113,7 +113,7 @@ public class EncodeConvertPanel extends JEasyPanel {
         Set<String> charsets = Charset.availableCharsets().keySet();
 
         JLabel fromLabel = new JLabel("From:");
-        JAutoCompleteComboBox<String> fromComboBox = new JAutoCompleteComboBox<String>();
+        AutoCompleteComboBox<String> fromComboBox = new AutoCompleteComboBox<String>();
         fromComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HIGHT));
         fromComboBox.setEnabled(false);
 
@@ -132,7 +132,7 @@ public class EncodeConvertPanel extends JEasyPanel {
         });
 
         JLabel toLabel = new JLabel("To:");
-        JAutoCompleteComboBox<String> toComboBox = new JAutoCompleteComboBox<String>();
+        AutoCompleteComboBox<String> toComboBox = new AutoCompleteComboBox<String>();
         toComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HIGHT));
         toComboBox.setSelectedItem(conf.getString("encodeconvert.to"));
 

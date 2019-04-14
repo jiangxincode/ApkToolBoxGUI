@@ -21,9 +21,12 @@ import edu.jiangxin.apktoolbox.utils.StreamHandler;
  * @author 2018-09-09
  */
 public class FileProcess {
-    
+
     private static final Logger logger = LogManager.getLogger(StreamHandler.class);
-    final static int BUFFERSIZE = 1024 * 5; // The size of the buffer
+    /**
+     * The size of the buffer
+     */
+    final static int BUFFERSIZE = 1024 * 5;
 
     public static void main(String args[]) throws IOException {
         // copyDirectory("test1", "test2");
@@ -46,12 +49,12 @@ public class FileProcess {
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(srcFileFile));
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFileFile));
         // 尚未进行覆盖判断 bad
-        byte[] buffer = new byte[BUFFERSIZE]; // 缓冲数组
+        byte[] buffer = new byte[BUFFERSIZE];
         int len;
         while ((len = in.read(buffer)) != -1) {
             out.write(buffer, 0, len);
         }
-        out.flush(); // 刷新此缓冲的输出流
+        out.flush();
         in.close();
         out.close();
         System.out.println("Success to copy " + srcFileString + " to " + desFileString);
@@ -72,7 +75,7 @@ public class FileProcess {
         File srcDirFile = new File(srcDirString);
         File desDirFile = new File(desDirString);
         if (!desDirFile.exists()) {
-            boolean ret= desDirFile.mkdirs();
+            boolean ret = desDirFile.mkdirs();
             if (!ret) {
                 logger.error("mkidrs failed: " + desDirFile);
                 return;
@@ -139,7 +142,7 @@ public class FileProcess {
         if (dirFile.isDirectory()) {
             String[] files = dirFile.list();
             if (files != null) {
-                for (int i = 0; i < files.length; i++) { // 递归删除目录中的子目录下
+                for (int i = 0; i < files.length; i++) {
                     String temp = dirFile.getAbsolutePath() + File.separator.toString() + files[i];
                     boolean success = deleteDir(temp);
                     if (!success) {
@@ -180,7 +183,7 @@ public class FileProcess {
         String temp = null;
         File fileFile = new File(fileString);
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileFile), encode));
-        if ((startString == null) || (endString == null)) {
+        if (startString == null || endString == null) {
             while ((temp = reader.readLine()) != null) {
                 content.append(temp);
                 content.append(System.getProperty("line.separator"));

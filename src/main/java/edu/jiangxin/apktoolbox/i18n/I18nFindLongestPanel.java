@@ -28,7 +28,7 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import edu.jiangxin.apktoolbox.swing.extend.JEasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
@@ -37,7 +37,7 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  * @author 2019-04-12
  *
  */
-public class I18nFindLongestPanel extends JEasyPanel {
+public class I18nFindLongestPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
     
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
@@ -50,7 +50,7 @@ public class I18nFindLongestPanel extends JEasyPanel {
     
     private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
 
-    List<I18NInfo> infos = new ArrayList<I18NInfo>();
+    List<I18nInfo> infos = new ArrayList<I18nInfo>();
 
     private JPanel sourcePanel;
 
@@ -135,7 +135,7 @@ public class I18nFindLongestPanel extends JEasyPanel {
                     JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "Failed, please see the log", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
-                    I18NInfo info = infos.get(0);
+                    I18nInfo info = infos.get(0);
                     StringBuilder sb = new StringBuilder();
                     sb.append("length: ").append(info.length).append(System.getProperty("line.separator"))
                             .append("text: ").append(info.text).append(System.getProperty("line.separator"))
@@ -245,7 +245,7 @@ public class I18nFindLongestPanel extends JEasyPanel {
                     if (value != null && value.equals(itemName)) {
                         String text = child.getText();
                         if (text != null) {
-                            I18NInfo info = new I18NInfo(getCanonicalPath(sourceFile), text, text.length());
+                            I18nInfo info = new I18nInfo(getCanonicalPath(sourceFile), text, text.length());
                             infos.add(info);
                             break;
                         }
@@ -255,9 +255,9 @@ public class I18nFindLongestPanel extends JEasyPanel {
             }
 
         }
-        Collections.sort(infos, new Comparator<I18NInfo>() {
+        Collections.sort(infos, new Comparator<I18nInfo>() {
             @Override
-            public int compare(I18NInfo o1, I18NInfo o2) {
+            public int compare(I18nInfo o1, I18nInfo o2) {
                 return o2.length - o1.length;
             }
         });
@@ -266,22 +266,17 @@ public class I18nFindLongestPanel extends JEasyPanel {
     }
 }
 
-class I18NInfo {
+class I18nInfo {
     String path;
     String text;
     int length;
 
-    public I18NInfo(String path, String text, int length) {
+    public I18nInfo(String path, String text, int length) {
         this.path = path;
         this.text = text;
         this.length = length;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "I18NInfo [path=" + path + ", text=" + text + ", length=" + length + "]";

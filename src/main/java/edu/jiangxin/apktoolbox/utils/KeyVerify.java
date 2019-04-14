@@ -16,32 +16,33 @@ import java.security.cert.CertificateException;
  *
  */
 public class KeyVerify {
-
+    
     public static String verify(String keyStorePath, char[] password, String alias, char[] aliasPassword) {
         KeyStore keyStore = null;
         FileInputStream fis = null;
         Key key = null;
+        String message;
         try {
             keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
             fis = new FileInputStream(keyStorePath);
             keyStore.load(fis, password);
             key = keyStore.getKey(alias, aliasPassword);
             if (key == null) {
-                return "alias does not exist";
+                message = "alias does not exist";
             }
-            return "OK";
+            message = "OK";
         } catch (NoSuchAlgorithmException | CertificateException | IOException | KeyStoreException
                 | UnrecoverableKeyException e) {
-            return e.getMessage();
+            message = e.getMessage();
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    return e.getMessage();
+                    message = "closing fis fails";
                 }
             }
         }
-
+        return message;
     }
 }
