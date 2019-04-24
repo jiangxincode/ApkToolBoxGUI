@@ -78,8 +78,3 @@ Any contributing is welcomed.
 All contributors will be listed here.
 
 * Jiangxin <jiangxinnju@gmail.com>
-
-Thanks a lot if you can reward me a cup of coffee!
-
-![WeChat](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/WeChatQR.png)
-![AliPay](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/AliPayQR.jpg)
