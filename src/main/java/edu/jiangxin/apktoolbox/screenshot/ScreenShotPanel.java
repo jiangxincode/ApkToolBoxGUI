@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
@@ -36,37 +37,37 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  */
 public class ScreenShotPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
-    
+
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
 
     private static final int PANEL_HIGHT = 110;
-    
+
     private static final int CHILD_PANEL_HIGHT = 30;
-    
+
     private static final int CHILD_PANEL_LEFT_WIDTH = 600;
-    
+
     private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
-    
+
     private JPanel directoryPanel;
-    
+
     private JTextField directoryTextField;
-    
+
     private JButton directoryButton;
-    
+
     private JPanel fileNamePanel;
-    
+
     private JTextField fileNameTextField;
-    
+
     private JButton fileNameButton;
-    
+
     private JPanel sceenshotPanel;
-    
+
     private JCheckBox openCheckBox;
-    
+
     private JCheckBox copyCheckBox;
-    
+
     private JButton sceenshotButton;
-    
+
     private JButton getExistButton;
 
     public ScreenShotPanel() throws HeadlessException {
@@ -74,12 +75,12 @@ public class ScreenShotPanel extends EasyPanel {
 
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
-        
+
         Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
 
         createDirectoryPanel();
         add(directoryPanel);
-        
+
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createFileNamePanel();
@@ -95,7 +96,7 @@ public class ScreenShotPanel extends EasyPanel {
         sceenshotPanel = new JPanel();
         Utils.setJComponentSize(sceenshotPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         sceenshotPanel.setLayout(new BoxLayout(sceenshotPanel, BoxLayout.X_AXIS));
-        
+
         openCheckBox = new JCheckBox("Open Dir");
         Utils.setJComponentSize(openCheckBox, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         openCheckBox.setSelected(false);
@@ -128,7 +129,7 @@ public class ScreenShotPanel extends EasyPanel {
     private void createFileNamePanel() {
         fileNamePanel = new JPanel();
         Utils.setJComponentSize(fileNamePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
-        
+
         fileNameTextField = new JTextField();
         Utils.setJComponentSize(fileNameTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         fileNameTextField.setToolTipText("timestamp default(for example: 20180101122345.png)");
@@ -145,7 +146,7 @@ public class ScreenShotPanel extends EasyPanel {
     private void createDirectoryPanel() {
         directoryPanel = new JPanel();
         Utils.setJComponentSize(directoryPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
-        
+
         directoryTextField = new JTextField();
         Utils.setJComponentSize(directoryTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
@@ -183,7 +184,7 @@ public class ScreenShotPanel extends EasyPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                JFileChooser jfc = new JFileChooser();
+                JFileChooser jfc = new JFileChooser(directoryTextField.getText());
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 jfc.setDialogTitle("select a directory");
                 int ret = jfc.showDialog(new JLabel(), null);
@@ -230,7 +231,7 @@ public class ScreenShotPanel extends EasyPanel {
 
         frame.getToolkit().getSystemClipboard().setContents(trans, null);
     }
-    
+
     private final class ScreenshotButtonMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -256,7 +257,7 @@ public class ScreenShotPanel extends EasyPanel {
                 process1.waitFor();
                 logger.info("screencap finish");
                 Process process2 = Runtime.getRuntime()
-                        .exec("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
+                        .exec(new String[] { "adb", "pull", "/sdcard/screenshot.png", file.getCanonicalPath() });
                 new StreamHandler(process2.getInputStream(), 0).start();
                 new StreamHandler(process2.getErrorStream(), 1).start();
                 process2.waitFor();
