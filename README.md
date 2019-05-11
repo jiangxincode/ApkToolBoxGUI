@@ -1,7 +1,7 @@
 # ApkToolBoxGUI
 
 [![Build Status](https://travis-ci.org/jiangxincode/ApkToolBoxGUI.svg?branch=master)](https://travis-ci.org/jiangxincode/ApkToolBoxGUI)
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=jiangxincode-github:APKToolBoxGUI)](https://sonarcloud.io/dashboard/index/jiangxincode-github:APKToolBoxGUI)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=edu.jiangxin.apktoolbox:APKToolBoxGUI)](https://sonarcloud.io/dashboard/index/edu.jiangxin.apktoolbox:APKToolBoxGUI)
 [![Build status](https://ci.appveyor.com/api/projects/status/0qhudb0r6pi18l5s?svg=true)](https://ci.appveyor.com/project/jiangxincode/apktoolboxgui)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Code Climate](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/gpa.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
