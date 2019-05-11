@@ -1,12 +1,26 @@
 # ApkToolBoxGUI
 
 [![Build Status](https://travis-ci.org/jiangxincode/ApkToolBoxGUI.svg?branch=master)](https://travis-ci.org/jiangxincode/ApkToolBoxGUI)
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=edu.jiangxin.apktoolbox:APKToolBoxGUI)](https://sonarcloud.io/dashboard/index/edu.jiangxin.apktoolbox:APKToolBoxGUI)
 [![Build status](https://ci.appveyor.com/api/projects/status/0qhudb0r6pi18l5s?svg=true)](https://ci.appveyor.com/project/jiangxincode/apktoolboxgui)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Code Climate](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/gpa.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 [![Issue Count](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/issue_count.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
+
+
+## sonarcloud status
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=alert_status)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=bugs)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=code_smells)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=coverage)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=security_rating)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=ncloc)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=sqale_index)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=APKToolBoxGUI&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=APKToolBoxGUI)
 
 * Project Documentation: <https://jiangxincode.github.io/ApkToolBoxGUI/>
 
