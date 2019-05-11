@@ -21,4 +21,8 @@ configuration:
 
 build_script:
   - mvn -v
-  - mvn clean package site scm-publish:publish-scm -B -Dusername=${GITHUB_USERNAME} -Dpassword=${GITHUB_PASSWORD}
+  - mvn clean package site
+  - cd target/site
+  - git init
+  - git remote add origin https://${GITHUB_USERNAME}${GITHUB_PASSWORD}@github.com/jiangxincode/ApkToolBoxGUI.git
+  - git push origin master:gh-pages
