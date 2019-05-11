@@ -4,7 +4,6 @@
 #
 environment:
   matrix:
-    # - JAVA_HOME: C:\Program Files\Java\jdk1.7.0
     - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
 
 install:
@@ -23,4 +22,4 @@ configuration:
 
 build_script:
   - mvn -v
-  - mvn clean package
+  - mvn clean package site scm-publish:publish-scm -B -Dusername=${GITHUB_USERNAME} -Dpassword=${GITHUB_PASSWORD}
