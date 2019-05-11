@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;

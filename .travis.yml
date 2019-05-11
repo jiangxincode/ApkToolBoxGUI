@@ -1,4 +1,10 @@
 language: java
 
+addons:
+  sonarcloud:
+    organization: "$SONAR_ORG"
+    token:
+      secure: "$SONAR_TOKEN"
+
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
