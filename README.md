@@ -77,7 +77,7 @@ Any contributing is welcomed.
 4. Submit pull request/issue
 
 * build binary: mvn clean package
-* build project documentation: mvn clean package site scm-publish:publish-scm -B
+* build project documentation: mvn clean package site
 
 ## Dependencies
 

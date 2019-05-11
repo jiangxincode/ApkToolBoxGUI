@@ -326,18 +326,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>3.0.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <pubScmUrl>scm:git:https://github.com/jiangxincode/ApkToolBoxGUI.git</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
-                    <content>${project.build.directory}/site</content>
-                    <tryUpdate>true</tryUpdate>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.7.1</version>
                 <configuration>
