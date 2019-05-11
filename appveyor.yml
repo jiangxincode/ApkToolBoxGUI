@@ -14,7 +14,6 @@ install:
   - cmd: mvn install:install-file -DgroupId="com.harukizaemon.simian" -DartifactId="simian" -Dversion="2.5.10" -Dpackaging=”jar” -Dfile="lib/simian-2.5.10.jar"
 
 platform:
-  # - x86
   - x64
 
 configuration:
