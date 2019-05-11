@@ -5,6 +5,8 @@ addons:
     organization: "$SONAR_ORG"
     token:
       secure: "$SONAR_TOKEN"
-
+script:
+   - mvn install
+   - mvn clean package sonar:sonar
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report sonar:sonar
+  - mvn clean cobertura:cobertura coveralls:report
