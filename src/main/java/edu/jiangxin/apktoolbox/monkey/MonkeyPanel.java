@@ -40,8 +40,6 @@ public class MonkeyPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
     
-    private static Logger logger = LogManager.getLogger(MonkeyPanel.class);
-
     private static final String LOG_NAME = "java_monkey_log";
 
     private static final String HOUR = "时";

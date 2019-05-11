@@ -23,8 +23,8 @@ import org.apache.logging.log4j.Logger;
 import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.help.AboutPanel;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
-import edu.jiangxin.apktoolbox.help.ContributeActionListener;
-import edu.jiangxin.apktoolbox.help.FeedbackActionListener;
+import edu.jiangxin.apktoolbox.help.Constant;
+import edu.jiangxin.apktoolbox.help.OpenWebsiteListener;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nRemovePanel;
@@ -51,7 +51,7 @@ public class MainFrame extends EasyFrame {
 
     private static final long serialVersionUID = 1L;
     
-    private static Logger logger = LogManager.getLogger(MainFrame.class);
+    private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
     
     private JPanel contentPane;
     private JMenuBar menuBar;
@@ -88,7 +88,7 @@ public class MainFrame extends EasyFrame {
                     MainFrame frame = new MainFrame();
                     frame.setVisible(true);
                 } catch (Exception e) {
-                    logger.error("Exception", e);
+                    LOGGER.error("Exception", e);
                 }
             }
         });
@@ -131,7 +131,7 @@ public class MainFrame extends EasyFrame {
         menuBar.add(helpMenu);
 
         feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
-        feedbackMenuItem.addActionListener(new FeedbackActionListener());
+        feedbackMenuItem.addActionListener(new OpenWebsiteListener(Constant.URL_FEEDBACK));
         helpMenu.add(feedbackMenuItem);
 
         checkUpdateMenuItem = new JMenuItem(bundle.getString("help.checkupdate.title"));
@@ -139,7 +139,7 @@ public class MainFrame extends EasyFrame {
         helpMenu.add(checkUpdateMenuItem);
 
         contributeMenuItem = new JMenuItem(bundle.getString("help.contribute.title"));
-        contributeMenuItem.addActionListener(new ContributeActionListener());
+        contributeMenuItem.addActionListener(new OpenWebsiteListener(Constant.URL_CONTRIBUTE));
         helpMenu.add(contributeMenuItem);
 
         aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
@@ -241,7 +241,7 @@ public class MainFrame extends EasyFrame {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
             contentPane.add(panel);
-            logger.info("Panel changed: " + panel.getClass().getSimpleName());
+            LOGGER.info("Panel changed: " + panel.getClass().getSimpleName());
             contentPane.add(Box.createVerticalGlue());
             contentPane.revalidate();
             contentPane.repaint();

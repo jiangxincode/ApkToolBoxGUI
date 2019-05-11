@@ -32,8 +32,6 @@ import edu.jiangxin.apktoolbox.Version;
  *
  */
 public class CheckUpdateActionListener implements ActionListener {
-    private static final String URI = "https://api.github.com/repos/jiangxincode/ApkToolBoxGUI/releases/latest";
-
     private static final int SOCKET_TIMEOUT_TIME = 4000;
     
     private static final int CONNECT_TIMEOUT_TIME = 4000;
@@ -91,7 +89,7 @@ public class CheckUpdateActionListener implements ActionListener {
         closeableHttpClient = HttpClients.createDefault();
 
         try {
-            HttpGet httpGet = new HttpGet(URI);
+            HttpGet httpGet = new HttpGet(Constant.URL_CHECK_UPDATE);
             // 设置请求和传输超时时间
             RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SOCKET_TIMEOUT_TIME)
                     .setConnectTimeout(CONNECT_TIMEOUT_TIME).build();

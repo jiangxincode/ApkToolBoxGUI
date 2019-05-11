@@ -1,5 +1,9 @@
 language: java
 
+cache:
+  directories:
+   - '$HOME/.m2/repository'
+
 addons:
   sonarcloud:
     organization: "$SONAR_ORG"
@@ -9,4 +13,4 @@ script:
    - mvn install
    - mvn clean package sonar:sonar
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+   - mvn clean cobertura:cobertura coveralls:report

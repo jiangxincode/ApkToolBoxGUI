@@ -21,15 +21,13 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  *
  */
 public class EasyFrame extends JFrame {
-
     private static final long serialVersionUID = 1L;
-    protected Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger(EasyFrame.class);
     protected Configuration conf;
     protected ResourceBundle bundle;
 
     public EasyFrame() throws HeadlessException {
         super();
-        logger = LogManager.getLogger(this.getClass().getSimpleName());
         conf = Utils.getConfiguration();
         bundle = ResourceBundle.getBundle("apktoolbox");
         addWindowListener(new WindowAdapter() {
@@ -37,12 +35,12 @@ public class EasyFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 Utils.saveConfiguration();
-                logger.info("Frame stop: " + EasyFrame.this.getClass().getSimpleName());
+                LOGGER.info("Frame stop: " + EasyFrame.this.getClass().getSimpleName());
             }
         });
         Toolkit tk = Toolkit.getDefaultToolkit();
         Image image = tk.createImage(this.getClass().getResource("/icon.jpg"));
         setIconImage(image);
-        logger.info("Frame start: " + this.getClass().getSimpleName());
+        LOGGER.info("Frame start: " + this.getClass().getSimpleName());
     }
 }

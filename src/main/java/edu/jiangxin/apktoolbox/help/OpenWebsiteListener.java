@@ -15,15 +15,22 @@ import org.apache.logging.log4j.Logger;
  * @author 2019-03-31
  *
  */
-public class FeedbackActionListener implements ActionListener {
-    
-    private static Logger logger = LogManager.getLogger(FeedbackActionListener.class);
+public class OpenWebsiteListener implements ActionListener {
+
+    private static Logger logger = LogManager.getLogger(OpenWebsiteListener.class);
+
+    private String url;
+
+    public OpenWebsiteListener(String url) {
+        super();
+        this.url = url;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         URI uri;
         try {
-            uri = new URI("https://github.com/jiangxincode/ApkToolBoxGUI/issues/new");
+            uri = new URI(url);
             Desktop.getDesktop().browse(uri);
         } catch (URISyntaxException ex) {
             logger.error("URISyntaxException", ex);
