@@ -10,6 +10,9 @@ package edu.jiangxin.apktoolbox.help;
  */
 public class Constant {
     
+    private Constant() {
+    }
+
     /**
      * Url for creating feedbacks or issues
      */
