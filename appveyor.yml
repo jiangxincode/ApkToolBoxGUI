@@ -25,4 +25,4 @@ build_script:
   - cd target/site
   - git init
   - git remote add origin https://${GITHUB_USERNAME}${GITHUB_PASSWORD}@github.com/jiangxincode/ApkToolBoxGUI.git
-  - git push origin master:gh-pages
+  - git push origin master:gh-pages --force
