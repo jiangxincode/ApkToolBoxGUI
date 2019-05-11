@@ -22,7 +22,9 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=edu.jiangxin.apktoolbox:APKToolBoxGUI&metric=sqale_index)](https://sonarcloud.io/dashboard?id=edu.jiangxin.apktoolbox:APKToolBoxGUI)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=edu.jiangxin.apktoolbox:APKToolBoxGUI&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=edu.jiangxin.apktoolbox:APKToolBoxGUI)
 
-* Project Documentation: <https://jiangxincode.github.io/ApkToolBoxGUI/>
+## Project Documentation
+
+[![Documentation](https://img.shields.io/badge/Aloys-Project%20Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
 A open source tool for simplify android development. It targets to replace all features of these tools:
 
