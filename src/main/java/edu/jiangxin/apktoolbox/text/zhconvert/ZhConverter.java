@@ -67,7 +67,7 @@ public class ZhConverter {
                 reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 charMap.load(reader);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IOException", e);
             } finally {
                 try {
                     if (reader != null) {

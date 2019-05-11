@@ -93,8 +93,7 @@ public class FileProcess {
                 try {
                     copyFile(srcFileTemp, desFileTemp);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error("IOException", e);
                 }
             }
             if (files[i].isDirectory()) {

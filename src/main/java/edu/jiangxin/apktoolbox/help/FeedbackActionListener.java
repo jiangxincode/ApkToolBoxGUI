@@ -7,12 +7,17 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author jiangxin
  * @author 2019-03-31
  *
  */
 public class FeedbackActionListener implements ActionListener {
+    
+    private static Logger logger = LogManager.getLogger(FeedbackActionListener.class);
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -21,9 +26,9 @@ public class FeedbackActionListener implements ActionListener {
             uri = new URI("https://github.com/jiangxincode/ApkToolBoxGUI/issues/new");
             Desktop.getDesktop().browse(uri);
         } catch (URISyntaxException ex) {
-            ex.printStackTrace();
+            logger.error("URISyntaxException", ex);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error("IOException", ex);
         }
     }
 

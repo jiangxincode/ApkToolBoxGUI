@@ -17,6 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.help.AboutPanel;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
@@ -26,10 +29,10 @@ import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.monkey.MonkeyPanel;
-import edu.jiangxin.apktoolbox.reverse.AxmlPrinterPanel;
 import edu.jiangxin.apktoolbox.reverse.ApkSignerPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolDecodePanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildPanel;
+import edu.jiangxin.apktoolbox.reverse.AxmlPrinterPanel;
 import edu.jiangxin.apktoolbox.reverse.JadxActionListener;
 import edu.jiangxin.apktoolbox.reverse.JdActionListener;
 import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
@@ -47,6 +50,9 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 public class MainFrame extends EasyFrame {
 
     private static final long serialVersionUID = 1L;
+    
+    private static Logger logger = LogManager.getLogger(MainFrame.class);
+    
     private JPanel contentPane;
     private JMenuBar menuBar;
     private JMenu reverseMenu;
@@ -82,7 +88,7 @@ public class MainFrame extends EasyFrame {
                     MainFrame frame = new MainFrame();
                     frame.setVisible(true);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("Exception", e);
                 }
             }
         });

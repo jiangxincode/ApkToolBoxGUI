@@ -23,6 +23,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -36,10 +39,9 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 public class MonkeyPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
+    
+    private static Logger logger = LogManager.getLogger(MonkeyPanel.class);
 
-    /**
-     * 日志文件名称
-     */
     private static final String LOG_NAME = "java_monkey_log";
 
     private static final String HOUR = "时";
@@ -612,7 +614,7 @@ public class MonkeyPanel extends EasyPanel {
                     try {
                         Thread.sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error("Exception", e);
                     }
                     // 正常结束
                     if (time == 0) {
@@ -841,6 +843,8 @@ public class MonkeyPanel extends EasyPanel {
  * 运行Monkey命令
  */
 class ExcuteMonkeyRunnable implements Runnable {
+    private static Logger logger = LogManager.getLogger(ExcuteMonkeyRunnable.class);
+    
     private String[] cmd;
 
     public ExcuteMonkeyRunnable(String[] cmd) {
@@ -852,7 +856,7 @@ class ExcuteMonkeyRunnable implements Runnable {
         try {
             Runtime.getRuntime().exec(cmd);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception", e);
         }
     }
 }
