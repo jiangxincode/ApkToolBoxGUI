@@ -826,9 +826,9 @@ public class MonkeyPanel extends EasyPanel {
             // 获取时间类型
             String timeType = (String) comboBoxTime.getSelectedItem();
             long time = Long.parseLong(textTime.getText());
-            if (timeType == HOUR) {
+            if (timeType.equals(HOUR)) {
                 time *= 3600;
-            } else if (timeType == MINUTE) {
+            } else if (timeType.equals(MINUTE)) {
                 time *= 60;
             }
             threadTimeType = new Thread(new CountdownRunnable(time));

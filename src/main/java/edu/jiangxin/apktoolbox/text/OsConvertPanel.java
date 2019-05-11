@@ -115,14 +115,10 @@ public class OsConvertPanel extends EasyPanel {
                 }
                 conf.setProperty("osconvert.src.dir", srcPath);
                 conf.setProperty("osconvert.suffix", suffixTextField.getText());
-                try {
-                    ArrayList<File> files = new ArrayList<File>();
-                    files.addAll(new FileFilterWrapper().list(srcPath, suffixTextField.getText()));
-                    OsPatternConvert.osConvertFiles(files, typeComboBox.getSelectedItem().toString());
-                    logger.info("convert finish");
-                } catch (IOException e1) {
-                    logger.error("convert fail", e);
-                }
+                ArrayList<File> files = new ArrayList<File>();
+                files.addAll(new FileFilterWrapper().list(srcPath, suffixTextField.getText()));
+                OsPatternConvert.osConvertFiles(files, typeComboBox.getSelectedItem().toString());
+                logger.info("convert finish");
             }
         });
 

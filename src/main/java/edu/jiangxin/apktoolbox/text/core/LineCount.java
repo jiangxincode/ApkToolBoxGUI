@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * 文件行数统计
  * 
@@ -15,7 +18,9 @@ import java.io.LineNumberReader;
  * @author 2018-09-09
  */
 public class LineCount {
-    public static void main(String[] args) throws IOException {
+    private static final Logger logger = LogManager.getLogger(LineCount.class);
+    
+    public static void main(String[] args) {
         String fileName = "temp/linux.txt";
         long time = System.currentTimeMillis();
         System.out.println("LineNumberReader" + getTotalLines(fileName));
@@ -28,45 +33,79 @@ public class LineCount {
         System.out.println(System.currentTimeMillis() - time);
     }
 
-    public static int getTotalLines(String fileName) throws IOException {
+    public static int getTotalLines(String fileName) {
         // 目前仅支持UTF-8
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
-        String strLine = reader.readLine();
+        LineNumberReader reader = null;
         int totalLines = 0;
-        while (strLine != null) {
-            totalLines++;
-            strLine = reader.readLine();
+        try {
+            reader = new LineNumberReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
+            String strLine = reader.readLine();
+            while (strLine != null) {
+                totalLines++;
+                strLine = reader.readLine();
+            }
+        } catch (Exception e) {
+            logger.error("Exception", e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                logger.error("IOException", e);
+            }
         }
-        reader.close();
         return totalLines;
     }
 
-    public static int getTotalLines2(String fileName) throws IOException {
+    public static int getTotalLines2(String fileName) {
         // 目前仅支持UTF-8
-        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
-        String strLine = in.readLine();
+        BufferedReader in = null;
         int totalLines = 0;
-        while (strLine != null) {
-            totalLines++;
-            strLine = in.readLine();
-        }
-        in.close();
-        return totalLines;
-    }
-
-    public static int count(String filename) throws IOException {
-        InputStream is = new BufferedInputStream(new FileInputStream(filename));
-        byte[] c = new byte[1024];
-        int count = 0;
-        int readChars = 0;
-        while ((readChars = is.read(c)) != -1) {
-            for (int i = 0; i < readChars; ++i) {
-                if (c[i] == '\n') {
-                    ++count;
+        try {
+            in = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
+            String strLine = in.readLine();
+            while (strLine != null) {
+                totalLines++;
+                strLine = in.readLine();
+            }
+        } catch (Exception e) {
+            logger.error("Exception", e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    logger.error("IOException", e);
                 }
             }
         }
-        is.close();
+        return totalLines;
+    }
+
+    public static int count(String filename) {
+        InputStream is = null;
+        int count = 0;
+        try {
+            is = new BufferedInputStream(new FileInputStream(filename));
+            byte[] c = new byte[1024];
+            int readChars = 0;
+            while ((readChars = is.read(c)) != -1) {
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++count;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception", e);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    logger.error("IOException", e);
+                }
+            }
+        }
         return count;
     }
 }

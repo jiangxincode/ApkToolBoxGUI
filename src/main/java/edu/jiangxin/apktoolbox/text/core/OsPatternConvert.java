@@ -21,8 +21,8 @@ import org.apache.logging.log4j.Logger;
  * @author 2018-09-09
  */
 public class OsPatternConvert {
-    
-    private static final Logger logger = LogManager.getLogger("OSPatternConvert");
+
+    private static final Logger logger = LogManager.getLogger("OsPatternConvert");
 
     /**
      * 不同操作系统文件格式之间的转换.
@@ -30,12 +30,11 @@ public class OsPatternConvert {
      * 转换函数的真正实现函数，其它转换函数必须调用此函数。
      * </p>
      * 
-     * @param srcFileString 源文件的文件名
-     * @param desFileString 目标文件的文件名
-     * @param               options:换行符，比如:\n,\r,\r\n
-     * @throws IOException
+     * @param srcFileString             源文件的文件名
+     * @param desFileString             目标文件的文件名
+     * @param options:换行符，比如:\n,\r,\r\n
      */
-    private static void convert(String srcFileString, String desFileString, String options) throws IOException {
+    private static void convert(String srcFileString, String desFileString, String options) {
 
         // 临时文件的后缀名，尽量保证不会含有同名文件
         String special = ".OSPattenConvert.temp";
@@ -61,16 +60,36 @@ public class OsPatternConvert {
         }
 
         // 仅支持UTF-8编码
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), "UTF-8"));
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), "UTF-8"));
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
 
-        String temp = null;
-        while ((temp = reader.readLine()) != null) {
-            writer.write(temp);
-            writer.write(options);
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), "UTF-8"));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), "UTF-8"));
+
+            String temp = null;
+            while ((temp = reader.readLine()) != null) {
+                writer.write(temp);
+                writer.write(options);
+            }
+        } catch (Exception e) {
+            logger.error("Exception", e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    logger.error("IOException", e);
+                }
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    logger.error("IOException", e);
+                }
+            }
         }
-        writer.close();
-        reader.close();
 
         // 如果存在临时文件，则删除
         if (srcFileString.equals(desFileString + special)) {
@@ -86,9 +105,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    private static void toUnix(String srcFileString, String desFileString) throws IOException {
+    private static void toUnix(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\n");
         System.out.println("Success to convert " + srcFileString + " to unix");
     }
@@ -98,9 +116,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    private static void toDos(String srcFileString, String desFileString) throws IOException {
+    private static void toDos(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\r\n");
         System.out.println("Success to convert " + srcFileString + " to dos");
     }
@@ -110,11 +127,10 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    private static void toMac(String srcFileString, String desFileString) throws IOException {
+    private static void toMac(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\r");
-        System.out.println("Success to convert " + srcFileString + " to mac");
+        logger.info("Success to convert " + srcFileString + " to mac");
     }
 
     /**
@@ -122,9 +138,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    public static void dos2Unix(String srcFileString, String desFileString) throws IOException {
+    public static void dos2Unix(String srcFileString, String desFileString) {
         toUnix(srcFileString, desFileString);
     }
 
@@ -133,9 +148,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    public static void dos2Mac(String srcFileString, String desFileString) throws IOException {
+    public static void dos2Mac(String srcFileString, String desFileString) {
         toMac(srcFileString, desFileString);
     }
 
@@ -144,9 +158,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    public static void unix2Dos(String srcFileString, String desFileString) throws IOException {
+    public static void unix2Dos(String srcFileString, String desFileString) {
         toDos(srcFileString, desFileString);
     }
 
@@ -155,9 +168,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    public static void unix2Mac(String srcFileString, String desFileString) throws IOException {
+    public static void unix2Mac(String srcFileString, String desFileString) {
         toMac(srcFileString, desFileString);
     }
 
@@ -166,9 +178,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    public static void mac2Unix(String srcFileString, String desFileString) throws IOException {
+    public static void mac2Unix(String srcFileString, String desFileString) {
         toUnix(srcFileString, desFileString);
     }
 
@@ -177,9 +188,8 @@ public class OsPatternConvert {
      * 
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
-     * @throws IOException
      */
-    public static void mac2Dos(String srcFileString, String desFileString) throws IOException {
+    public static void mac2Dos(String srcFileString, String desFileString) {
         toDos(srcFileString, desFileString);
     }
 
@@ -195,9 +205,8 @@ public class OsPatternConvert {
      * @param srcFileString 转换前的文件
      * @param desFileString 转换后的文件
      * @param pattern       转换模式
-     * @throws IOException
      */
-    public static void osFileConvert(String srcFileString, String desFileString, String pattern) throws IOException {
+    public static void osFileConvert(String srcFileString, String desFileString, String pattern) {
 
         // 允许输入大写字母格式的转换模式
         pattern = pattern.toLowerCase();
@@ -238,9 +247,8 @@ public class OsPatternConvert {
      * @param fileString 需要转换的文件
      * @param pattern    转换模式
      * @see #osFileConvert(String, String, String)
-     * @throws IOException
      */
-    public static void osFileConvert(String fileString, String pattern) throws IOException {
+    public static void osFileConvert(String fileString, String pattern) {
         osFileConvert(fileString, fileString, pattern);
     }
 
@@ -255,10 +263,8 @@ public class OsPatternConvert {
      * @param pattern      转换模式
      * @see #osFileConvert(String, String, String)
      * @param suffix 过滤特定文件后缀
-     * @throws IOException
      */
-    public static void osDirConvert(String srcDirString, String desDirString, String pattern, String suffix)
-            throws IOException {
+    public static void osDirConvert(String srcDirString, String desDirString, String pattern, String suffix) {
         File srcDirFile = new File(srcDirString);
         File desDirFile = new File(desDirString);
         if (!srcDirFile.exists()) {
@@ -288,9 +294,8 @@ public class OsPatternConvert {
      * @param desDirString 转化后要存放的目录
      * @param pattern      转换模式
      * @see #osFileConvert(String, String, String)
-     * @throws IOException
      */
-    public static void osDirConvert(String srcDirString, String desDirString, String pattern) throws IOException {
+    public static void osDirConvert(String srcDirString, String desDirString, String pattern) {
         osDirConvert(srcDirString, desDirString, pattern, null);
     }
 
@@ -303,9 +308,8 @@ public class OsPatternConvert {
      * @param files   要转换是文件列表
      * @param pattern 转换模式
      * @see #osFileConvert(String, String, String)
-     * @throws IOException
      */
-    public static void osConvertFiles(ArrayList<File> files, String pattern) throws IOException {
+    public static void osConvertFiles(ArrayList<File> files, String pattern) {
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             osFileConvert(it.next().getAbsolutePath(), pattern);

@@ -35,8 +35,7 @@ public class EncoderConvert {
      * @param desEncoder    需要转换的编码
      * @throws IOException
      */
-    public static void encodeFile(String srcFileString, String srcEncoder, String desFileString, String desEncoder)
-            throws IOException {
+    public static void encodeFile(String srcFileString, String srcEncoder, String desFileString, String desEncoder) {
         if (srcFileString.equals(desFileString)) {
             srcFileString = srcFileString + EncoderConvert.TMP_SUFFIX;
             FileProcess.copyFile(desFileString, srcFileString);
@@ -54,15 +53,34 @@ public class EncoderConvert {
         }
 
         // TODO see http://akini.mbnet.fi/java/unicodereader/
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
-        BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder));
-        int ch = 0;
-        while ((ch = reader.read()) != -1) {
-            writer.write(ch);
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder));
+            int ch = 0;
+            while ((ch = reader.read()) != -1) {
+                writer.write(ch);
+            }
+        } catch (Exception e) {
+            logger.error("Exception", e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    logger.error("IOException", e);
+                }
+            }
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    logger.error("IOException", e);
+                }
+            }
         }
-        reader.close();
-        writer.close();
+
         System.out.println("转换完成！");
         if (srcFileString.equals(desFileString + EncoderConvert.TMP_SUFFIX)) {
             System.out.println("here");
@@ -81,7 +99,7 @@ public class EncoderConvert {
      * @param desEncoder 需要转换的编码
      * @throws IOException
      */
-    public static void encodeFile(String fileString, String srcEncoder, String desEncoder) throws IOException {
+    public static void encodeFile(String fileString, String srcEncoder, String desEncoder) {
         encodeFile(fileString, srcEncoder, fileString, desEncoder);
     }
 
@@ -96,7 +114,7 @@ public class EncoderConvert {
      * @throws IOException
      */
     public static void encodeDir(String srcDirString, String srcEncoder, String desDirString, String desEncoder,
-            String suffix) throws IOException {
+            String suffix) {
         // File srcDirFile = new File(srcDirString);
         File desDirFile = new File(desDirString);
         // 获取所有符合条件的文件
@@ -122,8 +140,7 @@ public class EncoderConvert {
      * @param desEncoder   需要转换的编码
      * @throws IOException
      */
-    public static void encodeDir(String srcDirString, String srcEncoder, String desDirString, String desEncoder)
-            throws IOException {
+    public static void encodeDir(String srcDirString, String srcEncoder, String desDirString, String desEncoder) {
         encodeDir(srcDirString, srcEncoder, desDirString, desEncoder, null);
     }
 
@@ -134,7 +151,7 @@ public class EncoderConvert {
      * @param toEncoder   需要转换的编码
      * @throws IOException
      */
-    public static void encodeFiles(ArrayList<File> files, String fromEncoder, String toEncoder) throws IOException {
+    public static void encodeFiles(ArrayList<File> files, String fromEncoder, String toEncoder) {
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             encodeFile(it.next().getAbsolutePath(), fromEncoder, toEncoder);
