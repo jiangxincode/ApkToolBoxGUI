@@ -8,7 +8,7 @@
 [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
 
 
-## sonarcloud status
+## SonarCloud Status
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=edu.jiangxin.apktoolbox:APKToolBoxGUI&metric=alert_status)](https://sonarcloud.io/dashboard?id=edu.jiangxin.apktoolbox:APKToolBoxGUI)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=edu.jiangxin.apktoolbox:APKToolBoxGUI&metric=bugs)](https://sonarcloud.io/dashboard?id=edu.jiangxin.apktoolbox:APKToolBoxGUI)
