@@ -274,8 +274,12 @@ public class ScreenShotPanel extends EasyPanel {
                     setClipboardImage(ScreenShotPanel.this, image);
                     logger.info("copy finish");
                 }
-            } catch (IOException | InterruptedException e1) {
+            } catch (IOException e1) {
                 logger.error("screenshot fail", e1);
+                return;
+            } catch (InterruptedException e1) {
+                logger.error("screenshot fail", e1);
+                Thread.currentThread().interrupt();
             } finally {
                 Utils.setFrameTitle(ScreenShotPanel.this, title);
             }

@@ -105,7 +105,7 @@ public class EncoderDetector {
             countDownLatch.await();
         } catch (InterruptedException e) {
             logger.error("await failed", e);
-            return null;
+            Thread.currentThread().interrupt();
         }
         return electBestCharset();
     }

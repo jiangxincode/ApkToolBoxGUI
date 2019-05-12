@@ -352,8 +352,12 @@ public class ApkSignerPanel extends EasyPanel {
                 new StreamHandler(process.getErrorStream(), 1).start();
                 process.waitFor();
                 logger.info("apksigner finish");
-            } catch (IOException | InterruptedException e1) {
-                logger.error("apksigner fail", e);
+            } catch (IOException e1) {
+                logger.error("apksigner fail", e1);
+                return;
+            } catch (InterruptedException e1) {
+                logger.error("apksigner fail", e1);
+                Thread.currentThread().interrupt();
             }
         }
 

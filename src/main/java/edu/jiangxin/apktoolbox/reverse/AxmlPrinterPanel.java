@@ -172,8 +172,12 @@ public class AxmlPrinterPanel extends EasyPanel {
                     new StreamHandler(process.getErrorStream(), 1).start();
                     process.waitFor();
                     logger.info("axmlprinter finish");
-                } catch (IOException | InterruptedException e1) {
-                    logger.error("axmlprinter fail", e);
+                } catch (IOException e1) {
+                    logger.error("axmlprinter fail", e1);
+                    return;
+                } catch (InterruptedException e1) {
+                    logger.error("axmlprinter fail", e1);
+                    Thread.currentThread().interrupt();
                 }
             }
         });
