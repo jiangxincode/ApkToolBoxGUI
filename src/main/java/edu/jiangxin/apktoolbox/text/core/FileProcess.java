@@ -56,7 +56,7 @@ public class FileProcess {
         } catch (IOException e) {
             logger.error("copy file exception", e);
         }
-        logger.info(() -> "Success to copy " + srcFileString + " to " + desFileString);
+        logger.info("Success to copy {} to {}", srcFileString, desFileString);
     }
 
     /**

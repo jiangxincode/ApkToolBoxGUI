@@ -91,7 +91,7 @@ public class OsPatternConvert {
      */
     private static void toUnix(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\n");
-        logger.info(() -> "Success to convert " + srcFileString + " to unix");
+        logger.info("Success to convert {} to unix", srcFileString);
     }
 
     /**
@@ -102,7 +102,7 @@ public class OsPatternConvert {
      */
     private static void toDos(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\r\n");
-        logger.info(() -> "Success to convert " + srcFileString + " to dos");
+        logger.info("Success to convert {} to dos", srcFileString);
     }
 
     /**
@@ -113,7 +113,7 @@ public class OsPatternConvert {
      */
     private static void toMac(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\r");
-        logger.info(() -> "Success to convert " + srcFileString + " to mac");
+        logger.info("Success to convert {} to mac", srcFileString);
     }
 
     /**
