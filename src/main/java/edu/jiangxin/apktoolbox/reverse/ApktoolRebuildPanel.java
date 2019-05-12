@@ -185,7 +185,6 @@ public class ApktoolRebuildPanel extends EasyPanel {
                     }
                 } catch (IOException e1) {
                     logger.error("rebuild or apksign fail", e1);
-                    return;
                 } catch (InterruptedException e1) {
                     logger.error("rebuild or apksign fail", e1);
                     Thread.currentThread().interrupt();

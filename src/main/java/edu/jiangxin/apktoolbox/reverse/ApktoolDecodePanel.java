@@ -179,7 +179,6 @@ public class ApktoolDecodePanel extends EasyPanel {
                     logger.info("decode finish");
                 } catch (IOException e1) {
                     logger.error("decode fail", e1);
-                    return;
                 } catch (InterruptedException e1) {
                     logger.error("decode fail", e1);
                     Thread.currentThread().interrupt();

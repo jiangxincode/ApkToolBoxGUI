@@ -276,7 +276,6 @@ public class ScreenShotPanel extends EasyPanel {
                 }
             } catch (IOException e1) {
                 logger.error("screenshot fail", e1);
-                return;
             } catch (InterruptedException e1) {
                 logger.error("screenshot fail", e1);
                 Thread.currentThread().interrupt();

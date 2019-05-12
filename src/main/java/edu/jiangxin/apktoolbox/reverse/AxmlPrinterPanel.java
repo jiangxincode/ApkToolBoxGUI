@@ -174,7 +174,6 @@ public class AxmlPrinterPanel extends EasyPanel {
                     logger.info("axmlprinter finish");
                 } catch (IOException e1) {
                     logger.error("axmlprinter fail", e1);
-                    return;
                 } catch (InterruptedException e1) {
                     logger.error("axmlprinter fail", e1);
                     Thread.currentThread().interrupt();
