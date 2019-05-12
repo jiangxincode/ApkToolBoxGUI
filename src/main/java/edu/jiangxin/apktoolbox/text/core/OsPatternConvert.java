@@ -5,12 +5,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -91,7 +91,7 @@ public class OsPatternConvert {
      */
     private static void toUnix(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\n");
-        System.out.println("Success to convert " + srcFileString + " to unix");
+        logger.info(() -> "Success to convert " + srcFileString + " to unix");
     }
 
     /**
@@ -102,7 +102,7 @@ public class OsPatternConvert {
      */
     private static void toDos(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\r\n");
-        System.out.println("Success to convert " + srcFileString + " to dos");
+        logger.info(() -> "Success to convert " + srcFileString + " to dos");
     }
 
     /**
@@ -113,7 +113,7 @@ public class OsPatternConvert {
      */
     private static void toMac(String srcFileString, String desFileString) {
         convert(srcFileString, desFileString, "\r");
-        logger.info("Success to convert " + srcFileString + " to mac");
+        logger.info(() -> "Success to convert " + srcFileString + " to mac");
     }
 
     /**
@@ -292,7 +292,7 @@ public class OsPatternConvert {
      * @param pattern 转换模式
      * @see #osFileConvert(String, String, String)
      */
-    public static void osConvertFiles(ArrayList<File> files, String pattern) {
+    public static void osConvertFiles(List<File> files, String pattern) {
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             osFileConvert(it.next().getAbsolutePath(), pattern);
