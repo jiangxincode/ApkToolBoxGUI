@@ -39,24 +39,13 @@ public class ClassVersionTools {
             File classFile = it.next();
 
             byte[] bVersion = new byte[8];
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(classFile);
+            try (FileInputStream fis = new FileInputStream(classFile);) {
                 int ret = fis.read(bVersion, 0, 8);
                 if (ret <= 0) {
                     logger.error("read version byte failed");
                 }
             } catch (IOException e) {
                 logger.error("Some io errors happened.");
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        logger.error("Can't close the fis.");
-                        continue;
-                    }
-                }
             }
 
             String majorVersion = String.valueOf((bVersion[6] << 8 & 0xff00) | bVersion[7] & 0x00ff);
@@ -72,7 +61,6 @@ public class ClassVersionTools {
      *
      * @param srcDirString The directory of source
      * @param desDirString The directory of target
-     * @throws IOException
      */
     public static void modifyClassVersion(String srcDirString, String desDirString, byte[] newVersion) {
         File srcDirFile = new File(srcDirString);
@@ -88,6 +76,7 @@ public class ClassVersionTools {
 
         if (newVersion == null || newVersion.length != 4) {
             logger.error("The newVersion is error");
+            return;
         }
 
         FileProcess.copyDirectory(srcDirString, desDirString);
@@ -101,46 +90,24 @@ public class ClassVersionTools {
             byte[] content = new byte[1024 * 1024];
             int len = 0;
 
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(file);
+            try (FileInputStream fis = new FileInputStream(file);) {
                 len = fis.read(content);
             } catch (FileNotFoundException e) {
                 logger.error("Can't find the file: " + file.getName());
             } catch (IOException e) {
                 logger.error("Some io errors happened.");
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        logger.error("Can't close the fis.");
-                        continue;
-                    }
-                }
             }
 
             for (int i = 0; i < 4; i++) {
                 content[i + 4] = newVersion[i];
             }
 
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file);
+            try (FileOutputStream fos = new FileOutputStream(file);) {
                 fos.write(content, 0, len);
             } catch (FileNotFoundException e) {
                 logger.error("Can't find the file: " + file.getName());
             } catch (IOException e) {
                 logger.error("Some io errors happened.");
-            } finally {
-                if (fos != null) {
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        logger.error("Can't close the fos.");
-                        continue;
-                    }
-                }
             }
 
             logger.info("Process file success." + file.getAbsolutePath());

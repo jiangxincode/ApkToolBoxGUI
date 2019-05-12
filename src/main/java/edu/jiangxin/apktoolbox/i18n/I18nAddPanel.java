@@ -346,22 +346,16 @@ public class I18nAddPanel extends EasyPanel {
         }
         SAXBuilder builder = new SAXBuilder();
         Document sourceDoc = null;
-        InputStream in = null;
-        try {
-            in = new FileInputStream(sourceFile);
+        try (InputStream in = new FileInputStream(sourceFile)) {
             sourceDoc = builder.build(in);
             logger.info("build source document: " + sourceFile);
         } catch (JDOMException | IOException e) {
             logger.error("build source document failed: " + sourceFile, e);
             return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error("close input stream exception", e);
-                }
-            }
+        }
+        if (sourceDoc == null) {
+            logger.error("sourceDoc is null");
+            return null;
         }
         Element sourceElement = null;
         for (Element sourceChild : sourceDoc.getRootElement().getChildren()) {

@@ -83,6 +83,10 @@ public class ZhConverter {
 
     public static String convert(String text, int converterType) {
         ZhConverter instance = getInstance(converterType);
+        if (instance == null) {
+            LOGGER.error("instance is null");
+            return null;
+        }
         return instance.convert(text);
     }
 

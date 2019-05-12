@@ -149,8 +149,7 @@ public class AxmlPrinterPanel extends EasyPanel {
                     return;
                 }
                 conf.setProperty("axmlprinter.target.dir", targetPath);
-                try {
-                    ZipFile zip = new ZipFile(srcFile);
+                try (ZipFile zip = new ZipFile(srcFile)) {
                     Enumeration<?> entries = zip.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -159,10 +158,8 @@ public class AxmlPrinterPanel extends EasyPanel {
                                     new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig")));
                             break;
                         }
-
                     }
 
-                    zip.close();
                     StringBuilder sb = new StringBuilder();
                     sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
                             .append(Utils.getToolsPath()).append(File.separator).append("AXMLPrinter3.jar\"")
