@@ -26,7 +26,7 @@ public class FileProcess {
      */
     final static int BUFFERSIZE = 1024 * 5;
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         // copyDirectory("test1", "test2");
         // copyFile("test1/test.txt","test2/test.txt");
         // deleteDir("temp/temp2");
@@ -38,17 +38,14 @@ public class FileProcess {
      * 
      * @param srcFileString
      * @param desFileString
-     * @throws IOException
      */
-    public static void copyFile(String srcFileString, String desFileString, boolean isOverload) {
+    public static void copyFile(String srcFileString, String desFileString) {
         File srcFileFile = new File(srcFileString);
         File desFileFile = new File(desFileString);
 
-        BufferedInputStream in = null;
-        BufferedOutputStream out = null;
-        try {
-            in = new BufferedInputStream(new FileInputStream(srcFileFile));
-            out = new BufferedOutputStream(new FileOutputStream(desFileFile));
+        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(srcFileFile));
+                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFileFile))) {
+
             // 尚未进行覆盖判断 bad
             byte[] buffer = new byte[BUFFERSIZE];
             int len;
@@ -57,28 +54,9 @@ public class FileProcess {
             }
             out.flush();
         } catch (IOException e) {
-            logger.error("IOException", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
+            logger.error("copy file exception", e);
         }
-        logger.error("Success to copy " + srcFileString + " to " + desFileString);
-    }
-
-    public static void copyFile(String srcFileString, String desFileString) {
-        copyFile(srcFileString, desFileString, true);
+        logger.info(() -> "Success to copy " + srcFileString + " to " + desFileString);
     }
 
     /**
@@ -193,9 +171,7 @@ public class FileProcess {
         StringBuilder content = new StringBuilder();
         String temp = null;
         File fileFile = new File(fileString);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileFile), encode));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileFile), encode))) {
             if (startString == null || endString == null) {
                 while ((temp = reader.readLine()) != null) {
                     content.append(temp);
@@ -203,25 +179,19 @@ public class FileProcess {
                 }
             }
             while ((temp = reader.readLine()) != null) {
-                if (temp.contains(startString)) {
-                    while ((temp = reader.readLine()) != null) {
-                        if (!temp.contains(endString)) {
-                            content.append(temp);
-                            content.append(System.getProperty("line.separator"));
-                        }
+                if (!temp.contains(startString)) {
+                    continue;
+                }
+                while ((temp = reader.readLine()) != null) {
+                    if (temp.contains(endString)) {
+                        continue;
                     }
+                    content.append(temp);
+                    content.append(System.getProperty("line.separator"));
                 }
             }
         } catch (Exception e) {
             logger.error("Exception", e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
         }
 
         return content.toString();

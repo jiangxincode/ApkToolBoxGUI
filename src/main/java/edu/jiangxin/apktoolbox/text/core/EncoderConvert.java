@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,32 +54,16 @@ public class EncoderConvert {
         }
 
         // TODO see http://akini.mbnet.fi/java/unicodereader/
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder));
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder))) {
             int ch = 0;
             while ((ch = reader.read()) != -1) {
                 writer.write(ch);
             }
         } catch (Exception e) {
             logger.error("Exception", e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
         }
 
         System.out.println("转换完成！");
@@ -151,7 +136,7 @@ public class EncoderConvert {
      * @param toEncoder   需要转换的编码
      * @throws IOException
      */
-    public static void encodeFiles(ArrayList<File> files, String fromEncoder, String toEncoder) {
+    public static void encodeFiles(List<File> files, String fromEncoder, String toEncoder) {
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             encodeFile(it.next().getAbsolutePath(), fromEncoder, toEncoder);

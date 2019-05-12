@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -60,13 +61,10 @@ public class OsPatternConvert {
         }
 
         // 仅支持UTF-8编码
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(srcFileFile), "UTF-8"));
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFileFile), "UTF-8"));
-
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(srcFileFile), StandardCharsets.UTF_8));
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(new FileOutputStream(desFileFile), StandardCharsets.UTF_8))) {
             String temp = null;
             while ((temp = reader.readLine()) != null) {
                 writer.write(temp);
@@ -74,21 +72,6 @@ public class OsPatternConvert {
             }
         } catch (Exception e) {
             logger.error("Exception", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    logger.error("IOException", e);
-                }
-            }
         }
 
         // 如果存在临时文件，则删除
