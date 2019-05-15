@@ -19,7 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
@@ -156,38 +155,19 @@ public class ApktoolRebuildPanel extends EasyPanel {
                     return;
                 }
                 conf.setProperty("apktool.rebuild.target.file", targetPath);
-                try {
-                    StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
+                sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
+                        .append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"").append(" b ")
+                        .append(srcPath).append(" -o ").append(targetPath);
+                Utils.blockedExecutor(sb.toString());
+                if (signAPK.isSelected()) {
+                    sb = new StringBuilder();
                     sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                            .append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"")
-                            .append(" b ").append(srcPath).append(" -o ").append(targetPath);
-                    String cmd = sb.toString();
-                    logger.info(cmd);
-                    Process process1 = Runtime.getRuntime().exec(cmd);
-                    new StreamHandler(process1.getInputStream(), 0).start();
-                    new StreamHandler(process1.getErrorStream(), 1).start();
-                    process1.waitFor();
-                    logger.info("rebuild finish");
-                    if (signAPK.isSelected()) {
-                        sb = new StringBuilder();
-                        sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                                .append(Utils.getToolsPath()).append(File.separator).append("apksigner.jar\"")
-                                .append(" -keystore ").append(Utils.getToolsPath()).append(File.separator)
-                                .append("debug.keystore").append(" -alias androiddebugkey -pswd android ")
-                                .append(targetPath);
-                        cmd = sb.toString();
-                        logger.info(cmd);
-                        Process process2 = Runtime.getRuntime().exec(cmd);
-                        new StreamHandler(process2.getInputStream(), 0).start();
-                        new StreamHandler(process2.getErrorStream(), 1).start();
-                        process1.waitFor();
-                        logger.info("apksign finish");
-                    }
-                } catch (IOException e1) {
-                    logger.error("rebuild or apksign fail", e1);
-                } catch (InterruptedException e1) {
-                    logger.error("rebuild or apksign fail", e1);
-                    Thread.currentThread().interrupt();
+                            .append(Utils.getToolsPath()).append(File.separator).append("apksigner.jar\"")
+                            .append(" -keystore ").append(Utils.getToolsPath()).append(File.separator)
+                            .append("debug.keystore").append(" -alias androiddebugkey -pswd android ")
+                            .append(targetPath);
+                    Utils.blockedExecutor(sb.toString());
                 }
             }
         });

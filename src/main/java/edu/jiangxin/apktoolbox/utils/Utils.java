@@ -194,4 +194,20 @@ public class Utils {
             container = container.getParent();
         }
     }
+    
+    public static void blockedExecutor(String cmd) {
+        try {
+            logger.info(cmd);
+            Process process = Runtime.getRuntime().exec(cmd);
+            new StreamHandler(process.getInputStream(), 0).start();
+            new StreamHandler(process.getErrorStream(), 1).start();
+            process.waitFor();
+            logger.info("cmd finish");
+        } catch (IOException e1) {
+            logger.error("cmd fail", e1);
+        } catch (InterruptedException e1) {
+            logger.error("cmd fail", e1);
+            Thread.currentThread().interrupt();
+        }
+    }
 }

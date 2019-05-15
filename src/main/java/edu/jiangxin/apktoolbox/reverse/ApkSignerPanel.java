@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
@@ -344,20 +343,7 @@ public class ApkSignerPanel extends EasyPanel {
             }
             conf.setProperty("apksigner.alias.password", alisaPassword);
 
-            try {
-                String cmd = getCmd();
-                logger.info(cmd);
-                Process process = Runtime.getRuntime().exec(cmd);
-                new StreamHandler(process.getInputStream(), 0).start();
-                new StreamHandler(process.getErrorStream(), 1).start();
-                process.waitFor();
-                logger.info("apksigner finish");
-            } catch (IOException e1) {
-                logger.error("apksigner fail", e1);
-            } catch (InterruptedException e1) {
-                logger.error("apksigner fail", e1);
-                Thread.currentThread().interrupt();
-            }
+            Utils.blockedExecutor(getCmd());
         }
 
         private String getCmd() {

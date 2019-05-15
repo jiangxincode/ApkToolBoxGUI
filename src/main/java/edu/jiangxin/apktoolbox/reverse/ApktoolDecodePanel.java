@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 import org.apache.commons.io.FilenameUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
@@ -151,38 +150,26 @@ public class ApktoolDecodePanel extends EasyPanel {
                     return;
                 }
                 String targetPath;
+                String srcBaseName;
                 try {
                     targetPath = targetFile.getCanonicalPath();
+                    srcBaseName = FilenameUtils.getBaseName(srcFile.getCanonicalPath());
                 } catch (IOException e2) {
                     logger.error("getCanonicalPath fail");
                     return;
                 }
                 conf.setProperty("apktool.decode.target.dir", targetPath);
-                try {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                            .append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"")
-                            .append(" d ").append(srcPath).append(" -o ").append(targetPath).append(File.separator)
-                            .append(FilenameUtils.getBaseName(srcFile.getCanonicalPath()));
-                    if (resouceIgnore.isSelected()) {
-                        sb.append(" -r");
-                    }
-                    if (override.isSelected()) {
-                        sb.append(" -f");
-                    }
-                    String cmd = sb.toString();
-                    logger.info(cmd);
-                    Process process = Runtime.getRuntime().exec(cmd);
-                    new StreamHandler(process.getInputStream(), 0).start();
-                    new StreamHandler(process.getErrorStream(), 1).start();
-                    process.waitFor();
-                    logger.info("decode finish");
-                } catch (IOException e1) {
-                    logger.error("decode fail", e1);
-                } catch (InterruptedException e1) {
-                    logger.error("decode fail", e1);
-                    Thread.currentThread().interrupt();
+                StringBuilder sb = new StringBuilder();
+                sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
+                        .append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"").append(" d ")
+                        .append(srcPath).append(" -o ").append(targetPath).append(File.separator).append(srcBaseName);
+                if (resouceIgnore.isSelected()) {
+                    sb.append(" -r");
                 }
+                if (override.isSelected()) {
+                    sb.append(" -f");
+                }
+                Utils.blockedExecutor(sb.toString());
             }
         });
 
