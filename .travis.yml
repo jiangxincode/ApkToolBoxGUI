@@ -21,9 +21,11 @@ addons:
   coverity_scan:
     project:
       name: "jiangxincode/ApkToolBoxGUI"
-      description: "<Your project description here>"
+      description: "ApkToolBoxGUI"
     notification_email: jiangxinnju@163.com
-    branch_pattern: coverity_scan
+    build_command_prepend: "mvn -v"
+    build_command: "mvn package"
+    branch_pattern: master
 
 script:
    - mvn install
