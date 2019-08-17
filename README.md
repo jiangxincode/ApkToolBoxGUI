@@ -7,6 +7,8 @@
 [![Issue Count](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/issue_count.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
 
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
+
 [![Documentation](https://img.shields.io/badge/Aloys-Project%20Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
 
