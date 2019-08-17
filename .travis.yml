@@ -23,6 +23,8 @@ addons:
       name: "jiangxincode/ApkToolBoxGUI"
       description: "ApkToolBoxGUI"
     notification_email: jiangxinnju@163.com
+    build_command_prepend: "mvn clean"
+    build_command: "mvn -DskipTests=true compile"
     branch_pattern: master
 
 script:
