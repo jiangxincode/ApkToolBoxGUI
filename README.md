@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Code Climate](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/gpa.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
 [![Issue Count](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/badges/issue_count.svg)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI)
-[![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
+[![Release Version](https://img.shields.io/github/v/release/jiangxincode/ApkToolBoxGUI?include_prereleases&sort=semver)](https://github.com/jiangxincode/ApkToolBoxGUI/releases/latest)
 
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 
