@@ -42,11 +42,11 @@ script:
    - mvn clean package sonar:sonar
 
 after_success:
-   # For Coveralls
-   - mvn clean test jacoco:report
-   - mvn coveralls:report
    # For Code Climate
    - mvn clean test jacoco:report
    JACOCO_SOURCE_PATH=src/main/java
    - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
    - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
+   # For Coveralls
+   - mvn clean test jacoco:report
+   - mvn coveralls:report
