@@ -34,7 +34,7 @@ addons:
 script:
    - mvn install
    - mvn clean package sonar:sonar
+
 after_success:
-   - mvn clean cobertura:cobertura
+   - mvn clean test jacoco:report coveralls:report
    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-   - mvn coveralls:report
