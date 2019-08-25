@@ -45,4 +45,6 @@ after_success:
    # For Coveralls
    - mvn clean test jacoco:report coveralls:report
    # For Code Climate
-   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+   JACOCO_SOURCE_PATH=src/main/java
+   - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
+   - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
