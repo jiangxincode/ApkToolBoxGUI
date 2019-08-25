@@ -1,6 +1,12 @@
+# Maven
 target/
+
+# Eclipse
 .settings/
-.classpath
-.project
+
+# IntelliJ IDEA
+.idea/**/workspace.xml
+
+# Others
 *.db
 /dependency-reduced-pom.xml
