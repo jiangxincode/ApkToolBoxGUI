@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -154,8 +156,12 @@ public class AxmlPrinterPanel extends EasyPanel {
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
                         if ("AndroidManifest.xml".equals(entry.getName())) {
-                            IOUtils.copy(zip.getInputStream(entry),
-                                    new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig")));
+                            try (InputStream inputStream = zip.getInputStream(entry);
+                                    OutputStream outputSteam = new FileOutputStream(new File(targetPath, "AndroidManifest.xml.orig"))) {
+                                IOUtils.copy(inputStream,outputSteam);
+                            } catch (IOException e2) {
+                                logger.error("axmlprinter fail", e2);
+                            }
                             break;
                         }
                     }
