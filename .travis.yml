@@ -1,5 +1,8 @@
 language: java
 
+jdk:
+  - oraclejdk8
+
 cache:
   directories:
    - '$HOME/.m2/repository'
@@ -8,20 +11,25 @@ env:
   global:
    # For Code Climate
    - CC_TEST_REPORTER_ID: dc7b03610b06f57733b1410a3d48ef994dec7d292075910d644744850af89ae7
+   # For Coverity
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created via the "travis encrypt" command using the project repo's public key
    - secure: "OHg7/Dd4bhD3tPEdfG4mEHI6+JGm8DyzWPpNcbok/AyIBBz1CwVgcKamLf09fy+GoTiax9hm8jUU0PA9C8GJnnw8OonnQ9ta2IBHCeir74ClUak7VSQT/JAwvH/DnapjpxMNxt6sNA194LM5e2O3C7/u2O1rlgDQufx/zhaTV/pqVg3KaE8GJWmgAryCjcR5NDNyAK+A6Bd9AvQmJ73RaA1ibUWulULE2jxcTBO1vjRQonXpGwgEAlqRM0vz+b6OiZMYBTOhnYS7mfIRD/aoqA0wNErtTsDo2LE+PWi8jMP/p7eU/97VotgPjrRhKMV/mRHTBytnGOw3FCEW/hV7TxbqrC5Kzxn5N2V+ee5ElY/zC4WzPUG6PAEPzYrleBUhw43ZeT79Lb4t370SqCUOcf7gkrAuw9N/k9E7+g9bRGg3XQKclefNfReqItHdeoctQ1NHzyZVLglgGrCsKQhYPNTjSsG5+rVKmG5OrZ25HWi8KyvFlvunZZL1c3RiW0x4IDgXx99MtMbLbjruj5wGT6v0tClb9+yqbzM9krn9ZckhTdTIGT2DRTf22PyZ4JSX8Ez3s9+E1eHxLfh264LNWctLMH1rQ/usUVNiEsy867DahrP4X9PXB3klFWpQmZb7t3ZFn30pzSI7FHkFcUokX/RMHHBnm/t2XA0Pj76QrWY="
 
 before_install:
-  - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  # For Code Climate
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  # For Coverity
+  - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
 
 addons:
+  # For Sonar Cloud
   sonarcloud:
     organization: "$SONAR_ORG"
     token:
       secure: "$SONAR_TOKEN"
+  # For Coverity
   coverity_scan:
     project:
       name: "jiangxincode/ApkToolBoxGUI"
@@ -33,8 +41,11 @@ addons:
 
 script:
    - mvn install
+  # For Sonar Cloud
    - mvn clean package sonar:sonar
 
 after_success:
+   # For Coveralls
    - mvn clean test jacoco:report coveralls:report
+   # For Code Climate
    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
