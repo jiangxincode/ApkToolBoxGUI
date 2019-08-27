@@ -54,8 +54,8 @@ A open source tool for simplify android development. It targets to replace all f
 
 ### Text
 
-* Convert between different character encoding
-+ Convert between different OS type
+* Convert between different character encodings
+* Convert between different OS types
 
 ### I18N
 
@@ -64,7 +64,7 @@ A open source tool for simplify android development. It targets to replace all f
 
 ## License
 
-+ Apache License V2.0 <http://www.apache.org/licenses/LICENSE-2.0>
+* Apache License V2.0 <http://www.apache.org/licenses/LICENSE-2.0>
 
 ## Contributing
 
