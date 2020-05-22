@@ -39,14 +39,10 @@ addons:
 script:
    - mvn install
   # For Sonar Cloud
-   - mvn clean package sonar:sonar
+#   - mvn clean package sonar:sonar
 
 after_success:
-   # For Code Climate
-   - mvn clean test jacoco:report
-   JACOCO_SOURCE_PATH=src/main/java
-   - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
-   - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
    # For Coveralls
-   - mvn clean test jacoco:report
-   - mvn coveralls:report
+   - mvn clean test jacoco:report coveralls:report
+   # For Code Climate
+   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
