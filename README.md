@@ -1,8 +1,8 @@
 # ApkToolBoxGUI
 
+![Java CI with Maven](https://github.com/jiangxincode/ApkToolBoxGUI/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![Project Documentation](https://img.shields.io/badge/Aloys-Project%20Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 [![Travis CI Build Status](https://travis-ci.org/jiangxincode/ApkToolBoxGUI.svg?branch=master)](https://travis-ci.org/jiangxincode/ApkToolBoxGUI)
-[![Appveyor CI Build status](https://ci.appveyor.com/api/projects/status/0qhudb0r6pi18l5s?svg=true)](https://ci.appveyor.com/project/jiangxincode/apktoolboxgui)
 [![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/fb8d289a4b0ee14f9d8b/maintainability)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/maintainability)
 [![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/fb8d289a4b0ee14f9d8b/test_coverage)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/test_coverage)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
