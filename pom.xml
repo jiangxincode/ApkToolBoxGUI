@@ -10,11 +10,6 @@
         <cobertura.maven.plugin.version>2.7</cobertura.maven.plugin.version>
     </properties>
     <repositories>
-        <!-- org.antlr:com.springsource.antlr -->
-        <repository>
-            <id>Spring Repository</id>
-            <url>http://repo.spring.io/plugins-release/</url>
-        </repository>
         <!-- cpdetector:cpdetector -->
         <repository>
             <id>EBI Repository</id>
