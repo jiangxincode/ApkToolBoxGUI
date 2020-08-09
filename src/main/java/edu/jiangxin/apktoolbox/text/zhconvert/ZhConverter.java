@@ -14,8 +14,6 @@ import org.apache.logging.log4j.Logger;
  * 
  * @author jiangxin
  * @author 2018-10-28
- * @version
- *
  */
 public class ZhConverter {
 
@@ -36,7 +34,7 @@ public class ZhConverter {
 
     /**
      * @param converterType 0 for traditional and 1 for simplified
-     * @return
+     * @return Converter instance
      */
     public static ZhConverter getInstance(int converterType) {
 
@@ -91,8 +89,8 @@ public class ZhConverter {
     }
 
     /**
-     * @param in
-     * @return
+     * @param in Input string
+     * @return Converted string
      */
     public String convert(String in) {
         StringBuilder outString = new StringBuilder();
