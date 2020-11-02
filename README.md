@@ -80,13 +80,13 @@ Any contributing is welcomed.
 
 ## Dependencies
 
-| Name | Version | Website |
-| ------ | ------ | ------ |
-| Apktool | v2.3.3 | <https://github.com/iBotPeaches/Apktool> |
-| GD-GUI | 1.4.0 | <http://jd.benow.ca> |
-| JADX-GUI | v0.8.0 | <https://github.com/skylot/jadx> |
-| ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> |
-| AXMLPrinter3 | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3> |
+| Name | Version | Website | License
+| ------ | ------ | ------ | ------ |
+| Apktool | v2.3.3 | <https://github.com/iBotPeaches/Apktool> | Apache 2.0 |
+| GD-GUI | 1.4.0 | <http://jd.benow.ca> | GNU GPL v3 |
+| JADX-GUI | v0.8.0 | <https://github.com/skylot/jadx> | Apache 2.0 |
+| ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> | Apache 2.0 |
+| AXMLPrinter3 | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3> | Apache 2.0 |
 
 ## Contributors
 
