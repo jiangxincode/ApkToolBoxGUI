@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +26,7 @@ public class JdActionListener implements ActionListener {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                    .append(Utils.getToolsPath()).append(File.separator).append("jd-gui-1.4.0.jar\"");
+                    .append(Utils.getToolsPath()).append(File.separator).append(Constants.FILENAME_GD_GUI).append("\"");
             String cmd = sb.toString();
             logger.info(cmd);
             Process process = Runtime.getRuntime().exec(cmd);

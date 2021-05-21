@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FilenameUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
@@ -161,7 +162,7 @@ public class ApktoolDecodePanel extends EasyPanel {
                 conf.setProperty("apktool.decode.target.dir", targetPath);
                 StringBuilder sb = new StringBuilder();
                 sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                        .append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"").append(" d ")
+                        .append(Utils.getToolsPath()).append(File.separator).append(Constants.FILENAME_APKTOOL).append("\"").append(" d ")
                         .append(srcPath).append(" -o ").append(targetPath).append(File.separator).append(srcBaseName);
                 if (resouceIgnore.isSelected()) {
                     sb.append(" -r");

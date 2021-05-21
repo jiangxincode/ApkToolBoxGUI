@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,7 @@ public class JadxActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append("cmd /c").append(Utils.getToolsPath()).append(File.separator).append("jadx-0.8.0")
+            sb.append("cmd /c").append(Utils.getToolsPath()).append(File.separator).append(Constants.FILENAME_JADX)
                     .append(File.separator).append("bin").append(File.separator).append("jadx-gui.bat");
             String cmd = sb.toString();
             logger.info(cmd);

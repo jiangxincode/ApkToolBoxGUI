@@ -192,7 +192,7 @@ public class MonkeyPanel extends EasyPanel {
 
     public MonkeyPanel() {
         super();
-        Utils.setJComponentSize(this, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HIGHT);
+        Utils.setJComponentSize(this, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
 
         setLayout(null);
 

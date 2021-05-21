@@ -97,7 +97,7 @@ public class MainFrame extends EasyFrame {
     public MainFrame() {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HIGHT);
+        setSize(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
         setResizable(false);
         Utils.setJFrameCenterInScreen(this);
 

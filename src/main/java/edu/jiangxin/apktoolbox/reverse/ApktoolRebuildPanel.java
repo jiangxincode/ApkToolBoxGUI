@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
@@ -157,7 +158,7 @@ public class ApktoolRebuildPanel extends EasyPanel {
                 conf.setProperty("apktool.rebuild.target.file", targetPath);
                 StringBuilder sb = new StringBuilder();
                 sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                        .append(Utils.getToolsPath()).append(File.separator).append("apktool_2.3.3.jar\"").append(" b ")
+                        .append(Utils.getToolsPath()).append(File.separator).append(Constants.FILENAME_APKTOOL).append("\"").append(" b ")
                         .append(srcPath).append(" -o ").append(targetPath);
                 Utils.blockedExecutor(sb.toString());
                 if (signAPK.isSelected()) {
