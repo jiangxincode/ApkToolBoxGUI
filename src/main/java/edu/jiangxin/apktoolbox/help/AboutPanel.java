@@ -65,6 +65,7 @@ public class AboutPanel extends EasyPanel {
 
         JEditorPane editorPane = new JEditorPane("text/html",
                 stringBuffer.toString().replace("{VERSION}", Version.VERSION));
+        editorPane.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(editorPane);
 
