@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +56,7 @@ public class MainFrame extends EasyFrame {
     
     private JPanel contentPane;
     private JMenuBar menuBar;
+
     private JMenu reverseMenu;
     private JMenuItem apktoolDecodeMenuItem;
     private JMenuItem apktoolRebuildMenuItem;
@@ -62,17 +64,25 @@ public class MainFrame extends EasyFrame {
     private JMenuItem jDMenuItem;
     private JMenuItem jADXMenuItem;
     private JMenuItem aXMLPrinter;
+
     private JMenu screenshotMenu;
     private JMenuItem screenShotMenuItem;
+
     private JMenu testMenu;
     private JMenuItem monkeyMenuItem;
+
     private JMenu textMenu;
     private JMenuItem osConvertMenuItem;
     private JMenuItem encodeConvertMenuItem;
+
+    private JMenu timeMenu;
+    private JMenuItem timeTransformMenuItem;
+
     private JMenu i18nMenu;
     private JMenuItem i18nAddMenuItem;
     private JMenuItem i18nFindLongestMenuItem;
     private JMenuItem i18nRemoveMenuItem;
+
     private JMenu helpMenu;
     private JMenuItem feedbackMenuItem;
     private JMenuItem checkUpdateMenuItem;
@@ -121,6 +131,8 @@ public class MainFrame extends EasyFrame {
 
         createTextMenu();
 
+        createTimeMenu();
+
         createI18nMenu();
 
         createHelpMenu();
@@ -168,13 +180,22 @@ public class MainFrame extends EasyFrame {
         textMenu = new JMenu(bundle.getString("text.title"));
         menuBar.add(textMenu);
 
-        osConvertMenuItem = new JMenuItem("OS Convert");
+        osConvertMenuItem = new JMenuItem(bundle.getString("text.os.convert.title"));
         osConvertMenuItem.addActionListener(new ChangePanelListener(new OsConvertPanel()));
         textMenu.add(osConvertMenuItem);
 
         encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
         encodeConvertMenuItem.addActionListener(new ChangePanelListener(new EncodeConvertPanel()));
         textMenu.add(encodeConvertMenuItem);
+    }
+
+    private void createTimeMenu() {
+        timeMenu = new JMenu(bundle.getString("time.title"));
+        menuBar.add(timeMenu);
+
+        timeTransformMenuItem = new JMenuItem(bundle.getString("time.transform.title"));
+        timeTransformMenuItem.addActionListener(new ChangePanelListener(new TimeStampTransformPanel()));
+        timeMenu.add(timeTransformMenuItem);
     }
 
     private void createTestMenu() {
@@ -197,7 +218,7 @@ public class MainFrame extends EasyFrame {
     }
 
     private void createReverseMenu() {
-        reverseMenu = new JMenu("Reverse");
+        reverseMenu = new JMenu(bundle.getString("reverse.title"));
         reverseMenu.setMnemonic(KeyEvent.VK_R);
         menuBar.add(reverseMenu);
 
