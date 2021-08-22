@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 public class TimeStampTransformPanel extends EasyPanel {
 
     public TimeStampTransformPanel() throws HeadlessException {
+        super();
         placeComponents();
         Utils.setJComponentSize(this, 700, 350);
     }

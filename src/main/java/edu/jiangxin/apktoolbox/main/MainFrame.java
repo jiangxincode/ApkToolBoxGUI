@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+import edu.jiangxin.apktoolbox.dumpsys.DumpsysAlarmPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +69,9 @@ public class MainFrame extends EasyFrame {
 
     private JMenu screenshotMenu;
     private JMenuItem screenShotMenuItem;
+
+    private JMenu dumpsysMenu;
+    private JMenuItem dumpsysAlarmMenuItem;
 
     private JMenu testMenu;
     private JMenuItem monkeyMenuItem;
@@ -126,6 +131,8 @@ public class MainFrame extends EasyFrame {
         createReverseMenu();
 
         createScreenshotMenu();
+
+        createDumpsysMenu();
 
         createTestMenu();
 
@@ -217,6 +224,15 @@ public class MainFrame extends EasyFrame {
         screenshotMenu.add(screenShotMenuItem);
     }
 
+    private void createDumpsysMenu() {
+        dumpsysMenu = new JMenu("Dumpsys");
+        menuBar.add(dumpsysMenu);
+
+        dumpsysAlarmMenuItem = new JMenuItem("Dumpsys Alarm");
+        dumpsysAlarmMenuItem.addActionListener(new ChangePanelListener(new DumpsysAlarmPanel()));
+        dumpsysMenu.add(dumpsysAlarmMenuItem);
+    }
+
     private void createReverseMenu() {
         reverseMenu = new JMenu(bundle.getString("reverse.title"));
         reverseMenu.setMnemonic(KeyEvent.VK_R);
@@ -249,10 +265,10 @@ public class MainFrame extends EasyFrame {
     }
     
     class ChangePanelListener implements ActionListener {
-        
-        JPanel panel;
 
-        public ChangePanelListener(JPanel panel) {
+        EasyPanel panel;
+
+        public ChangePanelListener(EasyPanel panel) {
             this.panel = panel;
         }
 
@@ -262,6 +278,7 @@ public class MainFrame extends EasyFrame {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
             contentPane.add(panel);
+            panel.onShowEasyPanel();
             LOGGER.info("Panel changed: " + panel.getClass().getSimpleName());
             contentPane.add(Box.createVerticalGlue());
             contentPane.revalidate();

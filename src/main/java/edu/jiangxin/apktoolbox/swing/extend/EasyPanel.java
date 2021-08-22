@@ -30,4 +30,8 @@ public class EasyPanel extends JPanel {
         bundle = ResourceBundle.getBundle("apktoolbox");
         logger.info("Panel start: " + this.getClass().getSimpleName());
     }
+
+    public void onShowEasyPanel() {
+        
+    }
 }
