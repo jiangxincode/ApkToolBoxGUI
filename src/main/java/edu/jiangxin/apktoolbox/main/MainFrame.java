@@ -38,8 +38,6 @@ public class MainFrame extends EasyFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
-
     private JPanel contentPane;
     private JMenuBar menuBar;
 
@@ -97,15 +95,12 @@ public class MainFrame extends EasyFrame {
     public MainFrame() {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Utils.setJFrameCenterInScreen(this);
-
         setMenuBar();
-
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         setContentPane(contentPane);
-        pack();
+        refreshSizeAndLocation();
     }
 
     private void setMenuBar() {
@@ -265,6 +260,7 @@ public class MainFrame extends EasyFrame {
 
         public ChangePanelListener(EasyPanel panel) {
             this.panel = panel;
+            panel.setFrame(MainFrame.this);
         }
 
         @Override
@@ -274,11 +270,11 @@ public class MainFrame extends EasyFrame {
             contentPane.add(Box.createVerticalGlue());
             contentPane.add(panel);
             panel.onShowEasyPanel();
-            LOGGER.info("Panel changed: " + panel.getClass().getSimpleName());
+            logger.info("Panel changed: " + panel.getClass().getSimpleName());
             contentPane.add(Box.createVerticalGlue());
             contentPane.revalidate();
             contentPane.repaint();
-            pack();
+            refreshSizeAndLocation();
         }
     }
 }

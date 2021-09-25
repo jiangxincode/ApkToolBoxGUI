@@ -1,8 +1,6 @@
 package edu.jiangxin.apktoolbox.swing.extend;
 
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
@@ -43,5 +41,27 @@ public class EasyFrame extends JFrame {
         Image image = tk.createImage(this.getClass().getResource("/icon.jpg"));
         setIconImage(image);
         logger.info("Frame start: " + this.getClass().getSimpleName());
+    }
+
+    public void refreshSizeAndLocation() {
+        // use pack to resize the child component
+        pack();
+
+        // relocation this JFrame
+        int windowWidth = getWidth();
+        int windowHeight = getHeight();
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        if (kit == null) {
+            logger.error("kit is null");
+            return;
+        }
+        Dimension screenSize = kit.getScreenSize();
+        if (screenSize == null) {
+            logger.error("screenSize is null");
+            return;
+        }
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+        setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
     }
 }

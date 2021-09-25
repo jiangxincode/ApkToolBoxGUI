@@ -22,6 +22,8 @@ public class EasyPanel extends JPanel {
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
+
+    private EasyFrame rootFrame;
     
     public EasyPanel() throws HeadlessException {
         super();
@@ -33,5 +35,14 @@ public class EasyPanel extends JPanel {
 
     public void onShowEasyPanel() {
         
+    }
+
+
+    protected EasyFrame getFrame() {
+        return rootFrame;
+    }
+
+    public void setFrame(EasyFrame frame) {
+        rootFrame = frame;
     }
 }

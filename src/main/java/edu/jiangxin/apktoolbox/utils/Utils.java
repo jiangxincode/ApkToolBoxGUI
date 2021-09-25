@@ -33,28 +33,6 @@ public class Utils {
 
     private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
 
-    public static void setJFrameCenterInScreen(JFrame frame) {
-        if (frame == null) {
-            logger.error("frame is null");
-            return;
-        }
-        int windowWidth = frame.getWidth();
-        int windowHeight = frame.getHeight();
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        if (kit == null) {
-            logger.error("kit is null");
-            return;
-        }
-        Dimension screenSize = kit.getScreenSize();
-        if (screenSize == null) {
-            logger.error("screenSize is null");
-            return;
-        }
-        int screenWidth = screenSize.width;
-        int screenHeight = screenSize.height;
-        frame.setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
-    }
-
     public static String loadStream(InputStream in) {
         StringBuffer buffer = new StringBuffer();
         if (in == null) {

@@ -9,12 +9,10 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import java.awt.HeadlessException;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 public class DumpsysAlarmPanel extends EasyPanel {
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
@@ -26,6 +24,10 @@ public class DumpsysAlarmPanel extends EasyPanel {
     private static final int CHILD_PANEL_LEFT_WIDTH = 600;
 
     private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
+
+    private static final int SCROLL_PANEL_WIDTH = 700;
+
+    private static final int SCROLL_PANEL_HEIGHT = 400;
 
     private JPanel lastDateTimePanel;
 
@@ -63,6 +65,8 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private AlarmTreeTableDataNode root;
 
+    private List<AlarmTreeTableDataNode> children;
+
     public DumpsysAlarmPanel() throws HeadlessException {
         super();
     }
@@ -72,8 +76,6 @@ public class DumpsysAlarmPanel extends EasyPanel {
         super.onShowEasyPanel();
         setCenterWidget();
         reloadData();
-        //Utils.setJComponentSize(this, 700, 350);
-
     }
 
     private void setCenterWidget() {
@@ -168,36 +170,29 @@ public class DumpsysAlarmPanel extends EasyPanel {
         tabbedPane = new JTabbedPane();
 
         tabularFormTabPanel = new JPanel();
-        Utils.setJComponentSize(tabularFormTabPanel, PANEL_WIDTH, 360);
         createTable();
         tabbedPane.addTab("Tabular Form", null, tabularFormTabPanel, "Tabular Form");
 
-
         rawSourceTabPanel = new JPanel();
-        Utils.setJComponentSize(rawSourceTabPanel, PANEL_WIDTH, 360);
         createRawSource();
         tabbedPane.addTab("Raw source", null, rawSourceTabPanel, "Raw source");
     }
 
     private void createTable() {
-
-/*        children = new ArrayList<AlarmTreeTableDataNode>();
+        children = new ArrayList<>();
         root = new AlarmTreeTableDataNode("Root", "", "", "", "", children);
-
         MyAbstractTreeTableModel treeTableModel = new AlarmTreeTableDataModel(root);
-
         myTreeTable = new MyTreeTable(treeTableModel);
-
         JScrollPane scrollPane = new JScrollPane(myTreeTable);
-        Utils.setJComponentSize(scrollPane, PANEL_WIDTH, 320);
-        tabularFormTabPanel.add(scrollPane);*/
+        scrollPane.setPreferredSize(new Dimension(SCROLL_PANEL_WIDTH, SCROLL_PANEL_HEIGHT));
+        tabularFormTabPanel.add(scrollPane);
     }
 
     private void createRawSource() {
         editorPane = new JEditorPane("text/plain", "");
-        Utils.setJComponentSize(editorPane, PANEL_WIDTH, 300);
         editorPane.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(editorPane);
+        scrollPane.setPreferredSize(new Dimension(SCROLL_PANEL_WIDTH, SCROLL_PANEL_HEIGHT));
         rawSourceTabPanel.add(scrollPane);
     }
 
@@ -293,17 +288,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
             tmpInputString = StringUtils.substringAfter(tmpInputString, "Batch{");
         }
-        List<AlarmTreeTableDataNode> children = alarmBatches2AlarmTreeTableDataNodeList(listBatches);
-
-        root = new AlarmTreeTableDataNode("Root", "", "", "", "", children);
-
-        MyAbstractTreeTableModel treeTableModel = new AlarmTreeTableDataModel(root);
-
-        myTreeTable = new MyTreeTable(treeTableModel);
-
-        JScrollPane scrollPane = new JScrollPane(myTreeTable);
-        Utils.setJComponentSize(scrollPane, PANEL_WIDTH, 320);
-        tabularFormTabPanel.add(scrollPane);
+        children.addAll(alarmBatches2AlarmTreeTableDataNodeList(listBatches));
     }
 
     private List<AlarmTreeTableDataNode> alarmBatches2AlarmTreeTableDataNodeList(List<AlarmBatch> listBatches) {
