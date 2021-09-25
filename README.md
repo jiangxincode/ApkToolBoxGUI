@@ -50,12 +50,22 @@ A open source tool for simplify android development. It targets to replace all f
 
 ### SnapShot
 
+### Dumpsys
+
+* adb shell dumpsys alarm
+
 ### Test
 
 ### Text
 
 * Convert between different character encodings
 * Convert between different OS types
+
+### File
+
+* Find duplicated files
+
+ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
 ### Time
 

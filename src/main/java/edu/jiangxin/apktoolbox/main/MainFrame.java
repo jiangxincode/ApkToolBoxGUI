@@ -18,6 +18,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import edu.jiangxin.apktoolbox.dumpsys.DumpsysAlarmPanel;
+import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
 import org.apache.logging.log4j.LogManager;
@@ -80,6 +81,9 @@ public class MainFrame extends EasyFrame {
     private JMenuItem osConvertMenuItem;
     private JMenuItem encodeConvertMenuItem;
 
+    private JMenu fileMenu;
+    private JMenuItem duplicateFindMenuItem;
+
     private JMenu timeMenu;
     private JMenuItem timeTransformMenuItem;
 
@@ -138,6 +142,8 @@ public class MainFrame extends EasyFrame {
 
         createTextMenu();
 
+        createFileMenu();
+
         createTimeMenu();
 
         createI18nMenu();
@@ -194,6 +200,15 @@ public class MainFrame extends EasyFrame {
         encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
         encodeConvertMenuItem.addActionListener(new ChangePanelListener(new EncodeConvertPanel()));
         textMenu.add(encodeConvertMenuItem);
+    }
+
+    private void createFileMenu() {
+        fileMenu = new JMenu(bundle.getString("file.title"));
+        menuBar.add(fileMenu);
+
+        duplicateFindMenuItem = new JMenuItem(bundle.getString("file.duplicate.title"));
+        duplicateFindMenuItem.addActionListener(new ChangePanelListener(new DuplicateFindPanel()));
+        fileMenu.add(duplicateFindMenuItem);
     }
 
     private void createTimeMenu() {
