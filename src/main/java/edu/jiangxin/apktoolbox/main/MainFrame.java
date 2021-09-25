@@ -1,30 +1,8 @@
 package edu.jiangxin.apktoolbox.main;
 
-import java.awt.Event;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.text.MessageFormat;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.border.EmptyBorder;
-
+import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.dumpsys.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.help.AboutPanel;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
 import edu.jiangxin.apktoolbox.help.Constant;
@@ -33,30 +11,35 @@ import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.monkey.MonkeyPanel;
-import edu.jiangxin.apktoolbox.reverse.ApkSignerPanel;
-import edu.jiangxin.apktoolbox.reverse.ApktoolDecodePanel;
-import edu.jiangxin.apktoolbox.reverse.ApktoolRebuildPanel;
-import edu.jiangxin.apktoolbox.reverse.AxmlPrinterPanel;
-import edu.jiangxin.apktoolbox.reverse.JadxActionListener;
-import edu.jiangxin.apktoolbox.reverse.JdActionListener;
+import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.text.OsConvertPanel;
-import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
 
 /**
  * @author jiangxin
  * @author 2018-08-19
- *
  */
 public class MainFrame extends EasyFrame {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
-    
+
     private JPanel contentPane;
     private JMenuBar menuBar;
 
@@ -99,25 +82,21 @@ public class MainFrame extends EasyFrame {
     private JMenuItem aboutMenuItem;
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    /* UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); */
-                    MainFrame frame = new MainFrame();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    LOGGER.error("Exception", e);
-                }
+        Logger logger = LogManager.getLogger(MainFrame.class);
+        EventQueue.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.error("setLookAndFeel failed, use default instead", e);
             }
+            MainFrame frame = new MainFrame();
+            frame.setVisible(true);
         });
     }
 
     public MainFrame() {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
-        setResizable(false);
         Utils.setJFrameCenterInScreen(this);
 
         setMenuBar();
@@ -126,6 +105,7 @@ public class MainFrame extends EasyFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         setContentPane(contentPane);
+        pack();
     }
 
     private void setMenuBar() {
@@ -278,7 +258,7 @@ public class MainFrame extends EasyFrame {
         aXMLPrinter.addActionListener(new ChangePanelListener(new AxmlPrinterPanel()));
         reverseMenu.add(aXMLPrinter);
     }
-    
+
     class ChangePanelListener implements ActionListener {
 
         EasyPanel panel;
@@ -298,10 +278,9 @@ public class MainFrame extends EasyFrame {
             contentPane.add(Box.createVerticalGlue());
             contentPane.revalidate();
             contentPane.repaint();
+            pack();
         }
-        
     }
-    
 }
 
 
