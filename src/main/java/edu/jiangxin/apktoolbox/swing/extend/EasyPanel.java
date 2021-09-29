@@ -33,11 +33,6 @@ public class EasyPanel extends JPanel {
         logger.info("Panel start: " + this.getClass().getSimpleName());
     }
 
-    public void onShowEasyPanel() {
-        
-    }
-
-
     protected EasyFrame getFrame() {
         return rootFrame;
     }

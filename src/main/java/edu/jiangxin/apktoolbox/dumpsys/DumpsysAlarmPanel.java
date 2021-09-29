@@ -3,23 +3,27 @@ package edu.jiangxin.apktoolbox.dumpsys;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
+import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Stream2StringThread;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DumpsysAlarmPanel extends EasyPanel {
     private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
 
-    private static final int PANEL_HIGHT = 110;
-
-    private static final int CHILD_PANEL_HIGHT = 30;
+    private static final int CHILD_PANEL_HEIGHT = 30;
 
     private static final int CHILD_PANEL_LEFT_WIDTH = 600;
 
@@ -28,6 +32,12 @@ public class DumpsysAlarmPanel extends EasyPanel {
     private static final int SCROLL_PANEL_WIDTH = 700;
 
     private static final int SCROLL_PANEL_HEIGHT = 400;
+
+    private JPanel operationPanel;
+
+    private JButton refreshButton;
+
+    private JButton loadButton;
 
     private JPanel lastDateTimePanel;
 
@@ -67,20 +77,24 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private List<AlarmTreeTableDataNode> children;
 
+    private String alarmInfoString;
+
+    private boolean alarmInfoValid;
+
     public DumpsysAlarmPanel() throws HeadlessException {
         super();
-    }
-
-    @Override
-    public void onShowEasyPanel() {
-        super.onShowEasyPanel();
         setCenterWidget();
-        reloadData();
+        getAlarmInfoStringFromDevice();
+        updateUIFromString();
     }
 
     private void setCenterWidget() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
+
+        createOptionPanel();
+        add(operationPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createLastDateTimePanel();
         add(lastDateTimePanel);
@@ -102,15 +116,33 @@ public class DumpsysAlarmPanel extends EasyPanel {
         add(tabbedPane);
     }
 
+    private void createOptionPanel() {
+        operationPanel = new JPanel();
+        Utils.setJComponentSize(operationPanel, PANEL_WIDTH, CHILD_PANEL_HEIGHT);
+        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+
+        refreshButton = new JButton("Refresh");
+        Utils.setJComponentSize(refreshButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HEIGHT);
+        refreshButton.addMouseListener(new RefreshButtonMouseAdapter());
+
+        loadButton = new JButton("Load");
+        Utils.setJComponentSize(loadButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HEIGHT);
+        loadButton.addMouseListener(new LoadButtonMouseAdapter());
+
+        operationPanel.add(refreshButton);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        operationPanel.add(loadButton);
+    }
+
     private void createLastDateTimePanel() {
         lastDateTimePanel = new JPanel();
-        Utils.setJComponentSize(lastDateTimePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(lastDateTimePanel, PANEL_WIDTH, CHILD_PANEL_HEIGHT);
 
         lastDateTimeLabel = new JLabel("Last DateTime");
-        Utils.setJComponentSize(lastDateTimeLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(lastDateTimeLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HEIGHT);
 
         lastDateTimeField = new JTextField();
-        Utils.setJComponentSize(lastDateTimeField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(lastDateTimeField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HEIGHT);
 
         lastDateTimePanel.setLayout(new BoxLayout(lastDateTimePanel, BoxLayout.X_AXIS));
         lastDateTimePanel.add(lastDateTimeLabel);
@@ -120,13 +152,13 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private void createSystemUptime1Panel() {
         systemUptime1Panel = new JPanel();
-        Utils.setJComponentSize(systemUptime1Panel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(systemUptime1Panel, PANEL_WIDTH, CHILD_PANEL_HEIGHT);
 
         systemUptime1Label = new JLabel("System Uptime(ms)");
-        Utils.setJComponentSize(systemUptime1Label, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(systemUptime1Label, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HEIGHT);
 
         systemUptime1Field = new JTextField();
-        Utils.setJComponentSize(systemUptime1Field, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(systemUptime1Field, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HEIGHT);
 
         systemUptime1Panel.setLayout(new BoxLayout(systemUptime1Panel, BoxLayout.X_AXIS));
         systemUptime1Panel.add(systemUptime1Label);
@@ -136,13 +168,13 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private void createSystemUptime2Panel() {
         systemUptime2Panel = new JPanel();
-        Utils.setJComponentSize(systemUptime2Panel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(systemUptime2Panel, PANEL_WIDTH, CHILD_PANEL_HEIGHT);
 
         systemUptime2Label = new JLabel("System Uptime");
-        Utils.setJComponentSize(systemUptime2Label, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(systemUptime2Label, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HEIGHT);
 
         systemUptime2Field = new JTextField();
-        Utils.setJComponentSize(systemUptime2Field, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(systemUptime2Field, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HEIGHT);
 
         systemUptime2Panel.setLayout(new BoxLayout(systemUptime2Panel, BoxLayout.X_AXIS));
         systemUptime2Panel.add(systemUptime2Label);
@@ -152,13 +184,13 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private void createPackagePanel() {
         packagePanel = new JPanel();
-        Utils.setJComponentSize(packagePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(packagePanel, PANEL_WIDTH, CHILD_PANEL_HEIGHT);
 
         packageLabel = new JLabel("Package");
-        Utils.setJComponentSize(packageLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(packageLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HEIGHT);
 
         packageField = new JTextField();
-        Utils.setJComponentSize(packageField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
+        Utils.setJComponentSize(packageField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HEIGHT);
 
         packagePanel.setLayout(new BoxLayout(packagePanel, BoxLayout.X_AXIS));
         packagePanel.add(packageLabel);
@@ -196,7 +228,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
         rawSourceTabPanel.add(scrollPane);
     }
 
-    private void reloadData() {
+    private void getAlarmInfoStringFromDevice() {
         Process process1 = null;
         Stream2StringThread threadInput = null;
         Stream2StringThread threadError = null;
@@ -214,25 +246,38 @@ public class DumpsysAlarmPanel extends EasyPanel {
             e.printStackTrace();
         }
 
-        String inputString = null;
+
         if (threadInput != null) {
-            inputString = threadInput.getOutputString();
-            editorPane.setText(inputString);
-        }
-        if (StringUtils.isEmpty(inputString)) {
-            if (threadError != null) {
-                String errorString = threadError.getOutputString();
-                editorPane.setText(errorString);
+            alarmInfoString = threadInput.getOutputString();
+            alarmInfoValid = !StringUtils.isEmpty(alarmInfoString);
+            if (alarmInfoValid && threadError != null) {
+                alarmInfoString = threadError.getOutputString();
             }
         }
+    }
 
-        if (StringUtils.isEmpty(inputString)) {
+    private void getAlarmInfoStringFromFile(File file) {
+        try {
+            alarmInfoString = FileUtils.readFileToString(file, Charset.forName(EncoderDetector.judgeFile(file.getCanonicalPath())));
+            alarmInfoValid = true;
+        } catch (IOException ex) {
+            logger.error("readFileToString failed", ex);
+            alarmInfoValid = false;
+        }
+    }
+
+    private void updateUIFromString() {
+        alarmInfoString = StringUtils.isEmpty(alarmInfoString) ? "" : alarmInfoString;
+        editorPane.setText(alarmInfoString);
+
+        if (!alarmInfoValid) {
+            children.clear();
             return;
         }
 
-        String tmpInputString = inputString;
+        String tmpInputString = alarmInfoString;
 
-        String timeInformation = StringUtils.substringBetween(inputString, "nowRTC=", "mLastTimeChangeClockTime=").trim().replace(" ", "=");
+        String timeInformation = StringUtils.substringBetween(alarmInfoString, "nowRTC=", "mLastTimeChangeClockTime=").trim().replace(" ", "=");
         String[] components = timeInformation.split("=");
 
         SharedData sharedData = SharedData.getInstance();
@@ -288,6 +333,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
             tmpInputString = StringUtils.substringAfter(tmpInputString, "Batch{");
         }
+        children.clear();
         children.addAll(alarmBatches2AlarmTreeTableDataNodeList(listBatches));
     }
 
@@ -306,5 +352,33 @@ public class DumpsysAlarmPanel extends EasyPanel {
             sonList.add(son);
         }
         return sonList;
+    }
+
+    private final class RefreshButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            getAlarmInfoStringFromDevice();
+            updateUIFromString();
+        }
+    }
+
+    private final class LoadButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            JFileChooser jfc = new JFileChooser();
+            jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            jfc.setDialogTitle("select a alarm dumpsys file");
+            int ret = jfc.showDialog(new JLabel(), null);
+            switch (ret) {
+                case JFileChooser.APPROVE_OPTION:
+                    getAlarmInfoStringFromFile(jfc.getSelectedFile());
+                    break;
+                default:
+                    break;
+            }
+            updateUIFromString();
+        }
     }
 }

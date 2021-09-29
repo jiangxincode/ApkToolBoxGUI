@@ -269,7 +269,6 @@ public class MainFrame extends EasyFrame {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
             contentPane.add(panel);
-            panel.onShowEasyPanel();
             logger.info("Panel changed: " + panel.getClass().getSimpleName());
             contentPane.add(Box.createVerticalGlue());
             contentPane.revalidate();
