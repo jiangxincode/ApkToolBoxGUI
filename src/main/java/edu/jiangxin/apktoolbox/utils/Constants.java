@@ -15,6 +15,10 @@ public class Constants {
     
     public static final int DEFAULT_Y_BORDER = 10;
 
+    public static final int DEFAULT_SCROLL_PANEL_WIDTH = 700;
+
+    public static final int DEFAULT_SCROLL_PANEL_HEIGHT = 400;
+
     public static final int BUTTON_HEIGHT = 27;
 
     public static final String FILENAME_APKTOOL = "apktool_2.5.0.jar";
