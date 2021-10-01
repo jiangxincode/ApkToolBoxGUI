@@ -1,7 +1,6 @@
-package edu.jiangxin.apktoolbox.dumpsys;
+package edu.jiangxin.apktoolbox.dumpsys.alarm;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class AlarmTreeTableDataNode {

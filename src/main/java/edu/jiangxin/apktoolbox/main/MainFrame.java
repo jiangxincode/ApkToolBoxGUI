@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.main;
 
 import edu.jiangxin.apktoolbox.Version;
-import edu.jiangxin.apktoolbox.dumpsys.DumpsysAlarmPanel;
+import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
 import edu.jiangxin.apktoolbox.help.AboutPanel;
 import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;

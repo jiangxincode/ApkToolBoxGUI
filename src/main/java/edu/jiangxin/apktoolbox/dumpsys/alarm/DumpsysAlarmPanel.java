@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.dumpsys;
+package edu.jiangxin.apktoolbox.dumpsys.alarm;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
