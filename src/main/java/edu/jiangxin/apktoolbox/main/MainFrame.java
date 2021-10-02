@@ -3,10 +3,7 @@ package edu.jiangxin.apktoolbox.main;
 import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
-import edu.jiangxin.apktoolbox.help.AboutPanel;
-import edu.jiangxin.apktoolbox.help.CheckUpdateActionListener;
-import edu.jiangxin.apktoolbox.help.Constant;
-import edu.jiangxin.apktoolbox.help.OpenWebsiteListener;
+import edu.jiangxin.apktoolbox.help.*;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nRemovePanel;
@@ -19,6 +16,8 @@ import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.text.OsConvertPanel;
 import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -74,6 +73,7 @@ public class MainFrame extends EasyFrame {
     private JMenuItem i18nRemoveMenuItem;
 
     private JMenu helpMenu;
+    private JMenuItem lookAndFeelMenuItem;
     private JMenuItem feedbackMenuItem;
     private JMenuItem checkUpdateMenuItem;
     private JMenuItem contributeMenuItem;
@@ -82,8 +82,13 @@ public class MainFrame extends EasyFrame {
     public static void main(String[] args) {
         Logger logger = LogManager.getLogger(MainFrame.class);
         EventQueue.invokeLater(() -> {
+            Configuration conf = Utils.getConfiguration();
+            String lookAndFeelClassName = conf.getString("look.and.feel.class.name");
+            if (StringUtils.isEmpty(lookAndFeelClassName)) {
+                lookAndFeelClassName = UIManager.getSystemLookAndFeelClassName();
+            }
             try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.setLookAndFeel(lookAndFeelClassName);
             } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
                 logger.error("setLookAndFeel failed, use default instead", e);
             }
@@ -129,6 +134,10 @@ public class MainFrame extends EasyFrame {
     private void createHelpMenu() {
         helpMenu = new JMenu(bundle.getString("help.title"));
         menuBar.add(helpMenu);
+
+        lookAndFeelMenuItem = new JMenuItem(bundle.getString("help.look.and.feel.title"));
+        lookAndFeelMenuItem.addActionListener(new ChangePanelListener(LookAndFeelPanel.class));
+        helpMenu.add(lookAndFeelMenuItem);
 
         feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
         feedbackMenuItem.addActionListener(new OpenWebsiteListener(Constant.URL_FEEDBACK));
