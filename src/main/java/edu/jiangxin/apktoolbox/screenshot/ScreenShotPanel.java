@@ -37,16 +37,6 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 public class ScreenShotPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
-
-    private static final int PANEL_HIGHT = 110;
-
-    private static final int CHILD_PANEL_HIGHT = 30;
-
-    private static final int CHILD_PANEL_LEFT_WIDTH = 600;
-
-    private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
-
     private JPanel directoryPanel;
 
     private JTextField directoryTextField;
@@ -71,11 +61,12 @@ public class ScreenShotPanel extends EasyPanel {
 
     public ScreenShotPanel() throws HeadlessException {
         super();
+        initUI();
+    }
 
+    private void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
-
-        Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
 
         createDirectoryPanel();
         add(directoryPanel);
@@ -93,33 +84,24 @@ public class ScreenShotPanel extends EasyPanel {
 
     private void createScreenshotPanel() {
         sceenshotPanel = new JPanel();
-        Utils.setJComponentSize(sceenshotPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         sceenshotPanel.setLayout(new BoxLayout(sceenshotPanel, BoxLayout.X_AXIS));
 
         openCheckBox = new JCheckBox("Open Dir");
-        Utils.setJComponentSize(openCheckBox, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         openCheckBox.setSelected(false);
 
         copyCheckBox = new JCheckBox("Copy Pic");
-        Utils.setJComponentSize(copyCheckBox, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         copyCheckBox.setSelected(false);
 
         sceenshotButton = new JButton("Sceenshot");
-        Utils.setJComponentSize(sceenshotButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         sceenshotButton.addMouseListener(new ScreenshotButtonMouseAdapter());
 
         getExistButton = new JButton("Get Exist");
-        Utils.setJComponentSize(getExistButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
-        getExistButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                System.out.println("Get Exist");
-            }
-        });
+        getExistButton.addMouseListener(new GetExistButtonMouseAdapter());
 
         sceenshotPanel.add(openCheckBox);
+        sceenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         sceenshotPanel.add(copyCheckBox);
+        sceenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         sceenshotPanel.add(sceenshotButton);
         sceenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         sceenshotPanel.add(getExistButton);
@@ -127,67 +109,43 @@ public class ScreenShotPanel extends EasyPanel {
 
     private void createFileNamePanel() {
         fileNamePanel = new JPanel();
-        Utils.setJComponentSize(fileNamePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
 
         fileNameTextField = new JTextField();
-        Utils.setJComponentSize(fileNameTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         fileNameTextField.setToolTipText("timestamp default(for example: 20180101122345.png)");
 
         fileNameButton = new JButton("File name");
-        Utils.setJComponentSize(fileNameButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
 
         fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
         fileNamePanel.add(fileNameTextField);
-        fileNamePanel.add(Box.createHorizontalGlue());
+        fileNamePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         fileNamePanel.add(fileNameButton);
     }
 
     private void createDirectoryPanel() {
         directoryPanel = new JPanel();
-        Utils.setJComponentSize(directoryPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
 
         directoryTextField = new JTextField();
-        Utils.setJComponentSize(directoryTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
-        directoryTextField.setTransferHandler(new TransferHandler() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public boolean importData(JComponent comp, Transferable t) {
-                try {
-                    Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
-                    String filepath = o.toString();
-                    filepath = filepath.substring(1, filepath.length() - 1);
-                    directoryTextField.setText(filepath);
-                    return true;
-                } catch (Exception e) {
-                    logger.error("import data excetion", e);
-                }
-                return false;
-            }
-
-            @Override
-            public boolean canImport(JComponent jComponent, DataFlavor[] dataFlavors) {
-                for (int i = 0; i < dataFlavors.length; i++) {
-                    if (DataFlavor.javaFileListFlavor.equals(dataFlavors[i])) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        directoryTextField.setTransferHandler(new DirectoryTextFieldTransferHandler());
 
         directoryButton = new JButton("Save Directory");
-        Utils.setJComponentSize(directoryButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
-        directoryButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                JFileChooser jfc = new JFileChooser(directoryTextField.getText());
-                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jfc.setDialogTitle("select a directory");
-                int ret = jfc.showDialog(new JLabel(), null);
-                switch (ret) {
+        directoryButton.addMouseListener(new DirectoryButtonMouseAdapter());
+
+        directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
+        directoryPanel.add(directoryTextField);
+        directoryPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        directoryPanel.add(directoryButton);
+    }
+
+    private final class DirectoryButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            JFileChooser jfc = new JFileChooser(directoryTextField.getText());
+            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            jfc.setDialogTitle("select a directory");
+            int ret = jfc.showDialog(new JLabel(), null);
+            switch (ret) {
                 case JFileChooser.APPROVE_OPTION:
                     File file = jfc.getSelectedFile();
                     directoryTextField.setText(file.getAbsolutePath());
@@ -196,39 +154,17 @@ public class ScreenShotPanel extends EasyPanel {
 
                 default:
                     break;
-                }
-
             }
-        });
 
-        directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
-        directoryPanel.add(directoryTextField);
-        directoryPanel.add(Box.createHorizontalGlue());
-        directoryPanel.add(directoryButton);
+        }
     }
 
-    public static void setClipboardImage(JPanel frame, final Image image) {
-        Transferable trans = new Transferable() {
-            @Override
-            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-                if (isDataFlavorSupported(flavor)) {
-                    return image;
-                }
-                throw new UnsupportedFlavorException(flavor);
-            }
-
-            @Override
-            public DataFlavor[] getTransferDataFlavors() {
-                return new DataFlavor[] { DataFlavor.imageFlavor };
-            }
-
-            @Override
-            public boolean isDataFlavorSupported(DataFlavor flavor) {
-                return DataFlavor.imageFlavor.equals(flavor);
-            }
-        };
-
-        frame.getToolkit().getSystemClipboard().setContents(trans, null);
+    private final class GetExistButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            System.out.println("Get Exist");
+        }
     }
 
     private final class ScreenshotButtonMouseAdapter extends MouseAdapter {
@@ -283,5 +219,57 @@ public class ScreenShotPanel extends EasyPanel {
                 Utils.setFrameTitle(ScreenShotPanel.this, title);
             }
         }
+    }
+
+    private final class DirectoryTextFieldTransferHandler extends TransferHandler {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public boolean importData(JComponent comp, Transferable t) {
+            try {
+                Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
+                String filepath = o.toString();
+                filepath = filepath.substring(1, filepath.length() - 1);
+                directoryTextField.setText(filepath);
+                return true;
+            } catch (Exception e) {
+                logger.error("import data excetion", e);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean canImport(JComponent jComponent, DataFlavor[] dataFlavors) {
+            for (int i = 0; i < dataFlavors.length; i++) {
+                if (DataFlavor.javaFileListFlavor.equals(dataFlavors[i])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private static void setClipboardImage(JPanel frame, final Image image) {
+        Transferable trans = new Transferable() {
+            @Override
+            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                if (isDataFlavorSupported(flavor)) {
+                    return image;
+                }
+                throw new UnsupportedFlavorException(flavor);
+            }
+
+            @Override
+            public DataFlavor[] getTransferDataFlavors() {
+                return new DataFlavor[] { DataFlavor.imageFlavor };
+            }
+
+            @Override
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+                return DataFlavor.imageFlavor.equals(flavor);
+            }
+        };
+
+        frame.getToolkit().getSystemClipboard().setContents(trans, null);
     }
 }
