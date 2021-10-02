@@ -49,13 +49,13 @@ public class ScreenShotPanel extends EasyPanel {
 
     private JButton fileNameButton;
 
-    private JPanel sceenshotPanel;
+    private JPanel screenshotPanel;
 
     private JCheckBox openCheckBox;
 
     private JCheckBox copyCheckBox;
 
-    private JButton sceenshotButton;
+    private JButton screenshotButton;
 
     private JButton getExistButton;
 
@@ -79,12 +79,12 @@ public class ScreenShotPanel extends EasyPanel {
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createScreenshotPanel();
-        add(sceenshotPanel);
+        add(screenshotPanel);
     }
 
     private void createScreenshotPanel() {
-        sceenshotPanel = new JPanel();
-        sceenshotPanel.setLayout(new BoxLayout(sceenshotPanel, BoxLayout.X_AXIS));
+        screenshotPanel = new JPanel();
+        screenshotPanel.setLayout(new BoxLayout(screenshotPanel, BoxLayout.X_AXIS));
 
         openCheckBox = new JCheckBox("Open Dir");
         openCheckBox.setSelected(false);
@@ -92,19 +92,19 @@ public class ScreenShotPanel extends EasyPanel {
         copyCheckBox = new JCheckBox("Copy Pic");
         copyCheckBox.setSelected(false);
 
-        sceenshotButton = new JButton("Sceenshot");
-        sceenshotButton.addMouseListener(new ScreenshotButtonMouseAdapter());
+        screenshotButton = new JButton("Sceenshot");
+        screenshotButton.addMouseListener(new ScreenshotButtonMouseAdapter());
 
         getExistButton = new JButton("Get Exist");
         getExistButton.addMouseListener(new GetExistButtonMouseAdapter());
 
-        sceenshotPanel.add(openCheckBox);
-        sceenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        sceenshotPanel.add(copyCheckBox);
-        sceenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        sceenshotPanel.add(sceenshotButton);
-        sceenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        sceenshotPanel.add(getExistButton);
+        screenshotPanel.add(openCheckBox);
+        screenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        screenshotPanel.add(copyCheckBox);
+        screenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        screenshotPanel.add(screenshotButton);
+        screenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        screenshotPanel.add(getExistButton);
     }
 
     private void createFileNamePanel() {
