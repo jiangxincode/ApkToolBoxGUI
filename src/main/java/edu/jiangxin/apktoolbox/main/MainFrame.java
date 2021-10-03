@@ -136,7 +136,7 @@ public class MainFrame extends EasyFrame {
         menuBar.add(helpMenu);
 
         lookAndFeelMenuItem = new JMenuItem(bundle.getString("help.look.and.feel.title"));
-        lookAndFeelMenuItem.addActionListener(new ChangePanelListener(LookAndFeelPanel.class));
+        lookAndFeelMenuItem.addActionListener(new ChangePanelListener(LookAndFeelPanel.class, lookAndFeelMenuItem.getText()));
         helpMenu.add(lookAndFeelMenuItem);
 
         feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
@@ -152,7 +152,7 @@ public class MainFrame extends EasyFrame {
         helpMenu.add(contributeMenuItem);
 
         aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
-        aboutMenuItem.addActionListener(new ChangePanelListener(AboutPanel.class));
+        aboutMenuItem.addActionListener(new ChangePanelListener(AboutPanel.class, aboutMenuItem.getText()));
         helpMenu.add(aboutMenuItem);
     }
 
@@ -161,15 +161,15 @@ public class MainFrame extends EasyFrame {
         menuBar.add(i18nMenu);
 
         i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-        i18nAddMenuItem.addActionListener(new ChangePanelListener(I18nAddPanel.class));
+        i18nAddMenuItem.addActionListener(new ChangePanelListener(I18nAddPanel.class, i18nAddMenuItem.getText()));
         i18nMenu.add(i18nAddMenuItem);
 
         i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
-        i18nFindLongestMenuItem.addActionListener(new ChangePanelListener(I18nFindLongestPanel.class));
+        i18nFindLongestMenuItem.addActionListener(new ChangePanelListener(I18nFindLongestPanel.class, i18nFindLongestMenuItem.getText()));
         i18nMenu.add(i18nFindLongestMenuItem);
 
         i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
-        i18nRemoveMenuItem.addActionListener(new ChangePanelListener(I18nRemovePanel.class));
+        i18nRemoveMenuItem.addActionListener(new ChangePanelListener(I18nRemovePanel.class, i18nRemoveMenuItem.getText()));
         i18nMenu.add(i18nRemoveMenuItem);
     }
 
@@ -178,11 +178,11 @@ public class MainFrame extends EasyFrame {
         menuBar.add(textMenu);
 
         osConvertMenuItem = new JMenuItem(bundle.getString("text.os.convert.title"));
-        osConvertMenuItem.addActionListener(new ChangePanelListener(OsConvertPanel.class));
+        osConvertMenuItem.addActionListener(new ChangePanelListener(OsConvertPanel.class, osConvertMenuItem.getText()));
         textMenu.add(osConvertMenuItem);
 
         encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
-        encodeConvertMenuItem.addActionListener(new ChangePanelListener(EncodeConvertPanel.class));
+        encodeConvertMenuItem.addActionListener(new ChangePanelListener(EncodeConvertPanel.class, encodeConvertMenuItem.getText()));
         textMenu.add(encodeConvertMenuItem);
     }
 
@@ -191,7 +191,7 @@ public class MainFrame extends EasyFrame {
         menuBar.add(fileMenu);
 
         duplicateFindMenuItem = new JMenuItem(bundle.getString("file.duplicate.title"));
-        duplicateFindMenuItem.addActionListener(new ChangePanelListener(DuplicateFindPanel.class));
+        duplicateFindMenuItem.addActionListener(new ChangePanelListener(DuplicateFindPanel.class, duplicateFindMenuItem.getText()));
         fileMenu.add(duplicateFindMenuItem);
     }
 
@@ -200,7 +200,7 @@ public class MainFrame extends EasyFrame {
         menuBar.add(timeMenu);
 
         timeTransformMenuItem = new JMenuItem(bundle.getString("time.transform.title"));
-        timeTransformMenuItem.addActionListener(new ChangePanelListener(TimeStampTransformPanel.class));
+        timeTransformMenuItem.addActionListener(new ChangePanelListener(TimeStampTransformPanel.class, timeTransformMenuItem.getText()));
         timeMenu.add(timeTransformMenuItem);
     }
 
@@ -209,7 +209,7 @@ public class MainFrame extends EasyFrame {
         menuBar.add(testMenu);
 
         monkeyMenuItem = new JMenuItem(bundle.getString("test.monkey.title"));
-        monkeyMenuItem.addActionListener(new ChangePanelListener(MonkeyPanel.class));
+        monkeyMenuItem.addActionListener(new ChangePanelListener(MonkeyPanel.class, monkeyMenuItem.getText()));
         testMenu.add(monkeyMenuItem);
     }
 
@@ -218,17 +218,17 @@ public class MainFrame extends EasyFrame {
         menuBar.add(screenshotMenu);
 
         screenShotMenuItem = new JMenuItem(bundle.getString("screenshot.screenshot.title"));
-        screenShotMenuItem.addActionListener(new ChangePanelListener(ScreenShotPanel.class));
+        screenShotMenuItem.addActionListener(new ChangePanelListener(ScreenShotPanel.class, screenShotMenuItem.getText()));
         screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
         screenshotMenu.add(screenShotMenuItem);
     }
 
     private void createDumpsysMenu() {
-        dumpsysMenu = new JMenu("Dumpsys");
+        dumpsysMenu = new JMenu(bundle.getString("dumpsys.title"));
         menuBar.add(dumpsysMenu);
 
-        dumpsysAlarmMenuItem = new JMenuItem("Dumpsys Alarm");
-        dumpsysAlarmMenuItem.addActionListener(new ChangePanelListener(DumpsysAlarmPanel.class));
+        dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("dumpsys.alarm.title"));
+        dumpsysAlarmMenuItem.addActionListener(new ChangePanelListener(DumpsysAlarmPanel.class, dumpsysAlarmMenuItem.getText()));
         dumpsysMenu.add(dumpsysAlarmMenuItem);
     }
 
@@ -237,29 +237,29 @@ public class MainFrame extends EasyFrame {
         reverseMenu.setMnemonic(KeyEvent.VK_R);
         menuBar.add(reverseMenu);
 
-        apktoolDecodeMenuItem = new JMenuItem("Apktool Decode", KeyEvent.VK_D);
+        apktoolDecodeMenuItem = new JMenuItem(bundle.getString("reverse.apktool.decode.title"), KeyEvent.VK_D);
         apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
-        apktoolDecodeMenuItem.addActionListener(new ChangePanelListener(ApktoolDecodePanel.class));
+        apktoolDecodeMenuItem.addActionListener(new ChangePanelListener(ApktoolDecodePanel.class, apktoolDecodeMenuItem.getText()));
         reverseMenu.add(apktoolDecodeMenuItem);
 
-        apktoolRebuildMenuItem = new JMenuItem("Apktool Rebuild");
-        apktoolRebuildMenuItem.addActionListener(new ChangePanelListener(ApktoolRebuildPanel.class));
+        apktoolRebuildMenuItem = new JMenuItem(bundle.getString("reverse.apktool.rebuild.title"));
+        apktoolRebuildMenuItem.addActionListener(new ChangePanelListener(ApktoolRebuildPanel.class, apktoolRebuildMenuItem.getText()));
         reverseMenu.add(apktoolRebuildMenuItem);
 
-        apkSignMenuItem = new JMenuItem("ApkSigner");
-        apkSignMenuItem.addActionListener(new ChangePanelListener(ApkSignerPanel.class));
+        apkSignMenuItem = new JMenuItem(bundle.getString("reverse.apksigner.title"));
+        apkSignMenuItem.addActionListener(new ChangePanelListener(ApkSignerPanel.class, apkSignMenuItem.getText()));
         reverseMenu.add(apkSignMenuItem);
 
-        jDMenuItem = new JMenuItem("JD-GUI");
+        jDMenuItem = new JMenuItem(bundle.getString("reverse.jd.gui.title"));
         jDMenuItem.addActionListener(new JdActionListener());
         reverseMenu.add(jDMenuItem);
 
-        jADXMenuItem = new JMenuItem("JADX-GUI");
+        jADXMenuItem = new JMenuItem(bundle.getString("reverse.jadx.gui.title"));
         jADXMenuItem.addActionListener(new JadxActionListener());
         reverseMenu.add(jADXMenuItem);
 
-        aXMLPrinter = new JMenuItem("AXMLPrinter");
-        aXMLPrinter.addActionListener(new ChangePanelListener(AxmlPrinterPanel.class));
+        aXMLPrinter = new JMenuItem(bundle.getString("reverse.axmlprinter.title"));
+        aXMLPrinter.addActionListener(new ChangePanelListener(AxmlPrinterPanel.class, aXMLPrinter.getText()));
         reverseMenu.add(aXMLPrinter);
     }
 
@@ -267,8 +267,11 @@ public class MainFrame extends EasyFrame {
 
         Class<EasyPanel> easyPanelClass;
 
-        public ChangePanelListener(Class easyPanelClass) {
+        String title;
+
+        public ChangePanelListener(Class easyPanelClass, String title) {
             this.easyPanelClass = easyPanelClass;
+            this.title = title;
         }
 
         @Override
@@ -278,6 +281,7 @@ public class MainFrame extends EasyFrame {
             contentPane.add(Box.createVerticalGlue());
             EasyPanel panel = createEasyPanel();
             panel.setFrame(MainFrame.this);
+            panel.setBorder(BorderFactory.createTitledBorder(title));
             contentPane.add(panel);
             logger.info("Panel changed: " + panel.getClass().getSimpleName());
             contentPane.add(Box.createVerticalGlue());
