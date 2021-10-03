@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -103,7 +104,11 @@ public class EncoderConvert {
         // File srcDirFile = new File(srcDirString);
         File desDirFile = new File(desDirString);
         // 获取所有符合条件的文件
-        ArrayList<File> files = new FileFilterWrapper().list(srcDirString, suffix);
+        String[] extensions = null;
+        if (StringUtils.isNotEmpty(suffix)) {
+            extensions = suffix.split(",");
+        }
+        List<File> files = new FileFilterWrapper().list(new File(srcDirString), extensions, true);
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             File tempFile = it.next();

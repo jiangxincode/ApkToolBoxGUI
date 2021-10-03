@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -253,7 +254,11 @@ public class OsPatternConvert {
         if (!srcDirFile.exists()) {
             System.out.println("源目录不存在" + srcDirFile.getAbsolutePath());
         }
-        ArrayList<File> arrayList = new FileFilterWrapper().list(srcDirString, suffix);
+        String[] extensions = null;
+        if (StringUtils.isNotEmpty(suffix)) {
+            extensions = suffix.split(",");
+        }
+        List<File> arrayList = FileFilterWrapper.list(srcDirFile, extensions, true);
         Iterator<File> it = arrayList.iterator();
         while (it.hasNext()) {
             File srcFileFile = it.next();

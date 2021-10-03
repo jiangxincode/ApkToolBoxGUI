@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,7 @@ import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 public class FileFilterWrapperTest {
 
     FileFilterWrapper fileFilterWrapper = null;
-    ArrayList<File> fileList = null;
+    List<File> fileList = null;
     String path = "target/test-classes/FileFilterWrapperTest";
 
     @Before
@@ -28,13 +29,13 @@ public class FileFilterWrapperTest {
 
     @Test
     public void testList01() {
-        fileList = fileFilterWrapper.list(path, ".java");
+        fileList = FileFilterWrapper.list(new File(path), new String[]{"java"}, true);
         assertEquals(4, fileList.size());
     }
 
     @Test
     public void testList02() {
-        fileList = fileFilterWrapper.list(path, ".cpp");
+        fileList = FileFilterWrapper.list(new File(path), new String[]{"cpp"}, true);
         assertEquals(2, fileList.size());
     }
 

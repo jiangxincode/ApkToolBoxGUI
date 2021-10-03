@@ -1,20 +1,20 @@
 package edu.jiangxin.apktoolbox.text;
 
-import java.awt.Dimension;
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.*;
-
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.text.core.OsPatternConvert;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author jiangxin
@@ -24,17 +24,15 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 public class OsConvertPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    private JPanel srcPanel;
-
-    private JTextField srcTextField;
-
-    private JButton srcButton;
+    private FileListPanel srcPanel;
 
     private JPanel optionPanel;
 
     private JLabel suffixLabel;
 
     private JTextField suffixTextField;
+
+    private JCheckBox recursiveCheckBox;
 
     private JLabel typeLabel;
 
@@ -79,19 +77,25 @@ public class OsConvertPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 
-        suffixLabel = new JLabel("suffix");
+        suffixLabel = new JLabel("Suffix:");
         suffixTextField = new JTextField();
+        suffixTextField.setToolTipText("an array of extensions, ex. {\"java\",\"xml\"}. If this parameter is empty, all files are returned.");
         suffixTextField.setText(conf.getString("osconvert.suffix"));
         optionPanel.add(suffixLabel);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         optionPanel.add(suffixTextField);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
+        recursiveCheckBox = new JCheckBox("Recursive");
+        recursiveCheckBox.setSelected(true);
+        optionPanel.add(recursiveCheckBox);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
         typeLabel = new JLabel("Type:");
-        typeComboBox = new JComboBox<String>();
-        typeComboBox.addItem("tounix");
-        typeComboBox.addItem("tomac");
-        typeComboBox.addItem("towindows");
+        typeComboBox = new JComboBox<>();
+        typeComboBox.addItem("Convert to UNIX(LF Only)");
+        typeComboBox.addItem("Convert to Macintosh(CR Only)");
+        typeComboBox.addItem("Convert to Windows(CR+LF)");
 
         optionPanel.add(typeLabel);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -99,67 +103,39 @@ public class OsConvertPanel extends EasyPanel {
     }
 
     private void createSrcPanel() {
-        srcPanel = new JPanel();
-        srcPanel.setLayout(new BoxLayout(srcPanel, BoxLayout.X_AXIS));
-
-        srcTextField = new JTextField();
-        srcTextField.setText(conf.getString("osconvert.src.dir"));
-
-        srcButton = new JButton("Source Directory");
-        srcButton.addMouseListener(new SrcButtonMouseAdapter());
-
-        srcPanel.add(srcTextField);
-        srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        srcPanel.add(srcButton);
-    }
-
-    private final class SrcButtonMouseAdapter extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            jfc.setDialogTitle("select a directory");
-            int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    srcTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-            }
-
-        }
+        srcPanel = new FileListPanel();
     }
 
     private final class ConvertButtonMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
-            File srcFile = new File(srcTextField.getText());
-            if (!srcFile.exists() || !srcFile.isDirectory()) {
-                logger.error("srcFile is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(OsConvertPanel.this, "Source file is invalid", "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
-                srcTextField.requestFocus();
-                return;
-            }
-            String srcPath;
-            try {
-                srcPath = srcFile.getCanonicalPath();
-            } catch (IOException e2) {
-                logger.error("getCanonicalPath fail");
-                return;
-            }
-            conf.setProperty("osconvert.src.dir", srcPath);
             conf.setProperty("osconvert.suffix", suffixTextField.getText());
-            ArrayList<File> files = new ArrayList<File>();
-            files.addAll(new FileFilterWrapper().list(srcPath, suffixTextField.getText()));
-            OsPatternConvert.osConvertFiles(files, typeComboBox.getSelectedItem().toString());
+            List<File> fileList = new ArrayList<>();
+            for (File file : srcPanel.getFileList()) {
+                String[] extensions = null;
+                if (StringUtils.isNotEmpty(suffixTextField.getText())) {
+                    extensions = suffixTextField.getText().split(",");
+                }
+                fileList.addAll(FileFilterWrapper.list(file, extensions, recursiveCheckBox.isSelected()));
+            }
+            Set<File> fileSet = new TreeSet<>(fileList);
+            fileList.clear();
+            fileList.addAll(fileSet);
+            OsPatternConvert.osConvertFiles(fileList, convertShowNameToPattern(typeComboBox.getSelectedItem().toString()));
             logger.info("convert finish");
         }
     }
 
+    private String convertShowNameToPattern(String showName) {
+        switch (showName) {
+            case "Convert to UNIX(LF Only)":
+                return "tounix";
+            case "Convert to Macintosh(CR Only)":
+                return "tomac";
+            case "Convert to Windows(CR+LF)":
+                return "towindows";
+        }
+        return "towindows";
+    }
 }

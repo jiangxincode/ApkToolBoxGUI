@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.swing.JComponent;
@@ -187,5 +188,18 @@ public class Utils {
             logger.error("cmd fail", e1);
             Thread.currentThread().interrupt();
         }
+    }
+
+    public static <T> boolean isEleTypeOf(Collection<T> coll, Class<?> obj) {
+        if(coll == null || coll.size() == 0) {
+            return true;
+        }
+
+        for(T ele : coll) {
+            if(!ele.getClass().equals(obj)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

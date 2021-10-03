@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.Box;
@@ -181,8 +182,12 @@ public class EncodeConvertPanel extends EasyPanel {
                 conf.setProperty("encodeconvert.to", toComboBox.getSelectedItem().toString());
 
                 try {
-                    ArrayList<File> files = new ArrayList<File>();
-                    files.addAll(new FileFilterWrapper().list(srcPath, suffixTextField.getText()));
+                    List<File> files = new ArrayList<File>();
+                    String[] extensions = null;
+                    if (StringUtils.isNotEmpty(suffixTextField.getText())) {
+                        extensions = suffixTextField.getText().split(",");
+                    }
+                    files.addAll(FileFilterWrapper.list(srcFile, extensions, true));
                     for (File file : files) {
                         logger.info("process: " + file.getCanonicalPath());
                         String fromEncoder;

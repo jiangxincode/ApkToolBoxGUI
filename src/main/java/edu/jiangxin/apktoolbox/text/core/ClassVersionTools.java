@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +30,7 @@ public class ClassVersionTools {
             logger.warn("Can't find the target file or directory: " + srcDirFile.getAbsolutePath());
             return;
         }
-        ArrayList<File> arrayList = new FileFilterWrapper().list(pathname, ".class");
+        List<File> arrayList = FileFilterWrapper.list(srcDirFile, new String[]{"class"}, true);
         if (arrayList.isEmpty()) {
             logger.warn("Can't find class file.");
             return;
@@ -81,7 +82,7 @@ public class ClassVersionTools {
 
         FileProcess.copyDirectory(srcDirString, desDirString);
 
-        ArrayList<File> arrayList = new FileFilterWrapper().list(desDirString, ".class");
+        List<File> arrayList = FileFilterWrapper.list(new File(desDirString), new String[]{"class"}, true);
         Iterator<File> it = arrayList.iterator();
         while (it.hasNext()) {
 
