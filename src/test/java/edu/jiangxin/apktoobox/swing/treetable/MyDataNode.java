@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.swing.treetable;
+package edu.jiangxin.apktoobox.swing.treetable;
 
 import java.util.Collections;
 import java.util.Date;

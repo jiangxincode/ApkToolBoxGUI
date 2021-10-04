@@ -1,4 +1,7 @@
-package edu.jiangxin.apktoolbox.swing.treetable;
+package edu.jiangxin.apktoobox.swing.treetable;
+
+import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
+import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
 
 import java.awt.Container;
 import java.awt.GridLayout;
