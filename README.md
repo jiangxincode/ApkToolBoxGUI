@@ -60,6 +60,7 @@ A open source tool for simplify android development. It targets to replace all f
 
 * Convert between different character encodings
 * Convert between different OS types
+* Convert between Simplified Chinese and Traditional Chinese
 
 ### File
 

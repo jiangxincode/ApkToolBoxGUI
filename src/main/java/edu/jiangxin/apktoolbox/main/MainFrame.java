@@ -14,6 +14,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.text.OsConvertPanel;
+import edu.jiangxin.apktoolbox.text.zhconvert.ZhConvertPanel;
 import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
@@ -60,6 +61,7 @@ public class MainFrame extends EasyFrame {
     private JMenu textMenu;
     private JMenuItem osConvertMenuItem;
     private JMenuItem encodeConvertMenuItem;
+    private JMenuItem zhConvertMenuItem;
 
     private JMenu fileMenu;
     private JMenuItem duplicateFindMenuItem;
@@ -184,6 +186,10 @@ public class MainFrame extends EasyFrame {
         encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
         encodeConvertMenuItem.addActionListener(new ChangePanelListener(EncodeConvertPanel.class, encodeConvertMenuItem.getText()));
         textMenu.add(encodeConvertMenuItem);
+
+        zhConvertMenuItem = new JMenuItem(bundle.getString("text.zh.convert.title"));
+        zhConvertMenuItem.addActionListener(new ChangePanelListener(ZhConvertPanel.class, zhConvertMenuItem.getText()));
+        textMenu.add(zhConvertMenuItem);
     }
 
     private void createFileMenu() {

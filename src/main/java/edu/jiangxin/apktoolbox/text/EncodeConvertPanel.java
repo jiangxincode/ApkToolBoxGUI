@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -44,171 +45,148 @@ public class EncodeConvertPanel extends EasyPanel {
 
     private static final int CONTENT_WIDTH = 500;
 
+    private FileListPanel srcPanel;
+
+    private JPanel optionPanel;
+
+    private JLabel suffixLabel;
+
+    private JTextField suffixTextField;
+
+    private JCheckBox autoDetectCheckBox;
+
+    private JLabel fromLabel;
+
+    private AutoCompleteComboBox<String> fromComboBox;
+
+    private JCheckBox recursiveCheckBox;
+
+    private JLabel toLabel;
+
+    private AutoCompleteComboBox<String> toComboBox;
+
+    private JPanel operationPanel;
+
+    private JButton convertButton;
+
     public EncodeConvertPanel() throws HeadlessException {
         super();
+        initUI();
+    }
 
+    private void initUI() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JPanel sourcePanel = new JPanel();
-        sourcePanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HEIGHT));
-        sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
-        add(sourcePanel);
-        add(Box.createVerticalStrut(10));
+        createSrcPanel();
+        add(srcPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JPanel optionPanel = new JPanel();
-        optionPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HEIGHT));
-        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
+        createOptionPanel();
         add(optionPanel);
-        add(Box.createVerticalStrut(10));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JPanel operationPanel = new JPanel();
-        operationPanel.setPreferredSize(new Dimension(CONTENT_WIDTH, Constants.BUTTON_HEIGHT));
-        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        createOperationPanel();
         add(operationPanel);
+    }
 
-        String lastPath = conf.getString("encodeconvert.src");
-        JTextField srcTextField = new JTextField();
-        if (StringUtils.isNotEmpty(lastPath)) {
-            srcTextField.setText(lastPath);
-        }
+    private void createSrcPanel() {
+        srcPanel = new FileListPanel();
+    }
 
-        JButton srcButton = new JButton("File/Directory");
-        srcButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                jfc.setDialogTitle("select file or directory");
-                if (StringUtils.isNotEmpty(lastPath)) {
-                    File lastFile = new File(lastPath);
-                    if (lastFile.exists()) {
-                        jfc.setSelectedFile(lastFile);
-                    }
-                }
-                int ret = jfc.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    srcTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-                }
+    private void createOptionPanel() {
+        optionPanel = new JPanel();
+        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 
-            }
-        });
+        suffixLabel = new JLabel("Suffix:");
+        optionPanel.add(suffixLabel);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        sourcePanel.add(srcTextField);
-        sourcePanel.add(Box.createHorizontalStrut(5));
-        sourcePanel.add(srcButton);
-        srcTextField.setAlignmentY(Component.CENTER_ALIGNMENT);
-        srcButton.setAlignmentY(Component.CENTER_ALIGNMENT);
-
-        JLabel suffixLabel = new JLabel("Suffix:");
-        JTextField suffixTextField = new JTextField();
+        suffixTextField = new JTextField();
+        suffixTextField.setToolTipText("an array of extensions, ex. {\"java\",\"xml\"}. If this parameter is empty, all files are returned.");
         suffixTextField.setText(conf.getString("encodeconvert.suffix"));
-        suffixTextField.setPreferredSize(new Dimension(60, Constants.BUTTON_HEIGHT));
-        suffixTextField.setMaximumSize(new Dimension(60, Constants.BUTTON_HEIGHT));
+        optionPanel.add(suffixTextField);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        Set<String> charsets = Charset.availableCharsets().keySet();
+        recursiveCheckBox = new JCheckBox("Recursive");
+        recursiveCheckBox.setSelected(true);
+        optionPanel.add(recursiveCheckBox);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        JLabel fromLabel = new JLabel("From:");
-        AutoCompleteComboBox<String> fromComboBox = new AutoCompleteComboBox<String>();
-        fromComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HEIGHT));
+        fromLabel = new JLabel("From:");
+        optionPanel.add(fromLabel);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        fromComboBox = new AutoCompleteComboBox<String>();
         fromComboBox.setEnabled(false);
+        optionPanel.add(fromComboBox);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        JCheckBox autoDetectCheckBox = new JCheckBox("Auto Detect");
+        autoDetectCheckBox = new JCheckBox("Auto Detect");
         autoDetectCheckBox.setSelected(true);
-        autoDetectCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    fromComboBox.setEnabled(false);
-                } else {
-                    fromComboBox.setEnabled(true);
-                }
+        autoDetectCheckBox.addItemListener(e -> fromComboBox.setEnabled(!(e.getStateChange() == ItemEvent.SELECTED)));
+        optionPanel.add(autoDetectCheckBox);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-            }
-        });
+        toLabel = new JLabel("To:");
+        optionPanel.add(toLabel);
+        optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        JLabel toLabel = new JLabel("To:");
-        AutoCompleteComboBox<String> toComboBox = new AutoCompleteComboBox<String>();
-        toComboBox.setPreferredSize(new Dimension(80, Constants.BUTTON_HEIGHT));
+        toComboBox = new AutoCompleteComboBox<String>();
         toComboBox.setSelectedItem(conf.getString("encodeconvert.to"));
+        optionPanel.add(toComboBox);
 
-        for (String charset : charsets) {
+        for (String charset : Charset.availableCharsets().keySet()) {
             fromComboBox.addItem(charset);
             toComboBox.addItem(charset);
         }
+    }
 
-        optionPanel.add(suffixLabel);
-        optionPanel.add(Box.createHorizontalStrut(5));
-        optionPanel.add(suffixTextField);
-        optionPanel.add(Box.createHorizontalGlue());
-        optionPanel.add(fromLabel);
-        optionPanel.add(Box.createHorizontalStrut(5));
-        optionPanel.add(fromComboBox);
-        optionPanel.add(Box.createHorizontalGlue());
-        optionPanel.add(autoDetectCheckBox);
-        optionPanel.add(Box.createHorizontalGlue());
-        optionPanel.add(toLabel);
-        optionPanel.add(Box.createHorizontalStrut(5));
-        optionPanel.add(toComboBox);
+    private void createOperationPanel() {
+        operationPanel = new JPanel();
+        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        convertButton = new JButton("Convert");
+        convertButton.addMouseListener(new ConvertButtonMouseAdapter());
 
-        JButton sceenshotButton = new JButton("Convert");
-        sceenshotButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                File srcFile = new File(srcTextField.getText());
-                if (!srcFile.exists()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(EncodeConvertPanel.this, "Source file is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    srcTextField.requestFocus();
-                    return;
-                }
-                String srcPath;
-                try {
-                    srcPath = srcFile.getCanonicalPath();
-                } catch (IOException e2) {
-                    logger.error("getCanonicalPath fail");
-                    return;
-                }
-                conf.setProperty("encodeconvert.src", srcPath);
-                conf.setProperty("encodeconvert.suffix", suffixTextField.getText());
-                conf.setProperty("encodeconvert.to", toComboBox.getSelectedItem().toString());
+        operationPanel.add(convertButton);
+    }
 
-                try {
-                    List<File> files = new ArrayList<File>();
+    private class ConvertButtonMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            conf.setProperty("encodeconvert.suffix", suffixTextField.getText());
+            conf.setProperty("encodeconvert.to", toComboBox.getSelectedItem().toString());
+
+            try {
+                List<File> fileList = new ArrayList<>();
+                for (File file : srcPanel.getFileList()) {
                     String[] extensions = null;
                     if (StringUtils.isNotEmpty(suffixTextField.getText())) {
                         extensions = suffixTextField.getText().split(",");
                     }
-                    files.addAll(FileFilterWrapper.list(srcFile, extensions, true));
-                    for (File file : files) {
-                        logger.info("process: " + file.getCanonicalPath());
-                        String fromEncoder;
-                        if (autoDetectCheckBox.isSelected()) {
-                            fromEncoder = EncoderDetector.judgeFile(file.getCanonicalPath());
-                        } else {
-                            fromEncoder = fromComboBox.getSelectedItem().toString();
-                        }
-                        logger.info("from: " + fromEncoder);
-                        String toEncoder = toComboBox.getSelectedItem().toString();
-                        EncoderConvert.encodeFile(file.getCanonicalPath(), fromEncoder, toEncoder);
-                    }
-
-                    logger.info("convert finish");
-                } catch (IOException e1) {
-                    logger.error("convert fail", e1);
+                    fileList.addAll(FileFilterWrapper.list(file, extensions, recursiveCheckBox.isSelected()));
                 }
+                Set<File> fileSet = new TreeSet<>(fileList);
+                fileList.clear();
+                fileList.addAll(fileSet);
+
+                for (File file : fileList) {
+                    logger.info("process: " + file.getCanonicalPath());
+                    String fromEncoder;
+                    if (autoDetectCheckBox.isSelected()) {
+                        fromEncoder = EncoderDetector.judgeFile(file.getCanonicalPath());
+                    } else {
+                        fromEncoder = fromComboBox.getSelectedItem().toString();
+                    }
+                    logger.info("from: " + fromEncoder);
+                    String toEncoder = toComboBox.getSelectedItem().toString();
+                    EncoderConvert.encodeFile(file.getCanonicalPath(), fromEncoder, toEncoder);
+                }
+
+                logger.info("convert finish");
+            } catch (IOException e1) {
+                logger.error("convert fail", e1);
             }
-        });
-
-        operationPanel.add(sceenshotButton);
+        }
     }
-
 }
