@@ -39,16 +39,6 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  */
 public class I18nFindLongestPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
-    
-    private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
-
-    private static final int PANEL_HIGHT = 110;
-    
-    private static final int CHILD_PANEL_HIGHT = 30;
-    
-    private static final int CHILD_PANEL_LEFT_WIDTH = 600;
-    
-    private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
 
     List<I18nInfo> infos = new ArrayList<I18nInfo>();
 
@@ -70,7 +60,6 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     public I18nFindLongestPanel() throws HeadlessException {
         super();
-        Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -90,11 +79,9 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     private void createOperationPanel() {
         operationPanel = new JPanel();
-        Utils.setJComponentSize(operationPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
         findButton = new JButton(bundle.getString("i18n.longest.find"));
-        Utils.setJComponentSize(findButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         findButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -153,15 +140,12 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     private void createItemPanel() {
         itemPanel = new JPanel();
-        Utils.setJComponentSize(itemPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
         
         itemTextField = new JTextField();
-        Utils.setJComponentSize(itemTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         itemTextField.setText(conf.getString("i18n.longest.items"));
 
         itemLabel = new JLabel("Items");
-        Utils.setJComponentSize(itemLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
 
         itemPanel.add(itemTextField);
         itemPanel.add(Box.createHorizontalGlue());
@@ -170,15 +154,12 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     private void createSourcePanel() {
         sourcePanel = new JPanel();
-        Utils.setJComponentSize(sourcePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
         
         srcTextField = new JTextField();
-        Utils.setJComponentSize(srcTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         srcTextField.setText(conf.getString("i18n.longest.src.dir"));
 
         srcButton = new JButton("Source Directory");
-        Utils.setJComponentSize(srcButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         srcButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

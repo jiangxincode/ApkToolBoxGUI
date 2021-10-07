@@ -55,16 +55,6 @@ public class I18nAddPanel extends EasyPanel {
     private static final boolean REMOVE_LAST_LF_OPEN = true;
 
     private static Map<String, String> replace = new HashedMap<String, String>();
-    
-    private static final int PANEL_WIDTH = Constants.DEFAULT_WIDTH - 50;
-
-    private static final int PANEL_HIGHT = 150;
-    
-    private static final int CHILD_PANEL_HIGHT = 30;
-    
-    private static final int CHILD_PANEL_LEFT_WIDTH = 600;
-    
-    private static final int CHILD_PANEL_RIGHT_WIDTH = 130;
 
     private JPanel sourcePanel;
 
@@ -95,7 +85,6 @@ public class I18nAddPanel extends EasyPanel {
     
     public I18nAddPanel() throws HeadlessException {
         super();
-        Utils.setJComponentSize(this, PANEL_WIDTH, PANEL_HIGHT);
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -120,11 +109,9 @@ public class I18nAddPanel extends EasyPanel {
 
     private void createOperationPanel() {
         operationPanel = new JPanel();
-        Utils.setJComponentSize(operationPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
         addButton = new JButton(bundle.getString("i18n.add.title"));
-        Utils.setJComponentSize(addButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         addButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -194,15 +181,12 @@ public class I18nAddPanel extends EasyPanel {
 
     private void createItemPanel() {
         itemPanel = new JPanel();
-        Utils.setJComponentSize(itemPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
         
         itemTextField = new JTextField();
-        Utils.setJComponentSize(itemTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         itemTextField.setText(conf.getString("i18n.add.items"));
 
         itemLabel = new JLabel("Items");
-        Utils.setJComponentSize(itemLabel, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
 
         itemPanel.add(itemTextField);
         itemPanel.add(Box.createHorizontalGlue());
@@ -211,15 +195,12 @@ public class I18nAddPanel extends EasyPanel {
 
     private void createTargetPanel() {
         targetPanel = new JPanel();
-        Utils.setJComponentSize(targetPanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
         
         targetTextField = new JTextField();
-        Utils.setJComponentSize(targetTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         targetTextField.setText(conf.getString("i18n.add.target.dir"));
 
         targetButton = new JButton("Save Directory");
-        Utils.setJComponentSize(targetButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         targetButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -248,15 +229,12 @@ public class I18nAddPanel extends EasyPanel {
 
     private void createSourcePanel() {
         sourcePanel = new JPanel();
-        Utils.setJComponentSize(sourcePanel, PANEL_WIDTH, CHILD_PANEL_HIGHT);
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
         
         srcTextField = new JTextField();
-        Utils.setJComponentSize(srcTextField, CHILD_PANEL_LEFT_WIDTH, CHILD_PANEL_HIGHT);
         srcTextField.setText(conf.getString("i18n.add.src.dir"));
 
         srcButton = new JButton("Source Directory");
-        Utils.setJComponentSize(srcButton, CHILD_PANEL_RIGHT_WIDTH, CHILD_PANEL_HIGHT);
         srcButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
