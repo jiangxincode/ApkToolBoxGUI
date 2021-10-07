@@ -146,12 +146,6 @@ public class Utils {
 
     }
     
-    public static void setJComponentSize(JComponent component, int width, int height) {
-        component.setMinimumSize(new Dimension(width, height));
-        component.setMaximumSize(new Dimension(width, height));
-        component.setPreferredSize(new Dimension(width, height));
-    }
-    
     public static String getFrameTitle(JComponent component) {
         Container container = component.getParent();
         while(container != null) {

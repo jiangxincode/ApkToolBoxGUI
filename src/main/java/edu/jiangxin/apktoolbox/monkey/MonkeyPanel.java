@@ -1,8 +1,6 @@
 package edu.jiangxin.apktoolbox.monkey;
 
-import java.awt.Container;
-import java.awt.Label;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -192,7 +190,8 @@ public class MonkeyPanel extends EasyPanel {
 
     public MonkeyPanel() {
         super();
-        Utils.setJComponentSize(this, Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
+
+        setPreferredSize(new Dimension(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT));
 
         setLayout(null);
 
