@@ -8,13 +8,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <repositories>
-        <!-- cpdetector:cpdetector -->
-        <repository>
-            <id>EBI Repository</id>
-            <url>https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/public/</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
@@ -57,9 +50,9 @@
             <version>1.9.4</version>
         </dependency>
         <dependency>
-            <groupId>cpdetector</groupId>
+            <groupId>com.github.jiangxincode</groupId>
             <artifactId>cpdetector</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.10</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.juniversalchardet</groupId>
