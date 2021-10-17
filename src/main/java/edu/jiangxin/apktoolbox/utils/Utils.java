@@ -78,7 +78,7 @@ public class Utils {
 
     public static Configuration getConfiguration() {
         if (builder == null) {
-            File confiFile = new File(System.getenv("USERPROFILE") + File.separator + "apktoolboxgui.properties");
+            File confiFile = new File("apktoolboxgui.properties");
             if (!confiFile.exists()) {
                 try {
                     logger.info("confiFile does not exist");
