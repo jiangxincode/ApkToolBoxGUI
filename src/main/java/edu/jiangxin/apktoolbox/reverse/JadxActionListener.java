@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.OSinfo;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,16 +26,24 @@ public class JadxActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("cmd /c").append(Utils.getToolsPath()).append(File.separator).append(Constants.FILENAME_JADX)
-                    .append(File.separator).append("bin").append(File.separator).append("jadx-gui.bat");
-            String cmd = sb.toString();
-            logger.info(cmd);
-            Process process = Runtime.getRuntime().exec(cmd);
+            String shellPath = Utils.getToolsPath() + File.separator + Constants.FILENAME_JADX + File.separator + "bin" + File.separator;
+            if (OSinfo.isWindows()) {
+                shellPath += "jadx-gui.bat";
+            } else {
+                shellPath += "jadx-gui";
+            }
+            String[] cmdArray = null;
+            if (OSinfo.isWindows()) {
+                cmdArray = new String[]{"cmd", "/c", shellPath};
+            } else {
+                cmdArray = new String[]{"bash", shellPath};
+            }
+            logger.info(ArrayUtils.toString(cmdArray));
+            Process process = Runtime.getRuntime().exec(cmdArray);
             new StreamHandler(process.getInputStream(), 0).start();
             new StreamHandler(process.getErrorStream(), 1).start();
         } catch (IOException e1) {
-            logger.error("open gd-gui fail", e);
+            logger.error("open JADX fail", e);
         }
     }
 }
