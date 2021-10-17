@@ -10,4 +10,5 @@ target/
 # Others
 *.db
 *.log
+*.properties
 /dependency-reduced-pom.xml

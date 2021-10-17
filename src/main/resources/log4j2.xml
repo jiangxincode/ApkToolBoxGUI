@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
-     <Appenders>
-          <File name="File"
-               fileName="${env:USERPROFILE}/apktoolboxgui.log"
-               append="true">
-               <PatternLayout
-                    pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n" />
-          </File>
-          <Console name="STDOUT" target="SYSTEM_OUT">
-               <PatternLayout
-                    pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n" />
-          </Console>
-     </Appenders>
-     <Loggers>
-          <Root level="info">
-               <AppenderRef ref="STDOUT" />
-               <AppenderRef ref="File" />
-          </Root>
-     </Loggers>
+    <Appenders>
+        <File name="File"
+              fileName="apktoolboxgui.log"
+              append="true">
+            <PatternLayout
+                    pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
 </Configuration>
