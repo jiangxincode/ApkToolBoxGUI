@@ -230,11 +230,11 @@ public class ZhConvertPanel extends EasyPanel {
 
             if (converType.equals(Constants.zhSimple2zhTw)){
                 String str = myZHConverterUtils.myConvertToTW(content);
-                String result = ZhConverterUtil.convertToTraditional(str);
+                String result = ZhConverterUtil.toTraditional(str);
                 FileUtils.write(file,result,"UTF-8");
             }else{
                 String str = myZHConverterUtils.myConvertToSimple(content);
-                String result = ZhConverterUtil.convertToSimple(str);
+                String result = ZhConverterUtil.toSimple(str);
                 FileUtils.write(file,result,"UTF-8");
             }
             jTextArea.append("转换完成："+file + "\n");
