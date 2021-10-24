@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.time;
+package edu.jiangxin.apktoolbox.convert.time;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TimeStampTransformPanel extends EasyPanel {
+public class TimeConvertPanel extends EasyPanel {
 
     private JPanel convert1Panel;
 
@@ -48,7 +48,7 @@ public class TimeStampTransformPanel extends EasyPanel {
 
     private JTextField currentTimeTextField;
 
-    public TimeStampTransformPanel() throws HeadlessException {
+    public TimeConvertPanel() throws HeadlessException {
         super();
         initUI();
     }

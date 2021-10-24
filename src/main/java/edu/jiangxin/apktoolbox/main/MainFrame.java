@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.main;
 
 import edu.jiangxin.apktoolbox.Version;
+import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
 import edu.jiangxin.apktoolbox.help.*;
@@ -15,7 +16,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.text.OsConvertPanel;
 import edu.jiangxin.apktoolbox.text.zhconvert.ZhConvertPanel;
-import edu.jiangxin.apktoolbox.time.TimeStampTransformPanel;
+import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -66,8 +67,9 @@ public class MainFrame extends EasyFrame {
     private JMenu fileMenu;
     private JMenuItem duplicateFindMenuItem;
 
-    private JMenu timeMenu;
-    private JMenuItem timeTransformMenuItem;
+    private JMenu convertMenu;
+    private JMenuItem timeConvertMenuItem;
+    private JMenuItem colorConvertMenuItem;
 
     private JMenu i18nMenu;
     private JMenuItem i18nAddMenuItem;
@@ -126,7 +128,7 @@ public class MainFrame extends EasyFrame {
 
         createFileMenu();
 
-        createTimeMenu();
+        createConvertMenu();
 
         createI18nMenu();
 
@@ -201,13 +203,17 @@ public class MainFrame extends EasyFrame {
         fileMenu.add(duplicateFindMenuItem);
     }
 
-    private void createTimeMenu() {
-        timeMenu = new JMenu(bundle.getString("time.title"));
-        menuBar.add(timeMenu);
+    private void createConvertMenu() {
+        convertMenu = new JMenu(bundle.getString("convert.title"));
+        menuBar.add(convertMenu);
 
-        timeTransformMenuItem = new JMenuItem(bundle.getString("time.transform.title"));
-        timeTransformMenuItem.addActionListener(new ChangePanelListener(TimeStampTransformPanel.class, timeTransformMenuItem.getText()));
-        timeMenu.add(timeTransformMenuItem);
+        timeConvertMenuItem = new JMenuItem(bundle.getString("convert.time.title"));
+        timeConvertMenuItem.addActionListener(new ChangePanelListener(TimeConvertPanel.class, timeConvertMenuItem.getText()));
+        convertMenu.add(timeConvertMenuItem);
+
+        colorConvertMenuItem = new JMenuItem(bundle.getString("convert.color.title"));
+        colorConvertMenuItem.addActionListener(new ChangePanelListener(ColorConvertPanel.class, colorConvertMenuItem.getText()));
+        convertMenu.add(colorConvertMenuItem);
     }
 
     private void createTestMenu() {

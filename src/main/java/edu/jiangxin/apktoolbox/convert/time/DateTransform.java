@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.time;
+package edu.jiangxin.apktoolbox.convert.time;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

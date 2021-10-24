@@ -53,9 +53,10 @@ A open source tool for simplify android development. It targets to replace all f
 
 ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
-### Time
+### Convert
 
-* Transform between timestamp and formatted time
+* Convert between timestamp and formatted time
+* Convert between RGB and hexadecimal
 
 ### I18N
 
