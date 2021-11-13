@@ -1,7 +1,9 @@
 package edu.jiangxin.apktoolbox.main;
 
 import edu.jiangxin.apktoolbox.Version;
+import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
+import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
 import edu.jiangxin.apktoolbox.help.*;
@@ -70,6 +72,8 @@ public class MainFrame extends EasyFrame {
     private JMenu convertMenu;
     private JMenuItem timeConvertMenuItem;
     private JMenuItem colorConvertMenuItem;
+    private JMenuItem baseConvertMenuItem;
+    private JMenuItem unicodeConvertMenuItem;
 
     private JMenu i18nMenu;
     private JMenuItem i18nAddMenuItem;
@@ -214,6 +218,14 @@ public class MainFrame extends EasyFrame {
         colorConvertMenuItem = new JMenuItem(bundle.getString("convert.color.title"));
         colorConvertMenuItem.addActionListener(new ChangePanelListener(ColorConvertPanel.class, colorConvertMenuItem.getText()));
         convertMenu.add(colorConvertMenuItem);
+
+        baseConvertMenuItem = new JMenuItem(bundle.getString("convert.base.title"));
+        baseConvertMenuItem.addActionListener(new ChangePanelListener(BaseConvertPanel.class, baseConvertMenuItem.getText()));
+        convertMenu.add(baseConvertMenuItem);
+
+        unicodeConvertMenuItem = new JMenuItem(bundle.getString("convert.unicode.title"));
+        unicodeConvertMenuItem.addActionListener(new ChangePanelListener(Zh2UnicodeConvertPanel.class, unicodeConvertMenuItem.getText()));
+        convertMenu.add(unicodeConvertMenuItem);
     }
 
     private void createTestMenu() {

@@ -1,25 +1,37 @@
 package edu.jiangxin.apktoolbox.convert.color;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 //https://www.sioe.cn/yingyong/yanse-rgb-16/
 public class ColorConvertPanel  extends EasyPanel {
     String hexValue;
     String rgbValue;
 
-    public static JTextField textFieldHex;
-    public static JTextField textFieldRgb;
-    private JButton btnConvert;
-    private JLabel lblResultOfConversion;
-    private JTextField colorBox;
+    private JPanel hexPanel;
+
+    private JLabel hexLabel;
+
+    private JTextField hexTextField;
+
+    private JPanel rgbPanel;
+
+    private JLabel rgbLabel;
+
+    private JTextField rgbTextField;
+
+    private JPanel operationPanel;
+
+    private JButton rgb2HexConvertBtn;
+
+    private JButton hex2RgbConvertBtn;
+
+    private JTextField colorBoxTextField;
 
     public ColorConvertPanel() throws HeadlessException {
         super();
@@ -27,130 +39,87 @@ public class ColorConvertPanel  extends EasyPanel {
     }
 
     private void initUI() {
-        JLabel lblHex = new JLabel("Hexadecimal: ");
-        JLabel lblRgb = new JLabel("RGB: ");
-        lblResultOfConversion = new JLabel("");
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        createRgbPanel();
+        add(rgbPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        //hexadecimal input field
-        textFieldHex = new JTextField();
-        textFieldHex.setToolTipText("Enter a hexadecimal value(#FFB6C1)");
-        textFieldHex.setEditable(true);
-        textFieldHex.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                textFieldRgb.setText("");
-            }
-        });
+        createHexPanel();
+        add(hexPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        //convert button; when action performed,
-        //between color types
-        btnConvert = new JButton("Convert");
-        btnConvert.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                hexValue = textFieldHex.getText();
-                rgbValue = textFieldRgb.getText();
-
-                try {
-                    processConversion(hexValue, rgbValue);
-                } catch (Exception e1) {
-                    System.out.println("Exception: " + e1);
-                    e1.printStackTrace();
-                }
-            }
-        });
-
-        //RGB input field
-        textFieldRgb = new JTextField();
-        textFieldRgb.setToolTipText("Enter an RGB value(255,182,193)");
-        textFieldRgb.setEditable(true);
-        textFieldRgb.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                textFieldHex.setText("");
-            }
-        });
-
-        //color box
-        colorBox = new JTextField();
-        colorBox.setEditable(false);
-        colorBox.setOpaque(false);
-
-        GroupLayout gl_contentPane = new GroupLayout(this);
-        gl_contentPane.setHorizontalGroup(
-                //set horizontal gaps between elements
-                gl_contentPane.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addGroup(gl_contentPane.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblHex)
-                                        .addComponent(lblRgb))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(textFieldRgb, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                                        .addComponent(textFieldHex, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                                        .addComponent(colorBox)
-                                        .addComponent(lblResultOfConversion))
-                                .addGap(19)
-                                .addComponent(btnConvert)
-                                .addGap(19))
-        );
-        gl_contentPane.setVerticalGroup(
-                //set vertical gaps between elements and set height of each element
-                gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(gl_contentPane.createSequentialGroup()
-                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(gl_contentPane.createSequentialGroup()
-                                                .addGap(29)
-                                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(lblRgb)
-                                                        .addComponent(textFieldRgb, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(11)
-                                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(lblHex)
-                                                        .addComponent(textFieldHex, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(11)
-                                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(lblResultOfConversion))
-                                                .addGap(11)
-                                                .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(colorBox, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(gl_contentPane.createSequentialGroup()
-                                                .addGap(41)
-                                                .addComponent(btnConvert, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-                                .addGap(28))
-        );
-        setLayout(gl_contentPane);
-
+        createOperationPanel();
+        add(operationPanel);
     }
 
-    public void processConversion(String inputHexValue, String inputRgbValue) {
-        String outputRgb, outputHex;
-        RgbColor inputRgbColor = new RgbColor(inputRgbValue);
-        outputHex = inputRgbColor.convert();
+    private void createRgbPanel() {
+        rgbPanel = new JPanel();
+        rgbPanel.setLayout(new BoxLayout(rgbPanel, BoxLayout.X_AXIS));
 
-        HexColor inputHexColor = new HexColor(inputHexValue);
-        outputRgb = inputHexColor.convert();
+        rgbLabel = new JLabel("RGB: ");
+        rgbTextField = new JTextField();
+        rgbTextField.setToolTipText("Enter an RGB value(255,182,193)");
+        rgbTextField.setEditable(true);
 
-        //if the user input a hex value
-        if(!outputRgb.equals("")) {
+        rgbPanel.add(rgbLabel);
+        rgbPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        rgbPanel.add(rgbTextField);
+    }
 
-            lblResultOfConversion.setText(inputHexValue + " is " + outputRgb);
-            colorBox.setBackground(new Color(inputHexColor.getRed(), inputHexColor.getGreen(), inputHexColor.getBlue()));
-        }
+    private void createHexPanel() {
+        hexPanel = new JPanel();
+        hexPanel.setLayout(new BoxLayout(hexPanel, BoxLayout.X_AXIS));
 
-        //if the user input an RGB value
-        if(!outputHex.equals("")) {
-            lblResultOfConversion.setText(inputRgbValue + " is " + outputHex);
-            colorBox.setBackground(new Color(inputRgbColor.getRed(), inputRgbColor.getGreen(), inputRgbColor.getBlue()));
-        }
+        hexLabel = new JLabel("Hexadecimal: ");
+        hexTextField = new JTextField();
+        hexTextField.setToolTipText("Enter a hexadecimal value(#FFB6C1)");
+        hexTextField.setEditable(true);
 
-        //reset the text fields to prepare for another entry
-        textFieldRgb.setText("");
-        textFieldHex.setText("");
+        hexPanel.add(hexLabel);
+        hexPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        hexPanel.add(hexTextField);
+    }
 
-        //paint the color box with the converted output color
-        colorBox.setOpaque(true);
+    public void createOperationPanel() {
+        operationPanel = new JPanel();
+        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+
+        rgb2HexConvertBtn = new JButton("RGB->Hex");
+        rgb2HexConvertBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                rgbValue = rgbTextField.getText();
+                RgbColor rgbColor = new RgbColor(rgbValue);
+                String hexValue = rgbColor.convert();
+                colorBoxTextField.setBackground(new Color(rgbColor.getRed(), rgbColor.getGreen(), rgbColor.getBlue()));
+                hexTextField.setText(hexValue);
+                //paint the color box with the converted output color
+                colorBoxTextField.setOpaque(true);
+            }
+        });
+
+        hex2RgbConvertBtn = new JButton("Hex->RGB");
+        hex2RgbConvertBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                hexValue = hexTextField.getText();
+                HexColor hexColor = new HexColor(hexValue);
+                String rgbValue = hexColor.convert();
+                colorBoxTextField.setBackground(new Color(hexColor.getRed(), hexColor.getGreen(), hexColor.getBlue()));
+                rgbTextField.setText(rgbValue);
+                //paint the color box with the converted output color
+                colorBoxTextField.setOpaque(true);
+            }
+        });
+
+        colorBoxTextField = new JTextField();
+        colorBoxTextField.setEditable(false);
+        colorBoxTextField.setOpaque(false);
+
+        operationPanel.add(rgb2HexConvertBtn);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        operationPanel.add(hex2RgbConvertBtn);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        operationPanel.add(colorBoxTextField);
     }
 }

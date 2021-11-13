@@ -57,6 +57,8 @@ ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
 * Convert between timestamp and formatted time
 * Convert between RGB and hexadecimal
+* Convert between different base
+* Convert between Chinese character and Unicode character
 
 ### I18N
 
