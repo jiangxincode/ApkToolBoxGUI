@@ -3,18 +3,8 @@ package edu.jiangxin.apktoolbox.convert.color;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
-import java.awt.Point;
-import java.awt.Dimension;
-import java.awt.Color;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.MouseInfo;
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Graphics2D;
-import java.awt.Graphics;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
@@ -133,11 +123,15 @@ public class ColorPickerPanel extends EasyPanel {
 
         // 放大镜的十字线（大小100,100）
         crossHorizontal = new Line2D.Double(
-                LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT / 2,
-                LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT / 2);
+                (double) LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER,
+                (double) TOP_PADDING + ZOOM_RECT_HEIGHT / 2.0,
+                (double) LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER,
+                (double) TOP_PADDING + ZOOM_RECT_HEIGHT / 2.0);
         crossVertical = new Line2D.Double(
-                LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER + DEFAULT_WIDTH / 2, TOP_PADDING,
-                LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER + DEFAULT_WIDTH / 2, TOP_PADDING + ZOOM_RECT_HEIGHT);
+                (double) LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER + DEFAULT_WIDTH / 2.0,
+                TOP_PADDING,
+                (double) LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER + DEFAULT_WIDTH / 2.0,
+                (double) TOP_PADDING + ZOOM_RECT_HEIGHT);
 
         // 右侧的颜色背景和颜色值label。大小100, 100
         for (int i = 0; i < colorRecordMax; i++) {
@@ -285,7 +279,12 @@ public class ColorPickerPanel extends EasyPanel {
      */
     private void mouseAction() {
         // 获取光标位置之后，与上次比对，避免重复运行
-        mousePoint = MouseInfo.getPointerInfo().getLocation();
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        if (pointerInfo == null) {
+            logger.warn("pointerInfo is null");
+            return;
+        }
+        mousePoint = pointerInfo.getLocation();
 
         if (mousePoint.equals(prevPoint)) {
             return;
@@ -397,12 +396,21 @@ public class ColorPickerPanel extends EasyPanel {
 
     private void paintBorder(Graphics2D g2) {
         g2.setPaint(Color.BLACK);
-        colorRect.setFrameFromDiagonal(LEFT_PADDING - 1, TOP_PADDING - 1,
-                LEFT_PADDING + DEFAULT_WIDTH, TOP_PADDING + COLOR_RECT_HEIGHT);
-        zoomRect.setFrameFromDiagonal(LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER - 1, TOP_PADDING - 1,
-                LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT);
-        recordRect.setFrameFromDiagonal(LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER * 2 - 1, TOP_PADDING - 1,
-                LEFT_PADDING + DEFAULT_WIDTH * 3 + Constants.DEFAULT_X_BORDER * 2, TOP_PADDING + RECORD_RECT_HEIGHT);
+        colorRect.setFrameFromDiagonal(
+                (double)LEFT_PADDING - 1,
+                (double)TOP_PADDING - 1,
+                (double)LEFT_PADDING + DEFAULT_WIDTH,
+                (double)TOP_PADDING + COLOR_RECT_HEIGHT);
+        zoomRect.setFrameFromDiagonal(
+                (double)LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER - 1,
+                (double)TOP_PADDING - 1,
+                (double)LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER,
+                (double)TOP_PADDING + ZOOM_RECT_HEIGHT);
+        recordRect.setFrameFromDiagonal(
+                (double)LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER * 2 - 1,
+                (double)TOP_PADDING - 1,
+                (double)LEFT_PADDING + DEFAULT_WIDTH * 3 + Constants.DEFAULT_X_BORDER * 2,
+                (double)TOP_PADDING + RECORD_RECT_HEIGHT);
         g2.draw(colorRect);
         g2.draw(zoomRect);
         g2.draw(recordRect);
