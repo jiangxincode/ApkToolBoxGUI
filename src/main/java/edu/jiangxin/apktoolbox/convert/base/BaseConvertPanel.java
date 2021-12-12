@@ -1,20 +1,18 @@
 package edu.jiangxin.apktoolbox.convert.base;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class BaseConvertPanel extends EasyPanel {
+    private static final String PROPERTY_KEY = "name";
+
     private static final String DECIMAL = "Decimal";
 
     private static final String BINARY = "Binary";
@@ -23,65 +21,126 @@ public class BaseConvertPanel extends EasyPanel {
 
     private static final String HEX = "Hex";
 
-    private JTextField decTextField;
+    private JPanel binPanel;
+
+    private JLabel binLabel;
 
     private JTextField binTextField;
 
+    private JPanel octPanel;
+
+    private JLabel octLabel;
+
     private JTextField octTextField;
+
+    private JPanel decPanel;
+
+    private JLabel decLabel;
+
+    private JTextField decTextField;
+
+    private JPanel hexPanel;
+
+    private JLabel hexLabel;
 
     private JTextField hexTextField;
 
     private JButton clearBtn;
+
+    private DocumentListener documentListener;
 
     private boolean isChangedByUser;
 
     private String strBin, strOct, strDec, strHex;
 
     public BaseConvertPanel() {
-        setLayout(new GridLayout(5, 1));
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
-        decTextField = new JTextField(17);
-        decTextField.getDocument().addDocumentListener(new TextFieldDocumentListener());
-        decTextField.getDocument().putProperty("name", DECIMAL);
-
-        binTextField = new JTextField(17);
-        binTextField.getDocument().addDocumentListener(new TextFieldDocumentListener());
-        binTextField.getDocument().putProperty("name", BINARY);
-
-        octTextField = new JTextField(17);
-        octTextField.getDocument().addDocumentListener(new TextFieldDocumentListener());
-        octTextField.getDocument().putProperty("name", OCTAL);
-
-        hexTextField = new JTextField(17);
-        hexTextField.getDocument().addDocumentListener(new TextFieldDocumentListener());
-        hexTextField.getDocument().putProperty("name", HEX);
+        documentListener = new TextFieldDocumentListener();
 
         strBin = strOct = strDec = strHex = "";
         isChangedByUser = true;
 
-        JPanel binPanel = new JPanel();
-        binPanel.add(new JLabel("Binary  :"));
-        binPanel.add(binTextField);
+        createBinPanel();
         add(binPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JPanel decPanel = new JPanel();
-        decPanel.add(new JLabel("Decimal :"));
-        decPanel.add(decTextField);
-        add(decPanel);
-
-        JPanel octPanel = new JPanel();
-        octPanel.add(new JLabel("Octal     :"));
-        octPanel.add(octTextField);
+        createOctPanel();
         add(octPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        JPanel hexPanel = new JPanel();
-        hexPanel.add(new JLabel("Hex       :"));
-        hexPanel.add(hexTextField);
+        createDecPanel();
+        add(decPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createHexPanel();
         add(hexPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         clearBtn = new JButton("Clear");
         clearBtn.addActionListener(new ClearButtonActionListener());
         add(clearBtn);
+    }
+
+    private void createBinPanel() {
+        binPanel = new JPanel();
+        binPanel.setLayout(new BoxLayout(binPanel, BoxLayout.X_AXIS));
+
+        binLabel = new JLabel(BINARY + ":");
+
+        binTextField = new JTextField();
+        binTextField.getDocument().addDocumentListener(documentListener);
+        binTextField.getDocument().putProperty(PROPERTY_KEY, BINARY);
+
+        binPanel.add(binLabel);
+        binPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        binPanel.add(binTextField);
+    }
+
+    private void createOctPanel() {
+        octPanel = new JPanel();
+        octPanel.setLayout(new BoxLayout(octPanel, BoxLayout.X_AXIS));
+
+        octLabel = new JLabel(OCTAL + ":");
+
+        octTextField = new JTextField();
+        octTextField.getDocument().addDocumentListener(documentListener);
+        octTextField.getDocument().putProperty(PROPERTY_KEY, OCTAL);
+
+        octPanel.add(octLabel);
+        octPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        octPanel.add(octTextField);
+    }
+
+    private void createDecPanel() {
+        decPanel = new JPanel();
+        decPanel.setLayout(new BoxLayout(decPanel, BoxLayout.X_AXIS));
+
+        decLabel = new JLabel(DECIMAL + ":");
+
+        decTextField = new JTextField();
+        decTextField.getDocument().addDocumentListener(documentListener);
+        decTextField.getDocument().putProperty(PROPERTY_KEY, DECIMAL);
+
+        decPanel.add(decLabel);
+        decPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        decPanel.add(decTextField);
+    }
+
+    private void createHexPanel() {
+        hexPanel = new JPanel();
+        hexPanel.setLayout(new BoxLayout(hexPanel, BoxLayout.X_AXIS));
+
+        hexLabel = new JLabel(HEX + ":");
+
+        hexTextField = new JTextField();
+        hexTextField.getDocument().addDocumentListener(documentListener);
+        hexTextField.getDocument().putProperty(PROPERTY_KEY, HEX);
+
+        hexPanel.add(hexLabel);
+        hexPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        hexPanel.add(hexTextField);
     }
 
     class ClearButtonActionListener implements ActionListener {
@@ -90,8 +149,8 @@ public class BaseConvertPanel extends EasyPanel {
             strBin = strOct = strDec = strHex = "";
             isChangedByUser = false;
             binTextField.setText(strBin);
-            decTextField.setText(strDec);
             octTextField.setText(strOct);
+            decTextField.setText(strDec);
             hexTextField.setText(strHex);
             isChangedByUser = true;
         }
@@ -100,7 +159,6 @@ public class BaseConvertPanel extends EasyPanel {
     class TextFieldDocumentListener implements DocumentListener {
         @Override
         public void changedUpdate(DocumentEvent e) {
-            //	detect(e);
         }
 
         @Override
@@ -114,17 +172,24 @@ public class BaseConvertPanel extends EasyPanel {
         }
     }
 
-    private synchronized void detect(DocumentEvent documentEvent) {
+    private void detect(DocumentEvent documentEvent) {
         Document doc = documentEvent.getDocument();
-        String nameProp = doc.getProperty("name").toString();
-        if (nameProp.equals(BINARY)) {
+        Object propertyObj = doc.getProperty(PROPERTY_KEY);
+        if (propertyObj == null) {
+            logger.warn("property is null");
+            return;
+        }
+        String propertyStr = propertyObj.toString();
+        if (propertyStr.equals(BINARY)) {
             convertMe(BINARY, binTextField.getText());
-        } else if (nameProp.equals(DECIMAL)) {
-            convertMe(DECIMAL, decTextField.getText());
-        } else if (nameProp.equals(OCTAL)) {
+        } else if (propertyStr.equals(OCTAL)) {
             convertMe(OCTAL, octTextField.getText());
-        } else if (nameProp.equals(HEX)) {
+        } else if (propertyStr.equals(DECIMAL)) {
+            convertMe(DECIMAL, decTextField.getText());
+        } else if (propertyStr.equals(HEX)) {
             convertMe(HEX, hexTextField.getText());
+        } else {
+            logger.warn("property is invalid");
         }
     }
 
@@ -135,53 +200,67 @@ public class BaseConvertPanel extends EasyPanel {
         if (content.length() == 0) {
             content = "0";
         }
+        long value = 0;
         if (BINARY.equals(type)) {
-            if (!isBinStr(content)) {
+            try {
+                value = Long.valueOf(content, 2);
+            } catch (NumberFormatException e) {
+                logger.warn("convert error: NumberFormatException content: " + content);
+                isChangedByUser = false;
                 binTextField.setText(strBin);
-                isChangedByUser = false;
+                isChangedByUser = true;
                 return;
             }
-            int value = Integer.valueOf(content, 2);
+
             isChangedByUser = false;
-            decTextField.setText(Integer.toString(value));
-            octTextField.setText(Integer.toOctalString(value));
-            hexTextField.setText(Integer.toHexString(value));
-            isChangedByUser = true;
-        } else if (DECIMAL.equals(type)) {
-            if (!isDecimalStr(content)) {
-                decTextField.setText(strDec);
-                isChangedByUser = false;
-                return;
-            }
-            int value = Integer.valueOf(content);
-            isChangedByUser = false;
-            binTextField.setText(Integer.toBinaryString(value));
-            octTextField.setText(Integer.toOctalString(value));
-            hexTextField.setText(Integer.toHexString(value));
+            octTextField.setText(Long.toOctalString(value));
+            decTextField.setText(Long.toString(value));
+            hexTextField.setText(Long.toHexString(value));
             isChangedByUser = true;
         } else if (OCTAL.equals(type)) {
-            if (!isOctStr(content)) {
-                octTextField.setText(strOct);
+            try {
+                value = Long.valueOf(content, 8);
+            } catch (NumberFormatException e) {
+                logger.warn("convert error: NumberFormatException content: " + content);
                 isChangedByUser = false;
+                octTextField.setText(strOct);
+                isChangedByUser = true;
                 return;
             }
-            int value = Integer.valueOf(content, 8);
             isChangedByUser = false;
-            binTextField.setText(Integer.toBinaryString(value));
-            decTextField.setText(Integer.toString(value));
-            hexTextField.setText(Integer.toHexString(value));
+            binTextField.setText(Long.toBinaryString(value));
+            decTextField.setText(Long.toString(value));
+            hexTextField.setText(Long.toHexString(value));
+            isChangedByUser = true;
+        } else if (DECIMAL.equals(type)) {
+            try {
+                value = Long.valueOf(content, 10);
+            } catch (NumberFormatException e) {
+                logger.warn("convert error: NumberFormatException content: " + content);
+                isChangedByUser = false;
+                decTextField.setText(strDec);
+                isChangedByUser = true;
+                return;
+            }
+            isChangedByUser = false;
+            binTextField.setText(Long.toBinaryString(value));
+            octTextField.setText(Long.toOctalString(value));
+            hexTextField.setText(Long.toHexString(value));
             isChangedByUser = true;
         } else if (HEX.equals(type)) {
-            if (!isHexString(content)) {
-                hexTextField.setText(strHex);
+            try {
+                value = Long.valueOf(content, 16);
+            } catch (NumberFormatException e) {
+                logger.warn("convert error: NumberFormatException content: " + content);
                 isChangedByUser = false;
+                hexTextField.setText(strHex);
+                isChangedByUser = true;
                 return;
             }
-            int value = Integer.valueOf(content, 16);
             isChangedByUser = false;
-            binTextField.setText(Integer.toBinaryString(value));
-            octTextField.setText(Integer.toOctalString(value));
-            decTextField.setText(Integer.toHexString(value));
+            binTextField.setText(Long.toBinaryString(value));
+            octTextField.setText(Long.toOctalString(value));
+            decTextField.setText(Long.toHexString(value));
             isChangedByUser = true;
         }
         strBin = binTextField.getText();
