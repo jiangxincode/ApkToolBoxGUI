@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.convert.color;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
 
 import java.awt.Point;
 import java.awt.Dimension;
@@ -17,17 +18,7 @@ import java.awt.Graphics;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.AbstractAction;
+import javax.swing.*;
 
 import java.util.LinkedList;
 import java.util.Timer;
@@ -44,14 +35,48 @@ public class ColorPickerPanel extends EasyPanel {
     }
 
     private static final long serialVersionUID = 1L;
-    private static final int WIDTH = 340;
-    private static final int HEIGHT = 150;
+
+    private static final int TOP_PADDING = 20;
+
+    private static final int BOTTOM_PADDING = 20;
+
+    private static final int LEFT_PADDING = 10;
+
+    private static final int RIGHT_PADDING = 10;
+
+    private static final int COLOR_RECT_HEIGHT = 60;
+
+    private static final int COORDINATE_HEIGHT = 20;
+
+    private static final int COLOR_LABEL_HEIGHT = 20;
+
+    private static final int COMBO_HEIGHT = 20;
+
+    private static final int ZOOM_RECT_HEIGHT = 100;
+
+    private static final int SHOW_FIELD_HEIGHT = 20;
+
+    private static final int COLOR_RECORD_ITEM_HEIGHT = 20;
+
+    private static final int RECORD_RECT_HEIGHT = 100;
+
+    private static final int COPY_BUTTON_HEIGHT = 20;
+
+    private static final int TEXT_AREA_HEIGHT = 100;
+
+    private static final int TEXT_AREA_WIDTH = 200;
+
+    private static final int DEFAULT_WIDTH = 100;
+
+    private static final int WIDTH = LEFT_PADDING + DEFAULT_WIDTH * 3 + Constants.DEFAULT_X_BORDER * 3 + TEXT_AREA_WIDTH + RIGHT_PADDING;
+
+    private static final int HEIGHT = TOP_PADDING + COLOR_RECT_HEIGHT + COORDINATE_HEIGHT + COLOR_LABEL_HEIGHT + Constants.DEFAULT_Y_BORDER + COMBO_HEIGHT + BOTTOM_PADDING;
+
     private Robot robot;
 
     private JPanel colorPanel; // 颜色展示面板
-    //private final JPanel recordPanel; // 颜色记录框
-    private JLabel coordsJlabel; // 坐标信息
-    private JLabel colorJlabel; // 颜色信息
+    private JLabel coordsLabel; // 坐标信息
+    private JLabel colorLabel; // 颜色信息
     private Point mousePoint; // 光标点
     private Image areaImage; // 待放大的图片
     private final int zoomValue = 3; // 放大倍数，（只会放大到100像素）
@@ -89,36 +114,37 @@ public class ColorPickerPanel extends EasyPanel {
     }
 
     private void initUI() {
-        // 窗体居中
-        final Dimension centre = this.getScreenCentre();
-        setLocation(centre.width - WIDTH / 2, centre.height - HEIGHT / 2);
-        System.out.println((centre.width - WIDTH / 2) + " " + (centre.height - HEIGHT / 2));
         // 无布局方式
         setLayout(null);
 
         // 左侧的颜色框和显示的坐标，颜色值
         // 添加 panel 组件用来做颜色框
         colorPanel = new JPanel();
-        colorPanel.setBounds(10, 10, 100, 60);
+        colorPanel.setBounds(LEFT_PADDING, TOP_PADDING, DEFAULT_WIDTH, COLOR_RECT_HEIGHT);
         add(colorPanel);
         // 坐标
-        coordsJlabel = new JLabel();
-        coordsJlabel.setBounds(10, 70, 100, 20);
-        add(coordsJlabel);
+        coordsLabel = new JLabel();
+        coordsLabel.setBounds(LEFT_PADDING, TOP_PADDING + COLOR_RECT_HEIGHT, DEFAULT_WIDTH, COORDINATE_HEIGHT);
+        add(coordsLabel);
         // 颜色值
-        colorJlabel = new JLabel();
-        colorJlabel.setBounds(10, 90, 100, 20);
-        add(colorJlabel);
+        colorLabel = new JLabel();
+        colorLabel.setBounds(LEFT_PADDING, TOP_PADDING + COLOR_RECT_HEIGHT + COORDINATE_HEIGHT, DEFAULT_WIDTH, COLOR_LABEL_HEIGHT);
+        add(colorLabel);
 
-        // 放大镜的十字线（位置10,120 大小100,100）
-        crossHorizontal = new Line2D.Double(120 + 50, 10, 120 + 50, 10 + 100);
-        crossVertical = new Line2D.Double(120, 10 + 50, 120 + 100, 10 + 50);
+        // 放大镜的十字线（大小100,100）
+        crossHorizontal = new Line2D.Double(
+                LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT / 2,
+                LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT / 2);
+        crossVertical = new Line2D.Double(
+                LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER + DEFAULT_WIDTH / 2, TOP_PADDING,
+                LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER + DEFAULT_WIDTH / 2, TOP_PADDING + ZOOM_RECT_HEIGHT);
 
-        // 右侧的颜色背景和颜色值label。位置和大小230, 10, 100, 100
+        // 右侧的颜色背景和颜色值label。大小100, 100
         for (int i = 0; i < colorRecordMax; i++) {
             colorRecordValue[i] = new JLabel();
             colorRecordValue[i].setOpaque(true); // 背景不透明
-            colorRecordValue[i].setBounds(230, 10 + i * 20, 100, 20);
+            colorRecordValue[i].setBounds(LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER * 2,
+                    TOP_PADDING + i * COLOR_RECORD_ITEM_HEIGHT, DEFAULT_WIDTH, COLOR_RECORD_ITEM_HEIGHT);
             add(colorRecordValue[i]);
         }
 
@@ -131,13 +157,13 @@ public class ColorPickerPanel extends EasyPanel {
         colorModeCombo.addActionListener(event -> {
             currentColorMode = ColorMode.valueOf((String) colorModeCombo.getSelectedItem());
         });
-        colorModeCombo.setBounds(10, 120, 100, 20);
+        colorModeCombo.setBounds(LEFT_PADDING, TOP_PADDING + COLOR_RECT_HEIGHT + COORDINATE_HEIGHT + COLOR_LABEL_HEIGHT + Constants.DEFAULT_Y_BORDER, DEFAULT_WIDTH, COMBO_HEIGHT);
         add(colorModeCombo);
 
         // 颜色值框体
         showField = new JTextField();
         showField.setEditable(false);
-        showField.setBounds(120, 120, 100, 20);
+        showField.setBounds(LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT + Constants.DEFAULT_Y_BORDER, DEFAULT_WIDTH, SHOW_FIELD_HEIGHT);
         add(showField);
 
         // 复制按钮
@@ -150,8 +176,16 @@ public class ColorPickerPanel extends EasyPanel {
             clipboard.setContents(trans, null);
 
         });
-        copyButton.setBounds(230, 120, 100, 20);
+        copyButton.setBounds(LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER * 2, TOP_PADDING + RECORD_RECT_HEIGHT + Constants.DEFAULT_Y_BORDER, DEFAULT_WIDTH, COPY_BUTTON_HEIGHT);
         add(copyButton);
+
+        JTextArea textArea = new JTextArea();
+        textArea.setBackground(Color.PINK);
+        textArea.setBounds(LEFT_PADDING + DEFAULT_WIDTH * 3 + Constants.DEFAULT_X_BORDER * 3, TOP_PADDING, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
+        textArea.append("记录颜色: ALT+C" + System.getProperty("line.separator"));
+        textArea.append("锁定区域: ALT+L" + System.getProperty("line.separator"));
+        textArea.append("取消锁定区域: ALT+U" + System.getProperty("line.separator"));
+        add(textArea);
 
         // 键盘检测事件
         final InputMap inputMap = colorPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -216,17 +250,6 @@ public class ColorPickerPanel extends EasyPanel {
     }
 
     /**
-     * 获取屏幕中心点
-     *
-     * @return Dimension
-     */
-    public Dimension getScreenCentre() {
-        // 获取屏幕分辨率
-        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        return new Dimension(screenSize.width / 2, screenSize.height / 2);
-    }
-
-    /**
      * 重置窗口大小
      */
     public Dimension getPreferredSize() {
@@ -247,9 +270,7 @@ public class ColorPickerPanel extends EasyPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!isLocked) {
-                    mouseAction();
-                }
+                mouseAction();
             }
         }, 100, 100);
     }
@@ -271,18 +292,17 @@ public class ColorPickerPanel extends EasyPanel {
         final Color pixel = robot.getPixelColor(mousePoint.x, mousePoint.y);
         colorPanel.setBackground(pixel);
 
-        coordsJlabel.setText(String.format("[%d, %d]", mousePoint.x, mousePoint.y));
-        colorJlabel.setText(getColorText(pixel));
+        coordsLabel.setText(String.format("[%d, %d]", mousePoint.x, mousePoint.y));
+        colorLabel.setText(getColorText(pixel));
 
-        // 获取区域
-        getMouseArea();
+        if (!isLocked) {
+            // 获取区域
+            getMouseArea();
+        }
     }
 
     /**
      * 根据当前颜色模式显示颜色值
-     *
-     * @param Color c
-     * @return
      */
     private String getColorText(final Color c) {
         if (c == null) {
@@ -334,7 +354,7 @@ public class ColorPickerPanel extends EasyPanel {
         // 中间放大镜
         final Graphics2D g2 = (Graphics2D) g;
         //g2.drawImage(areaImage,10,300,null); // 原大小
-        g2.drawImage(areaImage, 120, 10, 100, 100, null);
+        g2.drawImage(areaImage, LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER, TOP_PADDING, DEFAULT_WIDTH, ZOOM_RECT_HEIGHT, null);
         // 放大镜的十字线
         g2.setPaint(Color.RED);
         g2.draw(crossHorizontal);
@@ -351,9 +371,6 @@ public class ColorPickerPanel extends EasyPanel {
 
     }
 
-    /**
-     * @param Graphics2D 绘制历史记录
-     */
     private void paintColorRecord(final Graphics2D g2) {
         int i = 0;
 
@@ -370,14 +387,14 @@ public class ColorPickerPanel extends EasyPanel {
         }
     }
 
-    /**
-     * @param Graphics2D 绘制边框
-     */
     private void paintBorder(Graphics2D g2) {
         g2.setPaint(Color.BLACK);
-        colorRect.setFrameFromDiagonal(10 - 1, 10 - 1, 110, 70);
-        zoomRect.setFrameFromDiagonal(120 - 1, 10 - 1, 120 + 100, 110);
-        recordRect.setFrameFromDiagonal(230 - 1, 10 - 1, 230 + 100, 110);
+        colorRect.setFrameFromDiagonal(LEFT_PADDING - 1, TOP_PADDING - 1,
+                LEFT_PADDING + DEFAULT_WIDTH, TOP_PADDING + COLOR_RECT_HEIGHT);
+        zoomRect.setFrameFromDiagonal(LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER - 1, TOP_PADDING - 1,
+                LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER, TOP_PADDING + ZOOM_RECT_HEIGHT);
+        recordRect.setFrameFromDiagonal(LEFT_PADDING + DEFAULT_WIDTH * 2 + Constants.DEFAULT_X_BORDER * 2 - 1, TOP_PADDING - 1,
+                LEFT_PADDING + DEFAULT_WIDTH * 3 + Constants.DEFAULT_X_BORDER * 2, TOP_PADDING + RECORD_RECT_HEIGHT);
         g2.draw(colorRect);
         g2.draw(zoomRect);
         g2.draw(recordRect);

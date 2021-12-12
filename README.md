@@ -21,6 +21,7 @@ A open source tool for simplify android development. It targets to replace all f
 * TextTools(**All main features have been replaced**): <https://github.com/jiangxincode/TextTools>
 * 元宝文件编码转换器(**All features have been replaced**): <http://www.jz5u.com/Soft/apply/Conve/131917.html>
 * UltraCodingSwitch(**All main features have been replaced**): <https://www.jb51.net/softs/21331.html>
+* ColorPix(**All main features have been replaced**): <https://colorpix.en.softonic.com/>
 
 ## Why you should try
 
@@ -34,6 +35,10 @@ A open source tool for simplify android development. It targets to replace all f
 ### Reverse
 
 ### SnapShot
+
+![ColorPicker](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/ColorPicker.png)
+![Timestamp](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Timestamp.png)
+![BaseConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/BaseConvert.png)
 
 ### Dumpsys
 
@@ -57,6 +62,7 @@ ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
 * Convert between timestamp and formatted time
 * Convert between RGB and hexadecimal
+* Color picker
 * Convert between different base
 * Convert between Chinese character and Unicode character
 
