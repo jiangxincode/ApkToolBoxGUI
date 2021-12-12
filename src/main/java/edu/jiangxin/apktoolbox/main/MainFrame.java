@@ -3,8 +3,11 @@ package edu.jiangxin.apktoolbox.main;
 import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
+import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
+import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
+import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
 import edu.jiangxin.apktoolbox.help.*;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
@@ -18,7 +21,6 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.text.OsConvertPanel;
 import edu.jiangxin.apktoolbox.text.zhconvert.ZhConvertPanel;
-import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -68,10 +70,12 @@ public class MainFrame extends EasyFrame {
 
     private JMenu fileMenu;
     private JMenuItem duplicateFindMenuItem;
+    private JMenuItem batchRenameMenuItem;
 
     private JMenu convertMenu;
     private JMenuItem timeConvertMenuItem;
     private JMenuItem colorConvertMenuItem;
+    private JMenuItem colorPickerMenuItem;
     private JMenuItem baseConvertMenuItem;
     private JMenuItem unicodeConvertMenuItem;
 
@@ -205,6 +209,10 @@ public class MainFrame extends EasyFrame {
         duplicateFindMenuItem = new JMenuItem(bundle.getString("file.duplicate.title"));
         duplicateFindMenuItem.addActionListener(new ChangePanelListener(DuplicateFindPanel.class, duplicateFindMenuItem.getText()));
         fileMenu.add(duplicateFindMenuItem);
+
+        batchRenameMenuItem = new JMenuItem(bundle.getString("file.batch.rename.title"));
+        batchRenameMenuItem.addActionListener(new ChangePanelListener(BatchRenamePanel.class, batchRenameMenuItem.getText()));
+        fileMenu.add(batchRenameMenuItem);
     }
 
     private void createConvertMenu() {
@@ -218,6 +226,10 @@ public class MainFrame extends EasyFrame {
         colorConvertMenuItem = new JMenuItem(bundle.getString("convert.color.title"));
         colorConvertMenuItem.addActionListener(new ChangePanelListener(ColorConvertPanel.class, colorConvertMenuItem.getText()));
         convertMenu.add(colorConvertMenuItem);
+
+        colorPickerMenuItem = new JMenuItem(bundle.getString("picker.color.title"));
+        colorPickerMenuItem.addActionListener(new ChangePanelListener(ColorPickerPanel.class, colorPickerMenuItem.getText()));
+        convertMenu.add(colorPickerMenuItem);
 
         baseConvertMenuItem = new JMenuItem(bundle.getString("convert.base.title"));
         baseConvertMenuItem.addActionListener(new ChangePanelListener(BaseConvertPanel.class, baseConvertMenuItem.getText()));
