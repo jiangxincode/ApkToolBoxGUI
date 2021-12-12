@@ -1,11 +1,16 @@
 package edu.jiangxin.apktoolbox.text.zhconvert;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Properties;
 
 public class ZHConverterUtils {
+    private static final Logger logger = LogManager.getLogger(ZHConverterUtils.class);
+
     private Properties charMap = new Properties();
 
     private Properties charMap2 = new Properties();
@@ -21,44 +26,23 @@ public class ZHConverterUtils {
         initProperties(dirpath2,charMap2);
     }
 
-
-    private void initProperties(String rPath,Properties properties){
-        InputStream is = null;
-//        is = getClass().getResourceAsStream(rPath);
-        try {
-
-            File file = new File(rPath);
-            if (!file.exists()){
+    private void initProperties(String rPath, Properties properties) {
+        File file = new File(rPath);
+        if (!file.exists()) {
+            try {
                 file.createNewFile();
+            } catch (IOException e) {
+                logger.error("createNewFile failed: " + e.getMessage());
+                return;
             }
-            is = new FileInputStream(file);
-            if (is != null) {
-                BufferedReader reader = null;
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(is));
-                    properties.load(reader);
-                } catch (FileNotFoundException e) {
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (reader != null) {
-                            reader.close();
-                        }
-                        if (is != null) {
-                            is.close();
-                        }
-                    } catch (IOException e) {
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
+        try (InputStream is = new FileInputStream(file);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            properties.load(reader);
+        } catch (IOException e) {
+            logger.error("load failed: " + e.getMessage());
+        }
     }
 
 

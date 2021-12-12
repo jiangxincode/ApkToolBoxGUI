@@ -212,10 +212,9 @@ public class DumpsysAlarmPanel extends EasyPanel {
             threadInput.start();
             threadError.start();
             process1.waitFor();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            logger.error("getAlarmInfoStringFromDevice failed: " + e.getMessage());
+            return;
         }
 
 

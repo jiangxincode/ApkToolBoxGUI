@@ -76,7 +76,7 @@ public class TimeConvertPanel extends EasyPanel {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error("InterruptedException occurred");
                 }
             }
 

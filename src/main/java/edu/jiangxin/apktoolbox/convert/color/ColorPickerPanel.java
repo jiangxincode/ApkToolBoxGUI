@@ -215,6 +215,10 @@ public class ColorPickerPanel extends EasyPanel {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
+            if (robot == null) {
+                logger.error("robot is null");
+                return;
+            }
             // 记录当前的颜色
             Color c = robot.getPixelColor(mousePoint.x, mousePoint.y);
             currentColor = c;
@@ -263,7 +267,7 @@ public class ColorPickerPanel extends EasyPanel {
         try {
             robot = new Robot();
         } catch (final AWTException e) {
-            e.printStackTrace();
+            logger.error("Create Rebot instance failed");
         }
 
         final Timer timer = new Timer();
@@ -288,7 +292,10 @@ public class ColorPickerPanel extends EasyPanel {
         } else {
             prevPoint = mousePoint;
         }
-
+        if (robot == null) {
+            logger.error("robot is null");
+            return;
+        }
         final Color pixel = robot.getPixelColor(mousePoint.x, mousePoint.y);
         colorPanel.setBackground(pixel);
 
@@ -339,8 +346,9 @@ public class ColorPickerPanel extends EasyPanel {
         final int y = mousePoint.y;
 
         final Rectangle r = new Rectangle(x - sideLength / 2, y - sideLength / 2, sideLength, sideLength);
-        areaImage = robot.createScreenCapture(r);
-
+        if (robot != null) {
+            areaImage = robot.createScreenCapture(r);
+        }
         repaint(); // 重绘，调用 paintComponent
     }
 
