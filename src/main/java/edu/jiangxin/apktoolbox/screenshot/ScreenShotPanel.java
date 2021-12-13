@@ -198,7 +198,7 @@ public class ScreenShotPanel extends EasyPanel {
                 process2.waitFor();
                 logger.info("pull finish");
                 if (openCheckBox.isSelected()) {
-                    Process process3 = Runtime.getRuntime().exec("explorer /e,/select," + file.getCanonicalPath());
+                    Process process3 = Runtime.getRuntime().exec(new String[]{"explorer", "/e,/select," + file.getCanonicalPath()});
                     new StreamHandler(process3.getInputStream(), 0).start();
                     new StreamHandler(process3.getErrorStream(), 1).start();
                     process3.waitFor();

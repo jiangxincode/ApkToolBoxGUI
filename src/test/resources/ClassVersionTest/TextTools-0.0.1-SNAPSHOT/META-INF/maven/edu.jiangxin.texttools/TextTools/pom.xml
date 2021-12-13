@@ -53,12 +53,6 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <id>osc_thirdparty</id>
-      <url>http://maven.oschina.net/content/repositories/thirdparty/</url>
-    </repository>
-  </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

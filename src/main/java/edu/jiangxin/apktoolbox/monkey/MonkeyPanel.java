@@ -517,8 +517,7 @@ public class MonkeyPanel extends EasyPanel {
         List<String> programs = new ArrayList<>();
         logger.info("获取应用程序列表......开始");
         try {
-            String cmd = "adb -s " + device + " shell pm list packages";
-            Process process = Runtime.getRuntime().exec(cmd);
+            Process process = Runtime.getRuntime().exec(new String[]{"adb", "-s", device, "shell", "pm", "list", "packages"});
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String line = null;
             while ((line = reader.readLine()) != null) {
