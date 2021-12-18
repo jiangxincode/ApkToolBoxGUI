@@ -30,9 +30,7 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.text.MessageFormat;
 
 /**
@@ -42,6 +40,9 @@ import java.text.MessageFormat;
 public class MainFrame extends EasyFrame {
 
     private static final long serialVersionUID = 1L;
+
+    private TrayIcon trayIcon;
+    private SystemTray systemTray;
 
     private JPanel contentPane;
     private JMenuBar menuBar;
@@ -110,6 +111,11 @@ public class MainFrame extends EasyFrame {
     }
 
     public MainFrame() {
+        super();
+        if (SystemTray.isSupported()) {
+            configSystemTray();
+        }
+
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMenuBar();
@@ -118,6 +124,42 @@ public class MainFrame extends EasyFrame {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         setContentPane(contentPane);
         refreshSizeAndLocation();
+    }
+
+    private void configSystemTray() {
+        systemTray = SystemTray.getSystemTray();
+        PopupMenu popupMenu = new PopupMenu();
+        final MenuItem show = new MenuItem("Open");
+        final MenuItem exit = new MenuItem("Close");
+        ActionListener actionListener = e -> {
+            if (e.getSource() == show) {
+                setExtendedState(JFrame.NORMAL);
+                setVisible(true);
+            }
+            if (e.getSource() == exit) {
+                dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            }
+        };
+        exit.addActionListener(actionListener);
+        show.addActionListener(actionListener);
+        popupMenu.add(show);
+        popupMenu.add(exit);
+        trayIcon = new TrayIcon(image, "系统托盘", popupMenu);
+        trayIcon.setImageAutoSize(true);
+        try {
+            systemTray.add(trayIcon);
+        } catch (AWTException e) {
+            logger.error("add icon to tray failed");
+        }
+        trayIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    setExtendedState(JFrame.NORMAL);
+                    setVisible(true);
+                }
+            }
+        });
     }
 
     private void setMenuBar() {

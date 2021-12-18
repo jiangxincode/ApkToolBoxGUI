@@ -23,6 +23,7 @@ public class EasyFrame extends JFrame {
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
+    protected Image image;
 
     public EasyFrame() throws HeadlessException {
         super();
@@ -34,11 +35,19 @@ public class EasyFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 Utils.saveConfiguration();
-                logger.info("Frame stop: " + EasyFrame.this.getClass().getSimpleName());
+                logger.info("windowClosing: " + EasyFrame.this.getClass().getSimpleName());
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {
+                super.windowIconified(e);
+                setVisible(false);
+                dispose();
+                Utils.saveConfiguration();
+                logger.info("windowIconified: " + EasyFrame.this.getClass().getSimpleName());
             }
         });
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image image = tk.createImage(this.getClass().getResource("/icon.jpg"));
+        image = tk.createImage(this.getClass().getResource("/icon.jpg"));
         setIconImage(image);
         logger.info("Frame start: " + this.getClass().getSimpleName());
     }
