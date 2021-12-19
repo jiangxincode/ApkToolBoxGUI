@@ -10,6 +10,7 @@ import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
+import edu.jiangxin.apktoolbox.file.checksum.CheckSumPanel;
 import edu.jiangxin.apktoolbox.help.*;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
@@ -76,6 +77,7 @@ public class MainFrame extends EasyFrame {
     private JMenu fileMenu;
     private JMenuItem duplicateFindMenuItem;
     private JMenuItem batchRenameMenuItem;
+    private JMenuItem checkSumMenuItem;
 
     private JMenu convertMenu;
     private JMenuItem timeConvertMenuItem;
@@ -261,6 +263,10 @@ public class MainFrame extends EasyFrame {
         batchRenameMenuItem = new JMenuItem(bundle.getString("file.batch.rename.title"));
         batchRenameMenuItem.addActionListener(new ChangePanelListener(BatchRenamePanel.class, batchRenameMenuItem.getText()));
         fileMenu.add(batchRenameMenuItem);
+
+        checkSumMenuItem = new JMenuItem(bundle.getString("file.check.summary.title"));
+        checkSumMenuItem.addActionListener(new ChangePanelListener(CheckSumPanel.class, checkSumMenuItem.getText()));
+        fileMenu.add(checkSumMenuItem);
     }
 
     private void createConvertMenu() {
