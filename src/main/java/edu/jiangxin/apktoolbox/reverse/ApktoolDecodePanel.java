@@ -14,6 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author jiangxin
@@ -52,6 +53,18 @@ public class ApktoolDecodePanel extends EasyPanel {
     }
 
     private void initUI() {
+        String toolPath = conf.getString(Constants.APKTOOL_PATH_KEY);
+        File toolFile = null;
+        if (!StringUtils.isEmpty(toolPath)) {
+            toolFile = new File(toolPath);
+        }
+        if (StringUtils.isEmpty(toolPath) || toolFile == null || !toolFile.exists() || !toolFile.isFile()) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, "Need Configuration", "ERROR",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -203,7 +216,7 @@ public class ApktoolDecodePanel extends EasyPanel {
             conf.setProperty("apktool.decode.target.dir", targetPath);
             StringBuilder sb = new StringBuilder();
             sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                    .append(Utils.getToolsPath()).append(File.separator).append(Constants.FILENAME_APKTOOL).append("\"").append(" d ")
+                    .append(conf.getString(Constants.APKTOOL_PATH_KEY)).append("\"").append(" d ")
                     .append(srcPath).append(" -o ").append(targetPath).append(File.separator).append(srcBaseName);
             if (resourceIgnoreCheckBox.isSelected()) {
                 sb.append(" -r");

@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.main;
 
 import edu.jiangxin.apktoolbox.Version;
+import edu.jiangxin.apktoolbox.config.ConfigPanel;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
@@ -46,6 +47,9 @@ public class MainFrame extends EasyFrame {
 
     private JPanel contentPane;
     private JMenuBar menuBar;
+
+    private JMenu configMenu;
+    private JMenuItem configMenuItem;
 
     private JMenu reverseMenu;
     private JMenuItem apktoolDecodeMenuItem;
@@ -165,6 +169,8 @@ public class MainFrame extends EasyFrame {
     private void setMenuBar() {
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
+
+        createConfigMenu();
 
         createReverseMenu();
 
@@ -308,6 +314,15 @@ public class MainFrame extends EasyFrame {
         dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("dumpsys.alarm.title"));
         dumpsysAlarmMenuItem.addActionListener(new ChangePanelListener(DumpsysAlarmPanel.class, dumpsysAlarmMenuItem.getText()));
         dumpsysMenu.add(dumpsysAlarmMenuItem);
+    }
+
+    private void createConfigMenu() {
+        configMenu = new JMenu(bundle.getString("config.title"));
+        menuBar.add(configMenu);
+
+        configMenuItem = new JMenuItem(bundle.getString("config.title"));
+        configMenuItem.addActionListener(new ChangePanelListener(ConfigPanel.class, configMenuItem.getText()));
+        configMenu.add(configMenuItem);
     }
 
     private void createReverseMenu() {

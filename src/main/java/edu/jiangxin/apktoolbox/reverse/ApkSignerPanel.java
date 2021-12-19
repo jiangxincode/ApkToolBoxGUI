@@ -74,6 +74,18 @@ public class ApkSignerPanel extends EasyPanel {
     }
 
     private void initUI() {
+        String toolPath = conf.getString(Constants.APKSIGNER_PATH_KEY);
+        File toolFile = null;
+        if (!StringUtils.isEmpty(toolPath)) {
+            toolFile = new File(toolPath);
+        }
+        if (StringUtils.isEmpty(toolPath) || toolFile == null || !toolFile.exists() || !toolFile.isFile()) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, "Need Configuration", "ERROR",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -326,7 +338,7 @@ public class ApkSignerPanel extends EasyPanel {
         private String getCmd() {
             StringBuilder sb = new StringBuilder();
             sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                    .append(Utils.getToolsPath()).append(File.separator).append("apksigner.jar\"")
+                    .append(conf.getString(Constants.APKSIGNER_PATH_KEY)).append("\"")
                     .append(" -keystore ").append(keystorePath).append(" -pswd ").append(keystorePassword)
                     .append(" -alias ").append(alias).append(" -aliaspswd ").append(alisaPassword).append(" ")
                     .append(apkPath);
