@@ -55,6 +55,7 @@ public class EasyFrame extends JFrame {
     public void refreshSizeAndLocation() {
         // use pack to resize the child component
         pack();
+        setMinimumSize(new Dimension(800, 100));
         setResizable(false);
 
         // relocation this JFrame

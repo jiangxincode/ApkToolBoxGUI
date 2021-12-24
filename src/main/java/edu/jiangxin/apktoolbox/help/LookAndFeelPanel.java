@@ -1,10 +1,7 @@
 package edu.jiangxin.apktoolbox.help;
 
-import edu.jiangxin.apktoolbox.main.MainFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,12 +16,11 @@ public class LookAndFeelPanel extends EasyPanel {
 
     private JLabel typeLabel;
 
-    private JComboBox<UIManager.LookAndFeelInfo> typeComboBox;
+    private JComboBox<String> typeComboBox;
 
     private JPanel operationPanel;
 
     private JButton ApplyButton;
-
 
     public LookAndFeelPanel() throws HeadlessException {
         super();
@@ -51,16 +47,17 @@ public class LookAndFeelPanel extends EasyPanel {
         typeLabel = new JLabel("Type:");
         typeComboBox = new JComboBox<>();
 
+        installThirdPartyLookAndFeel();
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
-        String currentLookAndFeelClassName = conf.getString("look.and.feel.class.name");
         if (ArrayUtils.isEmpty(lookAndFeelInfos)) {
             typeComboBox.setEnabled(false);
         } else {
             typeComboBox.setEnabled(true);
+            String className = conf.getString("look.and.feel.class.name");
             for (UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
-                typeComboBox.addItem(info);
-                if (StringUtils.equals(info.getClassName(), currentLookAndFeelClassName)) {
-                    typeComboBox.setSelectedItem(info);
+                typeComboBox.addItem(info.getName());
+                if (StringUtils.equals(className, info.getClassName())) {
+                    typeComboBox.setSelectedItem(info.getName());
                 }
             }
         }
@@ -84,15 +81,36 @@ public class LookAndFeelPanel extends EasyPanel {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
             super.mousePressed(mouseEvent);
-            UIManager.LookAndFeelInfo lookAndFeelInfo = (UIManager.LookAndFeelInfo)typeComboBox.getSelectedItem();
-            String lookAndFeelClassName = lookAndFeelInfo.getClassName();
-            conf.setProperty("look.and.feel.class.name", lookAndFeelClassName);
+            String name = (String)typeComboBox.getSelectedItem();
+            String className = getLookAndFeelClassNameFromName(name);
+            if (className == null) {
+                logger.warn("className is null");
+                return;
+            }
+            conf.setProperty("look.and.feel.class.name", className);
             try {
-                UIManager.setLookAndFeel(lookAndFeelClassName);
+                UIManager.setLookAndFeel(className);
             } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
                 logger.error("setLookAndFeel failed, use default instead", e);
             }
             SwingUtilities.updateComponentTreeUI(getFrame());
         }
+    }
+
+    private void installThirdPartyLookAndFeel() {
+        UIManager.installLookAndFeel("Flat Light", "com.formdev.flatlaf.FlatLightLaf");
+        UIManager.installLookAndFeel("Flat Dark", "com.formdev.flatlaf.FlatDarkLaf");
+        UIManager.installLookAndFeel("Flat IntelliJ", "com.formdev.flatlaf.FlatIntelliJLaf");
+        UIManager.installLookAndFeel("Flat Darcula", "com.formdev.flatlaf.FlatDarculaLaf");
+    }
+
+    private String getLookAndFeelClassNameFromName(String name) {
+        UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
+        for (UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
+            if (StringUtils.equals(name, info.getName())) {
+                return info.getClassName();
+            }
+        }
+        return null;
     }
 }
