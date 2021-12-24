@@ -10,7 +10,7 @@ import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.DuplicateFindPanel;
-import edu.jiangxin.apktoolbox.file.checksum.CheckSumPanel;
+import edu.jiangxin.apktoolbox.file.checksum.CheckDigestPanel;
 import edu.jiangxin.apktoolbox.help.*;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
@@ -265,7 +265,7 @@ public class MainFrame extends EasyFrame {
         fileMenu.add(batchRenameMenuItem);
 
         checkSumMenuItem = new JMenuItem(bundle.getString("file.check.summary.title"));
-        checkSumMenuItem.addActionListener(new ChangePanelListener(CheckSumPanel.class, checkSumMenuItem.getText()));
+        checkSumMenuItem.addActionListener(new ChangePanelListener(CheckDigestPanel.class, checkSumMenuItem.getText()));
         fileMenu.add(checkSumMenuItem);
     }
 

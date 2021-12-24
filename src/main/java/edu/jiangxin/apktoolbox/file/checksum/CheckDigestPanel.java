@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Vector;
 
-public class CheckSumPanel extends EasyPanel {
+public class CheckDigestPanel extends EasyPanel {
     private static final long serialVersionUID = 63924900336217723L;
 
     private JPanel fileNamePanel;
@@ -29,15 +29,14 @@ public class CheckSumPanel extends EasyPanel {
 
     private JTextField compareResult;
 
-    private JComboBox<Hash> sumsList;
-    private Vector<Hash> hashItems;
+    private JComboBox<Hash> digestTypeComboBox;
     private final String calculating = "Calculating...";
 
     private static File selectedFile;
     private static Hash selectedHash;
     private static String hashResult;
 
-    public CheckSumPanel() {
+    public CheckDigestPanel() {
         super();
         initUI();
     }
@@ -89,7 +88,7 @@ public class CheckSumPanel extends EasyPanel {
                     if (selectedFile != null) {
                         fileNameTextField.setText(selectedFile.getName());
                         selectedHash = null;
-                        selectedHash = (Hash) sumsList.getSelectedItem();
+                        selectedHash = (Hash) digestTypeComboBox.getSelectedItem();
                         calculate();
                     }
                     fileNameButton.setEnabled(true);
@@ -126,7 +125,6 @@ public class CheckSumPanel extends EasyPanel {
 
         compareButton = new JButton("Compare");
         compareButton.setFocusPainted(false);
-        compareButton.setBackground(Color.GRAY);
         compareButton.addActionListener(arg0 -> {
 
             if (!fileSums.getText().equals(calculating)) {
@@ -135,15 +133,12 @@ public class CheckSumPanel extends EasyPanel {
 
                     if (fileSums.getText().equals(inputSums.getText())) {
                         compareResult.setText("match :)");
-                        compareResult.setBackground(Color.GREEN);
                     } else if (fileSums.getText().toLowerCase().equals(inputSums.getText().toLowerCase())) {
                         compareResult.setText("match :/");
-                        compareResult.setBackground(Color.ORANGE);
                         JOptionPane.showMessageDialog(null, "Strings match but case insensitive :/", ":/",
                                 JOptionPane.WARNING_MESSAGE);
                     } else {
                         compareResult.setText("don't match :(");
-                        compareResult.setBackground(new Color(255, 51, 51));
                     }
 
                     return;
@@ -153,25 +148,20 @@ public class CheckSumPanel extends EasyPanel {
             JOptionPane.showMessageDialog(null, "Something not right :(", ":(", JOptionPane.ERROR_MESSAGE);
         });
 
-        hashItems = new Vector<>(Arrays.asList(Hash.values()));
-        sumsList = new JComboBox<>(hashItems);
-        sumsList.setBackground(Color.LIGHT_GRAY);
-        sumsList.addActionListener(e -> {
-            Hash selectItem = (Hash) sumsList.getSelectedItem();
+        digestTypeComboBox = new JComboBox<>(new Vector<>(Arrays.asList(Hash.values())));
+        digestTypeComboBox.addActionListener(e -> {
+            Hash selectItem = (Hash) digestTypeComboBox.getSelectedItem();
 
             if (selectedHash == null || (selectedHash.getId() != selectItem.getId())) {
                 selectedHash = selectItem;
-
                 if (selectedFile != null) {
                     Thread calculateThread = (new Thread(() -> {
                         fileNameButton.setEnabled(false);
                         compareResult.setText("");
-                        compareResult.setBackground(getBackground());
                         calculate();
                         fileNameButton.setEnabled(true);
                     }));
                     calculateThread.start();
-
                     fileSums.setText(calculating);
                 }
             }
@@ -185,7 +175,7 @@ public class CheckSumPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         operationPanel.add(compareButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        operationPanel.add(sumsList);
+        operationPanel.add(digestTypeComboBox);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(compareResult);
     }
