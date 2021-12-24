@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LookAndFeelPanel extends EasyPanel {
 
@@ -21,6 +23,14 @@ public class LookAndFeelPanel extends EasyPanel {
     private JPanel operationPanel;
 
     private JButton ApplyButton;
+
+    static {
+        // Avoid install duplicated Look And Feel, we install them in static block
+        UIManager.installLookAndFeel("Flat Light", "com.formdev.flatlaf.FlatLightLaf");
+        UIManager.installLookAndFeel("Flat Dark", "com.formdev.flatlaf.FlatDarkLaf");
+        UIManager.installLookAndFeel("Flat IntelliJ", "com.formdev.flatlaf.FlatIntelliJLaf");
+        UIManager.installLookAndFeel("Flat Darcula", "com.formdev.flatlaf.FlatDarculaLaf");
+    }
 
     public LookAndFeelPanel() throws HeadlessException {
         super();
@@ -47,7 +57,6 @@ public class LookAndFeelPanel extends EasyPanel {
         typeLabel = new JLabel("Type:");
         typeComboBox = new JComboBox<>();
 
-        installThirdPartyLookAndFeel();
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
         if (ArrayUtils.isEmpty(lookAndFeelInfos)) {
             typeComboBox.setEnabled(false);
@@ -94,14 +103,8 @@ public class LookAndFeelPanel extends EasyPanel {
                 logger.error("setLookAndFeel failed, use default instead", e);
             }
             SwingUtilities.updateComponentTreeUI(getFrame());
+            getFrame().refreshSizeAndLocation();
         }
-    }
-
-    private void installThirdPartyLookAndFeel() {
-        UIManager.installLookAndFeel("Flat Light", "com.formdev.flatlaf.FlatLightLaf");
-        UIManager.installLookAndFeel("Flat Dark", "com.formdev.flatlaf.FlatDarkLaf");
-        UIManager.installLookAndFeel("Flat IntelliJ", "com.formdev.flatlaf.FlatIntelliJLaf");
-        UIManager.installLookAndFeel("Flat Darcula", "com.formdev.flatlaf.FlatDarculaLaf");
     }
 
     private String getLookAndFeelClassNameFromName(String name) {
