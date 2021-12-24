@@ -1,23 +1,20 @@
 package edu.jiangxin.apktoolbox.file.checksum;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
-
-import org.apache.commons.codec.digest.DigestUtils;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class CalculationUtil {
+    private static final Logger logger = LogManager.getLogger(CalculationUtil.class);
 
     public static String calculate(final Hash selectedHash, final File file) {
         String result = "";
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-
-        try {
+        try (FileInputStream fis = new FileInputStream(file)) {
             switch (selectedHash) {
                 case MD5: {
                     result = DigestUtils.md5Hex(fis);
@@ -44,12 +41,11 @@ public class CalculationUtil {
                     break;
                 }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
+        } catch (FileNotFoundException e) {
+            logger.error("calculate, FileNotFoundException");
+        } catch (IOException e) {
+            logger.error("calculate, IOException");
         }
-
         return result;
     }
 
