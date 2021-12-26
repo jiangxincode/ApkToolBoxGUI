@@ -15,6 +15,7 @@ import java.util.zip.ZipFile;
 
 import javax.swing.*;
 
+import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -97,7 +98,7 @@ public class AxmlPrinterPanel extends EasyPanel {
         targetTextField.setText(conf.getString("axmlprinter.target.dir"));
 
         targetButton = new JButton("Save Dir");
-        targetButton.addMouseListener(new TargetButtonMouseAdapter());
+        targetButton.addMouseListener(new DirectorySelectButtonMouseAdapter("Save To", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -131,27 +132,6 @@ public class AxmlPrinterPanel extends EasyPanel {
                     File file = jfc.getSelectedFile();
                     srcTextField.setText(file.getAbsolutePath());
                     break;
-                default:
-                    break;
-            }
-
-        }
-    }
-
-    private final class TargetButtonMouseAdapter extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            jfc.setDialogTitle("save to");
-            int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    targetTextField.setText(file.getAbsolutePath());
-                    break;
-
                 default:
                     break;
             }

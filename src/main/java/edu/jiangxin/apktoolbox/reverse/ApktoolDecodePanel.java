@@ -1,20 +1,18 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
+import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.*;
-
-import edu.jiangxin.apktoolbox.utils.Constants;
-import org.apache.commons.io.FilenameUtils;
-
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.Utils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author jiangxin
@@ -106,7 +104,7 @@ public class ApktoolDecodePanel extends EasyPanel {
         targetTextField.setText(conf.getString("apktool.decode.target.dir"));
 
         targetButton = new JButton(bundle.getString("save.dir.button"));
-        targetButton.addMouseListener(new TargetButtonMouseAdapter());
+        targetButton.addMouseListener(new DirectorySelectButtonMouseAdapter("Save To", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -151,26 +149,6 @@ public class ApktoolDecodePanel extends EasyPanel {
                     break;
             }
 
-        }
-    }
-
-    private final class TargetButtonMouseAdapter extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            jfc.setDialogTitle("save to");
-            int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    targetTextField.setText(file.getAbsolutePath());
-                    break;
-
-                default:
-                    break;
-            }
         }
     }
 
