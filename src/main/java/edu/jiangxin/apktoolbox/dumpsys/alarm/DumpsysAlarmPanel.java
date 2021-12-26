@@ -3,7 +3,7 @@ package edu.jiangxin.apktoolbox.dumpsys.alarm;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
-import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Stream2StringThread;
 import org.apache.commons.io.FileUtils;

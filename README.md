@@ -13,8 +13,6 @@ APKToolBoxGUI is a handy tool for programmer with user-friendly GUI. It's a coll
 
 APKToolBoxGUI targets to replace most features of the tools below:
 
-* 元宝文件编码转换器(**All features have been replaced**): <http://www.jz5u.com/Soft/apply/Conve/131917.html>
-* UltraCodingSwitch(**All main features have been replaced**): <https://www.jb51.net/softs/21331.html>
 * ColorPix(**All main features have been replaced**): <https://colorpix.en.softonic.com/>
 * I18NTools(**All features have been replaced**): <https://github.com/jiangxincode/I18NTools>
 * TextTools(**All main features have been replaced**): <https://github.com/jiangxincode/TextTools>
@@ -37,6 +35,15 @@ APKToolBoxGUI targets to replace most features of the tools below:
 ### File
 
 #### Convert between different character encodings
+
+* 支持`UTF-8`,`GB2312`,`GBK`,`Big5`等上百种编码格式间的互相转换
+* 支持多文件夹、多文件批量转换
+* 支持源文件编码自动识别，自动识别采用多引擎方案，识别率高
+
+类似工具：
+
+* 元宝文件编码转换器: <https://www.cnblogs.com/yuanbao/archive/2008/01/30/1059065.html>
+* UltraCodingSwitch: <http://www.ultrasofts.cn/>
 
 ![FileEncoding](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/FileEncoding_01.png)
 

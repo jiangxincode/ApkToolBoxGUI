@@ -1,11 +1,9 @@
-package edu.jiangxin.apktoolbox.text.core;
+package edu.jiangxin.apktoolbox.file.core;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 

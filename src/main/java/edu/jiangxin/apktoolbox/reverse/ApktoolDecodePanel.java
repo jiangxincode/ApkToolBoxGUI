@@ -91,7 +91,7 @@ public class ApktoolDecodePanel extends EasyPanel {
         srcTextField = new JTextField();
         srcTextField.setText(conf.getString("apktool.decode.src.file"));
 
-        srcButton = new JButton("Source File");
+        srcButton = new JButton(bundle.getString("choose.file.button"));
         srcButton.addMouseListener(new SrcButtonMouseAdapter());
 
         srcPanel.add(srcTextField);
@@ -105,7 +105,7 @@ public class ApktoolDecodePanel extends EasyPanel {
         targetTextField = new JTextField();
         targetTextField.setText(conf.getString("apktool.decode.target.dir"));
 
-        targetButton = new JButton("Save Dir");
+        targetButton = new JButton(bundle.getString("save.dir.button"));
         targetButton.addMouseListener(new TargetButtonMouseAdapter());
 
         targetPanel.add(targetTextField);

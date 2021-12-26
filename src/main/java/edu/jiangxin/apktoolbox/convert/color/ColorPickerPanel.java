@@ -199,7 +199,6 @@ public class ColorPickerPanel extends EasyPanel {
 
     private void initFourthColumn() {
         JTextArea textArea = new JTextArea();
-        textArea.setBackground(Color.PINK);
         textArea.setBounds(LEFT_PADDING + DEFAULT_WIDTH * 3 + Constants.DEFAULT_X_BORDER * 3, TOP_PADDING, TEXT_AREA_WIDTH, DEFAULT_HEIGHT_BIG);
         textArea.append("记录颜色: ALT+C" + System.getProperty("line.separator"));
         textArea.append("锁定区域: ALT+L" + System.getProperty("line.separator"));

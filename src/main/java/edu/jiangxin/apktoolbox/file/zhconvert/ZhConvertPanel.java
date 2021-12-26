@@ -1,9 +1,9 @@
-package edu.jiangxin.apktoolbox.text.zhconvert;
+package edu.jiangxin.apktoolbox.file.zhconvert;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.text.FileListPanel;
-import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
+import edu.jiangxin.apktoolbox.file.FileListPanel;
+import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -116,7 +116,6 @@ public class ZhConvertPanel extends EasyPanel {
     private void createCenterPanel() {
         centerLeftTopPanel = new JPanel();
         centerLeftTopPanel.setLayout(new BoxLayout(centerLeftTopPanel, BoxLayout.Y_AXIS));
-        centerLeftTopPanel.setBackground(Color.CYAN);
 
         JPanel keyValuePanel = new JPanel();
         keyValuePanel.setLayout(new BoxLayout(keyValuePanel, BoxLayout.X_AXIS));
@@ -134,7 +133,6 @@ public class ZhConvertPanel extends EasyPanel {
 
         centerLeftBottomPanel = new JScrollPane();
         textArea = new JTextArea();
-        textArea.setBackground(Color.PINK);
         textArea.setMargin(new Insets(10, 10, 10, 10));
         //自动换行
         textArea.setLineWrap(true);
@@ -147,7 +145,6 @@ public class ZhConvertPanel extends EasyPanel {
 
         transformList = new JList();
         refreshListData();
-        transformList.setBackground(Color.orange);
         transformList.setFont(new Font("Dialog", 1, 18));
         transformList.setBorder(BorderFactory.createTitledBorder("词组转换定义"));
         JScrollPane centerRightScrollPanel = new JScrollPane(transformList);
@@ -197,16 +194,10 @@ public class ZhConvertPanel extends EasyPanel {
             String value = valueText.getText();
 
             if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)){
-                try {
-                    myZHConverterUtils.storeDataToProperties(key,value);
-                    JOptionPane.showMessageDialog(ZhConvertPanel.this, "成功插入一条词组对应信息", "提示",JOptionPane.WARNING_MESSAGE);
-                    refreshListData();
-                    textArea.append("成功插入一条词组对应信息：" + key + " <===> " + value + "\n");
-                } catch (URISyntaxException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                myZHConverterUtils.storeDataToProperties(key,value);
+                JOptionPane.showMessageDialog(ZhConvertPanel.this, "成功插入一条词组对应信息", "提示",JOptionPane.WARNING_MESSAGE);
+                refreshListData();
+                textArea.append("成功插入一条词组对应信息：" + key + " <===> " + value + "\n");
             }else{
                 JOptionPane.showMessageDialog(ZhConvertPanel.this, "键值对不能为空", "提示",JOptionPane.WARNING_MESSAGE);
             }

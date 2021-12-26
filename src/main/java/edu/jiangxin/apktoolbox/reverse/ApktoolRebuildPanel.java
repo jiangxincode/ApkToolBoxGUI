@@ -85,7 +85,7 @@ public class ApktoolRebuildPanel extends EasyPanel {
         srcTextField = new JTextField();
         srcTextField.setText(conf.getString("apktool.rebuild.src.dir"));
 
-        srcButton = new JButton("Source Dir");
+        srcButton = new JButton(bundle.getString("choose.dir.button"));
         srcButton.addMouseListener(new SrcButtonMouseAdapter());
 
         srcPanel.add(srcTextField);
@@ -100,7 +100,7 @@ public class ApktoolRebuildPanel extends EasyPanel {
         targetTextField = new JTextField();
         targetTextField.setText(conf.getString("apktool.rebuild.target.file"));
 
-        targetButton = new JButton("Save File");
+        targetButton = new JButton(bundle.getString("save.file.button"));
         targetButton.addMouseListener(new TargetButtonMouseAdapter());
 
         targetPanel.add(targetTextField);

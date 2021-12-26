@@ -6,7 +6,7 @@ import java.io.File;
 
 import org.junit.Test;
 
-import edu.jiangxin.apktoolbox.text.core.OsPatternConvert;
+import edu.jiangxin.apktoolbox.file.core.OsPatternConvert;
 
 /**
  * @author jiangxin

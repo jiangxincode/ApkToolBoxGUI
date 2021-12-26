@@ -26,19 +26,19 @@ public class ConfigPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
-        createPathPanel("Apktool Path(D:/Portable/tools/apktool_2.5.0.jar)", "https://github.com/iBotPeaches/Apktool", Constants.APKTOOL_PATH_KEY);
+        createPathPanel("Path of ApkTool(e.g.\"D:/Portable/tools/apktool_2.5.0.jar\")", "https://github.com/iBotPeaches/Apktool", Constants.APKTOOL_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createPathPanel("apksigner Path(D:/Portable/tools/apksigner.jar)", "http://apk.aq.163.com/apkpack.do#download", Constants.APKSIGNER_PATH_KEY);
+        createPathPanel("Path of ApkSigner(e.g.\"D:/Portable/tools/apksigner.jar\")", "http://apk.aq.163.com/apkpack.do#download", Constants.APKSIGNER_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createPathPanel("jd-gui Path(D:/Portable/tools/jd-gui-1.6.6.jar)", "http://jd.benow.ca", Constants.JD_GUI_PATH_KEY);
+        createPathPanel("Path of JD-GUI(e.g.\"D:/Portable/tools/jd-gui-1.6.6.jar\")", "http://jd.benow.ca", Constants.JD_GUI_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createPathPanel("jadx Path(D:/Portable/tools/jadx-1.2.0/bin/jadx-gui.bat)", "https://github.com/skylot/jadx", Constants.JADX_PATH_KEY);
+        createPathPanel("Path of JADX(e.g.\"D:/Portable/tools/jadx-1.2.0/bin/jadx-gui.bat\")", "https://github.com/skylot/jadx", Constants.JADX_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createPathPanel("AXMLPrinter Path(D:/Portable/tools/AXMLPrinter3.jar)", "https://github.com/jiangxincode/AXMLPrinter3", Constants.AXMLPRINTER_PATH_KEY);
+        createPathPanel("Path of AXMLPrinter(e.g.\"D:/Portable/tools/AXMLPrinter3.jar\")", "https://github.com/jiangxincode/AXMLPrinter3", Constants.AXMLPRINTER_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
     }
 
@@ -52,7 +52,7 @@ public class ConfigPanel extends EasyPanel {
 
         JLabel pathLabel = new JLabel(label);
 
-        JButton visitWebsiteButton = new JButton("Visit Website");
+        JButton visitWebsiteButton = new JButton(bundle.getString("download.button"));
 
         firstLinePanel.add(pathLabel);
         firstLinePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -65,7 +65,7 @@ public class ConfigPanel extends EasyPanel {
         JTextField pathTextField = new JTextField();
         pathTextField.setText(conf.getString(confKey));
 
-        JButton pathButton = new JButton("Choose");
+        JButton pathButton = new JButton(bundle.getString("choose.file.button"));
 
         secondLinePanel.add(pathTextField);
         secondLinePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));

@@ -20,9 +20,9 @@ import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.text.EncodeConvertPanel;
-import edu.jiangxin.apktoolbox.text.OsConvertPanel;
-import edu.jiangxin.apktoolbox.text.zhconvert.ZhConvertPanel;
+import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
+import edu.jiangxin.apktoolbox.file.OsConvertPanel;
+import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -69,12 +69,10 @@ public class MainFrame extends EasyFrame {
     private JMenu testMenu;
     private JMenuItem monkeyMenuItem;
 
-    private JMenu textMenu;
+    private JMenu fileMenu;
     private JMenuItem osConvertMenuItem;
     private JMenuItem encodeConvertMenuItem;
     private JMenuItem zhConvertMenuItem;
-
-    private JMenu fileMenu;
     private JMenuItem duplicateFindMenuItem;
     private JMenuItem batchRenameMenuItem;
     private JMenuItem checkSumMenuItem;
@@ -182,8 +180,6 @@ public class MainFrame extends EasyFrame {
 
         createTestMenu();
 
-        createTextMenu();
-
         createFileMenu();
 
         createConvertMenu();
@@ -235,26 +231,21 @@ public class MainFrame extends EasyFrame {
         i18nMenu.add(i18nRemoveMenuItem);
     }
 
-    private void createTextMenu() {
-        textMenu = new JMenu(bundle.getString("text.title"));
-        menuBar.add(textMenu);
-
-        osConvertMenuItem = new JMenuItem(bundle.getString("text.os.convert.title"));
-        osConvertMenuItem.addActionListener(new ChangePanelListener(OsConvertPanel.class, osConvertMenuItem.getText()));
-        textMenu.add(osConvertMenuItem);
-
-        encodeConvertMenuItem = new JMenuItem(bundle.getString("text.encode.convert.title"));
-        encodeConvertMenuItem.addActionListener(new ChangePanelListener(EncodeConvertPanel.class, encodeConvertMenuItem.getText()));
-        textMenu.add(encodeConvertMenuItem);
-
-        zhConvertMenuItem = new JMenuItem(bundle.getString("text.zh.convert.title"));
-        zhConvertMenuItem.addActionListener(new ChangePanelListener(ZhConvertPanel.class, zhConvertMenuItem.getText()));
-        textMenu.add(zhConvertMenuItem);
-    }
-
     private void createFileMenu() {
         fileMenu = new JMenu(bundle.getString("file.title"));
         menuBar.add(fileMenu);
+
+        osConvertMenuItem = new JMenuItem(bundle.getString("file.os.convert.title"));
+        osConvertMenuItem.addActionListener(new ChangePanelListener(OsConvertPanel.class, osConvertMenuItem.getText()));
+        fileMenu.add(osConvertMenuItem);
+
+        encodeConvertMenuItem = new JMenuItem(bundle.getString("file.encode.convert.title"));
+        encodeConvertMenuItem.addActionListener(new ChangePanelListener(EncodeConvertPanel.class, encodeConvertMenuItem.getText()));
+        fileMenu.add(encodeConvertMenuItem);
+
+        zhConvertMenuItem = new JMenuItem(bundle.getString("file.zh.convert.title"));
+        zhConvertMenuItem.addActionListener(new ChangePanelListener(ZhConvertPanel.class, zhConvertMenuItem.getText()));
+        fileMenu.add(zhConvertMenuItem);
 
         duplicateFindMenuItem = new JMenuItem(bundle.getString("file.duplicate.title"));
         duplicateFindMenuItem.addActionListener(new ChangePanelListener(DuplicateFindPanel.class, duplicateFindMenuItem.getText()));

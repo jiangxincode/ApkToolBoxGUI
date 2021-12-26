@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
-import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.file.core.EncoderConvert;
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 
 /**
  * @author jiangxin

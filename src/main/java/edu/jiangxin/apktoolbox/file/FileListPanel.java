@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.text;
+package edu.jiangxin.apktoolbox.file;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.collections.ListUtils;

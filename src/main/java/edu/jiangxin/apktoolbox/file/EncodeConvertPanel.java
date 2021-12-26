@@ -1,11 +1,7 @@
-package edu.jiangxin.apktoolbox.text;
+package edu.jiangxin.apktoolbox.file;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -20,9 +16,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -30,9 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import edu.jiangxin.apktoolbox.swing.extend.AutoCompleteComboBox;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.text.core.EncoderConvert;
-import edu.jiangxin.apktoolbox.text.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
+import edu.jiangxin.apktoolbox.file.core.EncoderConvert;
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
 /**

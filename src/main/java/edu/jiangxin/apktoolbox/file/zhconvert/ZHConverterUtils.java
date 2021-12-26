@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.text.zhconvert;
+package edu.jiangxin.apktoolbox.file.zhconvert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,13 +15,9 @@ public class ZHConverterUtils {
 
     private Properties charMap2 = new Properties();
 
-    private String path = System.getProperty("user.dir");
-
     public ZHConverterUtils() {
-        String dirpath = path + "/zhSimple2zhTw.properties";
-        String dirpath2 = path+"/zhTw2zhSimple.properties";
-//        initProperties("/zhSimple2zhTw.properties",charMap);
-//        initProperties("/zhTw2zhSimple.properties",charMap2);
+        String dirpath = "zhSimple2zhTw.properties";
+        String dirpath2 = "zhTw2zhSimple.properties";
         initProperties(dirpath,charMap);
         initProperties(dirpath2,charMap2);
     }
@@ -87,28 +83,22 @@ public class ZHConverterUtils {
      * 加入新词组对应
      * @param key
      * @param value
-     * @throws URISyntaxException
-     * @throws IOException
      */
-    public void storeDataToProperties(String key,String value) throws URISyntaxException, IOException {
+    public void storeDataToProperties(String key,String value) {
         charMap.setProperty(key,value);
-//        String path = System.getProperty("user.dir");
-//        System.out.println(path);
-//        System.out.println(path + "/zhSimple2zhTw.properties");
-//        String filePath = getClass().getResource("/zhSimple2zhTw.properties").toURI().getPath();
-        String filePath = path + "/zhSimple2zhTw.properties";
-        System.out.println(filePath);
-        OutputStream out = new FileOutputStream(path + "/zhSimple2zhTw.properties");
-        charMap.store(out,"加入新元素");
-        out.close();
-//
+        String filePath = "zhSimple2zhTw.properties";
+        try (OutputStream out = new FileOutputStream(filePath)) {
+            charMap.store(out, "加入新元素");
+        } catch (IOException e) {
+            logger.error("storeDataToProperties failed: IOException");
+        }
         charMap2.setProperty(value,key);
-        String filePath2 = path+"/zhTw2zhSimple.properties";
-//        String filePath2 = getClass().getResource("/zhTw2zhSimple.properties").toURI().getPath();
-        OutputStream out2 = new FileOutputStream(filePath2);
-        charMap2.store(out2,"加入新元素");
-        out2.close();
-
+        String filePath2 = "zhTw2zhSimple.properties";
+        try (OutputStream out2 = new FileOutputStream(filePath2)) {
+            charMap2.store(out2, "加入新元素");
+        } catch (IOException e) {
+            logger.error("storeDataToProperties failed: IOException");
+        }
     }
 
     public Properties getCharMap() {

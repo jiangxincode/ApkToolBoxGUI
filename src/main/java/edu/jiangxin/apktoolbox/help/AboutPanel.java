@@ -3,6 +3,7 @@
  */
 package edu.jiangxin.apktoolbox.help;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,6 +69,7 @@ public class AboutPanel extends EasyPanel {
         editorPane.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(editorPane);
+        scrollPane.setPreferredSize(new Dimension(800, 300));
 
         add(scrollPane);
     }

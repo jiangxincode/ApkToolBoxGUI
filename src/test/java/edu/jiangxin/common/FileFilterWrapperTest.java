@@ -3,13 +3,12 @@ package edu.jiangxin.common;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.jiangxin.apktoolbox.text.core.FileFilterWrapper;
+import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
 
 /**
  * @author jiangxin

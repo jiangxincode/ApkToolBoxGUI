@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.text.core;
+package edu.jiangxin.apktoolbox.file.core;
 
 import java.io.File;
 import java.io.FileInputStream;

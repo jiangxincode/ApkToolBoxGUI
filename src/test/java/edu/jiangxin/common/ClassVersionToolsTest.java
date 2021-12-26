@@ -3,7 +3,7 @@ package edu.jiangxin.common;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.jiangxin.apktoolbox.text.core.ClassVersionTools;
+import edu.jiangxin.apktoolbox.file.core.ClassVersionTools;
 
 /**
  * @author jiangxin

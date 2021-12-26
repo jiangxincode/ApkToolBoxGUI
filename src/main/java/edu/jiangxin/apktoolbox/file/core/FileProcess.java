@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.text.core;
+package edu.jiangxin.apktoolbox.file.core;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,13 +26,6 @@ public class FileProcess {
      * The size of the buffer
      */
     final static int BUFFERSIZE = 1024 * 5;
-
-    public static void main(String args[]) {
-        // copyDirectory("test1", "test2");
-        // copyFile("test1/test.txt","test2/test.txt");
-        // deleteDir("temp/temp2");
-        System.out.println(getString("README.md", "UTF-8", null, null));
-    }
 
     /**
      * 复制文件
@@ -165,35 +159,5 @@ public class FileProcess {
             }
         }
         return false;
-    }
-
-    public static String getString(String fileString, String encode, String startString, String endString) {
-        StringBuilder content = new StringBuilder();
-        String temp = null;
-        File fileFile = new File(fileString);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileFile), encode))) {
-            if (startString == null || endString == null) {
-                while ((temp = reader.readLine()) != null) {
-                    content.append(temp);
-                    content.append(System.getProperty("line.separator"));
-                }
-            }
-            while ((temp = reader.readLine()) != null) {
-                if (!temp.contains(startString)) {
-                    continue;
-                }
-                while ((temp = reader.readLine()) != null) {
-                    if (temp.contains(endString)) {
-                        continue;
-                    }
-                    content.append(temp);
-                    content.append(System.getProperty("line.separator"));
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Exception", e);
-        }
-
-        return content.toString();
     }
 }
