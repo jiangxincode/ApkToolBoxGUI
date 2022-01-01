@@ -9,11 +9,12 @@
 [![Release Version](https://img.shields.io/github/v/release/jiangxincode/ApkToolBoxGUI?include_prereleases&sort=semver)](https://github.com/jiangxincode/ApkToolBoxGUI/releases/latest)
 
 
-APKToolBoxGUI is a handy tool for programmer with user-friendly GUI. It's a collection of common tools, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
+APKToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
+
+It's a collection of common tools, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
 
 APKToolBoxGUI targets to replace most features of the tools below:
 
-* ColorPix(**All main features have been replaced**): <https://colorpix.en.softonic.com/>
 * I18NTools(**All features have been replaced**): <https://github.com/jiangxincode/I18NTools>
 * TextTools(**All main features have been replaced**): <https://github.com/jiangxincode/TextTools>
 * ApkToolBox(C#): <https://github.com/qtfreet00/ApkToolBox>
@@ -69,9 +70,25 @@ ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
 ![Timestamp](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Timestamp_01.png)
 
-#### Convert between RGB and hexadecimal
+#### Convert between color formats
+
+Convert between common color formats: `RGB`/`HEX`/`CMYK`/`HSB`(`HSV`)
+
+![ColorConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/ColorConvert_01.png)
+
+Similar Tools:
+
+* <https://www.sioe.cn/yingyong/yanse-rgb-16/>
+* <https://c.runoob.com/front-end/868/>
+* <https://www.qtccolor.com/tool/hsv.aspx>
 
 #### Color picker
+
+A useful little color picker that grabs the pixel under your mouse and transforms it into a number of different color formats. You can use the built-in magnifier to zoom in on your screen, click on a color value to copy it directly to the clipboard.
+
+Similar Tools:
+
+* ColorPix: <https://colorpix.en.softonic.com/>
 
 ![ColorPicker](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/ColorPicker_01.png)
 
@@ -83,6 +100,16 @@ ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
 ### Reverse
 
+Using third-party tools to decompile package like jar, aar, war, apk, dex and so on.
+
+| Name | Version | Website | License
+| ------ | ------ | ------ | ------ |
+| Apktool | v2.5.0 | <https://github.com/iBotPeaches/Apktool> | Apache 2.0 |
+| GD-GUI | 1.6.6 | <http://jd.benow.ca> | GNU GPL v3 |
+| JADX-GUI | v1.2.0 | <https://github.com/skylot/jadx> | Apache 2.0 |
+| ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> | Apache 2.0 |
+| AXMLPrinter3 | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3> | Apache 2.0 |
+
 ### SnapShot
 
 ### Dumpsys
@@ -93,9 +120,21 @@ ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
 
 ### I18N
 
-#### Copy or replace some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.
+#### Copy Items
 
-#### Find the longest translation of a `<string />`. Primarily for finding cuts or line breaks.
+Copy some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.
+
+#### Replace Items
+
+Replace some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.
+
+#### Delete Items
+
+Delete some `<string />` in strings.xml in the `value[.*]` directory of the [A directory]
+
+#### Find the longest
+
+Find the longest translation of a `<string />`. Primarily for finding cuts or line breaks.
 
 ## License
 
@@ -112,16 +151,6 @@ Any contributing is welcomed.
 
 * build binary: mvn clean package
 * build project documentation: mvn clean package site
-
-## Dependencies
-
-| Name | Version | Website | License
-| ------ | ------ | ------ | ------ |
-| Apktool | v2.5.0 | <https://github.com/iBotPeaches/Apktool> | Apache 2.0 |
-| GD-GUI | 1.6.6 | <http://jd.benow.ca> | GNU GPL v3 |
-| JADX-GUI | v1.2.0 | <https://github.com/skylot/jadx> | Apache 2.0 |
-| ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> | Apache 2.0 |
-| AXMLPrinter3 | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3> | Apache 2.0 |
 
 ## Contributors
 

@@ -317,7 +317,7 @@ public class ColorPickerPanel extends EasyPanel {
                 s = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
                 break;
             case HEX:
-                s = String.format("0x%02X%02X%02X", color.getBlue(), color.getGreen(), color.getRed());
+                s = String.format("0x%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
                 break;
             case HSB:
                 hsbArr = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
