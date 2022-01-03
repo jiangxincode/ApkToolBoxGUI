@@ -2,10 +2,14 @@ package edu.jiangxin.apktoolbox.file.checksum;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -180,8 +184,65 @@ public class CheckDigestPanel extends EasyPanel {
         operationPanel.add(compareResult);
     }
 
-    public void calculate() {
-        hashResult = CalculationUtil.calculate(selectedHash, selectedFile);
+    private void calculate() {
+        hashResult = calculate(selectedHash, selectedFile);
         fileSums.setText(hashResult);
+    }
+
+    private String calculate(final Hash selectedHash, final File file) {
+        String result = "";
+        try (FileInputStream fis = new FileInputStream(file)) {
+            switch (selectedHash) {
+                case MD5: {
+                    result = DigestUtils.md5Hex(fis);
+                    break;
+                }
+                case Sha1: {
+                    result = DigestUtils.sha1Hex(fis);
+                    break;
+                }
+                case Sha256: {
+                    result = DigestUtils.sha256Hex(fis);
+                    break;
+                }
+                case Sha384: {
+                    result = DigestUtils.sha384Hex(fis);
+                    break;
+                }
+                case Sha512: {
+                    result = DigestUtils.sha512Hex(fis);
+                    break;
+                }
+                default: {
+                    result = "return of the jedi";
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            logger.error("calculate, FileNotFoundException");
+        } catch (IOException e) {
+            logger.error("calculate, IOException");
+        }
+        return result;
+    }
+
+    enum Hash {
+        MD5(1, "MD5"), Sha1(2, "Sha1"), Sha256(3, "Sha256"), Sha384(4, "Sha384"), Sha512(5, "Sha512");
+
+        private int id;
+        private String name;
+
+        Hash(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

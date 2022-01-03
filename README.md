@@ -13,17 +13,6 @@ APKToolBoxGUI is a handy tool for programmer with user-friendly GUI.
 
 It's a collection of common tools, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
 
-APKToolBoxGUI targets to replace most features of the tools below:
-
-* I18NTools(**All features have been replaced**): <https://github.com/jiangxincode/I18NTools>
-* TextTools(**All main features have been replaced**): <https://github.com/jiangxincode/TextTools>
-* ApkToolBox(C#): <https://github.com/qtfreet00/ApkToolBox>
-* ApkToolBox(PowerShell): <https://github.com/jiangxincode/ApkToolBox>
-* APKDB(安卓逆向助手): <https://bitbucket.org/idoog/apkdb/downloads/>
-* APKIDE(改之理): <http://hrtsea.com/15759.html>
-* ApkToolkit: <https://www.52pojie.cn/thread-263925-1-1.html>
-* Android Killer: <https://www.52pojie.cn/thread-319641-1-1.html>
-
 ## Why you should try
 
 * Open source forever
@@ -41,7 +30,7 @@ APKToolBoxGUI targets to replace most features of the tools below:
 * 支持多文件夹、多文件批量转换
 * 支持源文件编码自动识别，自动识别采用多引擎方案，识别率高
 
-类似工具：
+Similar Tools:
 
 * 元宝文件编码转换器: <https://www.cnblogs.com/yuanbao/archive/2008/01/30/1059065.html>
 * UltraCodingSwitch: <http://www.ultrasofts.cn/>
@@ -81,6 +70,7 @@ Similar Tools:
 * <https://www.sioe.cn/yingyong/yanse-rgb-16/>
 * <https://c.runoob.com/front-end/868/>
 * <https://www.qtccolor.com/tool/hsv.aspx>
+* <http://colorizer.org/>
 
 #### Color picker
 
@@ -101,6 +91,17 @@ Similar Tools:
 ### Reverse
 
 Using third-party tools to decompile package like jar, aar, war, apk, dex and so on.
+
+Similar Tools:
+
+* I18NTools: <https://github.com/jiangxincode/I18NTools>
+* TextTools: <https://github.com/jiangxincode/TextTools>
+* ApkToolBox(C#): <https://github.com/qtfreet00/ApkToolBox>
+* ApkToolBox(PowerShell): <https://github.com/jiangxincode/ApkToolBox>
+* APKDB(安卓逆向助手): <https://bitbucket.org/idoog/apkdb/downloads/>
+* APKIDE(改之理): <http://hrtsea.com/15759.html>
+* ApkToolkit: <https://www.52pojie.cn/thread-263925-1-1.html>
+* Android Killer: <https://www.52pojie.cn/thread-319641-1-1.html>
 
 | Name | Version | Website | License
 | ------ | ------ | ------ | ------ |

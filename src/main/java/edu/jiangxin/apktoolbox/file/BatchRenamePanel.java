@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
 
+//https://www.zhihu.com/question/50890909
 public class BatchRenamePanel extends EasyPanel {
     private JPanel sourcePanel;
 
@@ -417,51 +418,52 @@ public class BatchRenamePanel extends EasyPanel {
                 }
             }
         }
+    }
 
-        private void renameSingleFile(File file) {
-            String sourceFile = FilenameUtils.normalizeNoEndSeparator(file.getAbsolutePath());
-            String sourceFileWithoutDir = FilenameUtils.getName(sourceFile);
-            String targetFileWithoutDir = sourceFileWithoutDir;
-            String sourceDir = FilenameUtils.normalizeNoEndSeparator(sourceTextField.getText());
-            String targetDir = FilenameUtils.normalizeNoEndSeparator(targetTextField.getText());
-            String middleStr = StringUtils.substringBetween(sourceFile, sourceDir, sourceFileWithoutDir);
-            if (ruleRadioButton1.isSelected()) {
-                targetFileWithoutDir = sourceFileWithoutDir;
-            } else if (ruleRadioButton2.isSelected()) {
+    private void renameSingleFile(File file) {
+        String sourceFile = FilenameUtils.normalizeNoEndSeparator(file.getAbsolutePath());
+        String sourceFileName = FilenameUtils.getName(sourceFile);
+        String targetFileName = sourceFileName;
+        String sourceDir = FilenameUtils.normalizeNoEndSeparator(sourceTextField.getText());
+        String targetDir = FilenameUtils.normalizeNoEndSeparator(targetTextField.getText());
+        String middleStr = StringUtils.substringBetween(sourceFile, sourceDir, sourceFileName);
+        if (ruleRadioButton1.isSelected()) {
+        } else if (ruleRadioButton2.isSelected()) {
 
-            } else if (ruleRadioButton3.isSelected()) {
+        } else if (ruleRadioButton3.isSelected()) {
 
-            } else if (ruleRadioButton4.isSelected()) {
+        } else if (ruleRadioButton4.isSelected()) {
 
-            } else if (ruleRadioButton5.isSelected()) {
+        } else if (ruleRadioButton5.isSelected()) {
+        } else if (ruleRadioButton6.isSelected()) {
+            targetFileName = StringUtils.replace(sourceFileName, textField61.getText(), textField62.getText());
+        } else {
+            logger.error("ruleRadioButton select status error");
+            return;
+        }
+        String targetFile = null;
+        if (hierarchyRadioButton1.isSelected()) {
+            targetFile = targetDir + File.separatorChar + targetFileName;
+        } else if (hierarchyRadioButton2.isSelected()) {
+            targetFile = targetDir + File.separatorChar + middleStr + targetFileName;
+        } else {
+            logger.error("hierarchyRadioButton select status error");
+            return;
+        }
+        try {
+            FileUtils.copyFile(new File(sourceFile), new File(targetFile));
+        } catch (IOException e) {
+            logger.error("copy file failed: IOException. current: " + sourceFile);
+        }
+        if (othersRadioButton1.isSelected()) {
 
-            } else if (ruleRadioButton6.isSelected()) {
-
-            } else {
-                logger.error("ruleRadioButton select status error");
-            }
-            String targetFile = null;
-            if (hierarchyRadioButton1.isSelected()) {
-                targetFile = targetDir + File.separatorChar + targetFileWithoutDir;
-            } else if (hierarchyRadioButton2.isSelected()) {
-                targetFile = targetDir + File.separatorChar + middleStr + targetFileWithoutDir;
-            } else {
-                logger.error("hierarchyRadioButton select status error");
-            }
-            try {
-                FileUtils.copyFile(new File(sourceFile), new File(targetFile));
-            } catch (IOException e) {
-                logger.error("copy file failed: IOException. current: " + sourceFile);
-            }
-            if (othersRadioButton1.isSelected()) {
-
-            } else if (othersRadioButton2.isSelected()) {
-                logger.info("delete: " + sourceFile);
-            } else if (othersRadioButton3.isSelected()) {
-                logger.info("delete: " + sourceFile);
-            } else {
-                logger.error("othersRadioButton select status error");
-            }
+        } else if (othersRadioButton2.isSelected()) {
+            logger.info("delete: " + sourceFile);
+        } else if (othersRadioButton3.isSelected()) {
+            logger.info("delete: " + sourceFile);
+        } else {
+            logger.error("othersRadioButton select status error");
+            return;
         }
     }
 }
