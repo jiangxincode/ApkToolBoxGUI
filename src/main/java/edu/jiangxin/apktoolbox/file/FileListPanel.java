@@ -10,6 +10,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileListPanel extends JPanel {
@@ -40,7 +41,14 @@ public class FileListPanel extends JPanel {
     }
 
     public List<File> getFileList() {
-        return fileList.getSelectedValuesList();
+        List<File> fileList = new ArrayList<>();
+        Object[] objectArray = fileListModel.toArray();
+        for (Object obj : objectArray) {
+            if (obj instanceof File) {
+                fileList.add((File) obj);
+            }
+        }
+        return fileList;
     }
 
     private void initUI() {

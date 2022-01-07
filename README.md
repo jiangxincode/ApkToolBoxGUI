@@ -51,7 +51,12 @@ Similar Tools:
 
 #### Find duplicated files(Not Finished)
 
-ref: <https://github.com/vivekbhalla/DuplicateFileFinder>
+![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_01.png)
+![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_02.png)
+
+Similar Tools:
+
+RenameIt: <http://www.comicer.com/stronghorse/>
 
 ### Convert
 
