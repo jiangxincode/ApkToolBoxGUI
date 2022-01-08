@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.jiangxin.apktoolbox</groupId>
     <artifactId>APKToolBoxGUI</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>jiangxincode-github</sonar.organization>
