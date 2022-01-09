@@ -1,10 +1,12 @@
 package edu.jiangxin.apktoolbox.file.core;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ public class FileFilterWrapper {
         if (file.isDirectory()) {
             files.addAll(FileUtils.listFiles(file, extensions, recursive));
         } else if (file.isFile()) {
+            files.addAll(FileUtils.listFiles(file.getParentFile(), extensions, recursive));
             String fileName = file.getName();
             if (ArrayUtils.isEmpty(extensions)) {
                 files.add(file);
@@ -40,5 +43,13 @@ public class FileFilterWrapper {
             }
         }
         return files;
+    }
+
+    public static void main(String[] args) {
+        File file = new File("D:\\Code\\temp\\test\\本地音乐\\BeatIt2.mp3");
+        Collection<File> files = FileUtils.listFiles(file, new String[]{"mp3"}, true);
+        for (File tmp : files) {
+            System.out.println(tmp.getAbsolutePath());
+        }
     }
 }

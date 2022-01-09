@@ -1,6 +1,15 @@
 package edu.jiangxin.apktoolbox.file;
 
-import java.awt.HeadlessException;
+import edu.jiangxin.apktoolbox.file.core.EncoderConvert;
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.swing.extend.AutoCompleteComboBox;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,23 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import org.apache.commons.lang3.StringUtils;
-
-import edu.jiangxin.apktoolbox.swing.extend.AutoCompleteComboBox;
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.file.core.EncoderConvert;
-import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
-import edu.jiangxin.apktoolbox.utils.Constants;
 
 /**
  * @author jiangxin
@@ -158,7 +150,7 @@ public class EncodeConvertPanel extends EasyPanel {
                     if (StringUtils.isNotEmpty(suffixTextField.getText())) {
                         extensions = suffixTextField.getText().split(",");
                     }
-                    fileList.addAll(FileFilterWrapper.list(file, extensions, recursiveCheckBox.isSelected()));
+                    fileList.addAll(FileUtils.listFiles(file, extensions, recursiveCheckBox.isSelected()));
                 }
                 Set<File> fileSet = new TreeSet<>(fileList);
                 fileList.clear();

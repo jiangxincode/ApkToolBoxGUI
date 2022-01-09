@@ -1,9 +1,9 @@
 package edu.jiangxin.apktoolbox.file;
 
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.file.core.OsPatternConvert;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -117,7 +117,7 @@ public class OsConvertPanel extends EasyPanel {
                 if (StringUtils.isNotEmpty(suffixTextField.getText())) {
                     extensions = suffixTextField.getText().split(",");
                 }
-                fileList.addAll(FileFilterWrapper.list(file, extensions, recursiveCheckBox.isSelected()));
+                fileList.addAll(FileUtils.listFiles(file, extensions, recursiveCheckBox.isSelected()));
             }
             Set<File> fileSet = new TreeSet<>(fileList);
             fileList.clear();

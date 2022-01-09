@@ -9,7 +9,7 @@ import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
-import edu.jiangxin.apktoolbox.file.duplicate.DuplicateFindPanel;
+import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
 import edu.jiangxin.apktoolbox.file.checksum.CheckDigestPanel;
 import edu.jiangxin.apktoolbox.help.*;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
@@ -248,7 +248,7 @@ public class MainFrame extends EasyFrame {
         fileMenu.add(zhConvertMenuItem);
 
         duplicateFindMenuItem = new JMenuItem(bundle.getString("file.duplicate.title"));
-        duplicateFindMenuItem.addActionListener(new ChangePanelListener(DuplicateFindPanel.class, duplicateFindMenuItem.getText()));
+        duplicateFindMenuItem.addActionListener(new ChangePanelListener(DuplicateSearchPanel.class, duplicateFindMenuItem.getText()));
         fileMenu.add(duplicateFindMenuItem);
 
         batchRenameMenuItem = new JMenuItem(bundle.getString("file.batch.rename.title"));

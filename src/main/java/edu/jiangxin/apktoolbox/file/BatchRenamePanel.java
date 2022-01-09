@@ -1,6 +1,5 @@
 package edu.jiangxin.apktoolbox.file;
 
-import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
 import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -14,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -401,7 +401,8 @@ public class BatchRenamePanel extends EasyPanel {
             if (StringUtils.isNotEmpty(suffixTextField.getText())) {
                 extensions = suffixTextField.getText().split(",");
             }
-            Set<File> fileSet = new TreeSet<>(FileFilterWrapper.list(sourceFile, extensions, recursiveCheckBox.isSelected()));
+            Collection<File> fileCollection = FileUtils.listFiles(sourceFile, extensions, recursiveCheckBox.isSelected());
+            Set<File> fileSet = new TreeSet<>(fileCollection);
             if (fileSet.isEmpty()) {
                 JOptionPane.showMessageDialog(BatchRenamePanel.this, "fileSet is empty", "ERROR",
                         JOptionPane.ERROR_MESSAGE);

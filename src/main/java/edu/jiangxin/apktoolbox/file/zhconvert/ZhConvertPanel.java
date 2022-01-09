@@ -1,9 +1,8 @@
 package edu.jiangxin.apktoolbox.file.zhconvert;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.file.FileListPanel;
-import edu.jiangxin.apktoolbox.file.core.FileFilterWrapper;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ZhConvertPanel extends EasyPanel {
     private JPanel northPanel;
@@ -166,7 +164,7 @@ public class ZhConvertPanel extends EasyPanel {
                     if (StringUtils.isNotEmpty(suffixTextField.getText())) {
                         extensions = suffixTextField.getText().split(",");
                     }
-                    fileList.addAll(FileFilterWrapper.list(file, extensions, recursiveCheckBox.isSelected()));
+                    fileList.addAll(FileUtils.listFiles(file, extensions, recursiveCheckBox.isSelected()));
                 }
                 Set<File> fileSet = new TreeSet<>(fileList);
                 fileList.clear();

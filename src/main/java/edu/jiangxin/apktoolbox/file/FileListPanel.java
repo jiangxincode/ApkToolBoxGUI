@@ -72,7 +72,7 @@ public class FileListPanel extends JPanel {
         scrollPane.setPreferredSize(new Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));
 
         leftPanel = new JPanel();
-        leftPanel.setBorder(BorderFactory.createTitledBorder("文件列表"));
+        leftPanel.setBorder(BorderFactory.createTitledBorder("File List"));
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setTransferHandler(new FileListTransferHandler());
         leftPanel.add(scrollPane);

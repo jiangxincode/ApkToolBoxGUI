@@ -8,9 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,7 +109,7 @@ public class EncoderConvert {
         if (StringUtils.isNotEmpty(suffix)) {
             extensions = suffix.split(",");
         }
-        List<File> files = new FileFilterWrapper().list(new File(srcDirString), extensions, true);
+        Collection<File> files = FileUtils.listFiles(new File(srcDirString), extensions, true);
         Iterator<File> it = files.iterator();
         while (it.hasNext()) {
             File tempFile = it.next();

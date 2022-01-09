@@ -8,9 +8,11 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -257,7 +259,7 @@ public class OsPatternConvert {
         if (StringUtils.isNotEmpty(suffix)) {
             extensions = suffix.split(",");
         }
-        List<File> arrayList = FileFilterWrapper.list(srcDirFile, extensions, true);
+        Collection<File> arrayList = FileUtils.listFiles(srcDirFile, extensions, true);
         Iterator<File> it = arrayList.iterator();
         while (it.hasNext()) {
             File srcFileFile = it.next();
