@@ -4,9 +4,19 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
+import javax.swing.text.DateFormatter;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+import static java.util.Calendar.*;
 
 public class TimeConvertPanel extends EasyPanel {
 
@@ -48,6 +58,30 @@ public class TimeConvertPanel extends EasyPanel {
 
     private JTextField currentTimeTextField;
 
+    private JButton pauseButton;
+
+    private boolean isPaused;
+
+    private JPanel commentPanel;
+
+    private JPanel timezonePanel;
+
+    private JFormattedTextField inTimeTextField;
+    private JComboBox inTimezoneComboBox;
+    private JComboBox outTimezoneComboBox;
+    private JTextField outTimeTextField;
+
+    private static final String SDF_PATTERN = "yyyy-MM-dd HH:mm";
+    private final SimpleDateFormat SDF = new SimpleDateFormat(SDF_PATTERN);
+    private final DateFormatter dtFormatter = new DateFormatter(SDF);
+
+    final static String[] sortedTimeZones;
+    static {
+        String[] t = TimeZone.getAvailableIDs();
+        sortedTimeZones = Arrays.copyOf(t, t.length);
+        Arrays.sort(sortedTimeZones, String.CASE_INSENSITIVE_ORDER);
+    }
+
     public TimeConvertPanel() throws HeadlessException {
         super();
         initUI();
@@ -67,20 +101,14 @@ public class TimeConvertPanel extends EasyPanel {
 
         createCurrentPanel();
         add(currentPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        new Thread(() -> {
-            while (true) {
-                long currentTimeStamp = System.currentTimeMillis() / 1000;
-                currentTimestampTextField.setText(String.valueOf(currentTimeStamp));
-                currentTimeTextField.setText(DateTransform.timestampToString(String.valueOf(currentTimeStamp)));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    logger.error("InterruptedException occurred");
-                }
-            }
+        createCommentPanel();
+        add(commentPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        }).start();
+        createTimezonePanel();
+        add(timezonePanel);
     }
 
     private void createConvert1Panel() {
@@ -155,23 +183,126 @@ public class TimeConvertPanel extends EasyPanel {
         currentPanel.setLayout(boxLayout);
 
         currentTimestampLabel = new JLabel("当前时间戳：");
-        currentTimestampLabel.setFont(new Font("Serif", Font.BOLD, 22));
         currentPanel.add(currentTimestampLabel);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         currentTimestampTextField = new JTextField();
-        currentTimestampTextField.setFont(new Font("Serif", Font.BOLD, 22));
         currentPanel.add(currentTimestampTextField);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         currentTimeTitleLabel = new JLabel("当前时间：");
-        currentTimeTitleLabel.setFont(new Font("Serif", Font.BOLD, 22));
         currentPanel.add(currentTimeTitleLabel);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         currentTimeTextField = new JTextField();
-        currentTimeTextField.setFont(new Font("Serif", Font.BOLD, 22));
         currentPanel.add(currentTimeTextField);
+        currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        pauseButton = new JButton("Pause");
+        currentPanel.add(pauseButton);
+        pauseButton.addActionListener(e -> {
+            if (isPaused) {
+                pauseButton.setText("Pause");
+                isPaused = false;
+            } else {
+                pauseButton.setText("Resume");
+                isPaused = true;
+            }
+        });
+
+        new Thread(() -> {
+            while (true) {
+                long currentTimeStamp = System.currentTimeMillis() / 1000;
+                if (!isPaused) {
+                    currentTimestampTextField.setText(String.valueOf(currentTimeStamp));
+                    currentTimeTextField.setText(DateTransform.timestampToString(String.valueOf(currentTimeStamp)));
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    logger.error("InterruptedException occurred");
+                }
+            }
+        }).start();
+    }
+
+    private void createCommentPanel() {
+        commentPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(commentPanel, BoxLayout.X_AXIS);
+        commentPanel.setLayout(boxLayout);
+
+        JTextArea textArea1 = new JTextArea("1s = 1000ms");
+        textArea1.setEditable(false);
+        JTextArea textArea2 = new JTextArea("1ms = 1000μs");
+        textArea2.setEditable(false);
+        JTextArea textArea3 = new JTextArea("1μs = 1000ns");
+        textArea3.setEditable(false);
+        JTextArea textArea4 = new JTextArea("1ns = 1000ps");
+        textArea4.setEditable(false);
+
+        commentPanel.add(textArea1);
+        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        commentPanel.add(textArea2);
+        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        commentPanel.add(textArea3);
+        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        commentPanel.add(textArea4);
+        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+    }
+
+    private void createTimezonePanel() {
+        timezonePanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(timezonePanel, BoxLayout.X_AXIS);
+        timezonePanel.setLayout(boxLayout);
+
+        JLabel label1 = new JLabel("From Time: ");
+        label1.setLabelFor(inTimeTextField);
+        timezonePanel.add(label1);
+
+        inTimeTextField = new JFormattedTextField(dtFormatter);
+        inTimeTextField.setToolTipText("Enter time (" + SDF_PATTERN + "): ");
+        inTimeTextField.setValue(new Date());
+        inTimeTextField.addPropertyChangeListener("value", event -> update());
+
+        JLabel label2 = new JLabel("From Timezone: ");
+        label2.setLabelFor(inTimezoneComboBox);
+        inTimezoneComboBox = new JComboBox(sortedTimeZones);
+        inTimezoneComboBox.setPreferredSize(new Dimension(70, 0));
+        inTimezoneComboBox.addActionListener(e -> update());
+
+        JLabel label3 = new JLabel("To Timezone: ");
+        label3.setLabelFor(outTimezoneComboBox);
+        outTimezoneComboBox = new JComboBox(sortedTimeZones);
+        outTimezoneComboBox.setPreferredSize(new Dimension(70, 0));
+        outTimezoneComboBox.addActionListener(e -> update());
+
+        JLabel label4 = new JLabel("To Time: ");
+        label4.setLabelFor(outTimeTextField);
+        outTimeTextField = new JTextField(10);
+
+        JButton swapButton = new JButton("Swap");
+        swapButton.addActionListener(e -> {
+            final String src = (String) inTimezoneComboBox.getSelectedItem();
+            inTimezoneComboBox.setSelectedItem(outTimezoneComboBox.getSelectedItem());
+            outTimezoneComboBox.setSelectedItem(src);
+        });
+
+        timezonePanel.add(label1);
+        timezonePanel.add(inTimeTextField);
+        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timezonePanel.add(label2);
+        timezonePanel.add(inTimezoneComboBox);
+        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timezonePanel.add(label3);
+        timezonePanel.add(outTimezoneComboBox);
+        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timezonePanel.add(label4);
+        timezonePanel.add(outTimeTextField);
+        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timezonePanel.add(swapButton);
     }
 
     private final class Convert1ButtonActionListener implements ActionListener {
@@ -182,7 +313,7 @@ public class TimeConvertPanel extends EasyPanel {
             String result = "";
             if (index.equals(0)) {
                 result = DateTransform.timestampToString(timestamp);
-            }else if (index.equals(1)) {
+            } else if (index.equals(1)) {
                 result = DateTransform.milTimestampToString(timestamp);
             }
             time1TextField.setText(result);
@@ -197,10 +328,44 @@ public class TimeConvertPanel extends EasyPanel {
             String result = "";
             if (index.equals(0)) {
                 result = DateTransform.stringToTimestamp(string);
-            }else if (index.equals(1)) {
+            } else if (index.equals(1)) {
                 result = DateTransform.stringToMilTimestamp(string);
             }
             timestamp2TextField.setText(result);
         }
+    }
+
+    private static Date getDate(final int hour, final int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(HOUR_OF_DAY, hour);
+        cal.set(MINUTE, minute);
+        return cal.getTime();
+    }
+
+
+    private void update() {
+        // Get the timezone objects:
+        final TimeZone sourceTimezone = TimeZone.getTimeZone(
+                (String) inTimezoneComboBox.getSelectedItem());
+        final TimeZone destTimezone = TimeZone.getTimeZone(
+                (String) outTimezoneComboBox.getSelectedItem());
+
+        // Get the entered date:
+        Date sourceDate = (Date) inTimeTextField.getValue();
+
+        // Compute the source:
+        Calendar localTime = Calendar.getInstance();
+        localTime.setTime(sourceDate);
+        Calendar sourceTime = Calendar.getInstance(sourceTimezone);
+        sourceTime.set(localTime.get(YEAR),
+                localTime.get(MONTH),
+                localTime.get(DATE),
+                localTime.get(HOUR_OF_DAY),
+                localTime.get(MINUTE));
+
+        // Destination:
+        SimpleDateFormat sdf = (SimpleDateFormat) SDF.clone();
+        sdf.setTimeZone(destTimezone);
+        outTimeTextField.setText(sdf.format(sourceTime.getTime()));
     }
 }
