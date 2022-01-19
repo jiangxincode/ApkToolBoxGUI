@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -53,6 +54,8 @@ public class DuplicateSearchPanel extends EasyPanel {
 
     private JMenuItem openDirMenuItem;
     private JMenuItem deleteFileMenuItem;
+    private JMenuItem deleteFilesInSameDirMenuItem;
+    private JMenuItem deleteFilesInSameDirRecursiveMenuItem;
 
     private Thread searchThread;
 
@@ -221,13 +224,24 @@ public class DuplicateSearchPanel extends EasyPanel {
             }
             if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                 JPopupMenu popupmenu = new JPopupMenu();
-                openDirMenuItem = new JMenuItem("Open parent folder of this file");
-                deleteFileMenuItem = new JMenuItem("Delete this file");
                 MyMenuActionListener menuActionListener = new MyMenuActionListener();
+
+                openDirMenuItem = new JMenuItem("Open parent folder of this file");
                 openDirMenuItem.addActionListener(menuActionListener);
-                deleteFileMenuItem.addActionListener(menuActionListener);
                 popupmenu.add(openDirMenuItem);
+
+                deleteFileMenuItem = new JMenuItem("Delete this duplicate file");
+                deleteFileMenuItem.addActionListener(menuActionListener);
                 popupmenu.add(deleteFileMenuItem);
+
+                deleteFilesInSameDirMenuItem = new JMenuItem("Delete these duplicate files in the same directory");
+                deleteFilesInSameDirMenuItem.addActionListener(menuActionListener);
+                popupmenu.add(deleteFilesInSameDirMenuItem);
+
+                deleteFilesInSameDirRecursiveMenuItem = new JMenuItem("Delete these duplicate files in the same directory(Recursive)");
+                deleteFilesInSameDirRecursiveMenuItem.addActionListener(menuActionListener);
+                popupmenu.add(deleteFilesInSameDirRecursiveMenuItem);
+
                 popupmenu.show(e.getComponent(), e.getX(), e.getY());
             }
         }
@@ -259,11 +273,47 @@ public class DuplicateSearchPanel extends EasyPanel {
                     if (!selectedFile.equals(file)) {
                         continue;
                     }
-                    resultTableModel.removeRow(rowIndex);
+                    files.remove(file);
                     boolean isSuccessful = file.delete();
                     logger.info("delete file: " + file.getAbsolutePath() + ", result: " + isSuccessful);
                     break;
                 }
+                resultTableModel.setRowCount(0);
+                showResult();
+            } else if (source.equals(deleteFilesInSameDirMenuItem)) {
+                int rowIndex = resultTable.getSelectedRow();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Path").getModelIndex()).toString();
+                for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
+                    List<File> duplicateFileGroup = entry.getValue();
+                    for (File duplicateFile : duplicateFileGroup) {
+                        String parentPathTmp = duplicateFile.getParent();
+                        if (Objects.equals(parentPath, parentPathTmp)) {
+                            duplicateFileGroup.remove(duplicateFile);
+                            boolean isSuccessful = duplicateFile.delete();
+                            logger.info("delete file: " + duplicateFile.getAbsolutePath() + ", result: " + isSuccessful);
+                            break;
+                        }
+                    }
+                }
+                resultTableModel.setRowCount(0);
+                showResult();
+            } else if (source.equals(deleteFilesInSameDirRecursiveMenuItem)) {
+                int rowIndex = resultTable.getSelectedRow();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Path").getModelIndex()).toString();
+                for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
+                    List<File> duplicateFileGroup = entry.getValue();
+                    for (File duplicateFile : duplicateFileGroup) {
+                        String parentPathTmp = duplicateFile.getParent();
+                        if (Objects.equals(parentPath, parentPathTmp) || FilenameUtils.directoryContains(parentPath, parentPathTmp)) {
+                            duplicateFileGroup.remove(duplicateFile);
+                            boolean isSuccessful = duplicateFile.delete();
+                            logger.info("delete file: " + duplicateFile.getAbsolutePath() + ", result: " + isSuccessful);
+                            break;
+                        }
+                    }
+                }
+                resultTableModel.setRowCount(0);
+                showResult();
             } else {
                 logger.error("invalid source");
             }
