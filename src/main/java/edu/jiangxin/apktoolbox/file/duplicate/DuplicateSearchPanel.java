@@ -1,15 +1,16 @@
 package edu.jiangxin.apktoolbox.file.duplicate;
 
+import edu.jiangxin.apktoolbox.convert.time.DateTransform;
 import edu.jiangxin.apktoolbox.file.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.FileUtilsEx;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,10 +24,6 @@ import java.util.*;
 public class DuplicateSearchPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
-
-    private static final Vector<String> COLUMN_NAMES;
-
-    private static final Vector<Color> RESULT_TABLE_BACKGROUND;
 
     private JTabbedPane tabbedPane;
 
@@ -60,19 +57,6 @@ public class DuplicateSearchPanel extends EasyPanel {
     private Thread searchThread;
 
     final private Map<String, List<File>> duplicateFileGroupMap = new HashMap<>();
-
-    static {
-        COLUMN_NAMES = new Vector<>();
-        COLUMN_NAMES.add("GroupNo");
-        COLUMN_NAMES.add("Path");
-        COLUMN_NAMES.add("Name");
-
-        RESULT_TABLE_BACKGROUND = new Vector<>();
-        RESULT_TABLE_BACKGROUND.add(new Color(255, 182, 193, 30));
-        RESULT_TABLE_BACKGROUND.add(new Color(123, 104, 238, 30));
-        RESULT_TABLE_BACKGROUND.add(new Color(127, 255, 170, 30));
-        RESULT_TABLE_BACKGROUND.add(new Color(255, 255, 0, 30));
-    }
 
     public DuplicateSearchPanel() {
         super();
@@ -159,13 +143,13 @@ public class DuplicateSearchPanel extends EasyPanel {
         resultPanel = new JPanel();
         resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
 
-        resultTableModel = new ResultTableModel(new Vector<>(), COLUMN_NAMES);
+        resultTableModel = new DuplicateFilesTableModel(new Vector<>(), DuplicateFilesConstants.COLUMN_NAMES);
         resultTable = new JTable(resultTableModel);
 
-        resultTable.setDefaultRenderer(Vector.class, new MyTableCellRenderer());
+        resultTable.setDefaultRenderer(Vector.class, new DuplicateFilesTableCellRenderer());
 
         for (int i = 0; i < resultTable.getColumnCount(); i++) {
-            resultTable.getColumn(resultTable.getColumnName(i)).setCellRenderer(new MyTableCellRenderer());
+            resultTable.getColumn(resultTable.getColumnName(i)).setCellRenderer(new DuplicateFilesTableCellRenderer());
         }
 
         resultTable.addMouseListener(new MyMouseListener());
@@ -176,7 +160,7 @@ public class DuplicateSearchPanel extends EasyPanel {
         resultPanel.add(scrollPane);
     }
 
-    private String getComparedKey(File file) {
+    public String getComparedKey(File file) {
         StringBuilder sb = new StringBuilder();
         if (isSizeChecked.isSelected()) {
             sb.append("[Size][");
@@ -253,7 +237,7 @@ public class DuplicateSearchPanel extends EasyPanel {
             Object source = actionEvent.getSource();
             if (source.equals(openDirMenuItem)) {
                 int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Path").getModelIndex()).toString();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
                 File parent = new File(parentPath);
                 if (parent.isDirectory()) {
                     try {
@@ -264,8 +248,8 @@ public class DuplicateSearchPanel extends EasyPanel {
                 }
             } else if (source.equals(deleteFileMenuItem)) {
                 int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Path").getModelIndex()).toString();
-                String name = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Name").getModelIndex()).toString();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
+                String name = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_NAME).getModelIndex()).toString();
                 File selectedFile = new File(parentPath, name);
                 String key = getComparedKey(selectedFile);
                 List<File> files = duplicateFileGroupMap.get(key);
@@ -282,7 +266,7 @@ public class DuplicateSearchPanel extends EasyPanel {
                 showResult();
             } else if (source.equals(deleteFilesInSameDirMenuItem)) {
                 int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Path").getModelIndex()).toString();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
                 for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
                     List<File> duplicateFileGroup = entry.getValue();
                     for (File duplicateFile : duplicateFileGroup) {
@@ -299,7 +283,7 @@ public class DuplicateSearchPanel extends EasyPanel {
                 showResult();
             } else if (source.equals(deleteFilesInSameDirRecursiveMenuItem)) {
                 int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn("Path").getModelIndex()).toString();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
                 for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
                     List<File> duplicateFileGroup = entry.getValue();
                     for (File duplicateFile : duplicateFileGroup) {
@@ -325,7 +309,11 @@ public class DuplicateSearchPanel extends EasyPanel {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
             if (source.equals(searchButton)) {
-                searchThread = new SearchThread();
+                String[] extensions = null;
+                if (StringUtils.isNotEmpty(suffixTextField.getText())) {
+                    extensions = suffixTextField.getText().split(",");
+                }
+                searchThread = new SearchThread(extensions, isRecursiveSearched.isSelected(), isHiddenFileSearched.isSelected(), duplicateFileGroupMap);
                 searchThread.start();
             } else if (source.equals(cancelButton)) {
                 if (searchThread.isAlive()) {
@@ -346,10 +334,7 @@ public class DuplicateSearchPanel extends EasyPanel {
                 }
                 groupIndex++;
                 for (File duplicateFile : duplicateFileGroup) {
-                    Vector<Object> rowData = new Vector<>();
-                    rowData.add(groupIndex);
-                    rowData.add(duplicateFile.getParent());
-                    rowData.add(duplicateFile.getName());
+                    Vector<Object> rowData = getRowVector(groupIndex, duplicateFile);
                     resultTableModel.addRow(rowData);
                 }
             }
@@ -357,7 +342,30 @@ public class DuplicateSearchPanel extends EasyPanel {
         });
     }
 
+    private Vector<Object> getRowVector(int groupIndex, File file) {
+        Vector<Object> rowData = new Vector<>();
+        rowData.add(groupIndex);
+        rowData.add(file.getParent());
+        rowData.add(file.getName());
+        rowData.add(FilenameUtils.getExtension(file.getName()));
+        rowData.add(FileUtilsEx.byteCountToDisplaySize(file.length()));
+        rowData.add(DateTransform.milTimestampToString(String.valueOf(file.lastModified())));
+        return rowData;
+    }
+
     class SearchThread extends Thread {
+        private String[] extensions;
+        private boolean isRecursiveSearched;
+        private boolean isHiddenFileSearched;
+        private Map<String, List<File>> duplicateFileGroupMap;
+
+        public SearchThread(String[] extensions, boolean isRecursiveSearched, boolean isHiddenFileSearched, Map<String, List<File>> duplicateFileGroupMap) {
+            super();
+            this.extensions = extensions;
+            this.isRecursiveSearched = isRecursiveSearched;
+            this.isHiddenFileSearched = isHiddenFileSearched;
+            this.duplicateFileGroupMap = duplicateFileGroupMap;
+        }
 
         @Override
         public void run() {
@@ -367,18 +375,14 @@ public class DuplicateSearchPanel extends EasyPanel {
 
             Set<File> fileSet = new TreeSet<>(fileList);
             for (File file : fileList) {
-                String[] extensions = null;
-                if (StringUtils.isNotEmpty(suffixTextField.getText())) {
-                    extensions = suffixTextField.getText().split(",");
-                }
-                fileSet.addAll(FileUtils.listFiles(file, extensions, isRecursiveSearched.isSelected()));
+                fileSet.addAll(FileUtils.listFiles(file, extensions, isRecursiveSearched));
             }
 
             for (File file : fileSet) {
                 if (Thread.currentThread().isInterrupted()) {
                     break;
                 }
-                if (file.isHidden() && !isHiddenFileSearched.isSelected()) {
+                if (file.isHidden() && !isHiddenFileSearched) {
                     continue;
                 }
                 String hash = getComparedKey(file);
@@ -386,29 +390,6 @@ public class DuplicateSearchPanel extends EasyPanel {
                 list.add(file);
             }
             showResult();
-        }
-    }
-
-    static class MyTableCellRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            int groupNo = (Integer) table.getValueAt(row, 0);
-            setBackground(RESULT_TABLE_BACKGROUND.get(groupNo % RESULT_TABLE_BACKGROUND.size()));
-            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        }
-    }
-
-    static class ResultTableModel extends DefaultTableModel {
-        public ResultTableModel(Vector data, Vector columnNames) {
-            super(data, columnNames);
-        }
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            if (column == COLUMN_NAMES.indexOf("GroupNo")) {
-                return false;
-            }
-            return super.isCellEditable(row, column);
         }
     }
 }
