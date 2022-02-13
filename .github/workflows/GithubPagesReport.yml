@@ -28,13 +28,13 @@ jobs:
            restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: |
-          git config --global user.name "jiangxincode"
-          git config --global user.email "jiangxinnju@163.com"
           mvn install:install-file -DgroupId="com.harukizaemon.simian" -DartifactId="simian" -Dversion="2.5.10" -Dpackaging=”jar” -Dfile="lib/simian-2.5.10.jar"
           mvn clean package site
       - name: Push to github pages
         run: |
           cd ./target/site
+          git config --global user.name "jiangxincode"
+          git config --global user.email "jiangxinnju@163.com"
           git init
           git add .
           git commit -m "update gh-pages"
