@@ -1,1 +1,81 @@
-init
+#0
+src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:59: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 59 is not released after line 59.
+  57.   
+  58.           // TODO see http://akini.mbnet.fi/java/unicodereader/
+  59. >         try (BufferedReader reader = new BufferedReader(
+  60.                   new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
+  61.                   BufferedWriter writer = new BufferedWriter(
+
+#1
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:504: error: Resource Leak
+  resource of type `java.io.InputStreamReader` acquired by call to `InputStreamReader(...)` at line 493 is not released after line 504.
+**Note**: potential exception at line 495
+  502.               reader.close();
+  503.               process.getOutputStream().close(); // 不要忘记了一定要关
+  504. >         } catch (Exception e) {
+  505.               logger.error("获取设备列表异常", e);
+  506.           }
+
+#2
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:504: error: Resource Leak
+  resource of type `java.lang.Process` acquired to `process` by call to `exec(...)` at line 492 is not released after line 504.
+**Note**: potential exception at line 495
+  502.               reader.close();
+  503.               process.getOutputStream().close(); // 不要忘记了一定要关
+  504. >         } catch (Exception e) {
+  505.               logger.error("获取设备列表异常", e);
+  506.           }
+
+#3
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:531: error: Resource Leak
+  resource of type `java.io.InputStreamReader` acquired by call to `InputStreamReader(...)` at line 521 is not released after line 531.
+**Note**: potential exception at line 523
+  529.               reader.close();
+  530.               process.getOutputStream().close(); // 不要忘记了一定要关
+  531. >         } catch (Exception e) {
+  532.               logger.error("获取应用程序列表异常", e);
+  533.           }
+
+#4
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:531: error: Resource Leak
+  resource of type `java.lang.Process` acquired to `process` by call to `exec(...)` at line 520 is not released after line 531.
+**Note**: potential exception at line 523
+  529.               reader.close();
+  530.               process.getOutputStream().close(); // 不要忘记了一定要关
+  531. >         } catch (Exception e) {
+  532.               logger.error("获取应用程序列表异常", e);
+  533.           }
+
+#5
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:568: error: Resource Leak
+  resource of type `java.io.InputStreamReader` acquired by call to `InputStreamReader(...)` at line 549 is not released after line 568.
+**Note**: potential exception at line 551
+  566.               reader.close();
+  567.               process.getOutputStream().close(); // 不要忘记了一定要关
+  568. >         } catch (Exception e) {
+  569.               logger.error("获取应用程序列表异常", e);
+  570.           }
+
+#6
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:568: error: Resource Leak
+  resource of type `java.lang.Process` acquired to `process` by call to `exec(...)` at line 548 is not released after line 568.
+**Note**: potential exception at line 551
+  566.               reader.close();
+  567.               process.getOutputStream().close(); // 不要忘记了一定要关
+  568. >         } catch (Exception e) {
+  569.               logger.error("获取应用程序列表异常", e);
+  570.           }
+
+#7
+src/main/java/edu/jiangxin/apktoolbox/monkey/MonkeyPanel.java:853: error: Resource Leak
+  resource of type `java.lang.Process` acquired by call to `exec(...)` at line 853 is not released after line 853.
+  851.       public void run() {
+  852.           try {
+  853. >             Runtime.getRuntime().exec(cmd);
+  854.           } catch (Exception e) {
+  855.               logger.error("Exception", e);
+
+Found 8 issues
+    Issue Type(ISSUED_TYPE_ID): #
+  Resource Leak(RESOURCE_LEAK): 8
