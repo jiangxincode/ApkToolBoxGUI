@@ -1,8 +1,19 @@
 package edu.jiangxin.apktoolbox.utils;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.FileBasedConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.exec.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -10,19 +21,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.FileBasedConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * @author jiangxin
@@ -167,20 +165,46 @@ public class Utils {
             container = container.getParent();
         }
     }
-    
+
     public static void blockedExecutor(String cmd) {
-        try {
-            logger.info(cmd);
-            Process process = Runtime.getRuntime().exec(cmd);
-            new StreamHandler(process.getInputStream(), 0).start();
-            new StreamHandler(process.getErrorStream(), 1).start();
-            process.waitFor();
-            logger.info("cmd finish");
-        } catch (IOException e1) {
-            logger.error("cmd fail", e1);
-        } catch (InterruptedException e1) {
-            logger.error("cmd fail", e1);
-            Thread.currentThread().interrupt();
+        logger.info(cmd);
+        try (ProcessLogOutputStream outStream = new ProcessLogOutputStream(logger, Level.INFO);
+             ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
+        ) {
+            CommandLine commandLine = CommandLine.parse(cmd);
+            DefaultExecutor exec = new DefaultExecutor();
+            PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
+            exec.setStreamHandler(streamHandler);
+            int exitValue = exec.execute(commandLine);
+            logger.info("exitValue: [" + exitValue + "]");
+        } catch (IOException ioe) {
+            logger.error("exec fail", ioe.getMessage());
+        }
+    }
+
+    public static void unBlockedExecutor(String cmd) {
+        logger.info(cmd);
+        try (ProcessLogOutputStream outStream = new ProcessLogOutputStream(logger, Level.INFO);
+             ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
+        ) {
+            CommandLine commandLine = CommandLine.parse(cmd);
+            DefaultExecutor exec = new DefaultExecutor();
+            PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
+            exec.setStreamHandler(streamHandler);
+            DefaultExecuteResultHandler erh = new DefaultExecuteResultHandler() {
+                @Override
+                public void onProcessComplete(int exitValue) {
+                    logger.info("complete: [" + cmd + "], exitValue: [" + exitValue + "]");
+                }
+
+                @Override
+                public void onProcessFailed(ExecuteException ee) {
+                    logger.info("failed: [" + cmd + "], execute exception: [" + ee.getMessage() + "]");
+                }
+            };
+            exec.execute(commandLine, erh);
+        } catch (IOException ioe) {
+            logger.error("exec fail", ioe.getMessage());
         }
     }
 

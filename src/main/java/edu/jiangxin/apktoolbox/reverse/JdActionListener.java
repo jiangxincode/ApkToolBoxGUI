@@ -1,10 +1,8 @@
 package edu.jiangxin.apktoolbox.reverse;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @author jiangxin
@@ -44,15 +41,8 @@ public class JdActionListener implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        try {
-            final String jarPath = conf.getString(Constants.JD_GUI_PATH_KEY);
-            String[] cmdArray = new String[]{"java", "-Duser.language=en", "-Dfile.encoding=UTF8", "-jar", jarPath};
-            logger.info(ArrayUtils.toString(cmdArray));
-            Process process = Runtime.getRuntime().exec(cmdArray);
-            new StreamHandler(process.getInputStream(), 0).start();
-            new StreamHandler(process.getErrorStream(), 1).start();
-        } catch (IOException e1) {
-            logger.error("open gd-gui fail", e);
-        }
+        final String jarPath = conf.getString(Constants.JD_GUI_PATH_KEY);
+        String cmd = "java -Duser.language=en -Dfile.encoding=UTF8 -jar " + jarPath;
+        Utils.unBlockedExecutor(cmd);
     }
 }

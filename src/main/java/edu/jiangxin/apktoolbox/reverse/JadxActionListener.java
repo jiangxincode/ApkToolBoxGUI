@@ -1,11 +1,9 @@
 package edu.jiangxin.apktoolbox.reverse;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.OSinfo;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.exec.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +12,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author jiangxin
@@ -33,7 +33,7 @@ public class JadxActionListener implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         String toolPath = conf.getString(Constants.JADX_PATH_KEY);
         File toolFile = null;
         if (!StringUtils.isEmpty(toolPath)) {
@@ -45,20 +45,8 @@ public class JadxActionListener implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        try {
-            String shellPath = conf.getString(Constants.JADX_PATH_KEY);
-            String[] cmdArray;
-            if (OSinfo.isWindows()) {
-                cmdArray = new String[]{"cmd", "/c", shellPath};
-            } else {
-                cmdArray = new String[]{"bash", shellPath};
-            }
-            logger.info(ArrayUtils.toString(cmdArray));
-            Process process = Runtime.getRuntime().exec(cmdArray);
-            new StreamHandler(process.getInputStream(), 0).start();
-            new StreamHandler(process.getErrorStream(), 1).start();
-        } catch (IOException e1) {
-            logger.error("open JADX fail", e);
-        }
+
+        String cmd = conf.getString(Constants.JADX_PATH_KEY);
+        Utils.unBlockedExecutor(cmd);
     }
 }

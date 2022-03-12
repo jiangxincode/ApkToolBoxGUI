@@ -1,7 +1,13 @@
 package edu.jiangxin.apktoolbox.screenshot;
 
-import java.awt.HeadlessException;
-import java.awt.Image;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -9,25 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.TransferHandler;
-
-import org.apache.commons.lang3.StringUtils;
-
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
@@ -185,23 +172,12 @@ public class ScreenShotPanel extends EasyPanel {
             }
             File file = new File(dirName, fileName);
             try {
-                Process process1 = Runtime.getRuntime()
-                        .exec("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
-                new StreamHandler(process1.getInputStream(), 0).start();
-                new StreamHandler(process1.getErrorStream(), 1).start();
-                process1.waitFor();
+                Utils.blockedExecutor("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
                 logger.info("screencap finish");
-                Process process2 = Runtime.getRuntime()
-                        .exec(new String[] { "adb", "pull", "/sdcard/screenshot.png", file.getCanonicalPath() });
-                new StreamHandler(process2.getInputStream(), 0).start();
-                new StreamHandler(process2.getErrorStream(), 1).start();
-                process2.waitFor();
+                Utils.blockedExecutor("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
                 logger.info("pull finish");
                 if (openCheckBox.isSelected()) {
-                    Process process3 = Runtime.getRuntime().exec(new String[]{"explorer", "/e,/select," + file.getCanonicalPath()});
-                    new StreamHandler(process3.getInputStream(), 0).start();
-                    new StreamHandler(process3.getErrorStream(), 1).start();
-                    process3.waitFor();
+                    Utils.blockedExecutor("explorer /e,/select, " + file.getCanonicalPath());
                     logger.info("open dir finish");
                 }
                 if (copyCheckBox.isSelected()) {
@@ -212,9 +188,6 @@ public class ScreenShotPanel extends EasyPanel {
                 }
             } catch (IOException e1) {
                 logger.error("screenshot fail", e1);
-            } catch (InterruptedException e1) {
-                logger.error("screenshot fail", e1);
-                Thread.currentThread().interrupt();
             } finally {
                 Utils.setFrameTitle(ScreenShotPanel.this, title);
             }

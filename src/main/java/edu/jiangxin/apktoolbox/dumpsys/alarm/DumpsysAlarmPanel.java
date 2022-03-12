@@ -1,11 +1,13 @@
 package edu.jiangxin.apktoolbox.dumpsys.alarm;
 
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
-import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Stream2StringThread;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -201,30 +204,25 @@ public class DumpsysAlarmPanel extends EasyPanel {
     }
 
     private void getAlarmInfoStringFromDevice() {
-        Process process1 = null;
-        Stream2StringThread threadInput = null;
-        Stream2StringThread threadError = null;
-        try {
-            process1 = Runtime.getRuntime()
-                    .exec("adb shell dumpsys alarm");
-            threadInput = new Stream2StringThread(process1.getInputStream());
-            threadError = new Stream2StringThread(process1.getErrorStream());
-            threadInput.start();
-            threadError.start();
-            process1.waitFor();
-        } catch (IOException e) {
-            logger.error("getAlarmInfoStringFromDevice failed: " + e.getMessage());
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        final String cmd = "adb shell dumpsys alarm";
+        logger.info(cmd);
+        try (ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+             ByteArrayOutputStream errStream = new ByteArrayOutputStream()
+        ) {
+            CommandLine commandLine = CommandLine.parse(cmd);
+            DefaultExecutor exec = new DefaultExecutor();
+            PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
+            exec.setStreamHandler(streamHandler);
+            int exitValue = exec.execute(commandLine);
+            logger.info("exitValue: [" + exitValue + "]");
 
-
-        if (threadInput != null) {
-            alarmInfoString = threadInput.getOutputString();
+            alarmInfoString = outStream.toString("UTF-8");
             alarmInfoValid = !StringUtils.isEmpty(alarmInfoString);
-            if (!alarmInfoValid && threadError != null) {
-                alarmInfoString = threadError.getOutputString();
+            if (!alarmInfoValid) {
+                alarmInfoString = errStream.toString("UTF-8");
             }
+        } catch (IOException ioe) {
+            logger.error("exec fail", ioe.getMessage());
         }
     }
 

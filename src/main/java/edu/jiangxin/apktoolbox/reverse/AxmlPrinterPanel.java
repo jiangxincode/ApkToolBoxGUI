@@ -1,29 +1,24 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
+import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import javax.swing.*;
-
-import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
-import edu.jiangxin.apktoolbox.utils.Constants;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.StreamHandler;
-import edu.jiangxin.apktoolbox.utils.Utils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author jiangxin
@@ -194,23 +189,24 @@ public class AxmlPrinterPanel extends EasyPanel {
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                        .append(conf.getString(Constants.APKTOOL_PATH_KEY)).append("\"")
+                        .append(conf.getString(Constants.AXMLPRINTER_PATH_KEY)).append("\"")
                         .append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
                 String cmd = sb.toString();
                 logger.info(cmd);
-                Process process = Runtime.getRuntime().exec(cmd);
-                String content = Utils.loadStream(process.getInputStream());
-                FileUtils.writeStringToFile(new File(targetFile, "AndroidManifest.xml"), content, "UTF-8", true);
-                new StreamHandler(process.getErrorStream(), 1).start();
-                process.waitFor();
-                logger.info("axmlprinter finish");
+                File outputFile = new File(targetFile, "AndroidManifest.xml");
+                try (FileOutputStream outStream = new FileOutputStream(outputFile);
+                     ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
+                ) {
+                    CommandLine commandLine = CommandLine.parse(cmd);
+                    DefaultExecutor exec = new DefaultExecutor();
+                    PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
+                    exec.setStreamHandler(streamHandler);
+                    int exitValue = exec.execute(commandLine);
+                    logger.info("exitValue: [" + exitValue + "]");
+                }
             } catch (IOException e1) {
                 logger.error("axmlprinter fail", e1);
-            } catch (InterruptedException e1) {
-                logger.error("axmlprinter fail", e1);
-                Thread.currentThread().interrupt();
             }
         }
     }
-
 }
