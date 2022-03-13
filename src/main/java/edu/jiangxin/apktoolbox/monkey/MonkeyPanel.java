@@ -1,33 +1,23 @@
 package edu.jiangxin.apktoolbox.monkey;
 
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.IOUtils;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
-import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
@@ -86,7 +76,7 @@ public class MonkeyPanel extends EasyPanel {
     private static final String MSG6 = "日志保存路径不能为空！";
 
     Thread threadTimeType = null;
-    Thread threadMonkey = null;
+    Process monkeyProcess = null;
 
     JLabel labelDevices = new JLabel("设备列表");
     JComboBox<String> comboBoxDevices = new JComboBox<String>();
@@ -242,7 +232,7 @@ public class MonkeyPanel extends EasyPanel {
             public void actionPerformed(ActionEvent e) {
                 comboBoxProgram.removeAllItems();
                 comboBoxProgram.setSelectedItem("com.shinow.*");
-                List<String> programs = getProgram(comboBoxDevices.getSelectedItem().toString());
+                List<String> programs = getApplication(comboBoxDevices.getSelectedItem().toString());
                 for (String program : programs) {
                     comboBoxProgram.addItem(program);
                 }
@@ -454,7 +444,7 @@ public class MonkeyPanel extends EasyPanel {
         logger.info("中断Monkey命令--开始");
 
         String[] cmd1 = new String[] { "cmd.exe", "/c", CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
-        excuteCommand(cmd1, MONKEY);
+        executeCommand(cmd1, MONKEY);
 
         List<String> listPid = list;
         logger.info("获取的中断Monkey进程数量：" + listPid.size());
@@ -464,13 +454,12 @@ public class MonkeyPanel extends EasyPanel {
         for (int i = 0; i < listPid.size(); i++) {
             pid = listPid.get(i);
             cmd2 = new String[] { "cmd.exe", "/c", CMD_KILL_A + comboBoxDevices.getSelectedItem() + CMD_KILL_B + pid };
-            excuteCommand(cmd2, MONKEY);
+            executeCommand(cmd2, MONKEY);
         }
 
         flag = 1;
 
-        // threadTimeType.interrupt();
-        threadMonkey.interrupt();
+        monkeyProcess.destroy();
 
         labelHour.setVisible(false);
         labelMinute.setVisible(false);
@@ -480,74 +469,90 @@ public class MonkeyPanel extends EasyPanel {
 
     }
 
-    /**
-     * 获取设备列表
-     * 
-     * @param cmd
-     */
     private List<String> getDevices() {
         List<String> devices = new ArrayList<>();
-        logger.info("获取设备列表......开始");
+        logger.info("get device list start");
+        Process process = null;
         try {
-            Process process = Runtime.getRuntime().exec("adb devices");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
-            String line = null;
+            process = Runtime.getRuntime().exec("adb devices");
+        } catch (IOException e) {
+            logger.error("exec command failed: " + e.getMessage());
+        }
+        if (process == null) {
+            logger.error("process is null");
+            return devices;
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+            String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("device") && !line.contains("List of")) {
                     line = line.substring(0, line.length() - 7);
-                    logger.info("获取的设备名称：" + line);
+                    logger.info("device name: " + line);
                     devices.add(line);
                 }
             }
-            reader.close();
-            process.getOutputStream().close(); // 不要忘记了一定要关
-        } catch (Exception e) {
-            logger.error("获取设备列表异常", e);
+        } catch (UnsupportedEncodingException e) {
+            logger.error("read failed: " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("read failed: " + e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(process.getOutputStream());
+            IOUtils.closeQuietly(process.getErrorStream());
+            IOUtils.closeQuietly(process.getInputStream());
         }
-        logger.info("获取设备列表......结束");
+        logger.info("get device list end");
         return devices;
     }
 
-    /**
-     * 获取应用程序列表
-     * 
-     * @param cmd
-     */
-    private List<String> getProgram(String device) {
-        List<String> programs = new ArrayList<>();
-        logger.info("获取应用程序列表......开始");
+    private List<String> getApplication(String device) {
+        List<String> apps = new ArrayList<>();
+        logger.info("get application list start");
+        Process process = null;
         try {
-            Process process = Runtime.getRuntime().exec(new String[]{"adb", "-s", device, "shell", "pm", "list", "packages"});
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
-            String line = null;
+            process = Runtime.getRuntime().exec(new String[]{"adb", "-s", device, "shell", "pm", "list", "packages"});
+        } catch (IOException e) {
+            logger.error("exec command failed: " + e.getMessage());
+        }
+        if (process == null) {
+            logger.error("process is null");
+            return apps;
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+            String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("package:")) {
-                    logger.info("获取应用程序名称：" + line);
-                    programs.add(line.replace("package:", ""));
+                    logger.info("application name：" + line);
+                    apps.add(line.replace("package:", ""));
                 }
             }
-            reader.close();
-            process.getOutputStream().close(); // 不要忘记了一定要关
-        } catch (Exception e) {
-            logger.error("获取应用程序列表异常", e);
+        } catch (UnsupportedEncodingException e) {
+            logger.error("read failed: " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("read failed: " + e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(process.getOutputStream());
+            IOUtils.closeQuietly(process.getErrorStream());
+            IOUtils.closeQuietly(process.getInputStream());
         }
-        logger.info("获取应用程序列表......结束");
-        return programs;
+        logger.info("get application list end");
+        return apps;
     }
 
-    /**
-     * 运行Dos命令
-     * 
-     * @param cmd      命令
-     * @param keyValue 关键字
-     */
-    public void excuteCommand(String[] cmd, String keyValue) {
-        logger.info("运行Dos命令......开始");
-        list = new ArrayList<String>();
+    private void executeCommand(String[] cmd, String keyValue) {
+        logger.info("exec cmd start");
+        list = new ArrayList<>();
+        Process process = null;
         try {
-            Process process = Runtime.getRuntime().exec(cmd);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
-            String line = null;
+            process = Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            logger.error("exec command failed: " + e.getMessage());
+        }
+        if (process == null) {
+            logger.error("process is null");
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+            String line;
             while ((line = reader.readLine()) != null) {
                 if (line.indexOf(keyValue) >= 0) {
                     line = line.replace(" ", ":");
@@ -556,19 +561,23 @@ public class MonkeyPanel extends EasyPanel {
                     System.out.println(str.length);
                     for (int i = 1; i < str.length; i++) {
                         if (str[i].length() > 0) {
-                            logger.info("Pid的值：" + str[i]);
+                            logger.info("Pid: " + str[i]);
                             list.add(str[i]);
                             break;
                         }
                     }
                 }
             }
-            reader.close();
-            process.getOutputStream().close(); // 不要忘记了一定要关
-        } catch (Exception e) {
-            logger.error("获取应用程序列表异常", e);
+        } catch (UnsupportedEncodingException e) {
+            logger.error("read failed: " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("read failed: " + e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(process.getOutputStream());
+            IOUtils.closeQuietly(process.getErrorStream());
+            IOUtils.closeQuietly(process.getInputStream());
         }
-        logger.info("运行Dos命令......结束");
+        logger.info("exec cmd end");
     }
 
     /**
@@ -648,7 +657,7 @@ public class MonkeyPanel extends EasyPanel {
                 String[] cmd = new String[] { "cmd.exe", "/c",
                         CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
-                excuteCommand(cmd, keyValue);
+                executeCommand(cmd, keyValue);
                 logger.info("当前线程数：" + list.size());
                 if (list.size() == 0) {
                     String log = textLogPath.getText();
@@ -665,8 +674,11 @@ public class MonkeyPanel extends EasyPanel {
                     String[] monkeyCommand = new String[] { "cmd.exe", "/c", monkeyCmd[2] };
                     logger.info("执行");
                     // 再次执行
-                    threadMonkey = new Thread(new ExcuteMonkeyRunnable(monkeyCommand));
-                    threadMonkey.start();
+                    try {
+                        monkeyProcess = Runtime.getRuntime().exec(monkeyCommand);
+                    } catch (Exception e) {
+                        logger.error("Exception", e);
+                    }
                 }
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---结束");
             }
@@ -685,7 +697,7 @@ public class MonkeyPanel extends EasyPanel {
                 String[] cmd = new String[] { "cmd.exe", "/c",
                         CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
-                excuteCommand(cmd, keyValue);
+                executeCommand(cmd, keyValue);
                 logger.info("当前线程数：" + list.size());
                 if (list.size() == 0) {
                     logger.info("[" + keyValue + "]已经关闭或崩溃，无法继续执行Monkey，退出系统");
@@ -752,7 +764,7 @@ public class MonkeyPanel extends EasyPanel {
 
     class ExcuteButtonActionListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent event) {
             ignoreCrashes = checkBoxCrashes.isSelected() ? IGNORE_CRASHES : "";
             ignoreTimeouts = checkBoxTimeouts.isSelected() ? IGNORE_TIMEOUTS : "";
             monitorNativeCrashes = checkBoxNativeCrashes.isSelected() ? MONITOR_NATIVE_CRASHES : "";
@@ -808,8 +820,11 @@ public class MonkeyPanel extends EasyPanel {
 
             flag = 0;
 
-            threadMonkey = new Thread(new ExcuteMonkeyRunnable(monkeyCmd));
-            threadMonkey.start();
+            try {
+                monkeyProcess = Runtime.getRuntime().exec(monkeyCmd);
+            } catch (Exception e) {
+                logger.error("Exception", e);
+            }
 
             excuteButton.setEnabled(false);
             resetButton.setEnabled(false);
@@ -831,28 +846,6 @@ public class MonkeyPanel extends EasyPanel {
             }
             threadTimeType = new Thread(new CountdownRunnable(time));
             threadTimeType.start();
-        }
-    }
-}
-
-/**
- * 运行Monkey命令
- */
-class ExcuteMonkeyRunnable implements Runnable {
-    private static Logger logger = LogManager.getLogger(ExcuteMonkeyRunnable.class);
-    
-    private String[] cmd;
-
-    public ExcuteMonkeyRunnable(String[] cmd) {
-        this.cmd = cmd;
-    }
-
-    @Override
-    public void run() {
-        try {
-            Runtime.getRuntime().exec(cmd);
-        } catch (Exception e) {
-            logger.error("Exception", e);
         }
     }
 }
