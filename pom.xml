@@ -86,11 +86,11 @@
             <artifactId>flatlaf</artifactId>
             <version>2.0.1</version>
         </dependency>
+        <!-- We execute junit test from maven-surefire-plugin, so we can not set <scope>test</scope> -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -162,34 +162,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.15.0</version>
+                    <version>3.16.0</version>
                     <configuration>
                         <targetJdk>1.8</targetJdk>
-                        <rulesets>
-                            <!-- A rule set, that comes bundled with PMD -->
-                            <ruleset>/rulesets/maven.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-comment.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-concurrent.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-constant.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-exception.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-flowcontrol.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-naming.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-oop.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-orm.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-other.xml</ruleset>
-                            <ruleset>/rulesets/java/ali-set.xml</ruleset>
-                        </rulesets>
                         <excludeRoots>
                             <excludeRoot>target/generated-sources</excludeRoot>
                         </excludeRoots>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.alibaba.p3c</groupId>
-                            <artifactId>p3c-pmd</artifactId>
-                            <version>2.1.1</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -200,47 +179,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
+                    <groupId>io.github.jiangxincode</groupId>
                     <artifactId>jdepend-maven-plugin</artifactId>
-                    <version>2.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.7</version>
-                    <configuration>
-                        <maxmem>256m</maxmem>
-                        <aggregate>true</aggregate>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.jiangxincode</groupId>
-                    <artifactId>emma-maven-plugin</artifactId>
-                    <version>1.2.3</version>
-                    <inherited>true</inherited>
-                    <executions>
-                        <execution>
-                            <id>instrument</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>instrument</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>report</id>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>emma</goal>
-                            </goals>
-                            <configuration>
-                                <outputEncoding>UTF-8</outputEncoding>
-                                <sourceEncoding>UTF-8</sourceEncoding>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <verbose>true</verbose>
-                    </configuration>
+                    <version>2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -257,11 +198,6 @@
                         <docencoding>UTF-8</docencoding>
                         <additionalJOption>-Xdoclint:none</additionalJOption>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>javancss-maven-plugin</artifactId>
-                    <version>2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -323,9 +259,17 @@
                 <plugin>
                     <groupId>com.github.jiangxincode</groupId>
                     <artifactId>simian-maven-plugin</artifactId>
-                    <version>0.0.6</version>
+                    <version>0.0.7</version>
                     <configuration>
                         <threshold>3</threshold>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.jiangxincode</groupId>
+                    <artifactId>fireline-maven-plugin</artifactId>
+                    <version>0.0.3</version>
+                    <configuration>
+                        <fireLineDownloadUrl>http://magic.360.cn/fireline_1.7.3.jar</fireLineDownloadUrl>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -453,19 +397,9 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>io.github.jiangxincode</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-	    <!--
-            <plugin>
-                <groupId>com.github.jiangxincode</groupId>
-                <artifactId>emma-maven-plugin</artifactId>
-            </plugin>
-	     -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -482,10 +416,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
-<!--            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
@@ -518,6 +448,10 @@
             <plugin>
                 <groupId>com.github.jiangxincode</groupId>
                 <artifactId>simian-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.github.jiangxincode</groupId>
+                <artifactId>fireline-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
