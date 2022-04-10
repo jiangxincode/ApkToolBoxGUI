@@ -32,38 +32,6 @@ public class Utils {
 
     private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
 
-    public static String loadStream(InputStream in) {
-        StringBuffer buffer = new StringBuffer();
-        if (in == null) {
-            logger.error("in is null");
-            return buffer.toString();
-        }
-
-        BufferedInputStream bis = new BufferedInputStream(in);
-        try {
-            int ptr = 0;
-            while ((ptr = bis.read()) != -1) {
-                buffer.append((char) ptr);
-            }
-        } catch (IOException e) {
-            logger.error("read bis error", e);
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (IOException e) {
-                    logger.error("bis close error", e);
-                }
-            }
-            try {
-                in.close();
-            } catch (IOException e) {
-                logger.error("in close error", e);
-            }
-        }
-        return buffer.toString();
-    }
-
     public static String getCurrentDateString() {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");

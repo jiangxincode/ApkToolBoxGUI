@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.config.ConfigPanel;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
+import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
@@ -83,6 +84,7 @@ public class MainFrame extends EasyFrame {
     private JMenuItem colorPickerMenuItem;
     private JMenuItem baseConvertMenuItem;
     private JMenuItem unicodeConvertMenuItem;
+    private JMenuItem relationShipConvertMenuItem;
 
     private JMenu i18nMenu;
     private JMenuItem i18nAddMenuItem;
@@ -283,6 +285,10 @@ public class MainFrame extends EasyFrame {
         unicodeConvertMenuItem = new JMenuItem(bundle.getString("convert.unicode.title"));
         unicodeConvertMenuItem.addActionListener(new ChangePanelListener(Zh2UnicodeConvertPanel.class, unicodeConvertMenuItem.getText()));
         convertMenu.add(unicodeConvertMenuItem);
+
+        relationShipConvertMenuItem = new JMenuItem(bundle.getString("convert.relationship.title"));
+        relationShipConvertMenuItem.addActionListener(new ChangePanelListener(RelationShipConvertPanel.class, relationShipConvertMenuItem.getText()));
+        convertMenu.add(relationShipConvertMenuItem);
     }
 
     private void createTestMenu() {
