@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.crack;
+package edu.jiangxin.apktoolbox.file.compress;
 
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;

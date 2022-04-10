@@ -8,6 +8,7 @@ import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
 import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
+import edu.jiangxin.apktoolbox.file.compress.CompressPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
@@ -77,6 +78,7 @@ public class MainFrame extends EasyFrame {
     private JMenuItem duplicateFindMenuItem;
     private JMenuItem batchRenameMenuItem;
     private JMenuItem checkSumMenuItem;
+    private JMenuItem compressMenuItem;
 
     private JMenu convertMenu;
     private JMenuItem timeConvertMenuItem;
@@ -260,6 +262,10 @@ public class MainFrame extends EasyFrame {
         checkSumMenuItem = new JMenuItem(bundle.getString("file.check.summary.title"));
         checkSumMenuItem.addActionListener(new ChangePanelListener(CheckDigestPanel.class, checkSumMenuItem.getText()));
         fileMenu.add(checkSumMenuItem);
+
+        compressMenuItem = new JMenuItem(bundle.getString("file.compress.title"));
+        compressMenuItem.addActionListener(new ChangePanelListener(CompressPanel.class, compressMenuItem.getText()));
+        fileMenu.add(compressMenuItem);
     }
 
     private void createConvertMenu() {

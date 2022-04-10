@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.crack;
+package edu.jiangxin.apktoolbox.file.compress;
 
 /**
  * 自定义异常类，表示解压文件的密码不正确

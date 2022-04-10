@@ -1,31 +1,33 @@
-package edu.jiangxin.apktoolbox.crack;
+package edu.jiangxin.apktoolbox.file.compress;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * 压缩解压zip文件的类
+ * ref:https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581
+ * https://www.yunjiemi.net/Passper/index.html
  * 
  */
-public final class ZipDialog extends JDialog {
+public final class CompressPanel extends EasyPanel {
+
+	public CompressPanel() {
+		super();
+		initUI();
+	}
+
+	private void initUI() {
+		setLayout(new BorderLayout(0, 0));
+		add(getTopPanel(), BorderLayout.NORTH);
+		add(getMainPanel(), BorderLayout.CENTER);
+	}
 
 	private JPanel getWestPanel() {
 		JPanel ret = new JPanel();
@@ -78,7 +80,7 @@ public final class ZipDialog extends JDialog {
 		JButton buttonCrackZip = new JButton("暴力破解zip文件密码...");
 		buttonCrackZip.addActionListener(new ActionAdapter() {
 			public void run() {
-				JOptionPane.showMessageDialog(ZipDialog.this, "暂未实现，敬请期待");
+				JOptionPane.showMessageDialog(CompressPanel.this, "暂未实现，敬请期待");
 			}
 		});
 		ret.add(buttonCrackZip);
@@ -346,37 +348,6 @@ public final class ZipDialog extends JDialog {
 		return ret;
 	}
 
-	private ZipDialog(JFrame owner) {
-		super(owner, true);
-
-		Container con = getContentPane();
-		con.setLayout(new BorderLayout(0, 0));
-		con.add(getTopPanel(), BorderLayout.NORTH);
-		con.add(getMainPanel(), BorderLayout.CENTER);
-
-		/*
-		 * 通过得到屏幕尺寸，计算得到坐标，使对话框在屏幕上居中显示
-		 */
-		final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		final int width = 500;
-		final int height = 309;
-		final int left = (screen.width - width) / 2;
-		final int top = (screen.height - height) / 2;
-		this.setTitle("压缩解压对话框");
-		this.setLocation(left, top);
-		this.setSize(width, height);
-		this.setResizable(false);
-		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setVisible(true);
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		 new ZipDialog(null);
-	}
-
 	private class ActionAdapter implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -386,7 +357,7 @@ public final class ZipDialog extends JDialog {
 		}
 
 		public void run() {
-			JOptionPane.showMessageDialog(ZipDialog.this, "暂未实现，敬请期待");
+			JOptionPane.showMessageDialog(CompressPanel.this, "暂未实现，敬请期待");
 		}
 	}
 

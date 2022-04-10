@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.crack;
+package edu.jiangxin.apktoolbox.file.compress;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
