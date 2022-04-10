@@ -1,5 +1,9 @@
 package edu.jiangxin.apktoolbox.crack;
 
+import com.github.junrar.Archive;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.rarfile.FileHeader;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,10 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import de.innosystec.unrar.Archive;
-import de.innosystec.unrar.exception.RarException;
-import de.innosystec.unrar.rarfile.FileHeader;
 
 public final class MyRar extends Archiver {
 
@@ -23,30 +23,6 @@ public final class MyRar extends Archiver {
 			throws IOException {
 	}
 
-	@SuppressWarnings("unused")
-	private boolean crack(Archive ar, String pass, File tmpf) {
-		// BufferedOutputStream bos = null;
-		// try {
-		// ar.setPassword(pass);
-		// FileHeader fh = ar.nextFileHeader();
-		// FileOutputStream fos = new FileOutputStream(tmpf);
-		// bos = new BufferedOutputStream(fos);
-		// ar.extractFile(fh, bos);
-		// bos.flush();
-		// bos.close();
-		// } catch (RarException e) {
-		// try {
-		// bos.flush();
-		// bos.close();
-		// } catch (IOException e1) {
-		// e1.printStackTrace();
-		// }
-		// return false;
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		return true;
-	}
 
 	// public final String crackRar(File srcfile, String tmpdir, CodeIterator
 	// ci) {
@@ -109,7 +85,7 @@ public final class MyRar extends Archiver {
 	public final void doUnArchiver(File srcfile, String destpath,
 			String password) throws IOException, WrongPassException {
 		try {
-			Archive a = new Archive(srcfile, password, false);
+			Archive a = new Archive(srcfile);
 			FileHeader fh;
 			while ((fh = a.nextFileHeader()) != null) {
 				File f = new File(destpath + "/"

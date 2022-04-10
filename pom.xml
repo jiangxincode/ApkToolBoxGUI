@@ -37,11 +37,9 @@
             <version>1.21</version>
         </dependency>
         <dependency>
-            <groupId>de.innosystec.unrar</groupId>
-            <artifactId>unrar</artifactId>
-            <version>1.7</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/java-unrar-decryption-supported-20120903.jar</systemPath>
+            <groupId>com.github.junrar</groupId>
+            <artifactId>junrar</artifactId>
+            <version>7.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
