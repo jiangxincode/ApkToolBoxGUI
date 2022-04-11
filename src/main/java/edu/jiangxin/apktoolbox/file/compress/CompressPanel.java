@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,6 +18,9 @@ import java.io.IOException;
  * 
  */
 public final class CompressPanel extends EasyPanel {
+	private JPanel optionPanel;
+
+	private JPanel operationPanel;
 
 	public CompressPanel() {
 		super();
@@ -24,14 +28,54 @@ public final class CompressPanel extends EasyPanel {
 	}
 
 	private void initUI() {
-		setLayout(new BorderLayout(0, 0));
-		add(getTopPanel(), BorderLayout.NORTH);
-		add(getMainPanel(), BorderLayout.CENTER);
+		BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+		setLayout(boxLayout);
+
+		createOptionPanel();
+		add(optionPanel);
+		add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+		createOperationPanel();
+		add(operationPanel);
 	}
 
-	private JPanel getWestPanel() {
-		JPanel ret = new JPanel();
-		ret.setLayout(new GridLayout(6, 1));
+	private void createOptionPanel() {
+		optionPanel = new JPanel();
+		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
+
+		JLabel tips = new JLabel("文件编码:");
+		optionPanel.add(tips);
+		optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+		JRadioButton utf8 = new JRadioButton("UTF-8");
+		optionPanel.add(utf8);
+		optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+		JRadioButton gbk = new JRadioButton("GBK");
+		optionPanel.add(gbk);
+		optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER * 2));
+
+		ButtonGroup buttonGroup1 = new ButtonGroup();
+		buttonGroup1.add(utf8);
+		buttonGroup1.add(gbk);
+		utf8.setSelected(true);
+
+		JRadioButton plainRadioButton = new JRadioButton("不加密");
+		optionPanel.add(plainRadioButton);
+		optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+		JRadioButton encryptRadioButton = new JRadioButton("加密");
+		optionPanel.add(encryptRadioButton);
+
+		ButtonGroup buttonGroup2 = new ButtonGroup();
+		buttonGroup2.add(plainRadioButton);
+		buttonGroup2.add(encryptRadioButton);
+		plainRadioButton.setSelected(true);
+
+	}
+
+	private void createOperationPanel() {
+		operationPanel = new JPanel();
+		operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.Y_AXIS));
 
 		JButton buttonZip = new JButton("打包并压缩文件成ZIP格式...");
 		buttonZip.addActionListener(new ActionAdapter() {
@@ -39,7 +83,7 @@ public final class CompressPanel extends EasyPanel {
 				onArchiverFile(new MyZip());
 			}
 		});
-		ret.add(buttonZip);
+		operationPanel.add(buttonZip);
 
 		JButton buttonGZip = new JButton("压缩文件成GZIP格式...");
 		buttonGZip.addActionListener(new ActionAdapter() {
@@ -47,7 +91,7 @@ public final class CompressPanel extends EasyPanel {
 				onCompressFile(new MyGZip());
 			}
 		});
-		ret.add(buttonGZip);
+		operationPanel.add(buttonGZip);
 
 		JButton buttonTar = new JButton("打包文件成TAR格式...");
 		buttonTar.addActionListener(new ActionAdapter() {
@@ -55,27 +99,27 @@ public final class CompressPanel extends EasyPanel {
 				onArchiverFile(new MyTar());
 			}
 		});
-		ret.add(buttonTar);
+		operationPanel.add(buttonTar);
 
 		JButton buttonBz2 = new JButton("压缩文件成BZIP2格式...");
 		buttonBz2.addActionListener(new ActionAdapter());
-		ret.add(buttonBz2);
+		operationPanel.add(buttonBz2);
 
-		// JButton button7Zip = new JButton("打包并压缩文件成7ZIP格式...");
-		// button7Zip.addActionListener(new ActionAdapter());
-		// ret.add(button7Zip);
-		//
-		// JButton buttonRar = new JButton("打包并压缩文件成RAR格式...");
-		// buttonRar.addActionListener(new ActionAdapter());
-		// ret.add(buttonRar);
+		JButton button7Zip = new JButton("打包并压缩文件成7ZIP格式...");
+		button7Zip.addActionListener(new ActionAdapter());
+		operationPanel.add(button7Zip);
+
+		JButton buttonRar = new JButton("打包并压缩文件成RAR格式...");
+		buttonRar.addActionListener(new ActionAdapter());
+		operationPanel.add(buttonRar);
 
 		JButton buttonCrackRar = new JButton("暴力破解rar文件密码...");
 		buttonCrackRar.addActionListener(new ActionAdapter() {
 			public void run() {
-				crackRar();
+				crack("rar");
 			}
 		});
-		ret.add(buttonCrackRar);
+		operationPanel.add(buttonCrackRar);
 
 		JButton buttonCrackZip = new JButton("暴力破解zip文件密码...");
 		buttonCrackZip.addActionListener(new ActionAdapter() {
@@ -83,14 +127,7 @@ public final class CompressPanel extends EasyPanel {
 				JOptionPane.showMessageDialog(CompressPanel.this, "暂未实现，敬请期待");
 			}
 		});
-		ret.add(buttonCrackZip);
-
-		return ret;
-	}
-
-	private JPanel getEastPanel() {
-		JPanel ret = new JPanel();
-		ret.setLayout(new GridLayout(6, 1));
+		operationPanel.add(buttonCrackZip);
 
 		JButton buttonUpZip = new JButton("解压解包ZIP文件...");
 		buttonUpZip.addActionListener(new ActionAdapter() {
@@ -98,7 +135,7 @@ public final class CompressPanel extends EasyPanel {
 				onUnArchiverFile(new MyZip());
 			}
 		});
-		ret.add(buttonUpZip);
+		operationPanel.add(buttonUpZip);
 
 		JButton buttonUnGZip = new JButton("解压GZIP文件...");
 		buttonUnGZip.addActionListener(new ActionAdapter() {
@@ -106,7 +143,7 @@ public final class CompressPanel extends EasyPanel {
 				onUnCompressFile(new MyGZip());
 			}
 		});
-		ret.add(buttonUnGZip);
+		operationPanel.add(buttonUnGZip);
 
 		JButton buttonUnTar = new JButton("解包TAR文件...");
 		buttonUnTar.addActionListener(new ActionAdapter() {
@@ -114,7 +151,7 @@ public final class CompressPanel extends EasyPanel {
 				onUnArchiverFile(new MyTar());
 			}
 		});
-		ret.add(buttonUnTar);
+		operationPanel.add(buttonUnTar);
 
 		JButton buttonUnRar = new JButton("解压解包RAR文件...");
 		buttonUnRar.addActionListener(new ActionAdapter() {
@@ -122,12 +159,12 @@ public final class CompressPanel extends EasyPanel {
 				onUnArchiverFile(new MyRar());
 			}
 		});
-		ret.add(buttonUnRar);
+		operationPanel.add(buttonUnRar);
 
 		JButton buttonUn7zip = new JButton("解压解包7ZIP文件...");
 		buttonUn7zip.addActionListener(new ActionAdapter() {
 		});
-		ret.add(buttonUn7zip);
+		operationPanel.add(buttonUn7zip);
 
 		JButton buttonUnBzip2 = new JButton("解压BZIP2文件...");
 		buttonUnBzip2.addActionListener(new ActionAdapter() {
@@ -135,9 +172,7 @@ public final class CompressPanel extends EasyPanel {
 				onUnCompressFile(new MyBZip2());
 			}
 		});
-		ret.add(buttonUnBzip2);
-
-		return ret;
+		operationPanel.add(buttonUnBzip2);
 	}
 
 	private File getSelectedArchiverFile(FileNameExtensionFilter filter) {
@@ -152,21 +187,23 @@ public final class CompressPanel extends EasyPanel {
 		return o.getSelectedFile();
 	}
 
-	private void crackRar() {
-		if(!MyRar.isReady()) {
+	private void crack(String type) {
+		Cracker cracker = null;
+		if ("rar".equals(type)) {
+			cracker = new MyRar();
+		}
+		if(!cracker.isCrackerReady()) {
 			JOptionPane.showMessageDialog(this, "没有找到测试程序，无法破解rar文件！");
 			return ;
 		}
-		MyRar rar = new MyRar();
-		File f = getSelectedArchiverFile(rar.getFileFilter());
+		File f = getSelectedArchiverFile(new MyRar().getFileFilter());
 		if (f == null) {
 			return;
 		}
-//		String pass = rar.crackRar(f, ".~tmp", new CodeIterator());
 		String pass;
 		try {
 			long t = System.currentTimeMillis();
-			pass = rar.crackRar(f, new CodeIterator());
+			pass = cracker.crack(f, new CodeIterator());
 			t = System.currentTimeMillis() - t;
 			System.out.println(t);
 
@@ -291,61 +328,6 @@ public final class CompressPanel extends EasyPanel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private JPanel getTopLeftPanel() {
-		JPanel ret = new JPanel();
-
-		JLabel tips = new JLabel("文件编码:");
-		ret.add(tips);
-		JRadioButton utf8 = new JRadioButton("UTF-8");
-		ret.add(utf8);
-		JRadioButton gbk = new JRadioButton("GBK");
-		ret.add(gbk);
-
-		ButtonGroup bg = new ButtonGroup();
-		bg.add(utf8);
-		bg.add(gbk);
-
-		utf8.setSelected(true);
-
-		gbk.setEnabled(false);
-
-		return ret;
-	}
-
-	private JPanel getTopRightPanel() {
-		JPanel ret = new JPanel();
-
-		JRadioButton uncode = new JRadioButton("不加密");
-		ret.add(uncode);
-		JRadioButton encode = new JRadioButton("加密");
-		ret.add(encode);
-
-		ButtonGroup bg = new ButtonGroup();
-		bg.add(uncode);
-		bg.add(encode);
-
-		uncode.setSelected(true);
-		encode.setEnabled(false);
-
-		return ret;
-	}
-
-	private JPanel getTopPanel() {
-		JPanel ret = new JPanel();
-		ret.setLayout(new GridLayout(1, 2));
-		ret.add(getTopLeftPanel());
-		ret.add(getTopRightPanel());
-		return ret;
-	}
-
-	private JPanel getMainPanel() {
-		JPanel ret = new JPanel();
-		ret.setLayout(new GridLayout(1, 2));
-		ret.add(getWestPanel());
-		ret.add(getEastPanel());
-		return ret;
 	}
 
 	private class ActionAdapter implements ActionListener {
