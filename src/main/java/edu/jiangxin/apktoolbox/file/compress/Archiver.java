@@ -1,7 +1,10 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public abstract class Archiver implements ICracker {
@@ -35,7 +38,32 @@ public abstract class Archiver implements ICracker {
 	}
 
 	@Override
-	public String crack(File file, CodeIterator codeIterator) {
+	public String getPwd(File file, List<CodeIterator> codeIterators) {
+		for (CodeIterator codeIterator : codeIterators) {
+			String pass = codeIterator.nextCode();
+			if (pass != null) {
+				return pass;
+			}
+		}
 		return null;
+	}
+
+	@Override
+	public String getPwd(File file, CodeIterator codeIterator) {
+		String pass = codeIterator.nextCode();
+		while (pass != null) {
+			boolean isHit = checkPwd(file, pass);
+			if (isHit) {
+				return pass;
+			} else {
+				pass = codeIterator.nextCode();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean checkPwd(File file, String pwd) {
+		return false;
 	}
 }

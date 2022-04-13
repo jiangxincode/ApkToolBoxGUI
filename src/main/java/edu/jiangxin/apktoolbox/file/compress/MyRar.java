@@ -9,9 +9,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.*;
 
 public final class MyRar extends Archiver implements ICracker {
 	private Logger logger;
@@ -30,54 +29,6 @@ public final class MyRar extends Archiver implements ICracker {
 	@Override
 	public final void doArchiver(File[] files, String destpath)
 			throws IOException {
-	}
-
-	@Override
-	public boolean prepareCracker() {
-		try {
-			Runtime.getRuntime().exec(path);
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public String crack(File file, CodeIterator codeIterator) {
-		boolean isHit = false;
-		String target = file.getAbsolutePath();
-		String pass = codeIterator.nextCode();
-
-		while (!isHit && pass != null) {
-			String unrarCmd = String.format("%s t -p%s %s", path, pass, target);
-			logger.info("unrar cmd: " + unrarCmd);
-			Process process = null;
-			try {
-				process = Runtime.getRuntime().exec(unrarCmd);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try (BufferedReader bf = new BufferedReader(new InputStreamReader(process.getInputStream(), "gbk"))) {
-				String line;
-				while ((line = bf.readLine()) != null) {
-					logger.info(line);
-					if (line.indexOf("全部成功") >= 0 || line.indexOf("全部正常") >= 0) {
-						isHit = true;
-						break;
-					}
-				}
-			} catch (IOException e) {
-
-			}
-			if (!isHit) {
-				pass = codeIterator.nextCode();
-			}
-		}
-		if (isHit) {
-			return pass;
-		} else {
-			return null;
-		}
 	}
 
 	@Override
@@ -120,5 +71,35 @@ public final class MyRar extends Archiver implements ICracker {
 	@Override
 	public final FileNameExtensionFilter getFileFilter() {
 		return filter;
+	}
+
+	@Override
+	public boolean prepareCracker() {
+		try {
+			Runtime.getRuntime().exec(path);
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean checkPwd(File file, String pwd) {
+		String target = file.getAbsolutePath();
+		String cmd = String.format("%s t -p%s %s", path, pwd, target);
+		logger.info("checkPwd cmd: " + cmd);
+		try (BufferedReader bf = new BufferedReader(new InputStreamReader(
+				Runtime.getRuntime().exec(cmd).getInputStream(), "gbk"))) {
+			String line;
+			while ((line = bf.readLine()) != null) {
+				logger.info(line);
+				if (line.indexOf("全部成功") >= 0 || line.indexOf("全部正常") >= 0) {
+					return true;
+				}
+			}
+		} catch (IOException e) {
+			logger.error("checkPwd IOException" + e.getMessage());
+		}
+		return false;
 	}
 }

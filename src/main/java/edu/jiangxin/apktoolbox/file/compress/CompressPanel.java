@@ -312,7 +312,7 @@ public final class CompressPanel extends EasyPanel {
 		String pass;
 		try {
 			long t = System.currentTimeMillis();
-			pass = archiver.crack(f, new CodeIterator());
+			pass = archiver.getPwd(f, new CodeIterator());
 			t = System.currentTimeMillis() - t;
 			System.out.println(t);
 

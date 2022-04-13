@@ -1,9 +1,14 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
 import java.io.File;
+import java.util.List;
 
 public interface ICracker {
     boolean prepareCracker();
 
-    String crack(File file, CodeIterator codeIterator);
+    String getPwd(File file, List<CodeIterator> codeIterator);
+
+    String getPwd(File file, CodeIterator codeIterator);
+
+    boolean checkPwd(File file, String pwd);
 }
