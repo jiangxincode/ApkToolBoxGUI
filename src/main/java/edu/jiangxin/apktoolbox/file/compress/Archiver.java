@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public abstract class Archiver {
+public abstract class Archiver implements ICracker {
 	
 	/**
 	 * 打包或压缩文件
@@ -28,5 +28,14 @@ public abstract class Archiver {
 	 * @return 本归档类对应文件的文件过滤器
 	 */
 	public abstract FileNameExtensionFilter getFileFilter();
-		
+
+	@Override
+	public boolean prepareCracker() {
+		return false;
+	}
+
+	@Override
+	public String crack(File file, CodeIterator codeIterator) {
+		return null;
+	}
 }

@@ -8,7 +8,7 @@ import java.io.*;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public final class MyRar extends Archiver implements Cracker {
+public final class MyRar extends Archiver implements ICracker {
 
 	private static FileNameExtensionFilter filter = new FileNameExtensionFilter(
 			"RAR压缩文件(*.rar)", "rar");
@@ -19,7 +19,7 @@ public final class MyRar extends Archiver implements Cracker {
 	}
 
 	@Override
-	public boolean isCrackerReady() {
+	public boolean prepareCracker() {
 		try {
 			Runtime.getRuntime().exec("rar.exe");
 		} catch (IOException e) {

@@ -116,7 +116,7 @@ public final class CompressPanel extends EasyPanel {
 		JButton buttonCrackRar = new JButton("暴力破解rar文件密码...");
 		buttonCrackRar.addActionListener(new ActionAdapter() {
 			public void run() {
-				crack("rar");
+				onCrackArchiverFile(new MyRar());
 			}
 		});
 		operationPanel.add(buttonCrackRar);
@@ -187,33 +187,33 @@ public final class CompressPanel extends EasyPanel {
 		return o.getSelectedFile();
 	}
 
-	private void crack(String type) {
-		Cracker cracker = null;
-		if ("rar".equals(type)) {
-			cracker = new MyRar();
-		}
-		if(!cracker.isCrackerReady()) {
-			JOptionPane.showMessageDialog(this, "没有找到测试程序，无法破解rar文件！");
-			return ;
-		}
-		File f = getSelectedArchiverFile(new MyRar().getFileFilter());
-		if (f == null) {
+	private void onArchiverFile(Archiver ma) {
+		JFileChooser o = new JFileChooser(".");
+		o.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		o.setMultiSelectionEnabled(true);
+		int returnVal = o.showOpenDialog(this);
+		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		String pass;
-		try {
-			long t = System.currentTimeMillis();
-			pass = cracker.crack(f, new CodeIterator());
-			t = System.currentTimeMillis() - t;
-			System.out.println(t);
+		File[] files = o.getSelectedFiles();
 
-			if (pass == null) {
-				JOptionPane.showMessageDialog(this, "指定的密码无法解开文件!");
-			} else {
-				JOptionPane.showMessageDialog(this, pass);
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "破解过程中出错!");
+		JFileChooser s = new JFileChooser(".");
+		FileNameExtensionFilter filter = ma.getFileFilter();
+		s.addChoosableFileFilter(filter);
+		returnVal = s.showSaveDialog(this);
+		if (returnVal != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+		File f = s.getSelectedFile();
+		String filepath = f.getAbsolutePath();
+		if (!filter.accept(f)) {// 确保一定有后缀
+			filepath = filepath + "." + filter.getExtensions()[0];
+		}
+
+		try {
+			ma.doArchiver(files, filepath);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -248,30 +248,6 @@ public final class CompressPanel extends EasyPanel {
 		}
 	}
 
-	private void onUnCompressFile(Compressor ma) {
-		File file = getSelectedArchiverFile(ma.getFileFilter());
-		if (file == null) {
-			return;
-		}
-		String fn = file.getName();
-		fn = fn.substring(0, fn.lastIndexOf('.'));
-		JFileChooser s = new JFileChooser(".");
-		s.setSelectedFile(new File(fn));
-		s.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		int returnVal = s.showSaveDialog(this);
-		if (returnVal != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		String filepath = s.getSelectedFile().getAbsolutePath();
-
-		try {
-			ma.doUnCompress(file, filepath);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	private void onCompressFile(Compressor c) {
 		File f = getSelectedArchiverFile(null);
 		if (f == null) {
@@ -300,36 +276,55 @@ public final class CompressPanel extends EasyPanel {
 		}
 	}
 
-	private void onArchiverFile(Archiver ma) {
-		JFileChooser o = new JFileChooser(".");
-		o.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		o.setMultiSelectionEnabled(true);
-		int returnVal = o.showOpenDialog(this);
-		if (returnVal != JFileChooser.APPROVE_OPTION) {
+	private void onUnCompressFile(Compressor ma) {
+		File file = getSelectedArchiverFile(ma.getFileFilter());
+		if (file == null) {
 			return;
 		}
-		File[] files = o.getSelectedFiles();
-
+		String fn = file.getName();
+		fn = fn.substring(0, fn.lastIndexOf('.'));
 		JFileChooser s = new JFileChooser(".");
-		FileNameExtensionFilter filter = ma.getFileFilter();
-		s.addChoosableFileFilter(filter);
-		returnVal = s.showSaveDialog(this);
+		s.setSelectedFile(new File(fn));
+		s.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int returnVal = s.showSaveDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		File f = s.getSelectedFile();
-		String filepath = f.getAbsolutePath();
-		if (!filter.accept(f)) {// 确保一定有后缀
-			filepath = filepath + "." + filter.getExtensions()[0];
-		}
+		String filepath = s.getSelectedFile().getAbsolutePath();
 
 		try {
-			ma.doArchiver(files, filepath);
+			ma.doUnCompress(file, filepath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
+	private void onCrackArchiverFile(Archiver archiver) {
+		if(!archiver.prepareCracker()) {
+			JOptionPane.showMessageDialog(this, "没有找到测试程序，无法破解rar文件！");
+			return ;
+		}
+		File f = getSelectedArchiverFile(archiver.getFileFilter());
+		if (f == null) {
+			return;
+		}
+		String pass;
+		try {
+			long t = System.currentTimeMillis();
+			pass = archiver.crack(f, new CodeIterator());
+			t = System.currentTimeMillis() - t;
+			System.out.println(t);
+
+			if (pass == null) {
+				JOptionPane.showMessageDialog(this, "指定的密码无法解开文件!");
+			} else {
+				JOptionPane.showMessageDialog(this, pass);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "破解过程中出错!");
+		}
+	}
 	private class ActionAdapter implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
