@@ -3,12 +3,26 @@ package edu.jiangxin.apktoolbox.file.compress;
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public final class MyRar extends Archiver implements ICracker {
+	private Logger logger;
+	private Configuration conf;
+	private String path;
+
+	public MyRar() {
+		logger = LogManager.getLogger(this.getClass().getSimpleName());
+		conf = Utils.getConfiguration();
+		path = conf.getString(Constants.RAR_PATH_KEY);
+	}
 
 	private static FileNameExtensionFilter filter = new FileNameExtensionFilter(
 			"RAR压缩文件(*.rar)", "rar");
@@ -21,7 +35,7 @@ public final class MyRar extends Archiver implements ICracker {
 	@Override
 	public boolean prepareCracker() {
 		try {
-			Runtime.getRuntime().exec("rar.exe");
+			Runtime.getRuntime().exec(path);
 		} catch (IOException e) {
 			return false;
 		}
@@ -30,53 +44,36 @@ public final class MyRar extends Archiver implements ICracker {
 
 	@Override
 	public String crack(File file, CodeIterator codeIterator) {
-		boolean ret = false;
-		// 系统安装winrar的路径
-		String cmd = "rar.exe";
-//		String cmd = "C:\\Program Files\\WinRAR\\Rar.exe";
+		boolean isHit = false;
 		String target = file.getAbsolutePath();
 		String pass = codeIterator.nextCode();
 
-		while (!ret && pass != null) {
-			String unrarCmd = String.format("%s t -p%s %s", cmd, pass, target);
-			Runtime rt = Runtime.getRuntime();
-			Process pre = null;
+		while (!isHit && pass != null) {
+			String unrarCmd = String.format("%s t -p%s %s", path, pass, target);
+			logger.info("unrar cmd: " + unrarCmd);
+			Process process = null;
 			try {
-				pre = rt.exec(unrarCmd);
+				process = Runtime.getRuntime().exec(unrarCmd);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			InputStreamReader isr = null;
-			try {
-				isr = new InputStreamReader(pre.getInputStream(),
-						"gbk");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			BufferedReader bf = new BufferedReader(isr);
-			String line = null;
-			while (true) {
-				try {
-					if (!((line = bf.readLine()) != null)) break;
-				} catch (IOException e) {
-					e.printStackTrace();
+			try (BufferedReader bf = new BufferedReader(new InputStreamReader(process.getInputStream(), "gbk"))) {
+				String line;
+				while ((line = bf.readLine()) != null) {
+					logger.info(line);
+					if (line.indexOf("全部成功") >= 0 || line.indexOf("全部正常") >= 0) {
+						isHit = true;
+						break;
+					}
 				}
-//				System.out.println(line);
-				if (line.indexOf("全部成功") >= 0) {
-					ret = true;
-					break;
-				}
-			}
-			try {
-				bf.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+
 			}
-			if (!ret) {
+			if (!isHit) {
 				pass = codeIterator.nextCode();
 			}
 		}
-		if (ret) {
+		if (isHit) {
 			return pass;
 		} else {
 			return null;
@@ -123,17 +120,5 @@ public final class MyRar extends Archiver implements ICracker {
 	@Override
 	public final FileNameExtensionFilter getFileFilter() {
 		return filter;
-	}
-	
-	/**
-	 * 是否已准备好(暴力破解rar密码)
-	 */
-	public static boolean isReady() {
-		try {
-			Runtime.getRuntime().exec("rar.exe");
-		} catch (IOException e) {
-			return false;
-		}
-		return true;		
 	}
 }

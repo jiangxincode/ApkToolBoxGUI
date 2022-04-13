@@ -29,6 +29,8 @@ public class Constants {
 
     public static final String AXMLPRINTER_PATH_KEY = "axmlprinter.path";
 
+    public static final String RAR_PATH_KEY = "rar.path";
+
     public static final String zhSimple2zhTw = "简转繁";
 
     public static final String zhTw2zhSimple = "繁转简";

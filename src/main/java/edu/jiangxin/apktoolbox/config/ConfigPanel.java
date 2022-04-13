@@ -40,6 +40,9 @@ public class ConfigPanel extends EasyPanel {
 
         createPathPanel("Path of AXMLPrinter(e.g.\"D:/Portable/tools/AXMLPrinter3.jar\")", "https://github.com/jiangxincode/AXMLPrinter3", Constants.AXMLPRINTER_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createPathPanel("Path of RAR(e.g.\"D:/Portable/tools/rar.exe\")", "https://www.win-rar.com/", Constants.RAR_PATH_KEY);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
     }
 
     private void createPathPanel(String label, String website, String confKey) {
