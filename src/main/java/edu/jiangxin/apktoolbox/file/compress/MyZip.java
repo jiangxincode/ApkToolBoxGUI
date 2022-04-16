@@ -1,17 +1,11 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * 使用java原生方法处理ZIP文件

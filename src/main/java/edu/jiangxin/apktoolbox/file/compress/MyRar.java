@@ -4,8 +4,13 @@ import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,23 +88,31 @@ public final class MyRar extends Archiver implements ICracker {
 		return true;
 	}
 
+	//检查返回值来提升速度？
+	//使用库来提升速度？
+	//使用多线程来提升速度？
+	//比较不同的方式来决定最终的方案
 	@Override
 	public boolean checkPwd(File file, String pwd) {
 		String target = file.getAbsolutePath();
 		String cmd = String.format("%s t -p%s %s", path, pwd, target);
 		logger.info("checkPwd cmd: " + cmd);
-		try (BufferedReader bf = new BufferedReader(new InputStreamReader(
-				Runtime.getRuntime().exec(cmd).getInputStream(), "gbk"))) {
-			String line;
-			while ((line = bf.readLine()) != null) {
-				logger.info(line);
-				if (line.indexOf("全部成功") >= 0 || line.indexOf("全部正常") >= 0) {
-					return true;
-				}
+		boolean result = false;
+		try (ProcessLogOutputStream outStream = new ProcessLogOutputStream(logger, Level.INFO);
+			 ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
+		) {
+			CommandLine commandLine = CommandLine.parse(cmd);
+			DefaultExecutor exec = new DefaultExecutor();
+			PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
+			exec.setStreamHandler(streamHandler);
+			int exitValue = exec.execute(commandLine);
+			logger.info("exitValue: [" + exitValue + "]");
+			if (exitValue == 0) {
+				result = true;
 			}
-		} catch (IOException e) {
-			logger.error("checkPwd IOException" + e.getMessage());
+		} catch (IOException ioe) {
+			logger.error("exec fail");
 		}
-		return false;
+		return result;
 	}
 }

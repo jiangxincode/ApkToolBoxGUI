@@ -5,7 +5,7 @@ package edu.jiangxin.apktoolbox.file.compress;
  *
  */
 public class CodeIterator {
-	private Integer num = 986999;
+	private Integer num = 986899;
 
 	public String nextCode() {
 		if (num < 1000000) {

@@ -1,14 +1,11 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
-import java.io.BufferedReader;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public abstract class Archiver implements ICracker {
-	
 	/**
 	 * 打包或压缩文件
 	 * @param files 需要打包和压缩的文件数组
