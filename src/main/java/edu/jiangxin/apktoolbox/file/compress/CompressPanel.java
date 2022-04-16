@@ -124,7 +124,7 @@ public final class CompressPanel extends EasyPanel {
 		JButton buttonCrackZip = new JButton("暴力破解zip文件密码...");
 		buttonCrackZip.addActionListener(new ActionAdapter() {
 			public void run() {
-				JOptionPane.showMessageDialog(CompressPanel.this, "暂未实现，敬请期待");
+				onCrackArchiverFile(new MyZip());
 			}
 		});
 		operationPanel.add(buttonCrackZip);
