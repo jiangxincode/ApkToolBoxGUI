@@ -45,7 +45,7 @@ public final class MyTar extends Archiver {
 	}
 
 	@Override
-	public final void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destpath)
 			throws IOException {
 		/*
 		 * 定义一个TarArchiveOutputStream 对象
@@ -93,7 +93,7 @@ public final class MyTar extends Archiver {
 	}
 
 	@Override
-	public final FileNameExtensionFilter getFileFilter() {
+	public FileNameExtensionFilter getFileFilter() {
 		return filter;
 	}
 }

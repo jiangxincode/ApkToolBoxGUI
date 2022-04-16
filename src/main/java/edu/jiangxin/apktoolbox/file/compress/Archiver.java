@@ -37,7 +37,7 @@ public abstract class Archiver implements ICracker {
 	@Override
 	public String getPwd(File file, List<CodeIterator> codeIterators) {
 		for (CodeIterator codeIterator : codeIterators) {
-			String pass = codeIterator.nextCode();
+			String pass = getPwd(file, codeIterator);
 			if (pass != null) {
 				return pass;
 			}

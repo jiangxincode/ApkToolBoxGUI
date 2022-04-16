@@ -15,5 +15,4 @@ public class CodeIterator {
 		}
 		return null;
 	}
-
 }

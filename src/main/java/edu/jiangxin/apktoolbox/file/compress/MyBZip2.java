@@ -17,7 +17,7 @@ public final class MyBZip2 extends Compressor {
 			"BZIP2压缩文件(*.bz2)", "bz2");
 	
 	@Override
-	public final void doCompress(File file, String destpath) throws IOException {
+	public void doCompress(File file, String destpath) throws IOException {
 		FileInputStream fis = new FileInputStream(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		
@@ -29,7 +29,7 @@ public final class MyBZip2 extends Compressor {
 	}
 
 	@Override
-	public final void doUnCompress(File srcFile, String destpath) throws IOException {
+	public void doUnCompress(File srcFile, String destpath) throws IOException {
 		FileInputStream fis = new FileInputStream(srcFile);
 		BZip2CompressorInputStream gzis = new BZip2CompressorInputStream(fis);
 		BufferedInputStream bis = new BufferedInputStream(gzis);
@@ -41,7 +41,7 @@ public final class MyBZip2 extends Compressor {
 	}
 
 	@Override
-	public final FileNameExtensionFilter getFileFilter() {
+	public FileNameExtensionFilter getFileFilter() {
 		return filter;
 	}
 }

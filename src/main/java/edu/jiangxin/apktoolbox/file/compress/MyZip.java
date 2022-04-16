@@ -67,7 +67,7 @@ public final class MyZip extends Archiver {
 	}
 
 	@Override
-	public final void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destpath)
 			throws IOException {
 		/*
 		 * 定义一个ZipOutputStream 对象
@@ -81,7 +81,7 @@ public final class MyZip extends Archiver {
 	}
 
 	@Override
-	public final void doUnArchiver(File srcfile, String destpath,
+	public void doUnArchiver(File srcfile, String destpath,
 			String password) throws IOException {
 		byte[] buf = new byte[1024];
 		FileInputStream fis = new FileInputStream(srcfile);
@@ -116,7 +116,7 @@ public final class MyZip extends Archiver {
 	}
 
 	@Override
-	public final FileNameExtensionFilter getFileFilter() {
+	public FileNameExtensionFilter getFileFilter() {
 		return filter;
 	}
 

@@ -17,7 +17,7 @@ public final class MyGZip extends Compressor {
 			"GZIP压缩文件(*.gz)", "gz");
 
 	@Override
-	public final void doCompress(File file, String destpath) throws IOException {
+	public void doCompress(File file, String destpath) throws IOException {
 		FileInputStream fis = new FileInputStream(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		
@@ -29,7 +29,7 @@ public final class MyGZip extends Compressor {
 	}
 
 	@Override
-	public final void doUnCompress(File srcFile, String destpath) throws IOException {
+	public void doUnCompress(File srcFile, String destpath) throws IOException {
 		FileInputStream fis = new FileInputStream(srcFile);
 		GZIPInputStream gzis = new GZIPInputStream(fis);
 		BufferedInputStream bis = new BufferedInputStream(gzis);
@@ -41,7 +41,7 @@ public final class MyGZip extends Compressor {
 	}
 
 	@Override
-	public final FileNameExtensionFilter getFileFilter() {
+	public FileNameExtensionFilter getFileFilter() {
 		return filter;
 	}
 }

@@ -32,12 +32,12 @@ public final class MyRar extends Archiver implements ICracker {
 			"RAR压缩文件(*.rar)", "rar");
 
 	@Override
-	public final void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destpath)
 			throws IOException {
 	}
 
 	@Override
-	public final void doUnArchiver(File srcfile, String destpath,
+	public void doUnArchiver(File srcfile, String destpath,
 			String password) throws IOException, WrongPassException {
 		try {
 			Archive a = new Archive(srcfile);
@@ -74,7 +74,7 @@ public final class MyRar extends Archiver implements ICracker {
 	}
 
 	@Override
-	public final FileNameExtensionFilter getFileFilter() {
+	public FileNameExtensionFilter getFileFilter() {
 		return filter;
 	}
 
