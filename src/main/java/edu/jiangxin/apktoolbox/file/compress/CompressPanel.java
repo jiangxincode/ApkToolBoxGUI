@@ -13,8 +13,6 @@ import java.io.IOException;
 
 /**
  * 压缩解压zip文件的类
- * ref:https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581
- * https://www.yunjiemi.net/Passper/index.html
  * 
  */
 public final class CompressPanel extends EasyPanel {
@@ -112,22 +110,6 @@ public final class CompressPanel extends EasyPanel {
 		JButton buttonRar = new JButton("打包并压缩文件成RAR格式...");
 		buttonRar.addActionListener(new ActionAdapter());
 		operationPanel.add(buttonRar);
-
-		JButton buttonCrackRar = new JButton("暴力破解rar文件密码...");
-		buttonCrackRar.addActionListener(new ActionAdapter() {
-			public void run() {
-				onCrackArchiverFile(new MyRar());
-			}
-		});
-		operationPanel.add(buttonCrackRar);
-
-		JButton buttonCrackZip = new JButton("暴力破解zip文件密码...");
-		buttonCrackZip.addActionListener(new ActionAdapter() {
-			public void run() {
-				onCrackArchiverFile(new MyZip());
-			}
-		});
-		operationPanel.add(buttonCrackZip);
 
 		JButton buttonUpZip = new JButton("解压解包ZIP文件...");
 		buttonUpZip.addActionListener(new ActionAdapter() {
@@ -300,31 +282,6 @@ public final class CompressPanel extends EasyPanel {
 
 	}
 
-	private void onCrackArchiverFile(Archiver archiver) {
-		if(!archiver.prepareCracker()) {
-			JOptionPane.showMessageDialog(this, "没有找到测试程序，无法破解rar文件！");
-			return ;
-		}
-		File f = getSelectedArchiverFile(archiver.getFileFilter());
-		if (f == null) {
-			return;
-		}
-		String pass;
-		try {
-			long t = System.currentTimeMillis();
-			pass = archiver.getPwd(f, new CodeIterator());
-			t = System.currentTimeMillis() - t;
-			System.out.println(t);
-
-			if (pass == null) {
-				JOptionPane.showMessageDialog(this, "指定的密码无法解开文件!");
-			} else {
-				JOptionPane.showMessageDialog(this, pass);
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "破解过程中出错!");
-		}
-	}
 	private class ActionAdapter implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {

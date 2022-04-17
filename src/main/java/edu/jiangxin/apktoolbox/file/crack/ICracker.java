@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.compress;
+package edu.jiangxin.apktoolbox.file.crack;
 
 import java.io.File;
 import java.util.List;
@@ -11,4 +11,6 @@ public interface ICracker {
     String getPwd(File file, CodeIterator codeIterator);
 
     boolean checkPwd(File file, String pwd);
+
+    String[] getFileExtension();
 }

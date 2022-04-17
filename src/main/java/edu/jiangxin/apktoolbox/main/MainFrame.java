@@ -8,11 +8,15 @@ import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
 import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
-import edu.jiangxin.apktoolbox.file.compress.CompressPanel;
 import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
-import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
+import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
+import edu.jiangxin.apktoolbox.file.OsConvertPanel;
 import edu.jiangxin.apktoolbox.file.checksum.CheckDigestPanel;
+import edu.jiangxin.apktoolbox.file.compress.CompressPanel;
+import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
+import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
+import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
 import edu.jiangxin.apktoolbox.help.*;
 import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
@@ -22,9 +26,6 @@ import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
-import edu.jiangxin.apktoolbox.file.OsConvertPanel;
-import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -79,6 +80,7 @@ public class MainFrame extends EasyFrame {
     private JMenuItem batchRenameMenuItem;
     private JMenuItem checkSumMenuItem;
     private JMenuItem compressMenuItem;
+    private JMenuItem crackMenuItem;
 
     private JMenu convertMenu;
     private JMenuItem timeConvertMenuItem;
@@ -266,6 +268,10 @@ public class MainFrame extends EasyFrame {
         compressMenuItem = new JMenuItem(bundle.getString("file.compress.title"));
         compressMenuItem.addActionListener(new ChangePanelListener(CompressPanel.class, compressMenuItem.getText()));
         fileMenu.add(compressMenuItem);
+
+        crackMenuItem = new JMenuItem(bundle.getString("file.crack.title"));
+        crackMenuItem.addActionListener(new ChangePanelListener(CrackPanel.class, crackMenuItem.getText()));
+        fileMenu.add(crackMenuItem);
     }
 
     private void createConvertMenu() {

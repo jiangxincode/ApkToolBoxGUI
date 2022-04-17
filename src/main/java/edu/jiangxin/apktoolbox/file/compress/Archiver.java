@@ -1,11 +1,13 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
+import edu.jiangxin.apktoolbox.file.crack.CodeIterator;
+
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class Archiver implements ICracker {
+public abstract class Archiver {
 	/**
 	 * 打包或压缩文件
 	 * @param files 需要打包和压缩的文件数组
@@ -28,39 +30,4 @@ public abstract class Archiver implements ICracker {
 	 * @return 本归档类对应文件的文件过滤器
 	 */
 	public abstract FileNameExtensionFilter getFileFilter();
-
-	@Override
-	public boolean prepareCracker() {
-		return false;
-	}
-
-	@Override
-	public String getPwd(File file, List<CodeIterator> codeIterators) {
-		for (CodeIterator codeIterator : codeIterators) {
-			String pass = getPwd(file, codeIterator);
-			if (pass != null) {
-				return pass;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public String getPwd(File file, CodeIterator codeIterator) {
-		String pass = codeIterator.nextCode();
-		while (pass != null) {
-			boolean isHit = checkPwd(file, pass);
-			if (isHit) {
-				return pass;
-			} else {
-				pass = codeIterator.nextCode();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public boolean checkPwd(File file, String pwd) {
-		return false;
-	}
 }

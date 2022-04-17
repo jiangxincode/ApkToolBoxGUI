@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.compress;
+package edu.jiangxin.apktoolbox.file.crack;
 
 /**
  * 密码迭代器
