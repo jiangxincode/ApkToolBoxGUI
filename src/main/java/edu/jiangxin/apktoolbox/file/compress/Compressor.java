@@ -16,18 +16,18 @@ public abstract class Compressor {
 	/**
 	 * 压缩文件抽象方法，子类实现具体功能
 	 * @param file 需要进行压缩的文件
-	 * @param destpath 目标文件的文件名
+	 * @param destPath 目标文件的文件名
 	 * @throws IOException
 	 */
-	public abstract void doCompress(File file, String destpath) throws IOException;
+	public abstract void doCompress(File file, String destPath) throws IOException;
 	
 	/**
 	 * 解压缩文件抽象方法，子类实现具体功能
 	 * @param srcFile 需要进行解压的文件
-	 * @param destpath 目标文件的文件名
+	 * @param destPath 目标文件的文件名
 	 * @throws IOException
 	 */
-	public abstract void doUnCompress(File srcFile, String destpath) throws IOException;
+	public abstract void doUnCompress(File srcFile, String destPath) throws IOException;
 	
 	/**
 	 * 从bis读取数据并写入bos中

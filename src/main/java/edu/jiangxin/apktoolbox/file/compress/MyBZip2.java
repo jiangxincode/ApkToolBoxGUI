@@ -17,11 +17,11 @@ public final class MyBZip2 extends Compressor {
 			"BZIP2压缩文件(*.bz2)", "bz2");
 	
 	@Override
-	public void doCompress(File file, String destpath) throws IOException {
+	public void doCompress(File file, String destPath) throws IOException {
 		FileInputStream fis = new FileInputStream(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		
-		File gf = new File(destpath);
+		File gf = new File(destPath);
 		FileOutputStream fos = new FileOutputStream(gf);
 		BZip2CompressorOutputStream gzos = new BZip2CompressorOutputStream(fos);
 		BufferedOutputStream bos = new BufferedOutputStream(gzos);
@@ -29,12 +29,12 @@ public final class MyBZip2 extends Compressor {
 	}
 
 	@Override
-	public void doUnCompress(File srcFile, String destpath) throws IOException {
+	public void doUnCompress(File srcFile, String destPath) throws IOException {
 		FileInputStream fis = new FileInputStream(srcFile);
 		BZip2CompressorInputStream gzis = new BZip2CompressorInputStream(fis);
 		BufferedInputStream bis = new BufferedInputStream(gzis);
 
-		File tf = new File(destpath);
+		File tf = new File(destPath);
 		FileOutputStream fos = new FileOutputStream(tf);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		readAndWrite(bis, bos);

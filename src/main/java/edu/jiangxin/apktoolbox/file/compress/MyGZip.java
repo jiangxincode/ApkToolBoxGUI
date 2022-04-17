@@ -17,11 +17,11 @@ public final class MyGZip extends Compressor {
 			"GZIP压缩文件(*.gz)", "gz");
 
 	@Override
-	public void doCompress(File file, String destpath) throws IOException {
+	public void doCompress(File file, String destPath) throws IOException {
 		FileInputStream fis = new FileInputStream(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		
-		File gf = new File(destpath);
+		File gf = new File(destPath);
 		FileOutputStream fos = new FileOutputStream(gf);
 		GZIPOutputStream gzos = new GZIPOutputStream(fos);
 		BufferedOutputStream bos = new BufferedOutputStream(gzos);
@@ -29,12 +29,12 @@ public final class MyGZip extends Compressor {
 	}
 
 	@Override
-	public void doUnCompress(File srcFile, String destpath) throws IOException {
+	public void doUnCompress(File srcFile, String destPath) throws IOException {
 		FileInputStream fis = new FileInputStream(srcFile);
 		GZIPInputStream gzis = new GZIPInputStream(fis);
 		BufferedInputStream bis = new BufferedInputStream(gzis);
 
-		File tf = new File(destpath);
+		File tf = new File(destPath);
 		FileOutputStream fos = new FileOutputStream(tf);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		readAndWrite(bis, bos);

@@ -45,12 +45,12 @@ public final class MyTar extends Archiver {
 	}
 
 	@Override
-	public void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destPath)
 			throws IOException {
 		/*
 		 * 定义一个TarArchiveOutputStream 对象
 		 */
-		FileOutputStream fos = new FileOutputStream(destpath);
+		FileOutputStream fos = new FileOutputStream(destPath);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		TarArchiveOutputStream taos = new TarArchiveOutputStream(bos);
 		dfs(files, taos, "");
@@ -59,15 +59,15 @@ public final class MyTar extends Archiver {
 	}
 
 	@Override
-	public void doUnArchiver(File srcfile, String destpath, String password)
+	public void doUnArchiver(File srcFile, String destPath, String password)
 			throws IOException {
 		byte[] buf = new byte[1024];
-		FileInputStream fis = new FileInputStream(srcfile);
+		FileInputStream fis = new FileInputStream(srcFile);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		TarArchiveInputStream tais = new TarArchiveInputStream(bis);
 		TarArchiveEntry tae = null;
 		while ((tae = tais.getNextTarEntry()) != null) {
-			File f = new File(destpath + "/" + tae.getName());
+			File f = new File(destPath + "/" + tae.getName());
 			if (tae.isDirectory()) {
 				f.mkdirs();
 			} else {

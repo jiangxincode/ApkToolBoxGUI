@@ -32,18 +32,18 @@ public final class MyRar extends Archiver implements ICracker {
 			"RAR压缩文件(*.rar)", "rar");
 
 	@Override
-	public void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destPath)
 			throws IOException {
 	}
 
 	@Override
-	public void doUnArchiver(File srcfile, String destpath,
-			String password) throws IOException, WrongPassException {
+	public void doUnArchiver(File srcFile, String destPath,
+							 String password) throws IOException, WrongPassException {
 		try {
-			Archive a = new Archive(srcfile);
+			Archive a = new Archive(srcFile);
 			FileHeader fh;
 			while ((fh = a.nextFileHeader()) != null) {
-				File f = new File(destpath + "/"
+				File f = new File(destPath + "/"
 						+ fh.getFileNameString().trim());
 
 				if (fh.isDirectory()) {

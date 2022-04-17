@@ -67,12 +67,12 @@ public final class MyZip extends Archiver {
 	}
 
 	@Override
-	public void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destPath)
 			throws IOException {
 		/*
 		 * 定义一个ZipOutputStream 对象
 		 */
-		FileOutputStream fos = new FileOutputStream(destpath);
+		FileOutputStream fos = new FileOutputStream(destPath);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		ZipOutputStream zos = new ZipOutputStream(bos);
 		dfs(files, zos, "");
@@ -81,15 +81,15 @@ public final class MyZip extends Archiver {
 	}
 
 	@Override
-	public void doUnArchiver(File srcfile, String destpath,
-			String password) throws IOException {
+	public void doUnArchiver(File srcFile, String destPath,
+							 String password) throws IOException {
 		byte[] buf = new byte[1024];
-		FileInputStream fis = new FileInputStream(srcfile);
+		FileInputStream fis = new FileInputStream(srcFile);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		ZipInputStream zis = new ZipInputStream(bis, Charset.forName("GBK"));
 		ZipEntry zn = null;
 		while ((zn = zis.getNextEntry()) != null) {
-			File f = new File(destpath + "/" + zn.getName());
+			File f = new File(destPath + "/" + zn.getName());
 			if (zn.isDirectory()) {
 				f.mkdirs();
 			} else {

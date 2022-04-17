@@ -12,17 +12,17 @@ public final class My7Zip extends Archiver {
 
 
 	@Override
-	public final void doArchiver(File[] files, String destpath)
+	public void doArchiver(File[] files, String destPath)
 			throws IOException {
 	}
 
 	@Override
-	public void doUnArchiver(File srcfile, String destpath, String password)
+	public void doUnArchiver(File srcFile, String destPath, String password)
 			throws IOException, WrongPassException {
 	}
 
 	@Override
-	public final FileNameExtensionFilter getFileFilter() {
+	public FileNameExtensionFilter getFileFilter() {
 		return filter;
 	}
 
