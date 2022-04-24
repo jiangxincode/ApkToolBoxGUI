@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.NoLogOutputStream;
 import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
@@ -14,12 +15,13 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public final class RarCracker extends BaseCracker {
+public final class RarCracker extends FileCracker {
     private Logger logger;
     private Configuration conf;
     private String path;
 
-    public RarCracker() {
+    public RarCracker(File file) {
+        super(file);
         logger = LogManager.getLogger(this.getClass().getSimpleName());
         conf = Utils.getConfiguration();
         path = conf.getString(Constants.RAR_PATH_KEY);
@@ -35,18 +37,14 @@ public final class RarCracker extends BaseCracker {
         return true;
     }
 
-    //检查返回值来提升速度？
-    //使用库来提升速度？
-    //使用多线程来提升速度？
-    //比较不同的方式来决定最终的方案
     @Override
-    public boolean checkPwd(File file, String pwd) {
+    public boolean checkPwd(String pwd) {
         String target = file.getAbsolutePath();
         String cmd = String.format("%s t -p%s %s", path, pwd, target);
         logger.info("checkPwd cmd: " + cmd);
         boolean result = false;
-        try (ProcessLogOutputStream outStream = new ProcessLogOutputStream(logger, Level.INFO);
-             ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
+        try (NoLogOutputStream outStream = new NoLogOutputStream();
+             NoLogOutputStream errStream = new NoLogOutputStream()
         ) {
             CommandLine commandLine = CommandLine.parse(cmd);
             DefaultExecutor exec = new DefaultExecutor();
@@ -58,13 +56,7 @@ public final class RarCracker extends BaseCracker {
                 result = true;
             }
         } catch (IOException ioe) {
-            logger.error("exec fail");
         }
         return result;
-    }
-
-    @Override
-    public String[] getFileExtension() {
-        return new String[]{"rar"};
     }
 }

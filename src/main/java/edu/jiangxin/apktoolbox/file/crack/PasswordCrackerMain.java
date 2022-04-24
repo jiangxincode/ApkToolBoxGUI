@@ -20,7 +20,7 @@ public class PasswordCrackerMain {
         // init pool to the fixed number of threads available
         ExecutorService  workerPool = Executors.newFixedThreadPool(numThreads);
         PasswordFuture passwordFuture = new PasswordFuture();
-        PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, encryptedPassword);
+        PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, new StringCracker(encryptedPassword));
 
         // Create PasswordCrackerTask and use executor
         // service to run in a separate thread

@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 压缩解压zip文件的类
@@ -49,7 +51,13 @@ public final class CrackPanel extends EasyPanel {
         JButton buttonCrackRar = new JButton("破解RAR类型文件");
         buttonCrackRar.addActionListener(new ActionAdapter() {
             public void run() {
-                onCrackArchiverFile(new RarCracker());
+                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"rar"});
+                File file = getSelectedArchiverFile(fileNameExtensionFilter);
+                if (file == null) {
+                    return;
+                }
+                ICracker cracker = new RarCracker(file);
+                onCrackArchiverFile(cracker);
             }
         });
         operationPanel.add(buttonCrackRar);
@@ -57,7 +65,13 @@ public final class CrackPanel extends EasyPanel {
         JButton buttonCrackZip = new JButton("破解ZIP类型文件");
         buttonCrackZip.addActionListener(new ActionAdapter() {
             public void run() {
-                onCrackArchiverFile(new ZipCracker());
+                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"zip"});
+                File file = getSelectedArchiverFile(fileNameExtensionFilter);
+                if (file == null) {
+                    return;
+                }
+                ICracker cracker = new ZipCracker(file);
+                onCrackArchiverFile(cracker);
             }
         });
         operationPanel.add(buttonCrackZip);
@@ -80,22 +94,36 @@ public final class CrackPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "没有找到测试程序，无法破解rar文件！");
             return;
         }
-        FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, cracker.getFileExtension());
-        File f = getSelectedArchiverFile(fileNameExtensionFilter);
-        if (f == null) {
-            return;
-        }
-        String pass;
+        String password = null;
         try {
             long t = System.currentTimeMillis();
-            pass = cracker.getPwd(f, new CodeIterator());
+
+            int numThreads = 10;
+            int passwordLength = 6;
+            boolean isEarlyTermination = true;
+
+            ExecutorService workerPool = Executors.newFixedThreadPool(numThreads);
+            PasswordFuture passwordFuture = new PasswordFuture();
+            PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, cracker);
+
+            for (int i = 0; i < numThreads; i++) {
+                workerPool.execute(new PasswordCrackerTask(i, isEarlyTermination, consts, passwordFuture));
+            }
+            try {
+                password = passwordFuture.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                workerPool.shutdown();
+            }
+
             t = System.currentTimeMillis() - t;
             System.out.println(t);
 
-            if (pass == null) {
+            if (password == null) {
                 JOptionPane.showMessageDialog(this, "指定的密码无法解开文件!");
             } else {
-                JOptionPane.showMessageDialog(this, pass);
+                JOptionPane.showMessageDialog(this, password);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "破解过程中出错!");

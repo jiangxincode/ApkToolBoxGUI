@@ -1,9 +1,7 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import static edu.jiangxin.apktoolbox.file.crack.PasswordCrackerConsts.PASSWORD_CHARS;
 
-import static PasswordCracker.PasswordCrackerConsts.*;
 
 // refer to Runnable class
 // site : https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html
@@ -17,7 +15,7 @@ public class PasswordCrackerTask implements Runnable {
     public PasswordCrackerTask() {
         taskId = 0;
         isEarlyTermination = true;
-        consts = new PasswordCrackerConsts(1, 0, "");
+        consts = new PasswordCrackerConsts(1, 0, new StringCracker(""));
         passwordFuture = new PasswordFuture();
     }
 
@@ -34,7 +32,7 @@ public class PasswordCrackerTask implements Runnable {
     public void run() {
         long rangeBegin = taskId * consts.getPasswordSubRangeSize();
         long rangeEnd = (taskId + 1) * consts.getPasswordSubRangeSize() - 1;
-        String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getEncryptedPassword());
+        String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getCracker());
         if (passwordOrNull != null) {
             passwordFuture.set(passwordOrNull);
         }
@@ -44,14 +42,13 @@ public class PasswordCrackerTask implements Runnable {
      * The findPasswordInRange method find the original password using md5 hash function
      * if a thread discovers the password, it returns original password string; otherwise, it returns null;
     */
-    public String findPasswordInRange(long rangeBegin, long rangeEnd, String encryptedPassword) {
+    public String findPasswordInRange(long rangeBegin, long rangeEnd, ICracker cracker) {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBase36(rangeBegin, passwordIterator);
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
             if (isEarlyTermination && passwordFuture.isDone()) return null;
             String password = transformIntToStr(passwordIterator);
-            String hashedPassword = encrypt(password, getMessageDigest());
-            if (hashedPassword.equals(encryptedPassword)) {
+            if (cracker.checkPwd(password)) {
                 return password;
             }
             getNextCandidate(passwordIterator);
@@ -101,35 +98,6 @@ public class PasswordCrackerTask implements Runnable {
             password[i] = PASSWORD_CHARS.charAt(chars[i]);
         }
         return new String(password);
-    }
-
-
-    public static MessageDigest getMessageDigest() {
-        try {
-            return MessageDigest.getInstance("MD5");
-        }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Cannot use MD5 Library:" + e.getMessage());
-        }
-    }
-
-    public static String encrypt(String password, MessageDigest messageDigest) {
-        messageDigest.update(password.getBytes());
-        byte[] hashedValue = messageDigest.digest();
-        return byteToHexString(hashedValue);
-    }
-
-    public static String byteToHexString(byte[] bytes) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                builder.append('0');
-            }
-            builder.append(hex);
-        }
-        return builder.toString();
     }
 }
 

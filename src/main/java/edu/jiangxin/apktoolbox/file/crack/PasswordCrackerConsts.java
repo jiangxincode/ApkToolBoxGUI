@@ -7,12 +7,12 @@ class PasswordCrackerConsts {
     final int passwordLength;
     final long passwordRangeSize;
     final long passwordSubRangeSize;
-    final String encryptedPassword;
-    
-    public PasswordCrackerConsts(int numThreads, int passwordLength, String encryptedPassword) {
+    final ICracker cracker;
+
+    public PasswordCrackerConsts(int numThreads, int passwordLength, ICracker cracker) {
         this.numThreads = numThreads;
         this.passwordLength = passwordLength;
-        this.encryptedPassword = encryptedPassword;
+        this.cracker = cracker;
         passwordRangeSize = (long) Math.pow(PASSWORD_CHARS.length(), passwordLength);
         passwordSubRangeSize = (passwordRangeSize + numThreads - 1) / numThreads;
     }
@@ -28,9 +28,9 @@ class PasswordCrackerConsts {
     public long getPasswordSubRangeSize() {
         return passwordSubRangeSize;
     }
-    
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+
+    public ICracker getCracker() {
+        return cracker;
     }
 }
 
