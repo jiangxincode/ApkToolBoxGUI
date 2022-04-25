@@ -1,11 +1,8 @@
 package edu.jiangxin.apktoolbox.file.compress;
 
-import edu.jiangxin.apktoolbox.file.crack.CodeIterator;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public abstract class Archiver {
 	/**

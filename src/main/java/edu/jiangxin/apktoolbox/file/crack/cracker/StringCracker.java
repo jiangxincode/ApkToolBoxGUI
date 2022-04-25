@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack;
+package edu.jiangxin.apktoolbox.file.crack.cracker;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

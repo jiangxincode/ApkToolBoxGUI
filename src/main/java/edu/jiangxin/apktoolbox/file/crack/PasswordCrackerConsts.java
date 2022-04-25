@@ -1,5 +1,7 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
+import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
+
 class PasswordCrackerConsts {
     public static final String PASSWORD_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
     

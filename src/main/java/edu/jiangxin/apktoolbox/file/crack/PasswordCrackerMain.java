@@ -1,7 +1,9 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
-import java.lang.String;
-import java.util.concurrent.*;
+import edu.jiangxin.apktoolbox.file.crack.cracker.StringCracker;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PasswordCrackerMain {
     public static void main(String args[]) {

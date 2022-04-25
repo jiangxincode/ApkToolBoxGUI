@@ -1,5 +1,8 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
+import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.StringCracker;
+
 import static edu.jiangxin.apktoolbox.file.crack.PasswordCrackerConsts.PASSWORD_CHARS;
 
 

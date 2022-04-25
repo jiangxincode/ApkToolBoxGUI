@@ -1,30 +1,28 @@
-package edu.jiangxin.apktoolbox.file.crack;
+package edu.jiangxin.apktoolbox.file.crack.cracker;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.NoLogOutputStream;
-import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 
-public final class ZipCracker extends FileCracker {
+public final class RarCracker extends FileCracker {
     private Logger logger;
     private Configuration conf;
     private String path;
 
-    public ZipCracker(File file) {
+    public RarCracker(File file) {
         super(file);
         logger = LogManager.getLogger(this.getClass().getSimpleName());
         conf = Utils.getConfiguration();
-        path = conf.getString(Constants.SEVEN_ZIP_PATH_KEY);
+        path = conf.getString(Constants.RAR_PATH_KEY);
     }
 
     @Override
@@ -40,7 +38,7 @@ public final class ZipCracker extends FileCracker {
     @Override
     public boolean checkPwd(String pwd) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t %s -p%s", path, target, pwd);
+        String cmd = String.format("%s t -p%s %s", path, pwd, target);
         logger.info("checkPwd cmd: " + cmd);
         boolean result = false;
         try (NoLogOutputStream outStream = new NoLogOutputStream();

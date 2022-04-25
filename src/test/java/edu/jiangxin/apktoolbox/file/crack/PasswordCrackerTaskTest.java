@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
+import edu.jiangxin.apktoolbox.file.crack.cracker.StringCracker;
 import org.junit.Assert;
 import org.junit.Test;
 

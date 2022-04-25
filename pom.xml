@@ -37,6 +37,11 @@
             <version>1.21</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.junrar</groupId>
             <artifactId>junrar</artifactId>
             <version>7.5.0</version>

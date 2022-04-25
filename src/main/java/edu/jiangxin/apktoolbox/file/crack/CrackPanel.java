@@ -1,5 +1,9 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
+import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.PDFCracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.RarCracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.ZipCracker;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
@@ -75,6 +79,20 @@ public final class CrackPanel extends EasyPanel {
             }
         });
         operationPanel.add(buttonCrackZip);
+
+        JButton buttonCrackPdf = new JButton("破解PDF类型文件");
+        buttonCrackPdf.addActionListener(new ActionAdapter() {
+            public void run() {
+                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"pdf"});
+                File file = getSelectedArchiverFile(fileNameExtensionFilter);
+                if (file == null) {
+                    return;
+                }
+                ICracker cracker = new PDFCracker(file);
+                onCrackArchiverFile(cracker);
+            }
+        });
+        operationPanel.add(buttonCrackPdf);
     }
 
     private File getSelectedArchiverFile(FileNameExtensionFilter filter) {
