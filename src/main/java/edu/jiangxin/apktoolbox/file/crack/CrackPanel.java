@@ -45,12 +45,53 @@ public final class CrackPanel extends EasyPanel {
 
     private void createOptionPanel() {
         optionPanel = new JPanel();
-        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
+        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
+
+        JPanel optionTopPanel = new JPanel();
+        optionTopPanel.setLayout(new BoxLayout(optionTopPanel, BoxLayout.X_AXIS));
+
+        JPanel optionBottomPanel = new JPanel();
+        optionBottomPanel.setLayout(new BoxLayout(optionBottomPanel, BoxLayout.X_AXIS));
+
+        optionPanel.add(optionTopPanel);
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
+        optionPanel.add(optionBottomPanel);
+
+        JRadioButton bruteForceRadioButton = new JRadioButton("Brute Force");
+        JRadioButton dictionaryRadioButton = new JRadioButton("Dictionary");
+        ButtonGroup crackTypeButtonGroup = new ButtonGroup();
+        crackTypeButtonGroup.add(bruteForceRadioButton);
+        crackTypeButtonGroup.add(dictionaryRadioButton);
+        bruteForceRadioButton.setSelected(true);
+
+        optionTopPanel.add(bruteForceRadioButton);
+        optionTopPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionTopPanel.add(dictionaryRadioButton);
+
+        JCheckBox numberCheckBox = new JCheckBox("Number");
+        JCheckBox lowercaseLetterCheckBox = new JCheckBox("Lowercase Letter");
+        JCheckBox uppercaseLetterCheckBox = new JCheckBox("Uppercase Letter");
+
+        JLabel maxDigitLabel = new JLabel("Max Digits");
+        JSpinner maxDigitSpinner = new JSpinner();
+        maxDigitSpinner.setModel(new SpinnerNumberModel(6, 1, 9, 1));
+
+        optionBottomPanel.add(numberCheckBox);
+        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionBottomPanel.add(lowercaseLetterCheckBox);
+        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionBottomPanel.add(uppercaseLetterCheckBox);
+        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionBottomPanel.add(maxDigitLabel);
+        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionBottomPanel.add(maxDigitSpinner);
+        optionBottomPanel.add(Box.createHorizontalGlue());
+
     }
 
     private void createOperationPanel() {
         operationPanel = new JPanel();
-        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.Y_AXIS));
+        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
         JButton buttonCrackRar = new JButton("破解RAR类型文件");
         buttonCrackRar.addActionListener(new ActionAdapter() {
@@ -65,6 +106,7 @@ public final class CrackPanel extends EasyPanel {
             }
         });
         operationPanel.add(buttonCrackRar);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         JButton buttonCrackZip = new JButton("破解ZIP类型文件");
         buttonCrackZip.addActionListener(new ActionAdapter() {
@@ -79,6 +121,7 @@ public final class CrackPanel extends EasyPanel {
             }
         });
         operationPanel.add(buttonCrackZip);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         JButton buttonCrackPdf = new JButton("破解PDF类型文件");
         buttonCrackPdf.addActionListener(new ActionAdapter() {
