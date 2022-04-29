@@ -176,13 +176,13 @@ public final class CrackPanel extends EasyPanel {
         }
         String password = null;
         try {
-            long t = System.currentTimeMillis();
             for (int i = 1; i <= 6; i++) {
-                int numThreads = 1000;
+                long t = System.currentTimeMillis();
+                int numThreads = getThreadCount(charsStringBuffer.length(), i);
                 boolean isEarlyTermination = true;
 
                 ExecutorService workerPool = Executors.newFixedThreadPool(numThreads);
-                PasswordFuture passwordFuture = new PasswordFuture();
+                PasswordFuture passwordFuture = new PasswordFuture(numThreads);
                 PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, i, cracker,charsStringBuffer.toString());
 
                 for (int j = 0; j < numThreads; j++) {
@@ -195,14 +195,12 @@ public final class CrackPanel extends EasyPanel {
                 } finally {
                     workerPool.shutdown();
                 }
-                logger.info("password: " + password);
+                t = System.currentTimeMillis() - t;
+                System.out.println(t);
                 if (password != null) {
                     break;
                 }
             }
-            t = System.currentTimeMillis() - t;
-            System.out.println(t);
-
             if (password == null) {
                 JOptionPane.showMessageDialog(this, "指定的密码无法解开文件!");
             } else {
@@ -211,6 +209,17 @@ public final class CrackPanel extends EasyPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "破解过程中出错!");
         }
+    }
+
+    private int getThreadCount(int charSetSize, int length) {
+        int result = 1;
+        for (int i = 1; i <= length; i++) {
+            result *= charSetSize;
+        }
+        if (result > 1000) {
+            result = 1000;
+        }
+        return result;
     }
 
     private class ActionAdapter implements ActionListener {

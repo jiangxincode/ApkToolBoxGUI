@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -28,8 +29,14 @@ import java.util.concurrent.locks.ReentrantLock;
 // Complete this class using a lock and the condition variable
 class PasswordFuture implements Future<String> {
     private String result = null;
+    private AtomicInteger finishedTaskCount = new AtomicInteger(0);
+    private int taskCount;
     private final Lock lock = new ReentrantLock();
     private final Condition resultSet = lock.newCondition(); // refer to Condition and Lock class in javadoc
+
+    public PasswordFuture(int taskCount) {
+        this.taskCount = taskCount;
+    }
 
     /*  ### set ###
      *  set the result and send signal to thread waiting for the result
@@ -40,7 +47,9 @@ class PasswordFuture implements Future<String> {
         try {
             this.result = result;
             // signal for condition var
-            resultSet.signal();
+            if (this.result != null || this.finishedTaskCount.incrementAndGet() >= taskCount) {
+                resultSet.signal();
+            }
         } finally {
             // release lock
             lock.unlock();

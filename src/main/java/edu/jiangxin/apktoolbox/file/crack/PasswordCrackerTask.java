@@ -22,9 +22,7 @@ public class PasswordCrackerTask implements Runnable {
         long rangeBegin = taskId * consts.getPasswordSubRangeSize();
         long rangeEnd = (taskId + 1) * consts.getPasswordSubRangeSize() - 1;
         String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getCracker());
-        if (passwordOrNull != null) {
-            passwordFuture.set(passwordOrNull);
-        }
+        passwordFuture.set(passwordOrNull);
     }
 
     /*	### findPasswordInRange	###

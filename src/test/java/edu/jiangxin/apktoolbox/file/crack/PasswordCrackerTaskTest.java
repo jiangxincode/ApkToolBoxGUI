@@ -10,7 +10,7 @@ public class PasswordCrackerTaskTest {
 
     @Test
     public void testFindPasswordInRange() {
-        PasswordFuture passwordFuture = new PasswordFuture();
+        PasswordFuture passwordFuture = new PasswordFuture(1);
         PasswordCrackerConsts consts = new PasswordCrackerConsts(1, 6, new StringCracker("c4b9942f2886cd34fce932f279000ef3"), PASSWORD_CHARS);
         PasswordCrackerTask task = new PasswordCrackerTask(0, true,  consts, passwordFuture);
         String password = task.findPasswordInRange(64250866, 64250900, consts.getCracker());
@@ -25,7 +25,7 @@ public class PasswordCrackerTaskTest {
 
     @Test
     public void testTransformation() {
-        PasswordFuture passwordFuture = new PasswordFuture();
+        PasswordFuture passwordFuture = new PasswordFuture(1);
         PasswordCrackerConsts consts = new PasswordCrackerConsts(1, 6, new StringCracker("c4b9942f2886cd34fce932f279000ef3"), PASSWORD_CHARS);
         PasswordCrackerTask task = new PasswordCrackerTask(0, true,  consts, passwordFuture);
         int[] array = new int[consts.getPasswordLength()];
