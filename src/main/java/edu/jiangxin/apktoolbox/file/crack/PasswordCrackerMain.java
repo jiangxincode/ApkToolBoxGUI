@@ -6,6 +6,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PasswordCrackerMain {
+    private static final String PASSWORD_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
+
     public static void main(String args[]) {
         if (args.length < 4) {
             System.out.println("Usage: PasswordCrackerMain numThreads passwordLength isEarlyTermination encryptedPassword");
@@ -22,7 +24,7 @@ public class PasswordCrackerMain {
         // init pool to the fixed number of threads available
         ExecutorService  workerPool = Executors.newFixedThreadPool(numThreads);
         PasswordFuture passwordFuture = new PasswordFuture();
-        PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, new StringCracker(encryptedPassword));
+        PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, new StringCracker(encryptedPassword), PASSWORD_CHARS);
 
         // Create PasswordCrackerTask and use executor
         // service to run in a separate thread

@@ -26,6 +26,10 @@ public final class CrackPanel extends EasyPanel {
 
     private JPanel operationPanel;
 
+    private JCheckBox numberCheckBox;
+    private JCheckBox lowercaseLetterCheckBox;
+    private JCheckBox uppercaseLetterCheckBox;
+
     public CrackPanel() {
         super();
         initUI();
@@ -68,9 +72,10 @@ public final class CrackPanel extends EasyPanel {
         optionTopPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         optionTopPanel.add(dictionaryRadioButton);
 
-        JCheckBox numberCheckBox = new JCheckBox("Number");
-        JCheckBox lowercaseLetterCheckBox = new JCheckBox("Lowercase Letter");
-        JCheckBox uppercaseLetterCheckBox = new JCheckBox("Uppercase Letter");
+        numberCheckBox = new JCheckBox("Number");
+        numberCheckBox.setSelected(true);
+        lowercaseLetterCheckBox = new JCheckBox("Lowercase Letter");
+        uppercaseLetterCheckBox = new JCheckBox("Uppercase Letter");
 
         JLabel maxDigitLabel = new JLabel("Max Digits");
         JSpinner maxDigitSpinner = new JSpinner();
@@ -152,32 +157,49 @@ public final class CrackPanel extends EasyPanel {
 
     private void onCrackArchiverFile(ICracker cracker) {
         if (!cracker.prepareCracker()) {
-            JOptionPane.showMessageDialog(this, "没有找到测试程序，无法破解rar文件！");
+            JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
+            return;
+        }
+        StringBuffer charsStringBuffer = new StringBuffer();
+        if (numberCheckBox.isSelected()) {
+            charsStringBuffer.append("0123456789");
+        }
+        if (lowercaseLetterCheckBox.isSelected()) {
+            charsStringBuffer.append("abcdefghijklmnopqrstuvwxyz");
+        }
+        if (uppercaseLetterCheckBox.isSelected()) {
+            charsStringBuffer.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }
+        if (charsStringBuffer.length() <= 0) {
+            JOptionPane.showMessageDialog(this, "Character set is empty!");
             return;
         }
         String password = null;
         try {
             long t = System.currentTimeMillis();
+            for (int i = 1; i <= 6; i++) {
+                int numThreads = 1000;
+                boolean isEarlyTermination = true;
 
-            int numThreads = 10;
-            int passwordLength = 6;
-            boolean isEarlyTermination = true;
+                ExecutorService workerPool = Executors.newFixedThreadPool(numThreads);
+                PasswordFuture passwordFuture = new PasswordFuture();
+                PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, i, cracker,charsStringBuffer.toString());
 
-            ExecutorService workerPool = Executors.newFixedThreadPool(numThreads);
-            PasswordFuture passwordFuture = new PasswordFuture();
-            PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, passwordLength, cracker);
-
-            for (int i = 0; i < numThreads; i++) {
-                workerPool.execute(new PasswordCrackerTask(i, isEarlyTermination, consts, passwordFuture));
+                for (int j = 0; j < numThreads; j++) {
+                    workerPool.execute(new PasswordCrackerTask(j, isEarlyTermination, consts, passwordFuture));
+                }
+                try {
+                    password = passwordFuture.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    workerPool.shutdown();
+                }
+                logger.info("password: " + password);
+                if (password != null) {
+                    break;
+                }
             }
-            try {
-                password = passwordFuture.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                workerPool.shutdown();
-            }
-
             t = System.currentTimeMillis() - t;
             System.out.println(t);
 
