@@ -8,11 +8,11 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import java.io.File;
 import java.io.IOException;
 
-public class PDFCracker extends FileCracker {
+public class PdfCracker extends FileCracker {
     private static final boolean DEBUG = false;
     private Logger logger;
 
-    public PDFCracker(File file) {
+    public PdfCracker(File file) {
         super(file);
         logger = LogManager.getLogger(this.getClass().getSimpleName());
     }
@@ -34,9 +34,6 @@ public class PDFCracker extends FileCracker {
         } catch (InvalidPasswordException e) {
             result = false;
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
         return result;
     }

@@ -1,11 +1,12 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
 import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
-import edu.jiangxin.apktoolbox.file.crack.cracker.PDFCracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.PdfCracker;
 import edu.jiangxin.apktoolbox.file.crack.cracker.RarCracker;
 import edu.jiangxin.apktoolbox.file.crack.cracker.ZipCracker;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 压缩解压zip文件的类
@@ -22,6 +24,12 @@ import java.util.concurrent.Executors;
  * https://www.yunjiemi.net/Passper/index.html
  */
 public final class CrackPanel extends EasyPanel {
+    private static final String FILE_TYPE_RAR = "RAR";
+
+    private static final String FILE_TYPE_ZIP = "ZIP";
+
+    private static final String FILE_TYPE_PDF = "PDF";
+
     private JPanel optionPanel;
 
     private JPanel operationPanel;
@@ -32,6 +40,16 @@ public final class CrackPanel extends EasyPanel {
 
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
+
+    private JComboBox<String> fileTypeComboBox;
+
+    private JButton startButton;
+    private JButton stopButton;
+
+    private String fileType;
+    private File selectedFile;
+    private ExecutorService workerPool;
+    private ICracker cracker;
 
     public CrackPanel() {
         super();
@@ -63,11 +81,16 @@ public final class CrackPanel extends EasyPanel {
         JPanel optionY3Panel = new JPanel();
         optionY3Panel.setLayout(new BoxLayout(optionY3Panel, BoxLayout.X_AXIS));
 
+        JPanel optionY4Panel = new JPanel();
+        optionY4Panel.setLayout(new BoxLayout(optionY4Panel, BoxLayout.X_AXIS));
+
         optionPanel.add(optionY1Panel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
         optionPanel.add(optionY2Panel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
         optionPanel.add(optionY3Panel);
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
+        optionPanel.add(optionY4Panel);
 
         JRadioButton bruteForceRadioButton = new JRadioButton("Brute Force");
         JRadioButton dictionaryRadioButton = new JRadioButton("Dictionary");
@@ -110,70 +133,98 @@ public final class CrackPanel extends EasyPanel {
         optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         optionY3Panel.add(maxSpinner);
 
+        fileTypeComboBox = new JComboBox<>();
+        fileTypeComboBox.addItem(FILE_TYPE_RAR + " File");
+        fileTypeComboBox.addItem(FILE_TYPE_ZIP + " File");
+        fileTypeComboBox.addItem(FILE_TYPE_PDF + " File");
+        fileTypeComboBox.setSelectedIndex(0);
+
+        JTextField fileNameTextField = new JTextField();
+
+        JButton chooseFileButton = new JButton("Choose File");
+        chooseFileButton.addActionListener(arg0 -> {
+            fileType = (String)fileTypeComboBox.getSelectedItem();
+            selectedFile = getSelectedFile(fileType);
+            if (selectedFile != null) {
+                fileNameTextField.setText(selectedFile.getAbsolutePath());
+            }
+        });
+
+        optionY4Panel.add(fileTypeComboBox);
+        optionY4Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY4Panel.add(fileNameTextField);
+        optionY4Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY4Panel.add(chooseFileButton);
+
     }
 
     private void createOperationPanel() {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        JButton buttonCrackRar = new JButton("Crack RAR File");
-        buttonCrackRar.addActionListener(new ActionAdapter() {
-            public void run() {
-                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"rar"});
-                File file = getSelectedArchiverFile(fileNameExtensionFilter);
-                if (file == null) {
-                    return;
-                }
-                ICracker cracker = new RarCracker(file);
-                onCrackArchiverFile(cracker);
-            }
-        });
-        operationPanel.add(buttonCrackRar);
-        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        startButton = new JButton("Start");
+        stopButton = new JButton("Stop");
 
-        JButton buttonCrackZip = new JButton("Crack ZIP File");
-        buttonCrackZip.addActionListener(new ActionAdapter() {
-            public void run() {
-                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"zip"});
-                File file = getSelectedArchiverFile(fileNameExtensionFilter);
-                if (file == null) {
-                    return;
-                }
-                ICracker cracker = new ZipCracker(file);
-                onCrackArchiverFile(cracker);
-            }
-        });
-        operationPanel.add(buttonCrackZip);
+        operationPanel.add(startButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        operationPanel.add(stopButton);
 
-        JButton buttonCrackPdf = new JButton("Crack PDF File");
-        buttonCrackPdf.addActionListener(new ActionAdapter() {
-            public void run() {
-                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"pdf"});
-                File file = getSelectedArchiverFile(fileNameExtensionFilter);
-                if (file == null) {
-                    return;
-                }
-                ICracker cracker = new PDFCracker(file);
-                onCrackArchiverFile(cracker);
+        startButton.addActionListener(e -> {
+            if (selectedFile == null) {
+                logger.error("file is null");
+                return;
             }
+            cracker = getCracker(fileType, selectedFile);
+            if (cracker == null) {
+                logger.error("cracker is null");
+                return;
+            }
+            new Thread(() -> onStart()).start();
         });
-        operationPanel.add(buttonCrackPdf);
+
+        stopButton.addActionListener(e -> new Thread(() -> onStop()).start());
     }
 
-    private File getSelectedArchiverFile(FileNameExtensionFilter filter) {
-        JFileChooser o = new JFileChooser(".");
-        o.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        o.setMultiSelectionEnabled(false);
-        o.addChoosableFileFilter(filter);
-        int returnVal = o.showOpenDialog(this);
+    private File getSelectedFile(String fileType) {
+        FileNameExtensionFilter filter;
+        if (StringUtils.isEmpty(fileType)) {
+            return null;
+        } else if (fileType.contains(FILE_TYPE_RAR)) {
+            filter = new FileNameExtensionFilter("*.rar", new String[]{"rar"});
+        } else if (fileType.contains(FILE_TYPE_ZIP)) {
+            filter = new FileNameExtensionFilter("*.zip", new String[]{"zip"});
+        } else if (fileType.contains(FILE_TYPE_PDF)) {
+            filter = new FileNameExtensionFilter("*.pdf", new String[]{"pdf"});
+        } else {
+            return null;
+        }
+        JFileChooser fileChooser = new JFileChooser(".");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.addChoosableFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return null;
         }
-        return o.getSelectedFile();
+        return fileChooser.getSelectedFile();
     }
 
-    private void onCrackArchiverFile(ICracker cracker) {
+    private ICracker getCracker(String fileType, File file) {
+        if (StringUtils.isEmpty(fileType)) {
+            return null;
+        } else if (fileType.contains(FILE_TYPE_RAR)) {
+            return new RarCracker(file);
+        } else if (fileType.contains(FILE_TYPE_ZIP)) {
+            return new ZipCracker(file);
+        } else if (fileType.contains(FILE_TYPE_PDF)) {
+            return new PdfCracker(file);
+        } else {
+            return null;
+        }
+    }
+
+    private void onStart() {
         if (!cracker.prepareCracker()) {
             JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
             return;
@@ -200,15 +251,16 @@ public final class CrackPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
             return;
         }
-        String password = null;
+        refreshUI(true);
         try {
+            String password = null;
             for (int length = minLength; length <= maxLength; length++) {
                 long startTime = System.currentTimeMillis();
                 int numThreads = getThreadCount(charSet.length(), length);
                 logger.info("Current attempt length: " + length + ", thread number: " + numThreads);
                 boolean isEarlyTermination = true;
 
-                ExecutorService workerPool = Executors.newFixedThreadPool(numThreads);
+                workerPool = Executors.newFixedThreadPool(numThreads);
                 PasswordFuture passwordFuture = new PasswordFuture(numThreads);
                 PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, cracker, charSet);
 
@@ -222,7 +274,9 @@ public final class CrackPanel extends EasyPanel {
                 } catch (Exception e) {
                     logger.info("Exception test: ", e);
                 } finally {
-                    workerPool.shutdown();
+                    if (workerPool.isShutdown()) {
+                        workerPool.shutdown();
+                    }
                 }
                 long endTime = System.currentTimeMillis();
                 logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
@@ -238,6 +292,25 @@ public final class CrackPanel extends EasyPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "破解过程中出错!");
         }
+        refreshUI(false);
+    }
+
+    private void onStop() {
+        if (workerPool == null) {
+            refreshUI(false);
+            return;
+        }
+        if (!workerPool.isShutdown()) {
+            workerPool.shutdown();
+        }
+        while (workerPool.isTerminated()) {
+            try {
+                workerPool.awaitTermination(100, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                logger.error("awaitTermination failed");
+            }
+        }
+        refreshUI(false);
     }
 
     private int getThreadCount(int charSetSize, int length) {
@@ -251,16 +324,15 @@ public final class CrackPanel extends EasyPanel {
         return result;
     }
 
-    private class ActionAdapter implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    private void refreshUI(boolean isStart) {
+        if (isStart) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            run();
+            startButton.setEnabled(false);
+            stopButton.setEnabled(true);
+        } else {
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        }
-
-        public void run() {
-            JOptionPane.showMessageDialog(CrackPanel.this, "暂未实现，敬请期待");
+            startButton.setEnabled(true);
+            stopButton.setEnabled(false);
         }
     }
 
