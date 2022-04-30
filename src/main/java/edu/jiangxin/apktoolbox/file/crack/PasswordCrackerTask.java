@@ -28,7 +28,7 @@ public class PasswordCrackerTask implements Runnable {
     /*	### findPasswordInRange	###
      * The findPasswordInRange method find the original password using md5 hash function
      * if a thread discovers the password, it returns original password string; otherwise, it returns null;
-    */
+     */
     public String findPasswordInRange(long rangeBegin, long rangeEnd, ICracker cracker) {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
@@ -46,9 +46,9 @@ public class PasswordCrackerTask implements Runnable {
     /* ###	transformDecToBaseN  ###
      * The transformDecToBaseN transforms decimal into numArray that is base N number system
      * If you don't understand, refer to the homework01 overview
-    */
+     */
     protected static void transformDecToBaseN(long numInDec, int[] numArrayInBaseN, final int charSetLength) {
-        for (int index = consts.getPasswordLength()-1; index >= 0; index--) {
+        for (int index = consts.getPasswordLength() - 1; index >= 0; index--) {
             numArrayInBaseN[index] = (int) (numInDec % charSetLength);
             numInDec = numInDec / charSetLength;
         }
@@ -56,7 +56,7 @@ public class PasswordCrackerTask implements Runnable {
 
     /*
      * The getNextCandidate update the possible password represented by N base system
-    */
+     */
     private static void getNextCandidate(int[] candidateChars, final int charsSetLength) {
         int reminder = 1;
         for (int index = consts.getPasswordLength() - 1; index >= 0; index--) {
@@ -78,7 +78,7 @@ public class PasswordCrackerTask implements Runnable {
      *     System.out.println(password);
      *     output is abcd0192.
      *
-    */
+     */
     private static String transformIntToStr(int[] charsArray, final String charsSet) {
         char[] password = new char[charsArray.length];
         for (int i = 0; i < password.length; i++) {

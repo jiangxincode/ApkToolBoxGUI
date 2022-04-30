@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 public final class ZipCracker extends FileCracker {
+    private static final boolean DEBUG = false;
     private Logger logger;
     private Configuration conf;
     private String path;
@@ -39,7 +40,9 @@ public final class ZipCracker extends FileCracker {
     public boolean checkPwd(String pwd) {
         String target = file.getAbsolutePath();
         String cmd = String.format("%s t %s -p%s", path, target, pwd);
-        //logger.info("checkPwd cmd: " + cmd);
+        if (DEBUG) {
+            logger.info("checkPwd cmd: " + cmd);
+        }
         boolean result = false;
         try (NoLogOutputStream outStream = new NoLogOutputStream();
              NoLogOutputStream errStream = new NoLogOutputStream()

@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
-public class StringCracker  implements ICracker {
+public class StringCracker implements ICracker {
     private String encryptPassword;
 
     public StringCracker(String encryptPassword) {
@@ -25,8 +25,7 @@ public class StringCracker  implements ICracker {
     public static MessageDigest getMessageDigest() {
         try {
             return MessageDigest.getInstance("MD5");
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new RuntimeException("Cannot use MD5 Library:" + e.getMessage());
         }

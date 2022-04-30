@@ -30,6 +30,9 @@ public final class CrackPanel extends EasyPanel {
     private JCheckBox lowercaseLetterCheckBox;
     private JCheckBox uppercaseLetterCheckBox;
 
+    private JSpinner minSpinner;
+    private JSpinner maxSpinner;
+
     public CrackPanel() {
         super();
         initUI();
@@ -51,15 +54,20 @@ public final class CrackPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
-        JPanel optionTopPanel = new JPanel();
-        optionTopPanel.setLayout(new BoxLayout(optionTopPanel, BoxLayout.X_AXIS));
+        JPanel optionY1Panel = new JPanel();
+        optionY1Panel.setLayout(new BoxLayout(optionY1Panel, BoxLayout.X_AXIS));
 
-        JPanel optionBottomPanel = new JPanel();
-        optionBottomPanel.setLayout(new BoxLayout(optionBottomPanel, BoxLayout.X_AXIS));
+        JPanel optionY2Panel = new JPanel();
+        optionY2Panel.setLayout(new BoxLayout(optionY2Panel, BoxLayout.X_AXIS));
 
-        optionPanel.add(optionTopPanel);
+        JPanel optionY3Panel = new JPanel();
+        optionY3Panel.setLayout(new BoxLayout(optionY3Panel, BoxLayout.X_AXIS));
+
+        optionPanel.add(optionY1Panel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
-        optionPanel.add(optionBottomPanel);
+        optionPanel.add(optionY2Panel);
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
+        optionPanel.add(optionY3Panel);
 
         JRadioButton bruteForceRadioButton = new JRadioButton("Brute Force");
         JRadioButton dictionaryRadioButton = new JRadioButton("Dictionary");
@@ -68,29 +76,39 @@ public final class CrackPanel extends EasyPanel {
         crackTypeButtonGroup.add(dictionaryRadioButton);
         bruteForceRadioButton.setSelected(true);
 
-        optionTopPanel.add(bruteForceRadioButton);
-        optionTopPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionTopPanel.add(dictionaryRadioButton);
+        optionY1Panel.add(bruteForceRadioButton);
+        optionY1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY1Panel.add(dictionaryRadioButton);
 
         numberCheckBox = new JCheckBox("Number");
         numberCheckBox.setSelected(true);
         lowercaseLetterCheckBox = new JCheckBox("Lowercase Letter");
         uppercaseLetterCheckBox = new JCheckBox("Uppercase Letter");
 
-        JLabel maxDigitLabel = new JLabel("Max Digits");
-        JSpinner maxDigitSpinner = new JSpinner();
-        maxDigitSpinner.setModel(new SpinnerNumberModel(6, 1, 9, 1));
+        optionY2Panel.add(numberCheckBox);
+        optionY2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY2Panel.add(lowercaseLetterCheckBox);
+        optionY2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY2Panel.add(uppercaseLetterCheckBox);
 
-        optionBottomPanel.add(numberCheckBox);
-        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionBottomPanel.add(lowercaseLetterCheckBox);
-        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionBottomPanel.add(uppercaseLetterCheckBox);
-        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionBottomPanel.add(maxDigitLabel);
-        optionBottomPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionBottomPanel.add(maxDigitSpinner);
-        optionBottomPanel.add(Box.createHorizontalGlue());
+        JLabel minLabel = new JLabel("Minimum Length: ");
+        JLabel maxLabel = new JLabel("Maximum Length: ");
+
+        minSpinner = new JSpinner();
+        minSpinner.setModel(new SpinnerNumberModel(1, 1, 9, 1));
+        minSpinner.setToolTipText("Minimum Length");
+
+        maxSpinner = new JSpinner();
+        maxSpinner.setModel(new SpinnerNumberModel(6, 1, 9, 1));
+        maxSpinner.setToolTipText("Maximum Length");
+
+        optionY3Panel.add(minLabel);
+        optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY3Panel.add(minSpinner);
+        optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY3Panel.add(maxLabel);
+        optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        optionY3Panel.add(maxSpinner);
 
     }
 
@@ -98,7 +116,7 @@ public final class CrackPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        JButton buttonCrackRar = new JButton("破解RAR类型文件");
+        JButton buttonCrackRar = new JButton("Crack RAR File");
         buttonCrackRar.addActionListener(new ActionAdapter() {
             public void run() {
                 FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"rar"});
@@ -113,7 +131,7 @@ public final class CrackPanel extends EasyPanel {
         operationPanel.add(buttonCrackRar);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        JButton buttonCrackZip = new JButton("破解ZIP类型文件");
+        JButton buttonCrackZip = new JButton("Crack ZIP File");
         buttonCrackZip.addActionListener(new ActionAdapter() {
             public void run() {
                 FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"zip"});
@@ -128,7 +146,7 @@ public final class CrackPanel extends EasyPanel {
         operationPanel.add(buttonCrackZip);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        JButton buttonCrackPdf = new JButton("破解PDF类型文件");
+        JButton buttonCrackPdf = new JButton("Crack PDF File");
         buttonCrackPdf.addActionListener(new ActionAdapter() {
             public void run() {
                 FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(null, new String[]{"pdf"});
@@ -160,43 +178,54 @@ public final class CrackPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
             return;
         }
-        StringBuffer charsStringBuffer = new StringBuffer();
+        StringBuffer tmpSb = new StringBuffer();
         if (numberCheckBox.isSelected()) {
-            charsStringBuffer.append("0123456789");
+            tmpSb.append("0123456789");
         }
         if (lowercaseLetterCheckBox.isSelected()) {
-            charsStringBuffer.append("abcdefghijklmnopqrstuvwxyz");
+            tmpSb.append("abcdefghijklmnopqrstuvwxyz");
         }
         if (uppercaseLetterCheckBox.isSelected()) {
-            charsStringBuffer.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            tmpSb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
-        if (charsStringBuffer.length() <= 0) {
+        if (tmpSb.length() <= 0) {
             JOptionPane.showMessageDialog(this, "Character set is empty!");
+            return;
+        }
+        final String charSet = tmpSb.toString();
+
+        int minLength = (Integer) minSpinner.getValue();
+        int maxLength = (Integer) maxSpinner.getValue();
+        if (minLength > maxLength) {
+            JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
             return;
         }
         String password = null;
         try {
-            for (int i = 1; i <= 6; i++) {
-                long t = System.currentTimeMillis();
-                int numThreads = getThreadCount(charsStringBuffer.length(), i);
+            for (int length = minLength; length <= maxLength; length++) {
+                long startTime = System.currentTimeMillis();
+                int numThreads = getThreadCount(charSet.length(), length);
+                logger.info("Current attempt length: " + length + ", thread number: " + numThreads);
                 boolean isEarlyTermination = true;
 
                 ExecutorService workerPool = Executors.newFixedThreadPool(numThreads);
                 PasswordFuture passwordFuture = new PasswordFuture(numThreads);
-                PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, i, cracker,charsStringBuffer.toString());
+                PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, cracker, charSet);
 
-                for (int j = 0; j < numThreads; j++) {
-                    workerPool.execute(new PasswordCrackerTask(j, isEarlyTermination, consts, passwordFuture));
+                for (int taskId = 0; taskId < numThreads; taskId++) {
+                    workerPool.execute(new PasswordCrackerTask(taskId, isEarlyTermination, consts, passwordFuture));
                 }
                 try {
+                    logger.info("before");
                     password = passwordFuture.get();
+                    logger.info("after password: " + password);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.info("Exception test: ", e);
                 } finally {
                     workerPool.shutdown();
                 }
-                t = System.currentTimeMillis() - t;
-                System.out.println(t);
+                long endTime = System.currentTimeMillis();
+                logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
                 if (password != null) {
                     break;
                 }

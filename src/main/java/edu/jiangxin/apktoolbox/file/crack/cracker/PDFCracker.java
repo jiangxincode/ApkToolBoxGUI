@@ -1,7 +1,5 @@
 package edu.jiangxin.apktoolbox.file.crack.cracker;
 
-import edu.jiangxin.apktoolbox.utils.Utils;
-import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -11,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFCracker extends FileCracker {
+    private static final boolean DEBUG = false;
     private Logger logger;
 
     public PDFCracker(File file) {
@@ -25,15 +24,19 @@ public class PDFCracker extends FileCracker {
 
     @Override
     public boolean checkPwd(String pwd) {
-        logger.info("checkPwd pwd: " + pwd);
-        boolean result;
+        if (DEBUG) {
+            logger.info("checkPwd: " + pwd);
+        }
+        boolean result = false;
         try {
             PDDocument.load(file, pwd);
             result = true;
         } catch (InvalidPasswordException e) {
             result = false;
         } catch (IOException e) {
-            result = false;
+            e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return result;
     }

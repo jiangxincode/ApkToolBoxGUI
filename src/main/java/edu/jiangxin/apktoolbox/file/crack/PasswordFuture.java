@@ -42,16 +42,13 @@ class PasswordFuture implements Future<String> {
      *  set the result and send signal to thread waiting for the result
      */
     public void set(String result) {
-        // acquiring lock
         lock.lock();
         try {
-            this.result = result;
-            // signal for condition var
-            if (this.result != null || this.finishedTaskCount.incrementAndGet() >= taskCount) {
+            if (result != null || finishedTaskCount.incrementAndGet() >= taskCount) {
+                this.result = result;
                 resultSet.signal();
             }
         } finally {
-            // release lock
             lock.unlock();
         }
     }
@@ -62,20 +59,17 @@ class PasswordFuture implements Future<String> {
      */
     @Override
     public String get() {
-        // setting condition var to wait and
-        // release unlock until signaled
         lock.lock();
         try {
             resultSet.await();
         } catch (InterruptedException e) {
-            // print exception failure
             e.printStackTrace();
         } finally {
-            // release lock
             lock.unlock();
         }
         return result;
     }
+
     /*  ### isDone ###
      *  returns true if result is set
      */
@@ -88,10 +82,12 @@ class PasswordFuture implements Future<String> {
     public boolean cancel(boolean mayInterruptIfRunning) {
         return false;
     }
+
     @Override
     public boolean isCancelled() {
         return false;
     }
+
     @Override
     public String get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         // no need to implement this. We don't use this...

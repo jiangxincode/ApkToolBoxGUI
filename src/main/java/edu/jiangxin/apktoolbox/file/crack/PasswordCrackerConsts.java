@@ -18,15 +18,15 @@ class PasswordCrackerConsts {
         this.passwordSubRangeSize = (passwordRangeSize + numThreads - 1) / numThreads;
         this.charsSet = charsSet;
     }
-    
+
     public int getPasswordLength() {
         return passwordLength;
     }
-    
+
     public long getPasswordTotalRangeSize() {
         return passwordRangeSize;
     }
-    
+
     public long getPasswordSubRangeSize() {
         return passwordSubRangeSize;
     }
