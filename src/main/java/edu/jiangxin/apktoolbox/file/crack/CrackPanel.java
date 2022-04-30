@@ -1,12 +1,11 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
-import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.FileCracker;
 import edu.jiangxin.apktoolbox.file.crack.cracker.PdfCracker;
 import edu.jiangxin.apktoolbox.file.crack.cracker.RarCracker;
 import edu.jiangxin.apktoolbox.file.crack.cracker.ZipCracker;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -22,12 +21,6 @@ import java.util.concurrent.TimeUnit;
  * https://www.yunjiemi.net/Passper/index.html
  */
 public final class CrackPanel extends EasyPanel {
-    private static final String FILE_TYPE_RAR = "RAR";
-
-    private static final String FILE_TYPE_ZIP = "ZIP";
-
-    private static final String FILE_TYPE_PDF = "PDF";
-
     private JPanel optionPanel;
 
     private JPanel operationPanel;
@@ -39,15 +32,13 @@ public final class CrackPanel extends EasyPanel {
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
 
-    private JComboBox<String> fileTypeComboBox;
+    private JComboBox<FileCracker> fileTypeComboBox;
 
     private JButton startButton;
     private JButton stopButton;
 
-    private String fileType;
     private File selectedFile;
     private ExecutorService workerPool;
-    private ICracker cracker;
 
     public CrackPanel() {
         super();
@@ -132,17 +123,16 @@ public final class CrackPanel extends EasyPanel {
         optionY3Panel.add(maxSpinner);
 
         fileTypeComboBox = new JComboBox<>();
-        fileTypeComboBox.addItem(FILE_TYPE_RAR + " File");
-        fileTypeComboBox.addItem(FILE_TYPE_ZIP + " File");
-        fileTypeComboBox.addItem(FILE_TYPE_PDF + " File");
+        fileTypeComboBox.addItem(new RarCracker());
+        fileTypeComboBox.addItem(new ZipCracker());
+        fileTypeComboBox.addItem(new PdfCracker());
         fileTypeComboBox.setSelectedIndex(0);
 
         JTextField fileNameTextField = new JTextField();
 
         JButton chooseFileButton = new JButton("Choose File");
         chooseFileButton.addActionListener(arg0 -> {
-            fileType = (String)fileTypeComboBox.getSelectedItem();
-            selectedFile = getSelectedFile(fileType);
+            selectedFile = getSelectedFile();
             if (selectedFile != null) {
                 fileNameTextField.setText(selectedFile.getAbsolutePath());
             }
@@ -172,9 +162,9 @@ public final class CrackPanel extends EasyPanel {
                 logger.error("file is null");
                 return;
             }
-            cracker = getCracker(fileType, selectedFile);
-            if (cracker == null) {
-                logger.error("cracker is null");
+            FileCracker fileCracker = (FileCracker) fileTypeComboBox.getSelectedItem();
+            if (fileCracker == null) {
+                logger.error("fileCracker is null");
                 return;
             }
             new Thread(this::onStart).start();
@@ -183,47 +173,30 @@ public final class CrackPanel extends EasyPanel {
         stopButton.addActionListener(e -> new Thread(this::onStop).start());
     }
 
-    private File getSelectedFile(String fileType) {
-        FileNameExtensionFilter filter;
-        if (StringUtils.isEmpty(fileType)) {
-            return null;
-        } else if (fileType.contains(FILE_TYPE_RAR)) {
-            filter = new FileNameExtensionFilter("*.rar", "rar");
-        } else if (fileType.contains(FILE_TYPE_ZIP)) {
-            filter = new FileNameExtensionFilter("*.zip", "zip");
-        } else if (fileType.contains(FILE_TYPE_PDF)) {
-            filter = new FileNameExtensionFilter("*.pdf", "pdf");
-        } else {
+    private File getSelectedFile() {
+        FileCracker fileCracker = (FileCracker) fileTypeComboBox.getSelectedItem();
+        if (fileCracker == null) {
+            logger.error("fileCracker is null");
             return null;
         }
+
         JFileChooser fileChooser = new JFileChooser(".");
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setMultiSelectionEnabled(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(fileCracker.getFileDescription(), fileCracker.getFileExtensions());
         fileChooser.addChoosableFileFilter(filter);
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return null;
         }
+        fileCracker.attachFile(fileChooser.getSelectedFile());
         return fileChooser.getSelectedFile();
     }
 
-    private ICracker getCracker(String fileType, File file) {
-        if (StringUtils.isEmpty(fileType)) {
-            return null;
-        } else if (fileType.contains(FILE_TYPE_RAR)) {
-            return new RarCracker(file);
-        } else if (fileType.contains(FILE_TYPE_ZIP)) {
-            return new ZipCracker(file);
-        } else if (fileType.contains(FILE_TYPE_PDF)) {
-            return new PdfCracker(file);
-        } else {
-            return null;
-        }
-    }
-
     private void onStart() {
-        if (!cracker.prepareCracker()) {
+        FileCracker fileCracker = (FileCracker) fileTypeComboBox.getSelectedItem();
+        if (fileCracker == null || !fileCracker.prepareCracker()) {
             JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
             return;
         }
@@ -259,7 +232,7 @@ public final class CrackPanel extends EasyPanel {
 
                 workerPool = Executors.newFixedThreadPool(numThreads);
                 PasswordFuture passwordFuture = new PasswordFuture(numThreads);
-                PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, cracker, charSet);
+                PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, fileCracker, charSet);
 
                 for (int taskId = 0; taskId < numThreads; taskId++) {
                     workerPool.execute(new PasswordCrackerTask(taskId, true, consts, passwordFuture));

@@ -1,21 +1,31 @@
 package edu.jiangxin.apktoolbox.file.crack.cracker;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
-import java.io.File;
 import java.io.IOException;
 
 public class PdfCracker extends FileCracker {
     private static final boolean DEBUG = false;
-    private final Logger logger;
 
-    public PdfCracker(File file) {
-        super(file);
-        logger = LogManager.getLogger(this.getClass().getSimpleName());
+    public PdfCracker() {
+        super();
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return new String[]{"pdf"};
+    }
+
+    @Override
+    public String getFileDescription() {
+        return "*.pdf";
+    }
+
+    @Override
+    public String getDescription() {
+        return "PDF Cracker";
     }
 
     @Override
