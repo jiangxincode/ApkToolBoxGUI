@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -85,11 +83,11 @@ public final class CrackPanel extends EasyPanel {
         optionY4Panel.setLayout(new BoxLayout(optionY4Panel, BoxLayout.X_AXIS));
 
         optionPanel.add(optionY1Panel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(optionY2Panel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(optionY3Panel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_X_BORDER));
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(optionY4Panel);
 
         JRadioButton bruteForceRadioButton = new JRadioButton("Brute Force");
@@ -179,10 +177,10 @@ public final class CrackPanel extends EasyPanel {
                 logger.error("cracker is null");
                 return;
             }
-            new Thread(() -> onStart()).start();
+            new Thread(this::onStart).start();
         });
 
-        stopButton.addActionListener(e -> new Thread(() -> onStop()).start());
+        stopButton.addActionListener(e -> new Thread(this::onStop).start());
     }
 
     private File getSelectedFile(String fileType) {
@@ -190,11 +188,11 @@ public final class CrackPanel extends EasyPanel {
         if (StringUtils.isEmpty(fileType)) {
             return null;
         } else if (fileType.contains(FILE_TYPE_RAR)) {
-            filter = new FileNameExtensionFilter("*.rar", new String[]{"rar"});
+            filter = new FileNameExtensionFilter("*.rar", "rar");
         } else if (fileType.contains(FILE_TYPE_ZIP)) {
-            filter = new FileNameExtensionFilter("*.zip", new String[]{"zip"});
+            filter = new FileNameExtensionFilter("*.zip", "zip");
         } else if (fileType.contains(FILE_TYPE_PDF)) {
-            filter = new FileNameExtensionFilter("*.pdf", new String[]{"pdf"});
+            filter = new FileNameExtensionFilter("*.pdf", "pdf");
         } else {
             return null;
         }
@@ -229,7 +227,7 @@ public final class CrackPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
             return;
         }
-        StringBuffer tmpSb = new StringBuffer();
+        StringBuilder tmpSb = new StringBuilder();
         if (numberCheckBox.isSelected()) {
             tmpSb.append("0123456789");
         }
@@ -258,14 +256,13 @@ public final class CrackPanel extends EasyPanel {
                 long startTime = System.currentTimeMillis();
                 int numThreads = getThreadCount(charSet.length(), length);
                 logger.info("Current attempt length: " + length + ", thread number: " + numThreads);
-                boolean isEarlyTermination = true;
 
                 workerPool = Executors.newFixedThreadPool(numThreads);
                 PasswordFuture passwordFuture = new PasswordFuture(numThreads);
                 PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, cracker, charSet);
 
                 for (int taskId = 0; taskId < numThreads; taskId++) {
-                    workerPool.execute(new PasswordCrackerTask(taskId, isEarlyTermination, consts, passwordFuture));
+                    workerPool.execute(new PasswordCrackerTask(taskId, true, consts, passwordFuture));
                 }
                 try {
                     logger.info("before");
@@ -305,7 +302,8 @@ public final class CrackPanel extends EasyPanel {
         }
         while (workerPool.isTerminated()) {
             try {
-                workerPool.awaitTermination(100, TimeUnit.SECONDS);
+                final boolean isTimeout = workerPool.awaitTermination(100, TimeUnit.SECONDS);
+                logger.info("awaitTermination isTimeout: " + isTimeout);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination failed");
             }
