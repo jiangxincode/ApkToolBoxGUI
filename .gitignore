@@ -12,3 +12,5 @@ target/
 *.log
 *.properties
 /dependency-reduced-pom.xml
+
+tmp/
