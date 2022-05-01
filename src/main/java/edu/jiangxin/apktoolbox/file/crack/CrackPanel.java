@@ -4,6 +4,8 @@ import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerConsts;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerTask;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordFuture;
 import edu.jiangxin.apktoolbox.file.crack.cracker.*;
+import edu.jiangxin.apktoolbox.file.crack.dictionary.*;
+import edu.jiangxin.apktoolbox.file.crack.dictionary.impl.*;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
@@ -11,9 +13,11 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * ref:
@@ -27,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 public final class CrackPanel extends EasyPanel {
     private JPanel optionPanel;
 
+    private JTabbedPane tabbedPane;
     private JPanel bruteForcePanel;
     private JPanel dictionaryPanel;
 
@@ -45,6 +50,7 @@ public final class CrackPanel extends EasyPanel {
     private JButton stopButton;
 
     private File selectedFile;
+    private File dictionaryFile;
     private ExecutorService workerPool;
 
     public CrackPanel() {
@@ -68,7 +74,7 @@ public final class CrackPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
 
         createBruteForcePanel();
         tabbedPane.addTab("Brute Force", null, bruteForcePanel, "Brute Force");
@@ -174,9 +180,9 @@ public final class CrackPanel extends EasyPanel {
 
         JButton chooseFileButton = new JButton("Choose File");
         chooseFileButton.addActionListener(arg0 -> {
-            selectedFile = getSelectedFile();
-            if (selectedFile != null) {
-                fileNameTextField.setText(selectedFile.getAbsolutePath());
+            dictionaryFile = getDictionaryFile();
+            if (dictionaryFile != null) {
+                fileNameTextField.setText(dictionaryFile.getAbsolutePath());
             }
         });
 
@@ -233,6 +239,20 @@ public final class CrackPanel extends EasyPanel {
         return fileChooser.getSelectedFile();
     }
 
+    private File getDictionaryFile() {
+        JFileChooser fileChooser = new JFileChooser(".");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic", "dic");
+        fileChooser.addChoosableFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
+            return null;
+        }
+        return fileChooser.getSelectedFile();
+    }
+
     private void onStart() {
         FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
         if (fileCracker == null || !fileCracker.prepareCracker()) {
@@ -241,34 +261,65 @@ public final class CrackPanel extends EasyPanel {
         }
         refreshUI(true);
 
-        StringBuilder sb = new StringBuilder();
-        if (numberCheckBox.isSelected()) {
-            sb.append("0123456789");
-        }
-        if (lowercaseLetterCheckBox.isSelected()) {
-            sb.append("abcdefghijklmnopqrstuvwxyz");
-        }
-        if (uppercaseLetterCheckBox.isSelected()) {
-            sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        }
-        if (sb.length() <= 0) {
-            JOptionPane.showMessageDialog(this, "Character set is empty!");
-            return;
-        }
-        final String charSet = sb.toString();
+        Component selectedPanel = tabbedPane.getSelectedComponent();
+        if (selectedPanel.equals(bruteForcePanel)) {
+            StringBuilder sb = new StringBuilder();
+            if (numberCheckBox.isSelected()) {
+                sb.append("0123456789");
+            }
+            if (lowercaseLetterCheckBox.isSelected()) {
+                sb.append("abcdefghijklmnopqrstuvwxyz");
+            }
+            if (uppercaseLetterCheckBox.isSelected()) {
+                sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            }
+            if (sb.length() <= 0) {
+                JOptionPane.showMessageDialog(this, "Character set is empty!");
+                return;
+            }
+            final String charSet = sb.toString();
 
-        int minLength = (Integer) minSpinner.getValue();
-        int maxLength = (Integer) maxSpinner.getValue();
-        if (minLength > maxLength) {
-            JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
-            return;
-        }
+            int minLength = (Integer) minSpinner.getValue();
+            int maxLength = (Integer) maxSpinner.getValue();
+            if (minLength > maxLength) {
+                JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
+                return;
+            }
 
-        String password = getPasswordByBruteForce(fileCracker, charSet, minLength, maxLength);
-        if (password == null) {
-            JOptionPane.showMessageDialog(this, "Can not find password");
+            String password = getPasswordByBruteForce(fileCracker, charSet, minLength, maxLength);
+            if (password == null) {
+                JOptionPane.showMessageDialog(this, "Can not find password");
+            } else {
+                JOptionPane.showMessageDialog(this, password);
+            }
+        } else if (selectedPanel.equals(dictionaryPanel)) {
+            if (dictionaryFile == null || !dictionaryFile.isFile()) {
+                JOptionPane.showMessageDialog(this, "Invalid dictionary file");
+                return;
+            }
+            try {
+                PasswordCombinationGenerator generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
+                PasswordConsumer passwordConsumer = password -> {
+                    System.out.println("password:" + password);
+                    if (password == null) {
+                        JOptionPane.showMessageDialog(CrackPanel.this, "Can not find password");
+                    } else {
+                        JOptionPane.showMessageDialog(CrackPanel.this, password);
+                    }
+                };
+                DictionaryPasswordCracker dictionaryPasswordCracker = new SimpleDictionaryPasswordCracker();
+                PasswordDataSource ds = new PasswordFileDataSource(dictionaryFile);
+                dictionaryPasswordCracker.crackPassword(ds, generator, fileCracker, passwordConsumer);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         } else {
-            JOptionPane.showMessageDialog(this, password);
+            logger.error("Invalid panel");
+            return;
         }
         refreshUI(false);
     }

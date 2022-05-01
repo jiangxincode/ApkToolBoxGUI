@@ -25,6 +25,10 @@ public abstract class FileCracker implements ICracker {
         return 1000;
     }
 
+    public boolean prepareCracker() {
+        return true;
+    }
+
     @Override
     public String toString() {
         return getDescription();

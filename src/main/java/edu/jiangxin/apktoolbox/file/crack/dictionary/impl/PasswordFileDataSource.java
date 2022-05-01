@@ -1,9 +1,6 @@
 package edu.jiangxin.apktoolbox.file.crack.dictionary.impl;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.stream.Stream;
 
 import edu.jiangxin.apktoolbox.file.crack.dictionary.PasswordDataSource;
@@ -12,8 +9,8 @@ public class PasswordFileDataSource implements PasswordDataSource {
 
 	BufferedReader br = null;
 
-	public PasswordFileDataSource(String path) throws FileNotFoundException {
-		br = new BufferedReader(new FileReader(path));
+	public PasswordFileDataSource(File file) throws FileNotFoundException {
+		br = new BufferedReader(new FileReader(file));
 	}
 
 	@Override

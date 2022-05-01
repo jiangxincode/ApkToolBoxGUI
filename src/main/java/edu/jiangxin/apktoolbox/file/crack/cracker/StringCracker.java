@@ -12,11 +12,6 @@ public class StringCracker implements ICracker {
     }
 
     @Override
-    public boolean prepareCracker() {
-        return true;
-    }
-
-    @Override
     public boolean checkPassword(String password) {
         String hashedPassword = encrypt(password, getMessageDigest());
         return Objects.equals(encryptPassword, hashedPassword);
