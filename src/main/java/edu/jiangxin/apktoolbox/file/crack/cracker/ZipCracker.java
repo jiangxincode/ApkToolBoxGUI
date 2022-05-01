@@ -2,6 +2,7 @@ package edu.jiangxin.apktoolbox.file.crack.cracker;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -35,15 +36,15 @@ public final class ZipCracker extends FileCracker {
 
     @Override
     public boolean checkPwd(String pwd) {
+        if (DEBUG) {
+            logger.info("checkPwd: " + pwd);
+        }
         boolean result = false;
         try {
             ZipFile zFile = new ZipFile(file);
             zFile.setFileNameCharset(StandardCharsets.UTF_8.name());
-            String dest = file.getAbsolutePath().replace(".zip", "Tmp");
+            String dest = file.getAbsolutePath().replace(".zip", "Tmp" + File.separator +  Thread.currentThread().getId());
             File destDir = new File(dest);
-            if (destDir.exists()) {
-                destDir.delete();
-            }
             if (!destDir.exists()) {
                 destDir.mkdirs();
             }

@@ -58,11 +58,8 @@ public final class ZipUsing7ZipCracker extends FileCracker {
             PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
             exec.setStreamHandler(streamHandler);
             int exitValue = exec.execute(commandLine);
-            logger.info("exitValue: [" + exitValue + "]");
-            if (exitValue == 0) {
-                result = true;
-            }
-        } catch (IOException ioe) {
+            result = (exitValue == 0);
+        } catch (IOException e) {
         }
         return result;
     }

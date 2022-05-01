@@ -1,8 +1,12 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
 import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
+import edu.jiangxin.apktoolbox.file.crack.exception.UnsupportedVersionException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PasswordCrackerTask implements Runnable {
+    private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
     int taskId;
     boolean isEarlyTermination;
     PasswordFuture passwordFuture;
@@ -35,10 +39,23 @@ public class PasswordCrackerTask implements Runnable {
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
             if (isEarlyTermination && passwordFuture.isDone()) return null;
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());
-            if (cracker.checkPwd(password)) {
-                return password;
+            int result;
+            try {
+                result = cracker.checkPwd(password) ? 1 : 0;
+            } catch (UnsupportedVersionException e) {
+                logger.error("UnsupportedVersionException, stop");
+                result = -1;
+            } catch (Exception e) {
+                logger.error("Exception, stop", e);
+                result = -1;
             }
-            getNextCandidate(passwordIterator, consts.getCharsSet().length());
+            if (result == 0) {
+                getNextCandidate(passwordIterator, consts.getCharsSet().length());
+            } else if (result == 1) {
+                return password;
+            } else {
+                return null;
+            }
         }
         return null;
     }

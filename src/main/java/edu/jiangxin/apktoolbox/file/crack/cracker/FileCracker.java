@@ -21,6 +21,10 @@ public abstract class FileCracker implements ICracker {
         this.file = file;
     }
 
+    public int getMaxThreadNum() {
+        return 1000;
+    }
+
     @Override
     public String toString() {
         return getDescription();

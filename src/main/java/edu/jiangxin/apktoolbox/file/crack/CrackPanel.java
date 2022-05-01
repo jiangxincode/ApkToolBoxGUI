@@ -124,6 +124,7 @@ public final class CrackPanel extends EasyPanel {
         optionY3Panel.add(maxSpinner);
 
         crackerTypeComboBox = new JComboBox<>();
+        crackerTypeComboBox.addItem(new RarCracker());
         crackerTypeComboBox.addItem(new RarUsingRarCracker());
         crackerTypeComboBox.addItem(new ZipCracker());
         crackerTypeComboBox.addItem(new ZipUsing7ZipCracker());
@@ -229,8 +230,8 @@ public final class CrackPanel extends EasyPanel {
             String password = null;
             for (int length = minLength; length <= maxLength; length++) {
                 long startTime = System.currentTimeMillis();
-                int numThreads = getThreadCount(charSet.length(), length);
-                logger.info("Current attempt length: " + length + ", thread number: " + numThreads);
+                int numThreads = Math.min(getThreadCount(charSet.length(), length), fileCracker.getMaxThreadNum());
+                logger.info("[" + fileCracker + "]Current attempt length: " + length + ", thread number: " + numThreads);
 
                 workerPool = Executors.newFixedThreadPool(numThreads);
                 PasswordFuture passwordFuture = new PasswordFuture(numThreads);
@@ -255,7 +256,7 @@ public final class CrackPanel extends EasyPanel {
                 }
             }
             if (password == null) {
-                JOptionPane.showMessageDialog(this, "指定的密码无法解开文件!");
+                JOptionPane.showMessageDialog(this, "Can not find password");
             } else {
                 JOptionPane.showMessageDialog(this, password);
             }
@@ -288,9 +289,6 @@ public final class CrackPanel extends EasyPanel {
         int result = 1;
         for (int i = 1; i <= length; i++) {
             result *= charSetSize;
-        }
-        if (result > 1000) {
-            result = 1000;
         }
         return result;
     }

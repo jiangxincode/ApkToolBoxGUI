@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.file.crack.cracker;
 
+import edu.jiangxin.apktoolbox.file.crack.exception.UnknownException;
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
@@ -44,17 +45,17 @@ public class PdfCracker extends FileCracker {
 
     @Override
     public boolean checkPwd(String pwd) {
-        if (DEBUG) {
-            logger.info("checkPwd: " + pwd);
-        }
         boolean result = false;
         PDDocument pdDocument = null;
         try {
             pdDocument = PDDocument.load(file, pwd);
             result = true;
         } catch (InvalidPasswordException e) {
+            if (DEBUG) {
+                logger.error("[InvalidPasswordException]password is incorrect: " + pwd);
+            }
         } catch (IOException e) {
-            logger.error("load failed: " + e.getMessage());
+            throw new UnknownException(e);
         } finally {
             if (pdDocument != null) {
                 IOUtils.closeQuietly(pdDocument);
