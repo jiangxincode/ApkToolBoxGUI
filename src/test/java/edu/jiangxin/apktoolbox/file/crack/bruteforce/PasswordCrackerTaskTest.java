@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack;
+package edu.jiangxin.apktoolbox.file.crack.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.crack.cracker.StringCracker;
 import org.junit.Assert;

@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack;
+package edu.jiangxin.apktoolbox.file.crack.bruteforce;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 // If you want to know the Future class, refer to site; https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html
 
 // Complete this class using a lock and the condition variable
-class PasswordFuture implements Future<String> {
+public class PasswordFuture implements Future<String> {
     private String result = null;
     private AtomicInteger finishedTaskCount = new AtomicInteger(0);
     private int taskCount;

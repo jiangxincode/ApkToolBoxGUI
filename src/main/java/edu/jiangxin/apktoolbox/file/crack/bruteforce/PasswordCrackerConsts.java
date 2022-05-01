@@ -1,8 +1,8 @@
-package edu.jiangxin.apktoolbox.file.crack;
+package edu.jiangxin.apktoolbox.file.crack.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
 
-class PasswordCrackerConsts {
+public class PasswordCrackerConsts {
     final int numThreads;
     final int passwordLength;
     final long passwordRangeSize;

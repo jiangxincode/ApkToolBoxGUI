@@ -41,7 +41,7 @@ public final class RarCracker extends FileCracker {
     public boolean checkPassword(String password) {
         boolean result = false;
         try {
-            String dest = file.getAbsolutePath().replace(".rar", "Tmp" + File.separator +  Thread.currentThread().getId());
+            String dest = file.getAbsolutePath().replace(".rar", "Tmp" + File.separator + Thread.currentThread().getId());
             File destDir = new File(dest);
             if (!destDir.exists()) {
                 destDir.mkdirs();

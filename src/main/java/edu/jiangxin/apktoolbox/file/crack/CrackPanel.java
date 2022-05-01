@@ -1,5 +1,8 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
+import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerConsts;
+import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerTask;
+import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordFuture;
 import edu.jiangxin.apktoolbox.file.crack.cracker.*;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -23,6 +26,9 @@ import java.util.concurrent.TimeUnit;
  */
 public final class CrackPanel extends EasyPanel {
     private JPanel optionPanel;
+
+    private JPanel bruteForcePanel;
+    private JPanel dictionaryPanel;
 
     private JPanel operationPanel;
 
@@ -62,47 +68,75 @@ public final class CrackPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
-        JPanel optionY1Panel = new JPanel();
-        optionY1Panel.setLayout(new BoxLayout(optionY1Panel, BoxLayout.X_AXIS));
+        JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanel optionY2Panel = new JPanel();
-        optionY2Panel.setLayout(new BoxLayout(optionY2Panel, BoxLayout.X_AXIS));
+        createBruteForcePanel();
+        tabbedPane.addTab("Brute Force", null, bruteForcePanel, "Brute Force");
+        tabbedPane.setSelectedIndex(0);
 
-        JPanel optionY3Panel = new JPanel();
-        optionY3Panel.setLayout(new BoxLayout(optionY3Panel, BoxLayout.X_AXIS));
+        createDictionaryPanel();
+        tabbedPane.addTab("Dictionary", null, dictionaryPanel, "Dictionary");
 
-        JPanel optionY4Panel = new JPanel();
-        optionY4Panel.setLayout(new BoxLayout(optionY4Panel, BoxLayout.X_AXIS));
+        crackerTypeComboBox = new JComboBox<>();
+        crackerTypeComboBox.addItem(new RarCracker());
+        crackerTypeComboBox.addItem(new RarUsingRarCracker());
+        crackerTypeComboBox.addItem(new ZipCracker());
+        crackerTypeComboBox.addItem(new ZipUsing7ZipCracker());
+        crackerTypeComboBox.addItem(new PdfCracker());
+        crackerTypeComboBox.setSelectedIndex(0);
 
-        optionPanel.add(optionY1Panel);
+        JPanel filePanel = new JPanel();
+        filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
+
+        optionPanel.add(tabbedPane);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(optionY2Panel);
+        optionPanel.add(crackerTypeComboBox);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(optionY3Panel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(optionY4Panel);
+        optionPanel.add(filePanel);
 
-        JRadioButton bruteForceRadioButton = new JRadioButton("Brute Force");
-        JRadioButton dictionaryRadioButton = new JRadioButton("Dictionary");
-        ButtonGroup crackTypeButtonGroup = new ButtonGroup();
-        crackTypeButtonGroup.add(bruteForceRadioButton);
-        crackTypeButtonGroup.add(dictionaryRadioButton);
-        bruteForceRadioButton.setSelected(true);
+        JTextField fileNameTextField = new JTextField();
 
-        optionY1Panel.add(bruteForceRadioButton);
-        optionY1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY1Panel.add(dictionaryRadioButton);
+        JButton chooseFileButton = new JButton("Choose File");
+        chooseFileButton.addActionListener(arg0 -> {
+            selectedFile = getSelectedFile();
+            if (selectedFile != null) {
+                fileNameTextField.setText(selectedFile.getAbsolutePath());
+            }
+        });
+
+        filePanel.add(fileNameTextField);
+        filePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        filePanel.add(chooseFileButton);
+
+    }
+
+    private void createBruteForcePanel() {
+        bruteForcePanel = new JPanel();
+
+        JPanel topLevelPanel = new JPanel();
+        topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));
+        bruteForcePanel.add(topLevelPanel);
+
+        JPanel charsetPanel = new JPanel();
+        charsetPanel.setLayout(new BoxLayout(charsetPanel, BoxLayout.X_AXIS));
+
+        JPanel passwordLengthPanel = new JPanel();
+        passwordLengthPanel.setLayout(new BoxLayout(passwordLengthPanel, BoxLayout.X_AXIS));
+
+        topLevelPanel.add(charsetPanel);
+        topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        topLevelPanel.add(passwordLengthPanel);
 
         numberCheckBox = new JCheckBox("Number");
         numberCheckBox.setSelected(true);
         lowercaseLetterCheckBox = new JCheckBox("Lowercase Letter");
         uppercaseLetterCheckBox = new JCheckBox("Uppercase Letter");
 
-        optionY2Panel.add(numberCheckBox);
-        optionY2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY2Panel.add(lowercaseLetterCheckBox);
-        optionY2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY2Panel.add(uppercaseLetterCheckBox);
+        charsetPanel.add(numberCheckBox);
+        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        charsetPanel.add(lowercaseLetterCheckBox);
+        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        charsetPanel.add(uppercaseLetterCheckBox);
 
         JLabel minLabel = new JLabel("Minimum Length: ");
         JLabel maxLabel = new JLabel("Maximum Length: ");
@@ -115,23 +149,28 @@ public final class CrackPanel extends EasyPanel {
         maxSpinner.setModel(new SpinnerNumberModel(6, 1, 9, 1));
         maxSpinner.setToolTipText("Maximum Length");
 
-        optionY3Panel.add(minLabel);
-        optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY3Panel.add(minSpinner);
-        optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY3Panel.add(maxLabel);
-        optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY3Panel.add(maxSpinner);
+        passwordLengthPanel.add(minLabel);
+        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        passwordLengthPanel.add(minSpinner);
+        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        passwordLengthPanel.add(maxLabel);
+        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        passwordLengthPanel.add(maxSpinner);
+    }
 
-        crackerTypeComboBox = new JComboBox<>();
-        crackerTypeComboBox.addItem(new RarCracker());
-        crackerTypeComboBox.addItem(new RarUsingRarCracker());
-        crackerTypeComboBox.addItem(new ZipCracker());
-        crackerTypeComboBox.addItem(new ZipUsing7ZipCracker());
-        crackerTypeComboBox.addItem(new PdfCracker());
-        crackerTypeComboBox.setSelectedIndex(0);
+    private void createDictionaryPanel() {
+        dictionaryPanel = new JPanel();
+
+        JPanel topLevelPanel = new JPanel();
+        topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));
+        dictionaryPanel.add(topLevelPanel);
+
+        JPanel dictionaryPathPanel = new JPanel();
+        dictionaryPathPanel.setLayout(new BoxLayout(dictionaryPathPanel, BoxLayout.X_AXIS));
+        topLevelPanel.add(dictionaryPathPanel);
 
         JTextField fileNameTextField = new JTextField();
+        fileNameTextField.setPreferredSize(new Dimension(600, 0));
 
         JButton chooseFileButton = new JButton("Choose File");
         chooseFileButton.addActionListener(arg0 -> {
@@ -141,12 +180,9 @@ public final class CrackPanel extends EasyPanel {
             }
         });
 
-        optionY4Panel.add(crackerTypeComboBox);
-        optionY4Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY4Panel.add(fileNameTextField);
-        optionY4Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        optionY4Panel.add(chooseFileButton);
-
+        dictionaryPathPanel.add(fileNameTextField);
+        dictionaryPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        dictionaryPathPanel.add(chooseFileButton);
     }
 
     private void createOperationPanel() {
@@ -203,21 +239,23 @@ public final class CrackPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
             return;
         }
-        StringBuilder tmpSb = new StringBuilder();
+        refreshUI(true);
+
+        StringBuilder sb = new StringBuilder();
         if (numberCheckBox.isSelected()) {
-            tmpSb.append("0123456789");
+            sb.append("0123456789");
         }
         if (lowercaseLetterCheckBox.isSelected()) {
-            tmpSb.append("abcdefghijklmnopqrstuvwxyz");
+            sb.append("abcdefghijklmnopqrstuvwxyz");
         }
         if (uppercaseLetterCheckBox.isSelected()) {
-            tmpSb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
-        if (tmpSb.length() <= 0) {
+        if (sb.length() <= 0) {
             JOptionPane.showMessageDialog(this, "Character set is empty!");
             return;
         }
-        final String charSet = tmpSb.toString();
+        final String charSet = sb.toString();
 
         int minLength = (Integer) minSpinner.getValue();
         int maxLength = (Integer) maxSpinner.getValue();
@@ -225,43 +263,12 @@ public final class CrackPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
             return;
         }
-        refreshUI(true);
-        try {
-            String password = null;
-            for (int length = minLength; length <= maxLength; length++) {
-                long startTime = System.currentTimeMillis();
-                int numThreads = Math.min(getThreadCount(charSet.length(), length), fileCracker.getMaxThreadNum());
-                logger.info("[" + fileCracker + "]Current attempt length: " + length + ", thread number: " + numThreads);
 
-                workerPool = Executors.newFixedThreadPool(numThreads);
-                PasswordFuture passwordFuture = new PasswordFuture(numThreads);
-                PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, fileCracker, charSet);
-
-                for (int taskId = 0; taskId < numThreads; taskId++) {
-                    workerPool.execute(new PasswordCrackerTask(taskId, true, consts, passwordFuture));
-                }
-                try {
-                    password = passwordFuture.get();
-                } catch (Exception e) {
-                    logger.info("Exception test: ", e);
-                } finally {
-                    if (workerPool.isShutdown()) {
-                        workerPool.shutdown();
-                    }
-                }
-                long endTime = System.currentTimeMillis();
-                logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
-                if (password != null) {
-                    break;
-                }
-            }
-            if (password == null) {
-                JOptionPane.showMessageDialog(this, "Can not find password");
-            } else {
-                JOptionPane.showMessageDialog(this, password);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "破解过程中出错!");
+        String password = getPasswordByBruteForce(fileCracker, charSet, minLength, maxLength);
+        if (password == null) {
+            JOptionPane.showMessageDialog(this, "Can not find password");
+        } else {
+            JOptionPane.showMessageDialog(this, password);
         }
         refreshUI(false);
     }
@@ -283,6 +290,43 @@ public final class CrackPanel extends EasyPanel {
             }
         }
         refreshUI(false);
+    }
+
+    private String getPasswordByBruteForce(FileCracker fileCracker, String charSet, int minLength, int maxLength) {
+        String password = null;
+        for (int length = minLength; length <= maxLength; length++) {
+            long startTime = System.currentTimeMillis();
+            int numThreads = Math.min(getThreadCount(charSet.length(), length), fileCracker.getMaxThreadNum());
+            logger.info("[" + fileCracker + "]Current attempt length: " + length + ", thread number: " + numThreads);
+
+            workerPool = Executors.newFixedThreadPool(numThreads);
+            PasswordFuture passwordFuture = new PasswordFuture(numThreads);
+            PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, fileCracker, charSet);
+
+            for (int taskId = 0; taskId < numThreads; taskId++) {
+                workerPool.execute(new PasswordCrackerTask(taskId, true, consts, passwordFuture));
+            }
+            try {
+                password = passwordFuture.get();
+            } catch (Exception e) {
+                logger.info("Exception test: ", e);
+            } finally {
+                if (workerPool.isShutdown()) {
+                    workerPool.shutdown();
+                }
+            }
+            long endTime = System.currentTimeMillis();
+            logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
+            if (password != null) {
+                break;
+            }
+        }
+        return password;
+    }
+
+    private String getPasswordByDictionary() {
+        String password = null;
+        return password;
     }
 
     private int getThreadCount(int charSetSize, int length) {

@@ -14,7 +14,6 @@ import java.io.IOException;
  * and the document may also specify operations that should be restricted even when the document is decrypted:
  * printing; copying text and graphics out of the document; modifying the document;
  * and adding or modifying text notes (using owner password).
- *
  */
 public class PdfCracker extends FileCracker {
     private static final boolean DEBUG = false;
