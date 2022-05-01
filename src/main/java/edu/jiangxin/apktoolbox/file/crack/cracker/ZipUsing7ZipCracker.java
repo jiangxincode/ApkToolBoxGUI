@@ -43,11 +43,11 @@ public final class ZipUsing7ZipCracker extends FileCracker {
     }
 
     @Override
-    public boolean checkPwd(String pwd) {
+    public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t %s -p%s", toolPath, target, pwd);
+        String cmd = String.format("%s t %s -p%s", toolPath, target, password);
         if (DEBUG) {
-            logger.info("checkPwd cmd: " + cmd);
+            logger.info("checkPassword cmd: " + cmd);
         }
         boolean result = false;
         try (NoLogOutputStream outStream = new NoLogOutputStream();

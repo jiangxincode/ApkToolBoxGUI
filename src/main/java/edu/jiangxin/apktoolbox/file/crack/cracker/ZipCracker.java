@@ -35,9 +35,9 @@ public final class ZipCracker extends FileCracker {
     }
 
     @Override
-    public boolean checkPwd(String pwd) {
+    public boolean checkPassword(String password) {
         if (DEBUG) {
-            logger.info("checkPwd: " + pwd);
+            logger.info("checkPassword: " + password);
         }
         boolean result = false;
         try {
@@ -49,7 +49,7 @@ public final class ZipCracker extends FileCracker {
                 destDir.mkdirs();
             }
             if (zFile.isEncrypted()) {
-                zFile.setPassword(pwd.toCharArray());
+                zFile.setPassword(password.toCharArray());
             }
             zFile.extractAll(dest);
             result = true;

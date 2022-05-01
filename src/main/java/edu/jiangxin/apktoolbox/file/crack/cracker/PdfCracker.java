@@ -44,15 +44,15 @@ public class PdfCracker extends FileCracker {
     }
 
     @Override
-    public boolean checkPwd(String pwd) {
+    public boolean checkPassword(String password) {
         boolean result = false;
         PDDocument pdDocument = null;
         try {
-            pdDocument = PDDocument.load(file, pwd);
+            pdDocument = PDDocument.load(file, password);
             result = true;
         } catch (InvalidPasswordException e) {
             if (DEBUG) {
-                logger.error("[InvalidPasswordException]password is incorrect: " + pwd);
+                logger.error("[InvalidPasswordException]password is incorrect: " + password);
             }
         } catch (IOException e) {
             throw new UnknownException(e);

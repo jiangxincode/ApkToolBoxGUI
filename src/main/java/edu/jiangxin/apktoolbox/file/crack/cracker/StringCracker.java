@@ -17,8 +17,8 @@ public class StringCracker implements ICracker {
     }
 
     @Override
-    public boolean checkPwd(String pwd) {
-        String hashedPassword = encrypt(pwd, getMessageDigest());
+    public boolean checkPassword(String password) {
+        String hashedPassword = encrypt(password, getMessageDigest());
         return Objects.equals(encryptPassword, hashedPassword);
     }
 

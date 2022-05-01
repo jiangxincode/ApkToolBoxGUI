@@ -41,7 +41,7 @@ public class PasswordCrackerTask implements Runnable {
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());
             int result;
             try {
-                result = cracker.checkPwd(password) ? 1 : 0;
+                result = cracker.checkPassword(password) ? 1 : 0;
             } catch (UnsupportedVersionException e) {
                 logger.error("UnsupportedVersionException, stop");
                 result = -1;

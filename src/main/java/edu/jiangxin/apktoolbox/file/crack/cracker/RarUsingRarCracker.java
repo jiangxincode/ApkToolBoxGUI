@@ -43,11 +43,11 @@ public final class RarUsingRarCracker extends FileCracker {
     }
 
     @Override
-    public boolean checkPwd(String pwd) {
+    public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t -p%s %s", toolPath, pwd, target);
+        String cmd = String.format("%s t -p%s %s", toolPath, password, target);
         if (DEBUG) {
-            logger.info("checkPwd cmd: " + cmd);
+            logger.info("checkPassword cmd: " + cmd);
         }
         boolean result = false;
         try (NoLogOutputStream outStream = new NoLogOutputStream();

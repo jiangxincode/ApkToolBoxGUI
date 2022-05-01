@@ -38,7 +38,7 @@ public final class RarCracker extends FileCracker {
     }
 
     @Override
-    public boolean checkPwd(String pwd) {
+    public boolean checkPassword(String password) {
         boolean result = false;
         try {
             String dest = file.getAbsolutePath().replace(".rar", "Tmp" + File.separator +  Thread.currentThread().getId());
@@ -46,17 +46,17 @@ public final class RarCracker extends FileCracker {
             if (!destDir.exists()) {
                 destDir.mkdirs();
             }
-            Junrar.extract(file, destDir, pwd);
+            Junrar.extract(file, destDir, password);
             result = true;
         } catch (CrcErrorException e) {
             if (DEBUG) {
-                logger.error("[CrcErrorException]password is incorrect: " + pwd);
+                logger.error("[CrcErrorException]password is incorrect: " + password);
             }
         } catch (UnsupportedRarV5Exception e) {
             throw new UnsupportedVersionException(e);
         } catch (RarException e) {
             if (DEBUG) {
-                logger.error("[RarException]password is incorrect: " + pwd);
+                logger.error("[RarException]password is incorrect: " + password);
             }
         } catch (IOException e) {
             throw new UnknownException(e);
