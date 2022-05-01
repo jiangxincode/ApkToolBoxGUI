@@ -8,34 +8,34 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
 
-public final class RarCracker extends FileCracker {
+public final class ZipUsing7ZipCracker extends FileCracker {
     private static final boolean DEBUG = false;
-    private String path;
+    private String toolPath;
 
-    public RarCracker() {
+    public ZipUsing7ZipCracker() {
         super();
-        path = conf.getString(Constants.RAR_PATH_KEY);
+        toolPath = conf.getString(Constants.SEVEN_ZIP_PATH_KEY);
     }
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"rar"};
+        return new String[]{"zip"};
     }
 
     @Override
     public String getFileDescription() {
-        return "*.rar";
+        return "*.zip";
     }
 
     @Override
     public String getDescription() {
-        return "RAR Cracker";
+        return "ZIP Cracker(Using 7z.exe)";
     }
 
     @Override
     public boolean prepareCracker() {
         try {
-            Runtime.getRuntime().exec(path);
+            Runtime.getRuntime().exec(toolPath);
         } catch (IOException e) {
             return false;
         }
@@ -45,7 +45,7 @@ public final class RarCracker extends FileCracker {
     @Override
     public boolean checkPwd(String pwd) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t -p%s %s", path, pwd, target);
+        String cmd = String.format("%s t %s -p%s", toolPath, target, pwd);
         if (DEBUG) {
             logger.info("checkPwd cmd: " + cmd);
         }

@@ -1,9 +1,6 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
-import edu.jiangxin.apktoolbox.file.crack.cracker.FileCracker;
-import edu.jiangxin.apktoolbox.file.crack.cracker.PdfCracker;
-import edu.jiangxin.apktoolbox.file.crack.cracker.RarCracker;
-import edu.jiangxin.apktoolbox.file.crack.cracker.ZipCracker;
+import edu.jiangxin.apktoolbox.file.crack.cracker.*;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
@@ -16,9 +13,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 压缩解压zip文件的类
- * ref:https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581
- * https://www.yunjiemi.net/Passper/index.html
+ * ref:
+ * 压缩包解密工具: https://www.yunjiemi.net/Passper/index.html
+ * 压缩包解密工具(doc): https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581
+ * PDF Password Remover: https://www.verypdf.com/app/pdf-password-remover/index.html
+ * qpdf: https://github.com/qpdf/qpdf
+ * pdfcrack: https://sourceforge.net/projects/pdfcrack/
+ * PDFCrack-GUI: https://github.com/tedsmith/PDFCrack-GUI
  */
 public final class CrackPanel extends EasyPanel {
     private JPanel optionPanel;
@@ -32,7 +33,7 @@ public final class CrackPanel extends EasyPanel {
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
 
-    private JComboBox<FileCracker> fileTypeComboBox;
+    private JComboBox<FileCracker> crackerTypeComboBox;
 
     private JButton startButton;
     private JButton stopButton;
@@ -122,11 +123,12 @@ public final class CrackPanel extends EasyPanel {
         optionY3Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         optionY3Panel.add(maxSpinner);
 
-        fileTypeComboBox = new JComboBox<>();
-        fileTypeComboBox.addItem(new RarCracker());
-        fileTypeComboBox.addItem(new ZipCracker());
-        fileTypeComboBox.addItem(new PdfCracker());
-        fileTypeComboBox.setSelectedIndex(0);
+        crackerTypeComboBox = new JComboBox<>();
+        crackerTypeComboBox.addItem(new RarUsingRarCracker());
+        crackerTypeComboBox.addItem(new ZipCracker());
+        crackerTypeComboBox.addItem(new ZipUsing7ZipCracker());
+        crackerTypeComboBox.addItem(new PdfCracker());
+        crackerTypeComboBox.setSelectedIndex(0);
 
         JTextField fileNameTextField = new JTextField();
 
@@ -138,7 +140,7 @@ public final class CrackPanel extends EasyPanel {
             }
         });
 
-        optionY4Panel.add(fileTypeComboBox);
+        optionY4Panel.add(crackerTypeComboBox);
         optionY4Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         optionY4Panel.add(fileNameTextField);
         optionY4Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -162,7 +164,7 @@ public final class CrackPanel extends EasyPanel {
                 logger.error("file is null");
                 return;
             }
-            FileCracker fileCracker = (FileCracker) fileTypeComboBox.getSelectedItem();
+            FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
             if (fileCracker == null) {
                 logger.error("fileCracker is null");
                 return;
@@ -174,7 +176,7 @@ public final class CrackPanel extends EasyPanel {
     }
 
     private File getSelectedFile() {
-        FileCracker fileCracker = (FileCracker) fileTypeComboBox.getSelectedItem();
+        FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
         if (fileCracker == null) {
             logger.error("fileCracker is null");
             return null;
@@ -195,7 +197,7 @@ public final class CrackPanel extends EasyPanel {
     }
 
     private void onStart() {
-        FileCracker fileCracker = (FileCracker) fileTypeComboBox.getSelectedItem();
+        FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
         if (fileCracker == null || !fileCracker.prepareCracker()) {
             JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
             return;
@@ -238,9 +240,7 @@ public final class CrackPanel extends EasyPanel {
                     workerPool.execute(new PasswordCrackerTask(taskId, true, consts, passwordFuture));
                 }
                 try {
-                    logger.info("before");
                     password = passwordFuture.get();
-                    logger.info("after password: " + password);
                 } catch (Exception e) {
                     logger.info("Exception test: ", e);
                 } finally {

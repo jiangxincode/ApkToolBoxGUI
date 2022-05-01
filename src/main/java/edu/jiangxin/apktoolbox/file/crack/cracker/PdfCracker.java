@@ -6,6 +6,15 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
 import java.io.IOException;
 
+/**
+ * Brief introduction to PDF password
+ * The standard security provided by PDF has two different passwords: user passwords and owner passwords.
+ * A PDF document may be protected by a password for opening (user password)
+ * and the document may also specify operations that should be restricted even when the document is decrypted:
+ * printing; copying text and graphics out of the document; modifying the document;
+ * and adding or modifying text notes (using owner password).
+ *
+ */
 public class PdfCracker extends FileCracker {
     private static final boolean DEBUG = false;
 
