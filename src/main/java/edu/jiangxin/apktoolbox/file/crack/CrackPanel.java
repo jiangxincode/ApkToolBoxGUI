@@ -4,19 +4,19 @@ import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerConsts;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerTask;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordFuture;
 import edu.jiangxin.apktoolbox.file.crack.cracker.*;
-import edu.jiangxin.apktoolbox.file.crack.dictionary.*;
-import edu.jiangxin.apktoolbox.file.crack.dictionary.impl.*;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -297,26 +297,19 @@ public final class CrackPanel extends EasyPanel {
                 JOptionPane.showMessageDialog(this, "Invalid dictionary file");
                 return;
             }
-            try {
-                PasswordCombinationGenerator generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
-                PasswordConsumer passwordConsumer = password -> {
-                    System.out.println("password:" + password);
-                    if (password == null) {
-                        JOptionPane.showMessageDialog(CrackPanel.this, "Can not find password");
-                    } else {
-                        JOptionPane.showMessageDialog(CrackPanel.this, password);
-                    }
+            try (BufferedReader br = new BufferedReader(new FileReader(dictionaryFile))) {
+                Function<String, Stream<String>> generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
+                Predicate<String> verifier = fileCracker::checkPassword;
+                Consumer<String> consumer = password -> {
+                    logger.info("password:" + password);
+                    JOptionPane.showMessageDialog(CrackPanel.this, password);
                 };
-                DictionaryPasswordCracker dictionaryPasswordCracker = new SimpleDictionaryPasswordCracker();
-                PasswordDataSource ds = new PasswordFileDataSource(dictionaryFile);
-                dictionaryPasswordCracker.crackPassword(ds, generator, fileCracker, passwordConsumer);
+                br.lines().flatMap(generator).filter(verifier).findFirst().ifPresent(consumer);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+                logger.info("FileNotFoundException");
+            } catch (IOException e) {
+                logger.info("IOException");
             }
-
-
         } else {
             logger.error("Invalid panel");
             return;
