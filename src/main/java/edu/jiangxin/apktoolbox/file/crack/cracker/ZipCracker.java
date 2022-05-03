@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.file.crack.cracker;
 
-import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public final class ZipCracker extends FileCracker {
         boolean result = false;
         try {
             ZipFile zFile = new ZipFile(file);
-            zFile.setFileNameCharset(StandardCharsets.UTF_8.name());
+            zFile.setCharset(StandardCharsets.UTF_8);
             String dest = file.getAbsolutePath().replace(".zip", "Tmp" + File.separator + Thread.currentThread().getId());
             File destDir = new File(dest);
             if (!destDir.exists()) {
