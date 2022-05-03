@@ -11,6 +11,8 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,7 +38,11 @@ public final class CrackPanel extends EasyPanel {
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
 
+    private JTextField dictionaryFileTextField;
+
     private JComboBox<FileCracker> crackerTypeComboBox;
+
+    private JTextField fileNameTextField;
 
     private JButton startButton;
     private JButton stopButton;
@@ -92,20 +98,14 @@ public final class CrackPanel extends EasyPanel {
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(filePanel);
 
-        JTextField fileNameTextField = new JTextField();
+        fileNameTextField = new JTextField();
 
         JButton chooseFileButton = new JButton("Choose File");
-        chooseFileButton.addActionListener(arg0 -> {
-            selectedFile = getSelectedFile();
-            if (selectedFile != null) {
-                fileNameTextField.setText(selectedFile.getAbsolutePath());
-            }
-        });
+        chooseFileButton.addActionListener(new OpenFileActionListener());
 
         filePanel.add(fileNameTextField);
         filePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         filePanel.add(chooseFileButton);
-
     }
 
     private void createBruteForcePanel() {
@@ -167,18 +167,13 @@ public final class CrackPanel extends EasyPanel {
         dictionaryPathPanel.setLayout(new BoxLayout(dictionaryPathPanel, BoxLayout.X_AXIS));
         topLevelPanel.add(dictionaryPathPanel);
 
-        JTextField fileNameTextField = new JTextField();
-        fileNameTextField.setPreferredSize(new Dimension(600, 0));
+        dictionaryFileTextField = new JTextField();
+        dictionaryFileTextField.setPreferredSize(new Dimension(600, 0));
 
-        JButton chooseFileButton = new JButton("Choose File");
-        chooseFileButton.addActionListener(arg0 -> {
-            dictionaryFile = getDictionaryFile();
-            if (dictionaryFile != null) {
-                fileNameTextField.setText(dictionaryFile.getAbsolutePath());
-            }
-        });
+        JButton chooseFileButton = new JButton("Choose Dictionary File");
+        chooseFileButton.addActionListener(new OpenDictionaryFileActionListener());
 
-        dictionaryPathPanel.add(fileNameTextField);
+        dictionaryPathPanel.add(dictionaryFileTextField);
         dictionaryPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         dictionaryPathPanel.add(chooseFileButton);
     }
@@ -210,39 +205,47 @@ public final class CrackPanel extends EasyPanel {
         stopButton.addActionListener(e -> new Thread(this::onStop).start());
     }
 
-    private File getSelectedFile() {
-        FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
-        if (fileCracker == null) {
-            logger.error("fileCracker is null");
-            return null;
-        }
+    class OpenFileActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
+            if (fileCracker == null) {
+                logger.error("fileCracker is null");
+                return;
+            }
 
-        JFileChooser fileChooser = new JFileChooser(".");
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setMultiSelectionEnabled(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(fileCracker.getFileDescription(), fileCracker.getFileExtensions());
-        fileChooser.addChoosableFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
-            return null;
+            JFileChooser fileChooser = new JFileChooser(".");
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setMultiSelectionEnabled(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(fileCracker.getFileDescription(), fileCracker.getFileExtensions());
+            fileChooser.addChoosableFileFilter(filter);
+            int returnVal = fileChooser.showOpenDialog(CrackPanel.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                selectedFile = fileChooser.getSelectedFile();
+                fileCracker.attachFile(selectedFile);
+                fileNameTextField.setText(selectedFile.getAbsolutePath());
+            }
         }
-        fileCracker.attachFile(fileChooser.getSelectedFile());
-        return fileChooser.getSelectedFile();
     }
 
-    private File getDictionaryFile() {
-        JFileChooser fileChooser = new JFileChooser(".");
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setMultiSelectionEnabled(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic;*.txt", "dic", "txt");
-        fileChooser.addChoosableFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
-            return null;
+    class OpenDictionaryFileActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser(".");
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setMultiSelectionEnabled(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic;*.txt", "dic", "txt");
+            fileChooser.addChoosableFileFilter(filter);
+            int returnVal = fileChooser.showOpenDialog(CrackPanel.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                dictionaryFile = fileChooser.getSelectedFile();
+                if (dictionaryFile != null) {
+                    dictionaryFileTextField.setText(dictionaryFile.getAbsolutePath());
+                }
+            }
         }
-        return fileChooser.getSelectedFile();
     }
 
     private void onStart() {
