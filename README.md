@@ -65,6 +65,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 * 支持掩码恢复和组合恢复
 * 支持用户一键补充字典
 * 支持自动下载最新字典
+* 支持自定义最大线程数（暴力恢复和字典恢复）
 
 ### Convert between different character encodings
 
