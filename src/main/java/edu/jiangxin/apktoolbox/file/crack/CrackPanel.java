@@ -20,16 +20,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-/**
- * ref:
- * 压缩包解密工具: https://www.yunjiemi.net/Passper/index.html
- * 压缩包解密工具(doc): https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581
- * PDF Password Remover: https://www.verypdf.com/app/pdf-password-remover/index.html
- * qpdf: https://github.com/qpdf/qpdf
- * pdfcrack: https://sourceforge.net/projects/pdfcrack/
- * PDFCrack-GUI: https://github.com/tedsmith/PDFCrack-GUI
- * password dictionary: https://wiki.skullsecurity.org/index.php/Passwords
- */
 public final class CrackPanel extends EasyPanel {
     private JPanel optionPanel;
 
