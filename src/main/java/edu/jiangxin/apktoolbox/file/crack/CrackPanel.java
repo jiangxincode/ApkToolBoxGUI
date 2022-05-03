@@ -14,10 +14,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -86,6 +86,7 @@ public final class CrackPanel extends EasyPanel {
         crackerTypeComboBox.addItem(new RarUsingRarCracker());
         crackerTypeComboBox.addItem(new ZipCracker());
         crackerTypeComboBox.addItem(new ZipUsing7ZipCracker());
+        crackerTypeComboBox.addItem(new SevenZipCracker());
         crackerTypeComboBox.addItem(new PdfCracker());
         crackerTypeComboBox.setSelectedIndex(0);
 
@@ -280,7 +281,6 @@ public final class CrackPanel extends EasyPanel {
                 JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
                 return;
             }
-
             String password = getPasswordByBruteForce(fileCracker, charSet, minLength, maxLength);
             if (password == null) {
                 JOptionPane.showMessageDialog(this, "Can not find password");
@@ -292,20 +292,11 @@ public final class CrackPanel extends EasyPanel {
                 JOptionPane.showMessageDialog(this, "Invalid dictionary file");
                 return;
             }
-            String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-            logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-                Function<String, Stream<String>> generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
-                Predicate<String> verifier = fileCracker::checkPassword;
-                Consumer<String> consumer = password -> {
-                    logger.info("password:" + password);
-                    JOptionPane.showMessageDialog(CrackPanel.this, password);
-                };
-                br.lines().flatMap(generator).filter(verifier).findFirst().ifPresent(consumer);
-            } catch (FileNotFoundException e) {
-                logger.info("FileNotFoundException");
-            } catch (IOException e) {
-                logger.info("IOException");
+            String password = getPasswordByDictionarySingleExecutor(fileCracker);
+            if (password == null) {
+                JOptionPane.showMessageDialog(this, "Can not find password");
+            } else {
+                JOptionPane.showMessageDialog(this, password);
             }
         } else {
             logger.error("Invalid panel");
@@ -365,9 +356,20 @@ public final class CrackPanel extends EasyPanel {
         return password;
     }
 
-    private String getPasswordByDictionary() {
-        String password = null;
-        return password;
+    private String getPasswordByDictionarySingleExecutor(FileCracker fileCracker) {
+        String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+        logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
+            Function<String, Stream<String>> generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
+            Predicate<String> verifier = fileCracker::checkPassword;
+            Optional<String> password = br.lines().flatMap(generator).filter(verifier).findFirst();
+            return password.isPresent() ? password.get() : null;
+        } catch (FileNotFoundException e) {
+            logger.info("FileNotFoundException");
+        } catch (IOException e) {
+            logger.info("IOException");
+        }
+        return null;
     }
 
     private int getThreadCount(int charSetSize, int length) {
