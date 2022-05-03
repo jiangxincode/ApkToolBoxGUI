@@ -45,7 +45,7 @@ public final class ZipUsing7ZipCracker extends FileCracker {
     @Override
     public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t %s -p%s", toolPath, target, password);
+        String cmd = String.format("%s t \"%s\" -p%s", toolPath, target, password);
         if (DEBUG) {
             logger.info("checkPassword cmd: " + cmd);
         }
