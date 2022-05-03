@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerConsts;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerTask;
 import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordFuture;
@@ -27,6 +28,7 @@ import java.util.stream.Stream;
  * qpdf: https://github.com/qpdf/qpdf
  * pdfcrack: https://sourceforge.net/projects/pdfcrack/
  * PDFCrack-GUI: https://github.com/tedsmith/PDFCrack-GUI
+ * password dictionary: https://wiki.skullsecurity.org/index.php/Passwords
  */
 public final class CrackPanel extends EasyPanel {
     private JPanel optionPanel;
@@ -244,7 +246,7 @@ public final class CrackPanel extends EasyPanel {
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setMultiSelectionEnabled(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic", "dic");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic;*.txt", "dic", "txt");
         fileChooser.addChoosableFileFilter(filter);
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
@@ -297,7 +299,9 @@ public final class CrackPanel extends EasyPanel {
                 JOptionPane.showMessageDialog(this, "Invalid dictionary file");
                 return;
             }
-            try (BufferedReader br = new BufferedReader(new FileReader(dictionaryFile))) {
+            String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+            logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
                 Function<String, Stream<String>> generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
                 Predicate<String> verifier = fileCracker::checkPassword;
                 Consumer<String> consumer = password -> {
