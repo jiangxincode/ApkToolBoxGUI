@@ -1,32 +1,33 @@
 package edu.jiangxin.apktoolbox.file.crack.bruteforce;
 
+import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
 import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
 import edu.jiangxin.apktoolbox.file.crack.exception.UnsupportedVersionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class PasswordCrackerTask implements Runnable {
+public class BruteForceCrackerTask implements Runnable {
     private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
-    int taskId;
-    boolean isEarlyTermination;
-    PasswordFuture passwordFuture;
-    static PasswordCrackerConsts consts;
+    private int taskId;
+    private boolean isEarlyTermination;
+    private BruteForceFuture bruteForceFuture;
+    private BruteForceCrackerConsts consts;
+    private CrackPanel crackPanel;
 
-    public PasswordCrackerTask(int taskId, boolean isEarlyTermination, PasswordCrackerConsts consts, PasswordFuture passwordFuture) {
+    public BruteForceCrackerTask(int taskId, boolean isEarlyTermination, BruteForceCrackerConsts consts, BruteForceFuture bruteForceFuture, CrackPanel crackPanel) {
         this.taskId = taskId;
         this.isEarlyTermination = isEarlyTermination;
         this.consts = consts;
-        this.passwordFuture = passwordFuture;
+        this.bruteForceFuture = bruteForceFuture;
+        this.crackPanel = crackPanel;
     }
 
-    /* ### run ###
-     */
     @Override
     public void run() {
         long rangeBegin = taskId * consts.getPasswordSubRangeSize();
         long rangeEnd = (taskId + 1) * consts.getPasswordSubRangeSize() - 1;
         String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getCracker());
-        passwordFuture.set(passwordOrNull);
+        bruteForceFuture.set(passwordOrNull);
     }
 
     /*	### findPasswordInRange	###
@@ -37,7 +38,10 @@ public class PasswordCrackerTask implements Runnable {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
-            if (isEarlyTermination && passwordFuture.isDone()) return null;
+            if ((isEarlyTermination && bruteForceFuture.isDone()) || Thread.currentThread().isInterrupted()) {
+                logger.info("isInterrupted");
+                return null;
+            }
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());
             int result;
             try {
@@ -48,6 +52,8 @@ public class PasswordCrackerTask implements Runnable {
             } catch (Exception e) {
                 logger.error("Exception, stop", e);
                 result = -1;
+            } finally {
+                crackPanel.increaseProgressBarValue();
             }
             if (result == 0) {
                 getNextCandidate(passwordIterator, consts.getCharsSet().length());
@@ -64,7 +70,7 @@ public class PasswordCrackerTask implements Runnable {
      * The transformDecToBaseN transforms decimal into numArray that is base N number system
      * If you don't understand, refer to the homework01 overview
      */
-    protected static void transformDecToBaseN(long numInDec, int[] numArrayInBaseN, final int charSetLength) {
+    protected void transformDecToBaseN(long numInDec, int[] numArrayInBaseN, final int charSetLength) {
         for (int index = consts.getPasswordLength() - 1; index >= 0; index--) {
             numArrayInBaseN[index] = (int) (numInDec % charSetLength);
             numInDec = numInDec / charSetLength;
@@ -74,7 +80,7 @@ public class PasswordCrackerTask implements Runnable {
     /*
      * The getNextCandidate update the possible password represented by N base system
      */
-    private static void getNextCandidate(int[] candidateChars, final int charsSetLength) {
+    private void getNextCandidate(int[] candidateChars, final int charsSetLength) {
         int reminder = 1;
         for (int index = consts.getPasswordLength() - 1; index >= 0; index--) {
             candidateChars[index] += reminder;

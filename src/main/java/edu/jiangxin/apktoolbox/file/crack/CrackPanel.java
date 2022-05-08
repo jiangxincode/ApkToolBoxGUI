@@ -1,12 +1,15 @@
 package edu.jiangxin.apktoolbox.file.crack;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerConsts;
-import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordCrackerTask;
-import edu.jiangxin.apktoolbox.file.crack.bruteforce.PasswordFuture;
+import edu.jiangxin.apktoolbox.file.crack.bruteforce.BruteForceCrackerConsts;
+import edu.jiangxin.apktoolbox.file.crack.bruteforce.BruteForceCrackerTask;
+import edu.jiangxin.apktoolbox.file.crack.bruteforce.BruteForceFuture;
 import edu.jiangxin.apktoolbox.file.crack.cracker.*;
+import edu.jiangxin.apktoolbox.file.crack.dictionary.BigFileReader;
+import edu.jiangxin.apktoolbox.file.crack.dictionary.FileHandle;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -18,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -25,9 +29,17 @@ import java.util.stream.Stream;
 public final class CrackPanel extends EasyPanel {
     private JPanel optionPanel;
 
-    private JTabbedPane tabbedPane;
+    private JTabbedPane categoryTabbedPane;
     private JPanel bruteForcePanel;
     private JPanel dictionaryPanel;
+
+    private enum CATEGORY {
+        UNKNOWN,
+        BRUTE_FORCE,
+        DICTIONARY_SINGLE_THREAD,
+        DICTIONARY_MULTI_THREAD
+    }
+    private CATEGORY currentCategory = CATEGORY.UNKNOWN;
 
     private JPanel operationPanel;
 
@@ -40,7 +52,12 @@ public final class CrackPanel extends EasyPanel {
 
     private JTextField dictionaryFileTextField;
 
+    private JSpinner threadNumSpinner;
+
+    private JProgressBar progressBar;
+
     private JComboBox<FileCracker> crackerTypeComboBox;
+    private FileCracker currentFileCracker;
 
     private JTextField fileNameTextField;
 
@@ -50,6 +67,9 @@ public final class CrackPanel extends EasyPanel {
     private File selectedFile;
     private File dictionaryFile;
     private ExecutorService workerPool;
+
+    private BigFileReader bigFileReader;
+    private FileHandle fileHandle;
 
     public CrackPanel() {
         super();
@@ -72,14 +92,14 @@ public final class CrackPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
-        tabbedPane = new JTabbedPane();
+        categoryTabbedPane = new JTabbedPane();
 
         createBruteForcePanel();
-        tabbedPane.addTab("Brute Force", null, bruteForcePanel, "Brute Force");
-        tabbedPane.setSelectedIndex(0);
+        categoryTabbedPane.addTab("Brute Force", null, bruteForcePanel, "Brute Force");
+        categoryTabbedPane.setSelectedIndex(0);
 
         createDictionaryPanel();
-        tabbedPane.addTab("Dictionary", null, dictionaryPanel, "Dictionary");
+        categoryTabbedPane.addTab("Dictionary", null, dictionaryPanel, "Dictionary");
 
         crackerTypeComboBox = new JComboBox<>();
         crackerTypeComboBox.addItem(new RarCracker());
@@ -93,11 +113,17 @@ public final class CrackPanel extends EasyPanel {
         JPanel filePanel = new JPanel();
         filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
 
-        optionPanel.add(tabbedPane);
+        progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setValue(0);
+
+        optionPanel.add(categoryTabbedPane);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(crackerTypeComboBox);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(filePanel);
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        optionPanel.add(progressBar);
 
         fileNameTextField = new JTextField();
 
@@ -166,7 +192,13 @@ public final class CrackPanel extends EasyPanel {
 
         JPanel dictionaryPathPanel = new JPanel();
         dictionaryPathPanel.setLayout(new BoxLayout(dictionaryPathPanel, BoxLayout.X_AXIS));
+
+        JPanel threadNumPanel = new JPanel();
+        threadNumPanel.setLayout(new BoxLayout(threadNumPanel, BoxLayout.X_AXIS));
+
         topLevelPanel.add(dictionaryPathPanel);
+        topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        topLevelPanel.add(threadNumPanel);
 
         dictionaryFileTextField = new JTextField();
         dictionaryFileTextField.setPreferredSize(new Dimension(600, 0));
@@ -177,6 +209,16 @@ public final class CrackPanel extends EasyPanel {
         dictionaryPathPanel.add(dictionaryFileTextField);
         dictionaryPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         dictionaryPathPanel.add(chooseFileButton);
+
+        JLabel threadNumLabel = new JLabel("Thread Number: ");
+
+        threadNumSpinner = new JSpinner();
+        threadNumSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
+        threadNumSpinner.setToolTipText("Thread Number");
+
+        threadNumPanel.add(threadNumLabel);
+        threadNumPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        threadNumPanel.add(threadNumSpinner);
     }
 
     private void createOperationPanel() {
@@ -250,96 +292,102 @@ public final class CrackPanel extends EasyPanel {
     }
 
     private void onStart() {
-        FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
-        if (fileCracker == null || !fileCracker.prepareCracker()) {
-            JOptionPane.showMessageDialog(this, "Crack condition is not ready! Check the condition");
-            return;
-        }
-        refreshUI(true);
-
-        Component selectedPanel = tabbedPane.getSelectedComponent();
+        Component selectedPanel = categoryTabbedPane.getSelectedComponent();
         if (selectedPanel.equals(bruteForcePanel)) {
-            StringBuilder sb = new StringBuilder();
-            if (numberCheckBox.isSelected()) {
-                sb.append("0123456789");
-            }
-            if (lowercaseLetterCheckBox.isSelected()) {
-                sb.append("abcdefghijklmnopqrstuvwxyz");
-            }
-            if (uppercaseLetterCheckBox.isSelected()) {
-                sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            }
-            if (sb.length() <= 0) {
-                JOptionPane.showMessageDialog(this, "Character set is empty!");
-                return;
-            }
-            final String charSet = sb.toString();
-
-            int minLength = (Integer) minSpinner.getValue();
-            int maxLength = (Integer) maxSpinner.getValue();
-            if (minLength > maxLength) {
-                JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
-                return;
-            }
-            String password = getPasswordByBruteForce(fileCracker, charSet, minLength, maxLength);
-            if (password == null) {
-                JOptionPane.showMessageDialog(this, "Can not find password");
-            } else {
-                JOptionPane.showMessageDialog(this, password);
-            }
+            currentCategory = CATEGORY.BRUTE_FORCE;
         } else if (selectedPanel.equals(dictionaryPanel)) {
-            if (dictionaryFile == null || !dictionaryFile.isFile()) {
-                JOptionPane.showMessageDialog(this, "Invalid dictionary file");
-                return;
-            }
-            String password = getPasswordByDictionarySingleExecutor(fileCracker);
-            if (password == null) {
-                JOptionPane.showMessageDialog(this, "Can not find password");
+            int threadNum = (Integer) threadNumSpinner.getValue();
+            if (threadNum == 1) {
+                currentCategory = CATEGORY.DICTIONARY_SINGLE_THREAD;
             } else {
-                JOptionPane.showMessageDialog(this, password);
+                currentCategory = CATEGORY.DICTIONARY_MULTI_THREAD;
             }
         } else {
-            logger.error("Invalid panel");
+            currentCategory = CATEGORY.UNKNOWN;
+        }
+
+        currentFileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
+        if (currentFileCracker == null || !currentFileCracker.prepareCracker()) {
+            JOptionPane.showMessageDialog(this, "onStart failed: Crack condition does not been prepared!");
             return;
         }
-        refreshUI(false);
+        switch (currentCategory) {
+            case BRUTE_FORCE:
+                onStartByBruteForceCategory();
+                break;
+            case DICTIONARY_SINGLE_THREAD:
+                onStartByDictionarySingleThreadCategory();
+                break;
+            case DICTIONARY_MULTI_THREAD:
+                onStartByDictionaryMultiThreadCategory();
+                break;
+            case UNKNOWN:
+                JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
+                break;
+        }
     }
 
     private void onStop() {
-        if (workerPool == null) {
-            refreshUI(false);
-            return;
+        switch (currentCategory) {
+            case BRUTE_FORCE:
+                onStopByBruteForceCategory();
+                break;
+            case DICTIONARY_SINGLE_THREAD:
+                onStopByDictionarySingleThreadCategory();
+                break;
+            case DICTIONARY_MULTI_THREAD:
+                onStopByDictionaryMultiThreadCategory();
+                break;
+            case UNKNOWN:
+                JOptionPane.showMessageDialog(this, "onStop failed: Invalid category!");
+                break;
         }
-        if (!workerPool.isShutdown()) {
-            workerPool.shutdown();
-        }
-        while (workerPool.isTerminated()) {
-            try {
-                final boolean isTimeout = workerPool.awaitTermination(100, TimeUnit.SECONDS);
-                logger.info("awaitTermination isTimeout: " + isTimeout);
-            } catch (InterruptedException e) {
-                logger.error("awaitTermination failed");
-            }
-        }
-        refreshUI(false);
     }
 
-    private String getPasswordByBruteForce(FileCracker fileCracker, String charSet, int minLength, int maxLength) {
+    private void onStartByBruteForceCategory() {
+        logger.info("onStartByBruteForceCategory");
+        StringBuilder sb = new StringBuilder();
+        if (numberCheckBox.isSelected()) {
+            sb.append("0123456789");
+        }
+        if (lowercaseLetterCheckBox.isSelected()) {
+            sb.append("abcdefghijklmnopqrstuvwxyz");
+        }
+        if (uppercaseLetterCheckBox.isSelected()) {
+            sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }
+        if (sb.length() <= 0) {
+            JOptionPane.showMessageDialog(this, "Character set is empty!");
+            return;
+        }
+        final String charSet = sb.toString();
+
+        int minLength = (Integer) minSpinner.getValue();
+        int maxLength = (Integer) maxSpinner.getValue();
+        if (minLength > maxLength) {
+            JOptionPane.showMessageDialog(this, "Minimum length is bigger than maximum length!");
+            return;
+        }
+
+        setWaitMode(true);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
+            setProgressMaxValue((int)Math.pow(charSet.length(), length));
+            setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
-            int numThreads = Math.min(getThreadCount(charSet.length(), length), fileCracker.getMaxThreadNum());
-            logger.info("[" + fileCracker + "]Current attempt length: " + length + ", thread number: " + numThreads);
+            int numThreads = Math.min(getThreadCount(charSet.length(), length), currentFileCracker.getMaxThreadNum());
+            logger.info("[" + currentFileCracker + "]Current attempt length: " + length + ", thread number: " + numThreads);
 
             workerPool = Executors.newFixedThreadPool(numThreads);
-            PasswordFuture passwordFuture = new PasswordFuture(numThreads);
-            PasswordCrackerConsts consts = new PasswordCrackerConsts(numThreads, length, fileCracker, charSet);
+            BruteForceFuture bruteForceFuture = new BruteForceFuture(numThreads);
+            BruteForceCrackerConsts consts = new BruteForceCrackerConsts(numThreads, length, currentFileCracker, charSet);
 
             for (int taskId = 0; taskId < numThreads; taskId++) {
-                workerPool.execute(new PasswordCrackerTask(taskId, true, consts, passwordFuture));
+                BruteForceCrackerTask task = new BruteForceCrackerTask(taskId, true, consts, bruteForceFuture, this);
+                workerPool.execute(task);
             }
             try {
-                password = passwordFuture.get();
+                password = bruteForceFuture.get();
             } catch (Exception e) {
                 logger.info("Exception test: ", e);
             } finally {
@@ -353,23 +401,110 @@ public final class CrackPanel extends EasyPanel {
                 break;
             }
         }
-        return password;
+        if (password == null) {
+            JOptionPane.showMessageDialog(this, "Can not find password");
+        } else {
+            JOptionPane.showMessageDialog(this, password);
+        }
+        onStopByBruteForceCategory();
     }
 
-    private String getPasswordByDictionarySingleExecutor(FileCracker fileCracker) {
+    private void onStartByDictionarySingleThreadCategory() {
+        logger.info("onStartByDictionarySingleThreadCategory");
+        if (dictionaryFile == null || !dictionaryFile.isFile()) {
+            JOptionPane.showMessageDialog(this, "Invalid dictionary file");
+            return;
+        }
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-            Function<String, Stream<String>> generator = password -> Stream.of(password.toLowerCase(), password.toUpperCase());
-            Predicate<String> verifier = fileCracker::checkPassword;
+            setWaitMode(true);
+            setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+            setProgressBarValue(0);
+            Function<String, Stream<String>> generator = password -> {
+                increaseProgressBarValue();
+                return Stream.of(password.toLowerCase(), password.toUpperCase());
+            };
+            Predicate<String> verifier = currentFileCracker::checkPassword;
             Optional<String> password = br.lines().flatMap(generator).filter(verifier).findFirst();
-            return password.isPresent() ? password.get() : null;
+            if (password.isPresent()) {
+                JOptionPane.showMessageDialog(this, password.get());
+            } else {
+                JOptionPane.showMessageDialog(this, "Can not find password");
+            }
         } catch (FileNotFoundException e) {
             logger.info("FileNotFoundException");
         } catch (IOException e) {
             logger.info("IOException");
         }
-        return null;
+        onStopByDictionarySingleThreadCategory();
+    }
+
+    private void onStartByDictionaryMultiThreadCategory() {
+        logger.info("onStartByDictionaryMultiThreadCategory");
+        if (dictionaryFile == null || !dictionaryFile.isFile()) {
+            JOptionPane.showMessageDialog(this, "Invalid dictionary file");
+            return;
+        }
+        int threadNum = (Integer) threadNumSpinner.getValue();
+        try {
+            setWaitMode(true);
+            setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+            setProgressBarValue(0);
+            fileHandle = new FileHandle(currentFileCracker, new AtomicBoolean(false), this);
+            String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+            BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), fileHandle);
+            bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
+            bigFileReader.setCompleteCallback(() -> {
+                if (fileHandle != null && !fileHandle.getSuccess().get()) {
+                    logger.error("Can not find password");
+                    JOptionPane.showMessageDialog(CrackPanel.this, "Can not find password");
+                    onStopByDictionaryMultiThreadCategory();
+                }
+            });
+            bigFileReader.start();
+        } catch (IOException e) {
+            logger.error("onStartByDictionaryMultiThreadCategory", e);
+        }
+    }
+
+    private void onStopByBruteForceCategory() {
+        logger.info("onStopByBruteForceCategory");
+        if (workerPool == null) {
+            setWaitMode(false);
+            return;
+        }
+        if (!workerPool.isShutdown()) {
+            workerPool.shutdownNow();
+        }
+        while (!workerPool.isTerminated()) {
+            try {
+                final boolean isTimeout = workerPool.awaitTermination(100, TimeUnit.SECONDS);
+                logger.info("awaitTermination isTimeout: " + isTimeout);
+            } catch (InterruptedException e) {
+                logger.error("awaitTermination failed");
+            }
+        }
+        setProgressBarValue(0);
+        setWaitMode(false);
+    }
+
+    private void onStopByDictionarySingleThreadCategory() {
+        logger.info("onStopByDictionarySingleThreadCategory");
+        setProgressBarValue(0);
+        setWaitMode(false);
+    }
+
+    private void onStopByDictionaryMultiThreadCategory() {
+        logger.info("onStopByDictionaryMultiThreadCategory");
+        if (bigFileReader != null) {
+            fileHandle.stop();
+        }
+        if (bigFileReader != null) {
+            bigFileReader.shutdown();
+        }
+        setProgressBarValue(0);
+        setWaitMode(false);
     }
 
     private int getThreadCount(int charSetSize, int length) {
@@ -380,8 +515,8 @@ public final class CrackPanel extends EasyPanel {
         return result;
     }
 
-    private void refreshUI(boolean isStart) {
-        if (isStart) {
+    public void setWaitMode(boolean isWaitMode) {
+        if (isWaitMode) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
@@ -392,5 +527,21 @@ public final class CrackPanel extends EasyPanel {
         }
     }
 
+    public void setProgressMaxValue(int maxValue) {
+        if (progressBar != null) {
+            progressBar.setMaximum(maxValue);
+        }
+    }
+    public void setProgressBarValue(int value) {
+        if (progressBar != null) {
+            progressBar.setValue(value);
+        }
+    }
+    public void increaseProgressBarValue() {
+        if (progressBar != null) {
+            int currentValue = progressBar.getValue();
+            progressBar.setValue(currentValue + 1);
+        }
+    }
 }
 

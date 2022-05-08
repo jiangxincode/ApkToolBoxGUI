@@ -56,12 +56,14 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 **TODO**
 
+* 各种策略的恢复方式能在停止时正常释放资源
+* 支持进度条显示
+* 支持恢复速率和恢复时间预测显示
 * 支持多线程读取字典
 * 支持多字典或者目录内字典递归读取
 * 支持中断和中断恢复
 * 支持更多类型的密码恢复
 * 支持PDF User Password/Owner Password两种密码的恢复（当前只支持User Password）
-* 支持恢复速率和恢复时间预测显示
 * 支持掩码恢复和组合恢复
 * 支持用户一键补充字典
 * 支持自动下载最新字典

@@ -2,7 +2,7 @@ package edu.jiangxin.apktoolbox.file.crack.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
 
-public class PasswordCrackerConsts {
+public class BruteForceCrackerConsts {
     final int numThreads;
     final int passwordLength;
     final long passwordRangeSize;
@@ -10,7 +10,7 @@ public class PasswordCrackerConsts {
     final ICracker cracker;
     final String charsSet;
 
-    public PasswordCrackerConsts(int numThreads, int passwordLength, ICracker cracker, String charsSet) {
+    public BruteForceCrackerConsts(int numThreads, int passwordLength, ICracker cracker, String charsSet) {
         this.numThreads = numThreads;
         this.passwordLength = passwordLength;
         this.cracker = cracker;

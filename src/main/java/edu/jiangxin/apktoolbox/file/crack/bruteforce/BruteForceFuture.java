@@ -27,14 +27,14 @@ import java.util.concurrent.locks.ReentrantLock;
 // If you want to know the Future class, refer to site; https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html
 
 // Complete this class using a lock and the condition variable
-public class PasswordFuture implements Future<String> {
+public class BruteForceFuture implements Future<String> {
     private String result = null;
     private AtomicInteger finishedTaskCount = new AtomicInteger(0);
     private int taskCount;
     private final Lock lock = new ReentrantLock();
     private final Condition resultSet = lock.newCondition(); // refer to Condition and Lock class in javadoc
 
-    public PasswordFuture(int taskCount) {
+    public BruteForceFuture(int taskCount) {
         this.taskCount = taskCount;
     }
 
