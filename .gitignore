@@ -5,7 +5,7 @@ target/
 .settings/
 
 # IntelliJ IDEA
-.idea/**/workspace.xml
+.idea/
 
 # Others
 *.db
