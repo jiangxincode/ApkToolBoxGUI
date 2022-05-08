@@ -8,28 +8,28 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
 
-public final class ZipUsing7ZipCracker extends FileCracker {
+public final class ArchiveUsing7ZipCracker extends FileCracker {
     private static final boolean DEBUG = false;
     private String toolPath;
 
-    public ZipUsing7ZipCracker() {
+    public ArchiveUsing7ZipCracker() {
         super();
         toolPath = conf.getString(Constants.SEVEN_ZIP_PATH_KEY);
     }
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"zip"};
+        return new String[]{"7Z", "ZIP", "RAR", "GZ", "TAR", "XZ", "Z"};
     }
 
     @Override
     public String getFileDescription() {
-        return "*.zip";
+        return "*.7z; *.zip; *.rar; ...";
     }
 
     @Override
     public String getDescription() {
-        return "ZIP Cracker(Using 7z.exe)";
+        return "Archive Cracker(Using 7z.exe)";
     }
 
     @Override

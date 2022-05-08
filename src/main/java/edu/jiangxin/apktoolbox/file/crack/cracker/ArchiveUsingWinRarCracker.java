@@ -8,32 +8,33 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
 
-/**
- * The RAR command line supports a larger number of functions when compared to WinRAR, but does not support ZIP and other formats.
- * https://www.win-rar.com/cmd-shell-mode.html
- */
-public final class RarUsingRarCracker extends FileCracker {
+public class ArchiveUsingWinRarCracker  extends FileCracker {
     private static final boolean DEBUG = false;
     private String toolPath;
 
-    public RarUsingRarCracker() {
+    public ArchiveUsingWinRarCracker() {
         super();
-        toolPath = conf.getString(Constants.RAR_PATH_KEY);
+        toolPath = conf.getString(Constants.WIN_RAR_PATH_KEY);
     }
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"rar"};
+        return new String[]{"RAR", "ZIP", "7Z", "ARJ", "BZ2", "CAB", "GZ", "ISO", "JAR", "LZ", "LZH", "TAR", "UUE", "XZ", "Z", "ZST"};
     }
 
     @Override
     public String getFileDescription() {
-        return "*.rar";
+        return "*.rar; *.zip; *.7z; ...";
     }
 
     @Override
     public String getDescription() {
-        return "RAR Cracker(Using Rar.exe)";
+        return "Archive Cracker(Using WinRar.exe)";
+    }
+
+    @Override
+    public int getMaxThreadNum() {
+        return 5;
     }
 
     @Override
@@ -49,7 +50,7 @@ public final class RarUsingRarCracker extends FileCracker {
     @Override
     public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t -p%s \"%s\"", toolPath, password, target);
+        String cmd = String.format("%s t -inul -ibck -p%s \"%s\"", toolPath, password, target);
         if (DEBUG) {
             logger.info("checkPassword cmd: " + cmd);
         }

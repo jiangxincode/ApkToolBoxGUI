@@ -104,10 +104,11 @@ public final class CrackPanel extends EasyPanel {
         categoryTabbedPane.addTab("Dictionary", null, dictionaryPanel, "Dictionary");
 
         crackerTypeComboBox = new JComboBox<>();
-        crackerTypeComboBox.addItem(new RarCracker());
+        crackerTypeComboBox.addItem(new ArchiveUsing7ZipCracker());
+        crackerTypeComboBox.addItem(new ArchiveUsingWinRarCracker());
         crackerTypeComboBox.addItem(new RarUsingRarCracker());
         crackerTypeComboBox.addItem(new ZipCracker());
-        crackerTypeComboBox.addItem(new ZipUsing7ZipCracker());
+        crackerTypeComboBox.addItem(new RarCracker());
         crackerTypeComboBox.addItem(new SevenZipCracker());
         crackerTypeComboBox.addItem(new PdfCracker());
         crackerTypeComboBox.setSelectedIndex(0);

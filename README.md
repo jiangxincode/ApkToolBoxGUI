@@ -33,7 +33,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 **Introduce**
 
-* Support password recovery from `PDF/ZIP/RAR` files (more file types will be supported in the future)
+* Support password recovery from `PDF/ZIP/RAR/7Z...` files
 * Multi-threaded processing, high recovery efficiency
 * Support progress showing
 * Support brute force recovery and dictionary recovery (more methods will be supported in the future)
@@ -47,6 +47,8 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 * passwordcracker(字典破解样例): <https://github.com/chandra1123/passwordcracker>
 * PasswordCrackerMultiThread(多线程暴力破解样例): <https://github.com/olzhabay/PasswordCrackerMultiThread>
 * Password Dictionary(一些公开的密码字典，主要针对英文互联网环境): <https://wiki.skullsecurity.org/index.php/Passwords>
+* ArchivePasswordTestTool(多线程读取字典): <https://github.com/RiverChu0/ArchivePasswordTestTool>
+* zip-file-cracker(使用WinRar破解各种类型的rar文件): <https://github.com/shuanglong1104/zip-file-cracker>
 
 * 压缩包解密工具: <https://www.yunjiemi.net/Passper/index.html>
 * 压缩包解密工具(doc): <https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581>
@@ -55,7 +57,6 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 * pdfcrack: <https://sourceforge.net/projects/pdfcrack/>
 * PDFCrack-GUI: <https://github.com/tedsmith/PDFCrack-GUI>
 * ArchivePasswordTestTool: <https://github.com/dawn-lc/ArchivePasswordTestTool>
-* ArchivePasswordTestTool: <https://github.com/RiverChu0/ArchivePasswordTestTool>
 
 **TODO**
 

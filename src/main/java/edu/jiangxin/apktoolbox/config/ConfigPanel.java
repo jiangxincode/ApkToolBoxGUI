@@ -44,7 +44,10 @@ public class ConfigPanel extends EasyPanel {
         createPathPanel("Path of RAR(e.g.\"D:/Portable/tools/rar.exe\")", "https://www.win-rar.com/", Constants.RAR_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createPathPanel("Path of RAR(e.g.\"D:/Portable/tools/7z.exe\")", "https://www.7-zip.org/", Constants.SEVEN_ZIP_PATH_KEY);
+        createPathPanel("Path of RAR(e.g.\"C:/Program Files/WinRAR/Rar.exe\")", "https://www.win-rar.com/", Constants.RAR_PATH_KEY);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createPathPanel("Path of RAR(e.g.\"C:/Program Files/WinRAR/WinRAR.exe\")", "https://www.win-rar.com/", Constants.WIN_RAR_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
     }
 
