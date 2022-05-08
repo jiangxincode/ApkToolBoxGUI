@@ -71,6 +71,8 @@ public final class CrackPanel extends EasyPanel {
     private BigFileReader bigFileReader;
     private FileHandle fileHandle;
 
+    private static boolean isCracking = false;
+
     public CrackPanel() {
         super();
         initUI();
@@ -369,7 +371,7 @@ public final class CrackPanel extends EasyPanel {
             return;
         }
 
-        setWaitMode(true);
+        setIsCracking(true);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
             setProgressMaxValue((int)Math.pow(charSet.length(), length));
@@ -418,15 +420,16 @@ public final class CrackPanel extends EasyPanel {
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-            setWaitMode(true);
+            setIsCracking(true);
             setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
             setProgressBarValue(0);
+            Predicate<String> isCrackingPredicate = password -> isCracking;
             Function<String, Stream<String>> generator = password -> {
                 increaseProgressBarValue();
                 return Stream.of(password.toLowerCase(), password.toUpperCase());
             };
             Predicate<String> verifier = currentFileCracker::checkPassword;
-            Optional<String> password = br.lines().flatMap(generator).filter(verifier).findFirst();
+            Optional<String> password = br.lines().takeWhile(isCrackingPredicate).flatMap(generator).filter(verifier).findFirst();
             if (password.isPresent()) {
                 JOptionPane.showMessageDialog(this, password.get());
             } else {
@@ -448,7 +451,7 @@ public final class CrackPanel extends EasyPanel {
         }
         int threadNum = (Integer) threadNumSpinner.getValue();
         try {
-            setWaitMode(true);
+            setIsCracking(true);
             setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
             setProgressBarValue(0);
             fileHandle = new FileHandle(currentFileCracker, new AtomicBoolean(false), this);
@@ -470,14 +473,10 @@ public final class CrackPanel extends EasyPanel {
 
     private void onStopByBruteForceCategory() {
         logger.info("onStopByBruteForceCategory");
-        if (workerPool == null) {
-            setWaitMode(false);
-            return;
-        }
-        if (!workerPool.isShutdown()) {
+        if (workerPool != null && !workerPool.isShutdown()) {
             workerPool.shutdownNow();
         }
-        while (!workerPool.isTerminated()) {
+        while (workerPool != null && !workerPool.isTerminated()) {
             try {
                 final boolean isTimeout = workerPool.awaitTermination(100, TimeUnit.SECONDS);
                 logger.info("awaitTermination isTimeout: " + isTimeout);
@@ -486,13 +485,13 @@ public final class CrackPanel extends EasyPanel {
             }
         }
         setProgressBarValue(0);
-        setWaitMode(false);
+        setIsCracking(false);
     }
 
     private void onStopByDictionarySingleThreadCategory() {
         logger.info("onStopByDictionarySingleThreadCategory");
         setProgressBarValue(0);
-        setWaitMode(false);
+        setIsCracking(false);
     }
 
     private void onStopByDictionaryMultiThreadCategory() {
@@ -504,7 +503,7 @@ public final class CrackPanel extends EasyPanel {
             bigFileReader.shutdown();
         }
         setProgressBarValue(0);
-        setWaitMode(false);
+        setIsCracking(false);
     }
 
     private int getThreadCount(int charSetSize, int length) {
@@ -515,16 +514,11 @@ public final class CrackPanel extends EasyPanel {
         return result;
     }
 
-    public void setWaitMode(boolean isWaitMode) {
-        if (isWaitMode) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            startButton.setEnabled(false);
-            stopButton.setEnabled(true);
-        } else {
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            startButton.setEnabled(true);
-            stopButton.setEnabled(false);
-        }
+    public void setIsCracking(boolean isCracking) {
+        CrackPanel.isCracking = isCracking;
+        setCursor(Cursor.getPredefinedCursor(isCracking ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
+        startButton.setEnabled(!isCracking);
+        stopButton.setEnabled(isCracking);
     }
 
     public void setProgressMaxValue(int maxValue) {

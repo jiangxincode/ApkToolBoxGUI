@@ -34,6 +34,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 * Support password recovery from `PDF/ZIP/RAR` files (more file types will be supported in the future)
 * Multi-threaded processing, high recovery efficiency
+* Support progress showing
 * Support brute force recovery and dictionary recovery (more methods will be supported in the future)
 * Brute force recovery supports customized character set and password length
 * Dictionary recovery supports customized dictionaries. The default dictionary currently covers various common download sites, gentlemen's sites, and other network resource passwords (if you find a password that is not covered in the dictionary, please provide feedback to help more people)
@@ -56,10 +57,6 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 **TODO**
 
-* 各种策略的恢复方式能在停止时正常释放资源
-* 支持进度条显示
-* 支持恢复速率和恢复时间预测显示
-* 支持多线程读取字典
 * 支持多字典或者目录内字典递归读取
 * 支持中断和中断恢复
 * 支持更多类型的密码恢复

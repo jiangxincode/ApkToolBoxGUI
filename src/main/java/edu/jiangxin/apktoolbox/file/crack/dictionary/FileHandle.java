@@ -33,7 +33,7 @@ public class FileHandle {
     }
 
     public void init() {
-        crackPanel.setWaitMode(false);
+        crackPanel.setIsCracking(false);
     }
 
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
@@ -45,7 +45,7 @@ public class FileHandle {
         if (fileCracker.checkPassword(line) ) {
             if (success.compareAndSet(false, true)) {
                 logger.info("find password: " + line);
-                crackPanel.setWaitMode(false);
+                crackPanel.setIsCracking(false);
                 bigFileReader.shutdown();
                 JOptionPane.showMessageDialog(crackPanel, "Password[" + line + "]");
                 crackPanel.setProgressBarValue(0);
