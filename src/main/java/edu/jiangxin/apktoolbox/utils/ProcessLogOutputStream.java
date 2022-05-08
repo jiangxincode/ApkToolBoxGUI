@@ -9,20 +9,15 @@ import org.apache.logging.log4j.Logger;
  */
 public class ProcessLogOutputStream extends LogOutputStream {
     Logger logger;
+    Level level;
 
-    public ProcessLogOutputStream(Logger logger, Level logLevel) {
-        super(logLevel.intLevel());
+    public ProcessLogOutputStream(Logger logger, Level level) {
         this.logger = logger;
+        this.level = level;
     }
 
     @Override
     protected void processLine(String line, int logLevel) {
-        String message;
-        if (logLevel == Level.INFO.intLevel()) {
-            message = "Process output: [" + line + "]";
-        } else {
-            message = "Process errput: [" + line + "]";
-        }
-        logger.log(Level.valueOf(String.valueOf(logLevel)), message);
+        logger.log(level, "[" + line + "]");
     }
 }

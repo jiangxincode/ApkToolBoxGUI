@@ -5,10 +5,12 @@ target/
 .settings/
 
 # IntelliJ IDEA
-.idea/**/workspace.xml
+.idea/
 
 # Others
 *.db
 *.log
 *.properties
 /dependency-reduced-pom.xml
+
+tmp/
