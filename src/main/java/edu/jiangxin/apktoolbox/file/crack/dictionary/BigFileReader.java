@@ -37,7 +37,7 @@ public class BigFileReader {
         try {
             this.rAccessFile = new RandomAccessFile(file, "r");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("BigFileReader FileNotFoundException");
         }
         this.executorService = new ScheduledThreadPoolExecutor(threadSize);
         startEndPairs = new HashSet<>();
@@ -104,7 +104,7 @@ public class BigFileReader {
         try {
             rAccessFile.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("shutdown IOException");
         }
         if (now) {
             executorService.shutdownNow();
@@ -204,8 +204,11 @@ public class BigFileReader {
                     handle(bos.toByteArray());
                 }
                 cyclicBarrier.await();//测试性能用
+            } catch (InterruptedException e) {
+                logger.error("run InterruptedException");
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("run Exception" + e.getMessage());
             }
         }
 

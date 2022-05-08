@@ -450,25 +450,21 @@ public final class CrackPanel extends EasyPanel {
             return;
         }
         int threadNum = (Integer) threadNumSpinner.getValue();
-        try {
-            setIsCracking(true);
-            setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-            setProgressBarValue(0);
-            fileHandle = new FileHandle(currentFileCracker, new AtomicBoolean(false), this);
-            String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-            BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), fileHandle);
-            bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
-            bigFileReader.setCompleteCallback(() -> {
-                if (fileHandle != null && !fileHandle.getSuccess().get()) {
-                    logger.error("Can not find password");
-                    JOptionPane.showMessageDialog(CrackPanel.this, "Can not find password");
-                    onStopByDictionaryMultiThreadCategory();
-                }
-            });
-            bigFileReader.start();
-        } catch (IOException e) {
-            logger.error("onStartByDictionaryMultiThreadCategory", e);
-        }
+        setIsCracking(true);
+        setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+        setProgressBarValue(0);
+        fileHandle = new FileHandle(currentFileCracker, new AtomicBoolean(false), this);
+        String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+        BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), fileHandle);
+        bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
+        bigFileReader.setCompleteCallback(() -> {
+            if (fileHandle != null && !fileHandle.getSuccess().get()) {
+                logger.error("Can not find password");
+                JOptionPane.showMessageDialog(CrackPanel.this, "Can not find password");
+                onStopByDictionaryMultiThreadCategory();
+            }
+        });
+        bigFileReader.start();
     }
 
     private void onStopByBruteForceCategory() {
@@ -482,6 +478,7 @@ public final class CrackPanel extends EasyPanel {
                 logger.info("awaitTermination isTimeout: " + isTimeout);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination failed");
+                Thread.currentThread().interrupt();
             }
         }
         setProgressBarValue(0);

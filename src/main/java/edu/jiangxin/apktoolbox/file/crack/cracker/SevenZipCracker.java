@@ -40,8 +40,7 @@ public final class SevenZipCracker extends FileCracker {
         }
         boolean result = false;
 
-        try {
-            SevenZFile sevenZFile = new SevenZFile(file, password.toCharArray());
+        try (SevenZFile sevenZFile = new SevenZFile(file, password.toCharArray())) {
             SevenZArchiveEntry entry = sevenZFile.getNextEntry();
             while (entry != null) {
                 try (BufferedInputStream bis = new BufferedInputStream(sevenZFile.getInputStream(entry))) {

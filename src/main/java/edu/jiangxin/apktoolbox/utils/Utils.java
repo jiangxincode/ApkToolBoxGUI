@@ -209,13 +209,14 @@ public class Utils {
         return rate;
     }
 
-    public static int getFileLineCount(File file) throws IOException {
-        FileReader fileReader = new FileReader(file);
-        LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
-        lineNumberReader.skip(Integer.MAX_VALUE);
-        int dictCount = lineNumberReader.getLineNumber() + 1;
-        fileReader.close();
-        lineNumberReader.close();
-        return dictCount;
+    public static int getFileLineCount(File file) {
+        try (LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file))) {
+            lineNumberReader.skip(Integer.MAX_VALUE);
+            int dictCount = lineNumberReader.getLineNumber() + 1;
+            return dictCount;
+        } catch (IOException e) {
+            logger.error("getFileLineCount IOException");
+            return 0;
+        }
     }
 }

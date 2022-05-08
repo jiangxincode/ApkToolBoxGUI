@@ -1,5 +1,8 @@
 package edu.jiangxin.apktoolbox.file.crack.bruteforce;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 // Complete this class using a lock and the condition variable
 public class BruteForceFuture implements Future<String> {
+    private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
     private String result = null;
     private AtomicInteger finishedTaskCount = new AtomicInteger(0);
     private int taskCount;
@@ -63,7 +67,8 @@ public class BruteForceFuture implements Future<String> {
         try {
             resultSet.await();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("get InterruptedException");
+            Thread.currentThread().interrupt();
         } finally {
             lock.unlock();
         }
