@@ -290,14 +290,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>io.github.jiangxincode</groupId>
-                    <artifactId>fireline-maven-plugin</artifactId>
-                    <version>0.0.3</version>
-                    <configuration>
-                        <fireLineDownloadUrl>http://magic.360.cn/fireline_1.7.3.jar</fireLineDownloadUrl>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>4.3.0</version>
@@ -345,8 +337,6 @@
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>edu.jiangxin.apktoolbox.main.MainFrame</Main-Class>
-                                        <!-- https://stackoverflow.com/questions/53049346/is-log4j2-compatible-with-java-11 -->
-                                        <Multi-Release>true</Multi-Release>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
@@ -478,10 +468,6 @@
             <plugin>
                 <groupId>com.github.jiangxincode</groupId>
                 <artifactId>simian-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>io.github.jiangxincode</groupId>
-                <artifactId>fireline-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
