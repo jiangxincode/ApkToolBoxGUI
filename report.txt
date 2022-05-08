@@ -9,7 +9,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/ClassVersionTools.java:49: error
   51.               }
 
 #1
-src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/RarUsingRarCracker.java:38: error: Resource Leak
+src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/ArchiveUsing7ZipCracker.java:38: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 38 is not released after line 38.
   36.       public boolean prepareCracker() {
   37.           try {
@@ -18,13 +18,13 @@ src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/RarUsingRarCracker.java
   40.               return false;
 
 #2
-src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/ZipUsing7ZipCracker.java:38: error: Resource Leak
-  resource of type `java.lang.Process` acquired by call to `exec(...)` at line 38 is not released after line 38.
-  36.       public boolean prepareCracker() {
-  37.           try {
-  38. >             Runtime.getRuntime().exec(toolPath);
-  39.           } catch (IOException e) {
-  40.               return false;
+src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/RarUsingRarCracker.java:42: error: Resource Leak
+  resource of type `java.lang.Process` acquired by call to `exec(...)` at line 42 is not released after line 42.
+  40.       public boolean prepareCracker() {
+  41.           try {
+  42. >             Runtime.getRuntime().exec(toolPath);
+  43.           } catch (IOException e) {
+  44.               return false;
 
 #3
 src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:59: error: Resource Leak
@@ -45,6 +45,15 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:61: error: R
   63.               int ch = 0;
 
 #5
+src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/ArchiveUsingWinRarCracker.java:43: error: Resource Leak
+  resource of type `java.lang.Process` acquired by call to `exec(...)` at line 43 is not released after line 43.
+  41.       public boolean prepareCracker() {
+  42.           try {
+  43. >             Runtime.getRuntime().exec(toolPath);
+  44.           } catch (IOException e) {
+  45.               return false;
+
+#6
 src/main/java/edu/jiangxin/apktoolbox/file/core/ClassVersionTools.java:109: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 107 is not released after line 109.
 **Note**: potential exception at line 95
@@ -54,7 +63,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/ClassVersionTools.java:109: erro
   110.                   logger.error("Can't find the file: " + file.getName());
   111.               } catch (IOException e) {
 
-#6
+#7
 src/main/java/edu/jiangxin/apktoolbox/file/core/ClassVersionTools.java:111: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 107 is not released after line 111.
 **Note**: potential exception at line 95
@@ -64,7 +73,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/ClassVersionTools.java:111: erro
   112.                   logger.error("Some io errors happened.");
   113.               }
 
-#7
+#8
 src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:92: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 90 is not released after line 92.
 **Note**: potential exception at line 91
@@ -74,7 +83,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:92: e
   93.               logger.error("storeDataToProperties failed: IOException");
   94.           }
 
-#8
+#9
 src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 97 is not released after line 99.
 **Note**: potential exception at line 91
@@ -84,7 +93,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: e
   100.               logger.error("storeDataToProperties failed: IOException");
   101.           }
 
-#9
+#10
 src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: Resource Leak
   resource of type `java.util.zip.ZipFile` acquired by call to `ZipFile(...)` at line 175 is not released after line 207.
 **Note**: potential exception at line 197
@@ -94,16 +103,16 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   208.                   logger.error("axmlprinter fail", e1);
   209.               }
 
-#10
-src/main/java/edu/jiangxin/apktoolbox/file/crack/CrackPanel.java:422: error: Resource Leak
-  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 422 is not released after line 422.
-  420.           String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-  421.           logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
-  422. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-  423.               setIsCracking(true);
-  424.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-
 #11
+src/main/java/edu/jiangxin/apktoolbox/file/crack/CrackPanel.java:423: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 423 is not released after line 423.
+  421.           String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+  422.           logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+  423. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
+  424.               setIsCracking(true);
+  425.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+
+#12
 src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -113,7 +122,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.jav
   34.       private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
   35.       private String result = null;
 
-#12
+#13
 src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because this access may occur on a background thread.
@@ -123,7 +132,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.jav
   76.       }
   77.   
 
-#13
+#14
 src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -133,7 +142,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.jav
   84.       }
   85.   
 
-Found 14 issues
+Found 15 issues
                         Issue Type(ISSUED_TYPE_ID): #
-                      Resource Leak(RESOURCE_LEAK): 11
+                      Resource Leak(RESOURCE_LEAK): 12
   Thread Safety Violation(THREAD_SAFETY_VIOLATION): 3
