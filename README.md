@@ -41,6 +41,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 **Reference**
 
+* Compressor(压缩解压小工具，简单暴力破解): <https://github.com/xu-ben/Compressor>
 * password_crack(暴力破解zip密码): <https://gitee.com/yymagicer/password_crack>
 * passwordcracker(字典破解样例): <https://github.com/chandra1123/passwordcracker>
 * PasswordCrackerMultiThread(多线程暴力破解样例): <https://github.com/olzhabay/PasswordCrackerMultiThread>

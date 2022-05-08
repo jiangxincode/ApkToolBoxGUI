@@ -13,7 +13,6 @@ import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
 import edu.jiangxin.apktoolbox.file.checksum.CheckDigestPanel;
-import edu.jiangxin.apktoolbox.file.compress.CompressPanel;
 import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
 import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
 import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
@@ -79,7 +78,6 @@ public class MainFrame extends EasyFrame {
     private JMenuItem duplicateFindMenuItem;
     private JMenuItem batchRenameMenuItem;
     private JMenuItem checkSumMenuItem;
-    private JMenuItem compressMenuItem;
     private JMenuItem crackMenuItem;
 
     private JMenu convertMenu;
@@ -264,10 +262,6 @@ public class MainFrame extends EasyFrame {
         checkSumMenuItem = new JMenuItem(bundle.getString("file.check.summary.title"));
         checkSumMenuItem.addActionListener(new ChangePanelListener(CheckDigestPanel.class, checkSumMenuItem.getText()));
         fileMenu.add(checkSumMenuItem);
-
-        compressMenuItem = new JMenuItem(bundle.getString("file.compress.title"));
-        compressMenuItem.addActionListener(new ChangePanelListener(CompressPanel.class, compressMenuItem.getText()));
-        fileMenu.add(compressMenuItem);
 
         crackMenuItem = new JMenuItem(bundle.getString("file.crack.title"));
         crackMenuItem.addActionListener(new ChangePanelListener(CrackPanel.class, crackMenuItem.getText()));
