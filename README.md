@@ -25,7 +25,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 ## Features
 
-### Recover password of PDF/ZIP/RAR
+### Recover password of PDF/ZIP/RAR/...
 
 **Breadcrumb Navigation**
 
@@ -40,35 +40,6 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 * Brute force recovery supports customized character set and password length
 * Dictionary recovery supports customized dictionaries. The default dictionary currently covers various common download sites, gentlemen's sites, and other network resource passwords (if you find a password that is not covered in the dictionary, please provide feedback to help more people)
 
-**Reference**
-
-* Compressor(压缩解压小工具，简单暴力破解): <https://github.com/xu-ben/Compressor>
-* password_crack(暴力破解zip密码): <https://gitee.com/yymagicer/password_crack>
-* passwordcracker(字典破解样例): <https://github.com/chandra1123/passwordcracker>
-* PasswordCrackerMultiThread(多线程暴力破解样例): <https://github.com/olzhabay/PasswordCrackerMultiThread>
-* Password Dictionary(一些公开的密码字典，主要针对英文互联网环境): <https://wiki.skullsecurity.org/index.php/Passwords>
-* ArchivePasswordTestTool(多线程读取字典): <https://github.com/RiverChu0/ArchivePasswordTestTool>
-* zip-file-cracker(使用WinRar破解各种类型的rar文件): <https://github.com/shuanglong1104/zip-file-cracker>
-
-* 压缩包解密工具: <https://www.yunjiemi.net/Passper/index.html>
-* 压缩包解密工具(doc): <https://doc.360qnw.com/web/#/p/2ad9e75ae0615dec5e016054cf905581>
-* PDF Password Remover: <https://www.verypdf.com/app/pdf-password-remover/index.html>
-* qpdf: <https://github.com/qpdf/qpdf>
-* pdfcrack: <https://sourceforge.net/projects/pdfcrack/>
-* PDFCrack-GUI: <https://github.com/tedsmith/PDFCrack-GUI>
-* ArchivePasswordTestTool: <https://github.com/dawn-lc/ArchivePasswordTestTool>
-
-**TODO**
-
-* 支持多字典或者目录内字典递归读取
-* 支持中断和中断恢复
-* 支持更多类型的密码恢复
-* 支持PDF User Password/Owner Password两种密码的恢复（当前只支持User Password）
-* 支持掩码恢复和组合恢复
-* 支持用户一键补充字典
-* 支持自动下载最新字典
-* 支持自定义最大线程数（暴力恢复和字典恢复）
-
 ### Convert between different character encodings
 
 **Breadcrumb Navigation**
@@ -80,11 +51,6 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 * Support conversion between hundreds of encoding formats such as `UTF-8`, `GB2312`, `GBK`, `Big5`
 * Support batch conversion of multiple folders and files
 * Support automatic identification of source file encoding, automatic identification adopts multi-engine scheme, high identification rate
-
-**Similar Tools**
-
-* 元宝文件编码转换器: <https://www.cnblogs.com/yuanbao/archive/2008/01/30/1059065.html>
-* UltraCodingSwitch: <http://www.ultrasofts.cn/>
 
 ![FileEncoding](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/FileEncoding_01.png)
 
@@ -105,10 +71,6 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 ![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_01.png)
 ![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_02.png)
 
-**Similar Tools**
-
-* RenameIt: <http://www.comicer.com/stronghorse/>
-
 ### Convert between timestamp and formatted time
 
 ![Timestamp](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Timestamp_01.png)
@@ -119,20 +81,9 @@ Convert between common color formats: `RGB`/`HEX`/`CMYK`/`HSB`(`HSV`)
 
 ![ColorConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/ColorConvert_01.png)
 
-**Similar Tools**
-
-* <https://www.sioe.cn/yingyong/yanse-rgb-16/>
-* <https://c.runoob.com/front-end/868/>
-* <https://www.qtccolor.com/tool/hsv.aspx>
-* <http://colorizer.org/>
-
 ### Color picker
 
 A useful little color picker that grabs the pixel under your mouse and transforms it into a number of different color formats. You can use the built-in magnifier to zoom in on your screen, click on a color value to copy it directly to the clipboard.
-
-**Similar Tools**
-
-* ColorPix: <https://colorpix.en.softonic.com/>
 
 ![ColorPicker](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/ColorPicker_01.png)
 
@@ -145,17 +96,6 @@ A useful little color picker that grabs the pixel under your mouse and transform
 ### Reverse
 
 Using third-party tools to decompile package like jar, aar, war, apk, dex and so on.
-
-**Similar Tools**
-
-* I18NTools: <https://github.com/jiangxincode/I18NTools>
-* TextTools: <https://github.com/jiangxincode/TextTools>
-* ApkToolBox(C#): <https://github.com/qtfreet00/ApkToolBox>
-* ApkToolBox(PowerShell): <https://github.com/jiangxincode/ApkToolBox>
-* APKDB(安卓逆向助手): <https://bitbucket.org/idoog/apkdb/downloads/>
-* APKIDE(改之理): <http://hrtsea.com/15759.html>
-* ApkToolkit: <https://www.52pojie.cn/thread-263925-1-1.html>
-* Android Killer: <https://www.52pojie.cn/thread-319641-1-1.html>
 
 **Dependencies**
 
