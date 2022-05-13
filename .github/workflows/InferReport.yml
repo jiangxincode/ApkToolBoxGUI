@@ -35,13 +35,14 @@ jobs:
           ./infer-linux64-v${VERSION}/bin/infer --version
           ./infer-linux64-v${VERSION}/bin/infer -- mvn -DskipTests=true clean package
           ls -al ./infer-out/
-      - name: Push to github infer-out branch
+      - name: push to github infer-out branch
         run: |
           git config --global user.name "jiangxincode"
           git config --global user.email "jiangxinnju@163.com"
           git clone https://github.com/jiangxincode/ApkToolBoxGUI.git -b infer-out infer-out-git
           cp ./infer-out/report.txt ./infer-out-git/
           cd ./infer-out-git
+          echo `date` > current.date
           git add --all
           git commit -m "update infer-out"
           git push -f https://jiangxincode:${{secrets.GITHUB_TOKEN}}@github.com/jiangxincode/ApkToolBoxGUI.git infer-out:infer-out
