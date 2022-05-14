@@ -6,8 +6,6 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -215,7 +213,7 @@ public class TimeConvertPanel extends EasyPanel {
                 long currentTimeStamp = System.currentTimeMillis() / 1000;
                 if (!isPaused) {
                     currentTimestampTextField.setText(String.valueOf(currentTimeStamp));
-                    currentTimeTextField.setText(DateTransform.timestampToString(String.valueOf(currentTimeStamp)));
+                    currentTimeTextField.setText(DateTransform.secondToDate(String.valueOf(currentTimeStamp)));
                 }
                 try {
                     Thread.sleep(1000);
@@ -312,9 +310,9 @@ public class TimeConvertPanel extends EasyPanel {
             Integer index = timestamp1ComboBox.getSelectedIndex();
             String result = "";
             if (index.equals(0)) {
-                result = DateTransform.timestampToString(timestamp);
+                result = DateTransform.secondToDate(timestamp);
             } else if (index.equals(1)) {
-                result = DateTransform.milTimestampToString(timestamp);
+                result = DateTransform.milliSecondToDate(timestamp);
             }
             time1TextField.setText(result);
         }
@@ -327,9 +325,9 @@ public class TimeConvertPanel extends EasyPanel {
             Integer index = timestamp2ComboBox.getSelectedIndex();
             String result = "";
             if (index.equals(0)) {
-                result = DateTransform.stringToTimestamp(string);
+                result = DateTransform.dateToSecond(string);
             } else if (index.equals(1)) {
-                result = DateTransform.stringToMilTimestamp(string);
+                result = DateTransform.dateToMilliSecond(string);
             }
             timestamp2TextField.setText(result);
         }

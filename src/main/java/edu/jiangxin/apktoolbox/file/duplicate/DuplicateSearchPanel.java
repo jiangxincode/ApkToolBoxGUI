@@ -349,7 +349,7 @@ public class DuplicateSearchPanel extends EasyPanel {
         rowData.add(file.getName());
         rowData.add(FilenameUtils.getExtension(file.getName()));
         rowData.add(FileUtilsEx.byteCountToDisplaySize(file.length()));
-        rowData.add(DateTransform.milTimestampToString(String.valueOf(file.lastModified())));
+        rowData.add(DateTransform.milliSecondToDate(String.valueOf(file.lastModified())));
         return rowData;
     }
 

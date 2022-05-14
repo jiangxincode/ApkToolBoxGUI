@@ -1,75 +1,95 @@
 package edu.jiangxin.apktoolbox.convert.time;
 
+import edu.jiangxin.apktoolbox.main.MainFrame;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTransform {
+    private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
+
+    private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
+
     /**
-     * 秒级时间戳转换为字符串格式
-     * @param timestamp 时间戳：1588766006
-     * @return 2020-05-06 19:53:26
+     * Convert timestamp in second to a date string
      */
-    public static String timestampToString(String timestamp) {
-        if (timestamp == null || timestamp.equals("null") || timestamp.isEmpty()) {
+    public static String secondToDate(String second) {
+        if (StringUtils.isEmpty(second)) {
+            LOGGER.warn("timestamp is empty");
             return "";
         }
 
-        String format = "yyyy-MM-dd HH:mm:ss";
+        long timestampValue;
+        try {
+            timestampValue = Long.parseLong(second + "000");
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Can not convert timestamp to a long-type value");
+            return "";
+        }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        try{
-            return sdf.format(new Date(new Long(timestamp + "000")));
-        }catch (Exception e) {
+        SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
+        try {
+            return sdf.format(new Date(timestampValue));
+        } catch (Exception e) {
+            LOGGER.warn("Can not convert timestamp to a date");
             return "";
         }
     }
 
     /**
-     * 毫秒级时间戳转换成字符串格式
-     * @param timestamp 毫秒级时间戳（13位）
-     * @return 时间字符串
+     * Convert timestamp in millisecond to a date string
      */
-    public static String milTimestampToString(String timestamp) {
-        if (timestamp == null || timestamp.equals("null") || timestamp.isEmpty()) {
+    public static String milliSecondToDate(String millisecond) {
+        if (StringUtils.isEmpty(millisecond)) {
+            LOGGER.warn("timestamp is empty");
             return "";
         }
 
-        String format = "yyyy-MM-dd HH:mm:ss";
-
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        long timestampValue;
         try {
-            return sdf.format(new Date(new Long(timestamp)));
-        }catch (Exception e) {
+            timestampValue = Long.parseLong(millisecond);
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Can not convert timestamp to a long-type value");
             return "";
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
+        try {
+            return sdf.format(new Date(timestampValue));
+        } catch (Exception e) {
+            LOGGER.warn("Can not convert timestamp to a date");
+            return "";
+        }
     }
 
     /**
-     * 日期的字符串格式转换成时间戳
-     * @param string 2020-05-06 19:53:26
-     * @return 秒级时间戳
+     * Convert date string to a timestamp in second
      */
-    public static String stringToTimestamp(String string) {
+    public static String dateToSecond(String dateString) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return String.valueOf(sdf.parse(string).getTime() / 1000);
+            SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
+            Date date = sdf.parse(dateString);
+            return String.valueOf(date.getTime() / 1000);
         } catch (ParseException e) {
+            LOGGER.warn("Can not parse this date string");
             return "";
         }
     }
 
     /**
-     * 转换成毫秒级时间戳
-     * @param string 日期的字符串表示
-     * @return 毫秒级时间戳
+     * Convert date string to a timestamp in millisecond
      */
-    public static String stringToMilTimestamp(String string) {
+    public static String dateToMilliSecond(String dateString) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return String.valueOf(sdf.parse(string).getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
+            Date date = sdf.parse(dateString);
+            return String.valueOf(date.getTime());
         } catch (ParseException e) {
+            LOGGER.warn("Can not parse this date string");
             return "";
         }
     }
