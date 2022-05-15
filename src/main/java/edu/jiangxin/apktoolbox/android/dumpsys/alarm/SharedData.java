@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.dumpsys.alarm;
+package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
 
 public class SharedData {
     private static SharedData instance = null;

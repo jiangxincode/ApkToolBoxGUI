@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.monkey;
+package edu.jiangxin.apktoolbox.android.monkey;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;

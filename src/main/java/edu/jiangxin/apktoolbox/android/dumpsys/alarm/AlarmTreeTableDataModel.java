@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.dumpsys.alarm;
+package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
 
 import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
 import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTableModel;

@@ -8,7 +8,7 @@ import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
 import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
-import edu.jiangxin.apktoolbox.dumpsys.alarm.DumpsysAlarmPanel;
+import edu.jiangxin.apktoolbox.android.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
@@ -17,12 +17,12 @@ import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
 import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
 import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
 import edu.jiangxin.apktoolbox.help.*;
-import edu.jiangxin.apktoolbox.i18n.I18nAddPanel;
-import edu.jiangxin.apktoolbox.i18n.I18nFindLongestPanel;
-import edu.jiangxin.apktoolbox.i18n.I18nRemovePanel;
-import edu.jiangxin.apktoolbox.monkey.MonkeyPanel;
+import edu.jiangxin.apktoolbox.android.i18n.I18nAddPanel;
+import edu.jiangxin.apktoolbox.android.i18n.I18nFindLongestPanel;
+import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
+import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
-import edu.jiangxin.apktoolbox.screenshot.ScreenShotPanel;
+import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -62,14 +62,13 @@ public class MainFrame extends EasyFrame {
     private JMenuItem jADXMenuItem;
     private JMenuItem aXMLPrinter;
 
-    private JMenu screenshotMenu;
+    private JMenu androidMenu;
+    private JMenuItem i18nAddMenuItem;
+    private JMenuItem i18nFindLongestMenuItem;
+    private JMenuItem i18nRemoveMenuItem;
     private JMenuItem screenShotMenuItem;
-
-    private JMenu dumpsysMenu;
-    private JMenuItem dumpsysAlarmMenuItem;
-
-    private JMenu testMenu;
     private JMenuItem monkeyMenuItem;
+    private JMenuItem dumpsysAlarmMenuItem;
 
     private JMenu fileMenu;
     private JMenuItem osConvertMenuItem;
@@ -87,11 +86,6 @@ public class MainFrame extends EasyFrame {
     private JMenuItem baseConvertMenuItem;
     private JMenuItem unicodeConvertMenuItem;
     private JMenuItem relationShipConvertMenuItem;
-
-    private JMenu i18nMenu;
-    private JMenuItem i18nAddMenuItem;
-    private JMenuItem i18nFindLongestMenuItem;
-    private JMenuItem i18nRemoveMenuItem;
 
     private JMenu helpMenu;
     private JMenuItem lookAndFeelMenuItem;
@@ -178,17 +172,11 @@ public class MainFrame extends EasyFrame {
 
         createReverseMenu();
 
-        createScreenshotMenu();
-
-        createDumpsysMenu();
-
-        createTestMenu();
+        createAndroidMenu();
 
         createFileMenu();
 
         createConvertMenu();
-
-        createI18nMenu();
 
         createHelpMenu();
     }
@@ -216,23 +204,6 @@ public class MainFrame extends EasyFrame {
         aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
         aboutMenuItem.addActionListener(new ChangePanelListener(AboutPanel.class, aboutMenuItem.getText()));
         helpMenu.add(aboutMenuItem);
-    }
-
-    private void createI18nMenu() {
-        i18nMenu = new JMenu(bundle.getString("i18n.title"));
-        menuBar.add(i18nMenu);
-
-        i18nAddMenuItem = new JMenuItem(bundle.getString("i18n.add.title"));
-        i18nAddMenuItem.addActionListener(new ChangePanelListener(I18nAddPanel.class, i18nAddMenuItem.getText()));
-        i18nMenu.add(i18nAddMenuItem);
-
-        i18nFindLongestMenuItem = new JMenuItem(bundle.getString("i18n.longest.title"));
-        i18nFindLongestMenuItem.addActionListener(new ChangePanelListener(I18nFindLongestPanel.class, i18nFindLongestMenuItem.getText()));
-        i18nMenu.add(i18nFindLongestMenuItem);
-
-        i18nRemoveMenuItem = new JMenuItem(bundle.getString("i18n.remove.title"));
-        i18nRemoveMenuItem.addActionListener(new ChangePanelListener(I18nRemovePanel.class, i18nRemoveMenuItem.getText()));
-        i18nMenu.add(i18nRemoveMenuItem);
     }
 
     private void createFileMenu() {
@@ -297,32 +268,34 @@ public class MainFrame extends EasyFrame {
         convertMenu.add(relationShipConvertMenuItem);
     }
 
-    private void createTestMenu() {
-        testMenu = new JMenu(bundle.getString("test.title"));
-        menuBar.add(testMenu);
+    private void createAndroidMenu() {
+        androidMenu = new JMenu(bundle.getString("android.title"));
+        menuBar.add(androidMenu);
 
-        monkeyMenuItem = new JMenuItem(bundle.getString("test.monkey.title"));
-        monkeyMenuItem.addActionListener(new ChangePanelListener(MonkeyPanel.class, monkeyMenuItem.getText()));
-        testMenu.add(monkeyMenuItem);
-    }
+        i18nAddMenuItem = new JMenuItem(bundle.getString("android.i18n.add.title"));
+        i18nAddMenuItem.addActionListener(new ChangePanelListener(I18nAddPanel.class, i18nAddMenuItem.getText()));
+        androidMenu.add(i18nAddMenuItem);
 
-    private void createScreenshotMenu() {
-        screenshotMenu = new JMenu(bundle.getString("screenshot.title"));
-        menuBar.add(screenshotMenu);
+        i18nFindLongestMenuItem = new JMenuItem(bundle.getString("android.i18n.longest.title"));
+        i18nFindLongestMenuItem.addActionListener(new ChangePanelListener(I18nFindLongestPanel.class, i18nFindLongestMenuItem.getText()));
+        androidMenu.add(i18nFindLongestMenuItem);
 
-        screenShotMenuItem = new JMenuItem(bundle.getString("screenshot.screenshot.title"));
+        i18nRemoveMenuItem = new JMenuItem(bundle.getString("android.i18n.remove.title"));
+        i18nRemoveMenuItem.addActionListener(new ChangePanelListener(I18nRemovePanel.class, i18nRemoveMenuItem.getText()));
+        androidMenu.add(i18nRemoveMenuItem);
+
+        screenShotMenuItem = new JMenuItem(bundle.getString("android.screenshot.title"));
         screenShotMenuItem.addActionListener(new ChangePanelListener(ScreenShotPanel.class, screenShotMenuItem.getText()));
         screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
-        screenshotMenu.add(screenShotMenuItem);
-    }
+        androidMenu.add(screenShotMenuItem);
 
-    private void createDumpsysMenu() {
-        dumpsysMenu = new JMenu(bundle.getString("dumpsys.title"));
-        menuBar.add(dumpsysMenu);
+        monkeyMenuItem = new JMenuItem(bundle.getString("android.monkey.title"));
+        monkeyMenuItem.addActionListener(new ChangePanelListener(MonkeyPanel.class, monkeyMenuItem.getText()));
+        androidMenu.add(monkeyMenuItem);
 
-        dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("dumpsys.alarm.title"));
+        dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("android.dumpsys.alarm.title"));
         dumpsysAlarmMenuItem.addActionListener(new ChangePanelListener(DumpsysAlarmPanel.class, dumpsysAlarmMenuItem.getText()));
-        dumpsysMenu.add(dumpsysAlarmMenuItem);
+        androidMenu.add(dumpsysAlarmMenuItem);
     }
 
     private void createConfigMenu() {

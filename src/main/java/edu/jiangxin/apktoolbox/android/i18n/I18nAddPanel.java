@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.jiangxin.apktoolbox.i18n;
+package edu.jiangxin.apktoolbox.android.i18n;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
@@ -39,7 +39,6 @@ import org.jdom2.output.XMLOutputter;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
@@ -111,7 +110,7 @@ public class I18nAddPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
-        addButton = new JButton(bundle.getString("i18n.add.title"));
+        addButton = new JButton(bundle.getString("android.i18n.add.title"));
         addButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -132,7 +131,7 @@ public class I18nAddPanel extends EasyPanel {
                     logger.error("getCanonicalPath fail");
                     return;
                 }
-                conf.setProperty("i18n.add.src.dir", srcPath);
+                conf.setProperty("android.i18n.add.src.dir", srcPath);
 
                 List<String> targetPaths = new ArrayList<>();
                 String[] tmps = targetTextField.getText().split(";");
@@ -153,14 +152,14 @@ public class I18nAddPanel extends EasyPanel {
                         return;
                     }
                 }
-                conf.setProperty("i18n.add.target.dir", targetTextField.getText());
+                conf.setProperty("android.i18n.add.target.dir", targetTextField.getText());
 
                 List<String> items = new ArrayList<>();
                 tmps = itemTextField.getText().split(";");
                 for (String tmp : tmps) {
                     items.add(tmp);
                 }
-                conf.setProperty("i18n.add.items", itemTextField.getText());
+                conf.setProperty("android.i18n.add.items", itemTextField.getText());
 
                 for (String targetPath : targetPaths) {
                     for (String item : items) {
@@ -184,7 +183,7 @@ public class I18nAddPanel extends EasyPanel {
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
         
         itemTextField = new JTextField();
-        itemTextField.setText(conf.getString("i18n.add.items"));
+        itemTextField.setText(conf.getString("android.i18n.add.items"));
 
         itemLabel = new JLabel("Items");
 
@@ -198,7 +197,7 @@ public class I18nAddPanel extends EasyPanel {
         targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
         
         targetTextField = new JTextField();
-        targetTextField.setText(conf.getString("i18n.add.target.dir"));
+        targetTextField.setText(conf.getString("android.i18n.add.target.dir"));
 
         targetButton = new JButton("Save Directory");
         targetButton.addMouseListener(new MouseAdapter() {
@@ -232,7 +231,7 @@ public class I18nAddPanel extends EasyPanel {
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
         
         srcTextField = new JTextField();
-        srcTextField.setText(conf.getString("i18n.add.src.dir"));
+        srcTextField.setText(conf.getString("android.i18n.add.src.dir"));
 
         srcButton = new JButton("Source Directory");
         srcButton.addMouseListener(new MouseAdapter() {

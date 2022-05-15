@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.screenshot;
+package edu.jiangxin.apktoolbox.android.screenshot;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;

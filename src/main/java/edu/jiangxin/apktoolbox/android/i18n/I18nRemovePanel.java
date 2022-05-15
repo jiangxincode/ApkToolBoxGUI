@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.i18n;
+package edu.jiangxin.apktoolbox.android.i18n;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
@@ -8,9 +8,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,26 +21,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
  * @author 2019-04-12
  *
  */
-public class I18nFindLongestPanel extends EasyPanel {
+public class I18nRemovePanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
     List<I18nInfo> infos = new ArrayList<I18nInfo>();
+
+    private static final String CHARSET = "UTF-8";
 
     private JPanel sourcePanel;
 
@@ -56,10 +53,11 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     private JPanel operationPanel;
 
-    private JButton findButton;
+    private JButton removeButton;
 
-    public I18nFindLongestPanel() throws HeadlessException {
+    public I18nRemovePanel() throws HeadlessException {
         super();
+
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -81,8 +79,8 @@ public class I18nFindLongestPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
-        findButton = new JButton(bundle.getString("i18n.longest.find"));
-        findButton.addMouseListener(new MouseAdapter() {
+        removeButton = new JButton(bundle.getString("android.i18n.remove.title"));
+        removeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -91,7 +89,7 @@ public class I18nFindLongestPanel extends EasyPanel {
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "Source directory is invalid", "ERROR",
+                    JOptionPane.showMessageDialog(I18nRemovePanel.this, "Source directory is invalid", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     srcTextField.requestFocus();
                     return;
@@ -103,39 +101,24 @@ public class I18nFindLongestPanel extends EasyPanel {
                     logger.error("getCanonicalPath fail");
                     return;
                 }
-                conf.setProperty("i18n.longest.src.dir", srcPath);
+                conf.setProperty("android.i18n.remove.src.dir", srcPath);
 
                 String item = itemTextField.getText();
                 if (StringUtils.isEmpty(item)) {
                     logger.error("item is empty");
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "item is empty", "ERROR",
+                    JOptionPane.showMessageDialog(I18nRemovePanel.this, "item is empty", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     itemTextField.requestFocus();
                     return;
                 }
 
-                conf.setProperty("i18n.longest.items", item);
-                sort(srcPath, itemTextField.getText());
-                if (CollectionUtils.isEmpty(infos)) {
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "Failed, please see the log", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    I18nInfo info = infos.get(0);
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("length: ").append(info.length).append(System.getProperty("line.separator"))
-                            .append("text: ").append(info.text).append(System.getProperty("line.separator"))
-                            .append("path: ").append(info.path);
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, sb.toString(), "INFO",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-
+                conf.setProperty("android.i18n.remove.items", item);
+                remove(srcPath, itemTextField.getText());
             }
         });
 
-        operationPanel.add(findButton);
+        operationPanel.add(removeButton);
     }
 
     private void createItemPanel() {
@@ -143,7 +126,7 @@ public class I18nFindLongestPanel extends EasyPanel {
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
         
         itemTextField = new JTextField();
-        itemTextField.setText(conf.getString("i18n.longest.items"));
+        itemTextField.setText(conf.getString("android.i18n.remove.items"));
 
         itemLabel = new JLabel("Items");
 
@@ -157,7 +140,7 @@ public class I18nFindLongestPanel extends EasyPanel {
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
         
         srcTextField = new JTextField();
-        srcTextField.setText(conf.getString("i18n.longest.src.dir"));
+        srcTextField.setText(conf.getString("android.i18n.remove.src.dir"));
 
         srcButton = new JButton("Source Directory");
         srcButton.addMouseListener(new MouseAdapter() {
@@ -185,20 +168,7 @@ public class I18nFindLongestPanel extends EasyPanel {
         sourcePanel.add(srcButton);
     }
 
-    private String getCanonicalPath(File file) {
-        if (file == null) {
-            logger.error("file is null");
-            return null;
-        }
-        try {
-            return file.getCanonicalPath();
-        } catch (IOException e) {
-            logger.error("getCanonicalPath failed: " + file.getAbsolutePath(), e);
-            return null;
-        }
-    }
-
-    private void sort(String sourceBaseStr, String itemName) {
+    private void remove(String sourceBaseStr, String itemName) {
         File[] sourceParentFiles = new File(sourceBaseStr).listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -209,57 +179,23 @@ public class I18nFindLongestPanel extends EasyPanel {
             logger.error("None valid directory found");
             return;
         }
+        int count = 0;
         for (File sourceParentFile : sourceParentFiles) {
             File sourceFile = new File(sourceParentFile, "strings.xml");
             if (sourceFile.exists()) {
-                SAXBuilder builder = new SAXBuilder();
-                Document sourceDoc;
                 try {
-                    sourceDoc = builder.build(sourceFile);
-                } catch (JDOMException | IOException e) {
-                    logger.error("build failed: " + sourceFile, e);
+                    System.out.println("read from: " + sourceFile.getCanonicalPath());
+                    String content = FileUtils.readFileToString(sourceFile, CHARSET);
+                    Pattern pattern = Pattern.compile("\\s*<string name=\"" + itemName + "\".*>.*</string>");
+                    Matcher matcher = pattern.matcher(content);
+                    String resultString = matcher.replaceAll("");
+                    FileUtils.writeStringToFile(sourceFile, resultString, CHARSET);
+                    logger.info("remove success, count: " + (++count) + ", and file: " + sourceFile);
+                } catch (IOException e) {
+                    logger.error("remove exception: " + sourceFile, e);
                     continue;
                 }
-                Element sourceRoot = sourceDoc.getRootElement();
-                for (Element child : sourceRoot.getChildren()) {
-                    String value = child.getAttributeValue("name");
-                    if (value != null && value.equals(itemName)) {
-                        String text = child.getText();
-                        if (text != null) {
-                            I18nInfo info = new I18nInfo(getCanonicalPath(sourceFile), text, text.length());
-                            infos.add(info);
-                            break;
-                        }
-                    }
-                }
-
             }
-
         }
-        Collections.sort(infos, new Comparator<I18nInfo>() {
-            @Override
-            public int compare(I18nInfo o1, I18nInfo o2) {
-                return o2.length - o1.length;
-            }
-        });
-
-        logger.info(infos);
-    }
-}
-
-class I18nInfo {
-    String path;
-    String text;
-    int length;
-
-    public I18nInfo(String path, String text, int length) {
-        this.path = path;
-        this.text = text;
-        this.length = length;
-    }
-
-    @Override
-    public String toString() {
-        return "I18NInfo [path=" + path + ", text=" + text + ", length=" + length + "]";
     }
 }

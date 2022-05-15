@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.dumpsys.alarm;
+package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
 
 import org.apache.commons.lang3.StringUtils;
 

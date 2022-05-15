@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.dumpsys.alarm;
+package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
 
 import java.util.Collections;
 import java.util.List;

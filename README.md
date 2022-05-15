@@ -107,27 +107,27 @@ Using third-party tools to decompile package like jar, aar, war, apk, dex and so
 | ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> | Apache 2.0 |
 | AXMLPrinter3 | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3> | Apache 2.0 |
 
-### SnapShot
+### SnapShot(Android Develop)
 
-### Dumpsys
+### Dumpsys Alarm Info(Android Develop)
 
 * adb shell dumpsys alarm
 
-### Test
+### Monkey Test(Android Develop)
 
-### Copy Items(I18N)
+### Copy internationalization items(Android Develop)
 
 Copy some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.
 
-### Replace Items(I18N)
+### Replace internationalization items(Android Develop)
 
 Replace some `<string />` in strings.xml in the `value[.*]` directory of the [A directory] to the strings.xml in the `value[.*]` directory of the [B directory]. It is mainly used to merge translations into several code branches.
 
-### Delete Items(I18N)
+### Delete internationalization items(Android Develop)
 
 Delete some `<string />` in strings.xml in the `value[.*]` directory of the [A directory]
 
-### Find the longest(I18N)
+### Find the longest in internationalization items(Android Develop)
 
 Find the longest translation of a `<string />`. Primarily for finding cuts or line breaks.
 
