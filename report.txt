@@ -9,18 +9,18 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/ClassVersionTools.java:49: error
   51.               }
 
 #1
-src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/ArchiveUsing7ZipCracker.java:38: error: Resource Leak
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsing7ZipChecker.java:38: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 38 is not released after line 38.
-  36.       public boolean prepareCracker() {
+  36.       public boolean prepareChecker() {
   37.           try {
   38. >             Runtime.getRuntime().exec(toolPath);
   39.           } catch (IOException e) {
   40.               return false;
 
 #2
-src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/RarUsingRarCracker.java:42: error: Resource Leak
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/RarUsingRarChecker.java:42: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 42 is not released after line 42.
-  40.       public boolean prepareCracker() {
+  40.       public boolean prepareChecker() {
   41.           try {
   42. >             Runtime.getRuntime().exec(toolPath);
   43.           } catch (IOException e) {
@@ -45,9 +45,9 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:61: error: R
   63.               int ch = 0;
 
 #5
-src/main/java/edu/jiangxin/apktoolbox/file/crack/cracker/ArchiveUsingWinRarCracker.java:43: error: Resource Leak
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsingWinRarChecker.java:43: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 43 is not released after line 43.
-  41.       public boolean prepareCracker() {
+  41.       public boolean prepareChecker() {
   42.           try {
   43. >             Runtime.getRuntime().exec(toolPath);
   44.           } catch (IOException e) {
@@ -104,16 +104,16 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   209.               }
 
 #11
-src/main/java/edu/jiangxin/apktoolbox/file/crack/CrackPanel.java:423: error: Resource Leak
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:423: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 423 is not released after line 423.
   421.           String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
   422.           logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
   423. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-  424.               setIsCracking(true);
+  424.               setIsRecovering(true);
   425.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
 
 #12
-src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
   31.   
@@ -123,7 +123,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.jav
   35.       private String result = null;
 
 #13
-src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because this access may occur on a background thread.
   73.               lock.unlock();
@@ -133,7 +133,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.jav
   77.   
 
 #14
-src/main/java/edu/jiangxin/apktoolbox/file/crack/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
   81.       @Override
