@@ -1,19 +1,19 @@
-package edu.jiangxin.apktoolbox.file.crack.cracker;
+package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import com.github.junrar.Junrar;
 import com.github.junrar.exception.CrcErrorException;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
-import edu.jiangxin.apktoolbox.file.crack.exception.UnknownException;
-import edu.jiangxin.apktoolbox.file.crack.exception.UnsupportedVersionException;
+import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnknownException;
+import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;
 
 import java.io.File;
 import java.io.IOException;
 
-public final class RarCracker extends FileCracker {
+public final class RarChecker extends FileChecker {
     private static final boolean DEBUG = false;
 
-    public RarCracker() {
+    public RarChecker() {
         super();
     }
 
@@ -29,11 +29,11 @@ public final class RarCracker extends FileCracker {
 
     @Override
     public String getDescription() {
-        return "RAR Cracker(Not support RAR5+)";
+        return "RAR Checker(Not support RAR5+)";
     }
 
     @Override
-    public boolean prepareCracker() {
+    public boolean prepareChecker() {
         return true;
     }
 

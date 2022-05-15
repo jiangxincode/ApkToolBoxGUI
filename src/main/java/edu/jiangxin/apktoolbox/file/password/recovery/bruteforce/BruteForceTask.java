@@ -1,32 +1,32 @@
-package edu.jiangxin.apktoolbox.file.crack.bruteforce;
+package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
 
-import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
-import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
-import edu.jiangxin.apktoolbox.file.crack.exception.UnsupportedVersionException;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
+import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class BruteForceCrackerTask implements Runnable {
+public class BruteForceTask implements Runnable {
     private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
     private int taskId;
     private boolean isEarlyTermination;
     private BruteForceFuture bruteForceFuture;
-    private BruteForceCrackerConsts consts;
-    private CrackPanel crackPanel;
+    private BruteForceTaskConst consts;
+    private RecoveryPanel recoveryPanel;
 
-    public BruteForceCrackerTask(int taskId, boolean isEarlyTermination, BruteForceCrackerConsts consts, BruteForceFuture bruteForceFuture, CrackPanel crackPanel) {
+    public BruteForceTask(int taskId, boolean isEarlyTermination, BruteForceTaskConst consts, BruteForceFuture bruteForceFuture, RecoveryPanel recoveryPanel) {
         this.taskId = taskId;
         this.isEarlyTermination = isEarlyTermination;
         this.consts = consts;
         this.bruteForceFuture = bruteForceFuture;
-        this.crackPanel = crackPanel;
+        this.recoveryPanel = recoveryPanel;
     }
 
     @Override
     public void run() {
         long rangeBegin = taskId * consts.getPasswordSubRangeSize();
         long rangeEnd = (taskId + 1) * consts.getPasswordSubRangeSize() - 1;
-        String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getCracker());
+        String passwordOrNull = findPasswordInRange(rangeBegin, rangeEnd, consts.getChecker());
         bruteForceFuture.set(passwordOrNull);
     }
 
@@ -34,7 +34,7 @@ public class BruteForceCrackerTask implements Runnable {
      * The findPasswordInRange method find the original password using md5 hash function
      * if a thread discovers the password, it returns original password string; otherwise, it returns null;
      */
-    public String findPasswordInRange(long rangeBegin, long rangeEnd, ICracker cracker) {
+    public String findPasswordInRange(long rangeBegin, long rangeEnd, IChecker checker) {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
@@ -45,7 +45,7 @@ public class BruteForceCrackerTask implements Runnable {
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());
             int result;
             try {
-                result = cracker.checkPassword(password) ? 1 : 0;
+                result = checker.checkPassword(password) ? 1 : 0;
             } catch (UnsupportedVersionException e) {
                 logger.error("UnsupportedVersionException, stop");
                 result = -1;
@@ -53,7 +53,7 @@ public class BruteForceCrackerTask implements Runnable {
                 logger.error("Exception, stop", e);
                 result = -1;
             } finally {
-                crackPanel.increaseProgressBarValue();
+                recoveryPanel.increaseProgressBarValue();
             }
             if (result == 0) {
                 getNextCandidate(passwordIterator, consts.getCharsSet().length());

@@ -1,7 +1,7 @@
-package edu.jiangxin.apktoolbox.file.crack.dictionary;
+package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
 
-import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
-import edu.jiangxin.apktoolbox.file.crack.cracker.FileCracker;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,13 +15,13 @@ public class FileHandle {
     private AtomicBoolean success;
     private boolean stop = false;
 
-    CrackPanel crackPanel;
-    private FileCracker fileCracker;
+    RecoveryPanel recoveryPanel;
+    private FileChecker fileChecker;
 
-    public FileHandle(FileCracker fileCracker, AtomicBoolean success, CrackPanel crackPanel) {
-        this.fileCracker = fileCracker;
+    public FileHandle(FileChecker fileChecker, AtomicBoolean success, RecoveryPanel recoveryPanel) {
+        this.fileChecker = fileChecker;
         this.success = success;
-        this.crackPanel = crackPanel;
+        this.recoveryPanel = recoveryPanel;
     }
 
     public void stop() {
@@ -33,22 +33,22 @@ public class FileHandle {
     }
 
     public void init() {
-        crackPanel.setIsCracking(false);
+        recoveryPanel.setIsRecovering(false);
     }
 
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
         if (success.compareAndSet(true, true) || stop) {
             return;
         }
-        crackPanel.setProgressBarValue(Math.toIntExact(currentLineCount));
+        recoveryPanel.setProgressBarValue(Math.toIntExact(currentLineCount));
 
-        if (fileCracker.checkPassword(line) ) {
+        if (fileChecker.checkPassword(line) ) {
             if (success.compareAndSet(false, true)) {
                 logger.info("find password: " + line);
-                crackPanel.setIsCracking(false);
+                recoveryPanel.setIsRecovering(false);
                 bigFileReader.shutdown();
-                JOptionPane.showMessageDialog(crackPanel, "Password[" + line + "]");
-                crackPanel.setProgressBarValue(0);
+                JOptionPane.showMessageDialog(recoveryPanel, "Password[" + line + "]");
+                recoveryPanel.setProgressBarValue(0);
                 return;
             }
         } else {

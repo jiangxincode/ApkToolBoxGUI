@@ -1,12 +1,12 @@
-package edu.jiangxin.apktoolbox.file.crack;
+package edu.jiangxin.apktoolbox.file.password.recovery;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.crack.bruteforce.BruteForceCrackerConsts;
-import edu.jiangxin.apktoolbox.file.crack.bruteforce.BruteForceCrackerTask;
-import edu.jiangxin.apktoolbox.file.crack.bruteforce.BruteForceFuture;
-import edu.jiangxin.apktoolbox.file.crack.cracker.*;
-import edu.jiangxin.apktoolbox.file.crack.dictionary.BigFileReader;
-import edu.jiangxin.apktoolbox.file.crack.dictionary.FileHandle;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTaskConst;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTask;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceFuture;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.FileHandle;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public final class CrackPanel extends EasyPanel {
+public final class RecoveryPanel extends EasyPanel {
     private JPanel optionPanel;
 
     private JTabbedPane categoryTabbedPane;
@@ -56,8 +56,8 @@ public final class CrackPanel extends EasyPanel {
 
     private JProgressBar progressBar;
 
-    private JComboBox<FileCracker> crackerTypeComboBox;
-    private FileCracker currentFileCracker;
+    private JComboBox<FileChecker> checkerTypeComboBox;
+    private FileChecker currentFileChecker;
 
     private JTextField fileNameTextField;
 
@@ -71,9 +71,9 @@ public final class CrackPanel extends EasyPanel {
     private BigFileReader bigFileReader;
     private FileHandle fileHandle;
 
-    private static boolean isCracking = false;
+    private static boolean isRecovering = false;
 
-    public CrackPanel() {
+    public RecoveryPanel() {
         super();
         initUI();
     }
@@ -103,15 +103,15 @@ public final class CrackPanel extends EasyPanel {
         createDictionaryPanel();
         categoryTabbedPane.addTab("Dictionary", null, dictionaryPanel, "Dictionary");
 
-        crackerTypeComboBox = new JComboBox<>();
-        crackerTypeComboBox.addItem(new ArchiveUsing7ZipCracker());
-        crackerTypeComboBox.addItem(new ArchiveUsingWinRarCracker());
-        crackerTypeComboBox.addItem(new RarUsingRarCracker());
-        crackerTypeComboBox.addItem(new ZipCracker());
-        crackerTypeComboBox.addItem(new RarCracker());
-        crackerTypeComboBox.addItem(new SevenZipCracker());
-        crackerTypeComboBox.addItem(new PdfCracker());
-        crackerTypeComboBox.setSelectedIndex(0);
+        checkerTypeComboBox = new JComboBox<>();
+        checkerTypeComboBox.addItem(new ArchiveUsing7ZipChecker());
+        checkerTypeComboBox.addItem(new ArchiveUsingWinRarChecker());
+        checkerTypeComboBox.addItem(new RarUsingRarChecker());
+        checkerTypeComboBox.addItem(new ZipChecker());
+        checkerTypeComboBox.addItem(new RarChecker());
+        checkerTypeComboBox.addItem(new SevenZipChecker());
+        checkerTypeComboBox.addItem(new PdfChecker());
+        checkerTypeComboBox.setSelectedIndex(0);
 
         JPanel filePanel = new JPanel();
         filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
@@ -122,7 +122,7 @@ public final class CrackPanel extends EasyPanel {
 
         optionPanel.add(categoryTabbedPane);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(crackerTypeComboBox);
+        optionPanel.add(checkerTypeComboBox);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(filePanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -240,9 +240,9 @@ public final class CrackPanel extends EasyPanel {
                 logger.error("file is null");
                 return;
             }
-            FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
-            if (fileCracker == null) {
-                logger.error("fileCracker is null");
+            FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
+            if (fileChecker == null) {
+                logger.error("fileChecker is null");
                 return;
             }
             new Thread(this::onStart).start();
@@ -254,9 +254,9 @@ public final class CrackPanel extends EasyPanel {
     class OpenFileActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            FileCracker fileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
-            if (fileCracker == null) {
-                logger.error("fileCracker is null");
+            FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
+            if (fileChecker == null) {
+                logger.error("fileChecker is null");
                 return;
             }
 
@@ -264,12 +264,12 @@ public final class CrackPanel extends EasyPanel {
             fileChooser.setAcceptAllFileFilterUsed(false);
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fileChooser.setMultiSelectionEnabled(false);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(fileCracker.getFileDescription(), fileCracker.getFileExtensions());
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(fileChecker.getFileDescription(), fileChecker.getFileExtensions());
             fileChooser.addChoosableFileFilter(filter);
-            int returnVal = fileChooser.showOpenDialog(CrackPanel.this);
+            int returnVal = fileChooser.showOpenDialog(RecoveryPanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 selectedFile = fileChooser.getSelectedFile();
-                fileCracker.attachFile(selectedFile);
+                fileChecker.attachFile(selectedFile);
                 fileNameTextField.setText(selectedFile.getAbsolutePath());
             }
         }
@@ -284,7 +284,7 @@ public final class CrackPanel extends EasyPanel {
             fileChooser.setMultiSelectionEnabled(false);
             FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic;*.txt", "dic", "txt");
             fileChooser.addChoosableFileFilter(filter);
-            int returnVal = fileChooser.showOpenDialog(CrackPanel.this);
+            int returnVal = fileChooser.showOpenDialog(RecoveryPanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 dictionaryFile = fileChooser.getSelectedFile();
                 if (dictionaryFile != null) {
@@ -309,9 +309,9 @@ public final class CrackPanel extends EasyPanel {
             currentCategory = CATEGORY.UNKNOWN;
         }
 
-        currentFileCracker = (FileCracker) crackerTypeComboBox.getSelectedItem();
-        if (currentFileCracker == null || !currentFileCracker.prepareCracker()) {
-            JOptionPane.showMessageDialog(this, "onStart failed: Crack condition does not been prepared!");
+        currentFileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
+        if (currentFileChecker == null || !currentFileChecker.prepareChecker()) {
+            JOptionPane.showMessageDialog(this, "onStart failed: Checker condition does not been prepared!");
             return;
         }
         switch (currentCategory) {
@@ -372,21 +372,21 @@ public final class CrackPanel extends EasyPanel {
             return;
         }
 
-        setIsCracking(true);
+        setIsRecovering(true);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
             setProgressMaxValue((int)Math.pow(charSet.length(), length));
             setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
-            int numThreads = Math.min(getThreadCount(charSet.length(), length), currentFileCracker.getMaxThreadNum());
-            logger.info("[" + currentFileCracker + "]Current attempt length: " + length + ", thread number: " + numThreads);
+            int numThreads = Math.min(getThreadCount(charSet.length(), length), currentFileChecker.getMaxThreadNum());
+            logger.info("[" + currentFileChecker + "]Current attempt length: " + length + ", thread number: " + numThreads);
 
             workerPool = Executors.newFixedThreadPool(numThreads);
             BruteForceFuture bruteForceFuture = new BruteForceFuture(numThreads);
-            BruteForceCrackerConsts consts = new BruteForceCrackerConsts(numThreads, length, currentFileCracker, charSet);
+            BruteForceTaskConst consts = new BruteForceTaskConst(numThreads, length, currentFileChecker, charSet);
 
             for (int taskId = 0; taskId < numThreads; taskId++) {
-                BruteForceCrackerTask task = new BruteForceCrackerTask(taskId, true, consts, bruteForceFuture, this);
+                BruteForceTask task = new BruteForceTask(taskId, true, consts, bruteForceFuture, this);
                 workerPool.execute(task);
             }
             try {
@@ -421,16 +421,16 @@ public final class CrackPanel extends EasyPanel {
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-            setIsCracking(true);
+            setIsRecovering(true);
             setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
             setProgressBarValue(0);
-            Predicate<String> isCrackingPredicate = password -> isCracking;
+            Predicate<String> isRecoveringPredicate = password -> isRecovering;
             Function<String, Stream<String>> generator = password -> {
                 increaseProgressBarValue();
                 return Stream.of(password.toLowerCase(), password.toUpperCase());
             };
-            Predicate<String> verifier = currentFileCracker::checkPassword;
-            Optional<String> password = br.lines().takeWhile(isCrackingPredicate).flatMap(generator).filter(verifier).findFirst();
+            Predicate<String> verifier = currentFileChecker::checkPassword;
+            Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
             if (password.isPresent()) {
                 JOptionPane.showMessageDialog(this, password.get());
             } else {
@@ -451,17 +451,17 @@ public final class CrackPanel extends EasyPanel {
             return;
         }
         int threadNum = (Integer) threadNumSpinner.getValue();
-        setIsCracking(true);
+        setIsRecovering(true);
         setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
         setProgressBarValue(0);
-        fileHandle = new FileHandle(currentFileCracker, new AtomicBoolean(false), this);
+        fileHandle = new FileHandle(currentFileChecker, new AtomicBoolean(false), this);
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), fileHandle);
         bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
         bigFileReader.setCompleteCallback(() -> {
             if (fileHandle != null && !fileHandle.getSuccess().get()) {
                 logger.error("Can not find password");
-                JOptionPane.showMessageDialog(CrackPanel.this, "Can not find password");
+                JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
                 onStopByDictionaryMultiThreadCategory();
             }
         });
@@ -483,13 +483,13 @@ public final class CrackPanel extends EasyPanel {
             }
         }
         setProgressBarValue(0);
-        setIsCracking(false);
+        setIsRecovering(false);
     }
 
     private void onStopByDictionarySingleThreadCategory() {
         logger.info("onStopByDictionarySingleThreadCategory");
         setProgressBarValue(0);
-        setIsCracking(false);
+        setIsRecovering(false);
     }
 
     private void onStopByDictionaryMultiThreadCategory() {
@@ -501,7 +501,7 @@ public final class CrackPanel extends EasyPanel {
             bigFileReader.shutdown();
         }
         setProgressBarValue(0);
-        setIsCracking(false);
+        setIsRecovering(false);
     }
 
     private int getThreadCount(int charSetSize, int length) {
@@ -512,11 +512,11 @@ public final class CrackPanel extends EasyPanel {
         return result;
     }
 
-    public void setIsCracking(boolean isCracking) {
-        CrackPanel.isCracking = isCracking;
-        setCursor(Cursor.getPredefinedCursor(isCracking ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
-        startButton.setEnabled(!isCracking);
-        stopButton.setEnabled(isCracking);
+    public void setIsRecovering(boolean isRecovering) {
+        RecoveryPanel.isRecovering = isRecovering;
+        setCursor(Cursor.getPredefinedCursor(isRecovering ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
+        startButton.setEnabled(!isRecovering);
+        stopButton.setEnabled(isRecovering);
     }
 
     public void setProgressMaxValue(int maxValue) {

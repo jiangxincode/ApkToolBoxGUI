@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack.exception;
+package edu.jiangxin.apktoolbox.file.password.recovery.exception;
 
 public class UnknownException extends RuntimeException {
     public UnknownException() {

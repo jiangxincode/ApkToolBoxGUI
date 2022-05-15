@@ -1,6 +1,6 @@
-package edu.jiangxin.apktoolbox.file.crack.cracker;
+package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
-import edu.jiangxin.apktoolbox.file.crack.exception.UnknownException;
+import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnknownException;
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
@@ -15,10 +15,10 @@ import java.io.IOException;
  * printing; copying text and graphics out of the document; modifying the document;
  * and adding or modifying text notes (using owner password).
  */
-public class PdfCracker extends FileCracker {
+public class PdfChecker extends FileChecker {
     private static final boolean DEBUG = false;
 
-    public PdfCracker() {
+    public PdfChecker() {
         super();
     }
 
@@ -34,11 +34,11 @@ public class PdfCracker extends FileCracker {
 
     @Override
     public String getDescription() {
-        return "PDF Cracker";
+        return "PDF Checker";
     }
 
     @Override
-    public boolean prepareCracker() {
+    public boolean prepareChecker() {
         return true;
     }
 

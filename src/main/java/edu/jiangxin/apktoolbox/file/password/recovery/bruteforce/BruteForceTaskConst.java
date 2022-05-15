@@ -1,19 +1,19 @@
-package edu.jiangxin.apktoolbox.file.crack.bruteforce;
+package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
 
-import edu.jiangxin.apktoolbox.file.crack.cracker.ICracker;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 
-public class BruteForceCrackerConsts {
+public class BruteForceTaskConst {
     final int numThreads;
     final int passwordLength;
     final long passwordRangeSize;
     final long passwordSubRangeSize;
-    final ICracker cracker;
+    final IChecker checker;
     final String charsSet;
 
-    public BruteForceCrackerConsts(int numThreads, int passwordLength, ICracker cracker, String charsSet) {
+    public BruteForceTaskConst(int numThreads, int passwordLength, IChecker checker, String charsSet) {
         this.numThreads = numThreads;
         this.passwordLength = passwordLength;
-        this.cracker = cracker;
+        this.checker = checker;
         this.passwordRangeSize = (long) Math.pow(charsSet.length(), passwordLength);
         this.passwordSubRangeSize = (passwordRangeSize + numThreads - 1) / numThreads;
         this.charsSet = charsSet;
@@ -31,8 +31,8 @@ public class BruteForceCrackerConsts {
         return passwordSubRangeSize;
     }
 
-    public ICracker getCracker() {
-        return cracker;
+    public IChecker getChecker() {
+        return checker;
     }
 
     public String getCharsSet() {

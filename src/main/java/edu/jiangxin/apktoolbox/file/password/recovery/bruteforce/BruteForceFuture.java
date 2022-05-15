@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack.bruteforce;
+package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

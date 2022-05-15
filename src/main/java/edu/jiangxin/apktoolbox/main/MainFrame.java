@@ -13,7 +13,7 @@ import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
 import edu.jiangxin.apktoolbox.file.checksum.CheckDigestPanel;
-import edu.jiangxin.apktoolbox.file.crack.CrackPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
 import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
 import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
 import edu.jiangxin.apktoolbox.help.*;
@@ -77,7 +77,7 @@ public class MainFrame extends EasyFrame {
     private JMenuItem duplicateFindMenuItem;
     private JMenuItem batchRenameMenuItem;
     private JMenuItem checkSumMenuItem;
-    private JMenuItem crackMenuItem;
+    private JMenuItem recoveryMenuItem;
 
     private JMenu convertMenu;
     private JMenuItem timeConvertMenuItem;
@@ -234,9 +234,9 @@ public class MainFrame extends EasyFrame {
         checkSumMenuItem.addActionListener(new ChangePanelListener(CheckDigestPanel.class, checkSumMenuItem.getText()));
         fileMenu.add(checkSumMenuItem);
 
-        crackMenuItem = new JMenuItem(bundle.getString("file.crack.title"));
-        crackMenuItem.addActionListener(new ChangePanelListener(CrackPanel.class, crackMenuItem.getText()));
-        fileMenu.add(crackMenuItem);
+        recoveryMenuItem = new JMenuItem(bundle.getString("file.password.recovery.title"));
+        recoveryMenuItem.addActionListener(new ChangePanelListener(RecoveryPanel.class, recoveryMenuItem.getText()));
+        fileMenu.add(recoveryMenuItem);
     }
 
     private void createConvertMenu() {

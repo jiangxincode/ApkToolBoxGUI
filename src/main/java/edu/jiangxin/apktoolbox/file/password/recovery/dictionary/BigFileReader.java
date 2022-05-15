@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack.dictionary;
+package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

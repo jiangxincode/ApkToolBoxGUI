@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack.cracker;
+package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
@@ -6,10 +6,10 @@ import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
-public final class SevenZipCracker extends FileCracker {
+public final class SevenZipChecker extends FileChecker {
     private static final boolean DEBUG = false;
 
-    public SevenZipCracker() {
+    public SevenZipChecker() {
         super();
     }
 
@@ -25,11 +25,11 @@ public final class SevenZipCracker extends FileCracker {
 
     @Override
     public String getDescription() {
-        return "7Zip Cracker";
+        return "7Zip Checker";
     }
 
     @Override
-    public boolean prepareCracker() {
+    public boolean prepareChecker() {
         return true;
     }
 

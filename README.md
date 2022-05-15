@@ -29,7 +29,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 **Breadcrumb Navigation**
 
-`File->Crack`
+`File->Recover File Password`
 
 **Introduce**
 

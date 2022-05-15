@@ -1,6 +1,6 @@
-package edu.jiangxin.apktoolbox.file.crack.cracker;
+package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
-import edu.jiangxin.apktoolbox.file.crack.exception.UnknownException;
+import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnknownException;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
@@ -8,10 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public final class ZipCracker extends FileCracker {
+public final class ZipChecker extends FileChecker {
     private static final boolean DEBUG = false;
 
-    public ZipCracker() {
+    public ZipChecker() {
         super();
     }
 
@@ -27,11 +27,11 @@ public final class ZipCracker extends FileCracker {
 
     @Override
     public String getDescription() {
-        return "ZIP Cracker";
+        return "ZIP Checker";
     }
 
     @Override
-    public boolean prepareCracker() {
+    public boolean prepareChecker() {
         return true;
     }
 

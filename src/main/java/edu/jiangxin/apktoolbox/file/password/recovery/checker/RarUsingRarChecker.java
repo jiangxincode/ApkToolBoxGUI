@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack.cracker;
+package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.NoLogOutputStream;
@@ -12,11 +12,11 @@ import java.io.IOException;
  * The RAR command line supports a larger number of functions when compared to WinRAR, but does not support ZIP and other formats.
  * https://www.win-rar.com/cmd-shell-mode.html
  */
-public final class RarUsingRarCracker extends FileCracker {
+public final class RarUsingRarChecker extends FileChecker {
     private static final boolean DEBUG = false;
     private String toolPath;
 
-    public RarUsingRarCracker() {
+    public RarUsingRarChecker() {
         super();
         toolPath = conf.getString(Constants.RAR_PATH_KEY);
     }
@@ -33,11 +33,11 @@ public final class RarUsingRarCracker extends FileCracker {
 
     @Override
     public String getDescription() {
-        return "RAR Cracker(Using Rar.exe)";
+        return "RAR Checker(Using Rar.exe)";
     }
 
     @Override
-    public boolean prepareCracker() {
+    public boolean prepareChecker() {
         try {
             Runtime.getRuntime().exec(toolPath);
         } catch (IOException e) {

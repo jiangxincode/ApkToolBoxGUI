@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.crack.cracker;
+package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.NoLogOutputStream;
@@ -8,37 +8,32 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
 
-public class ArchiveUsingWinRarCracker  extends FileCracker {
+public final class ArchiveUsing7ZipChecker extends FileChecker {
     private static final boolean DEBUG = false;
     private String toolPath;
 
-    public ArchiveUsingWinRarCracker() {
+    public ArchiveUsing7ZipChecker() {
         super();
-        toolPath = conf.getString(Constants.WIN_RAR_PATH_KEY);
+        toolPath = conf.getString(Constants.SEVEN_ZIP_PATH_KEY);
     }
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"RAR", "ZIP", "7Z", "ARJ", "BZ2", "CAB", "GZ", "ISO", "JAR", "LZ", "LZH", "TAR", "UUE", "XZ", "Z", "ZST"};
+        return new String[]{"7Z", "ZIP", "RAR", "GZ", "TAR", "XZ", "Z"};
     }
 
     @Override
     public String getFileDescription() {
-        return "*.rar; *.zip; *.7z; ...";
+        return "*.7z; *.zip; *.rar; ...";
     }
 
     @Override
     public String getDescription() {
-        return "Archive Cracker(Using WinRar.exe)";
+        return "Archive Checker(Using 7z.exe)";
     }
 
     @Override
-    public int getMaxThreadNum() {
-        return 5;
-    }
-
-    @Override
-    public boolean prepareCracker() {
+    public boolean prepareChecker() {
         try {
             Runtime.getRuntime().exec(toolPath);
         } catch (IOException e) {
@@ -50,7 +45,7 @@ public class ArchiveUsingWinRarCracker  extends FileCracker {
     @Override
     public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t -inul -ibck -p%s \"%s\"", toolPath, password, target);
+        String cmd = String.format("%s t \"%s\" -p%s", toolPath, target, password);
         if (DEBUG) {
             logger.info("checkPassword cmd: " + cmd);
         }
