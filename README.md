@@ -152,3 +152,7 @@ Any contributing is welcomed.
 All contributors will be listed here.
 
 * Jiangxin <jiangxinnju@gmail.com>
+
+## Communication Group
+
+![QQ Group](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/QQ_Group.png)
