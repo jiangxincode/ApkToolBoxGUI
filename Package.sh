@@ -23,6 +23,7 @@ VERSION=${VERSION%*.jar}
 
 cp $CURRENT_DIR/ApkToolBoxGUI.bat $RELEASE_DIR
 cp $CURRENT_DIR/ApkToolBoxGUI.sh $RELEASE_DIR
+cp $CURRENT_DIR/apktoolboxgui.properties $RELEASE_DIR
 cp -r $CURRENT_DIR/tools $RELEASE_DIR
 
 cd $RELEASE_DIR

@@ -17,6 +17,7 @@ $VERSION = $RELEASE_JAR_FILE.BaseName.Replace("APKToolBoxGUI-", "").Replace(".ja
 
 Copy-Item "$CURRENT_DIR/ApkToolBoxGUI.bat" $RELEASE_DIR
 Copy-Item "$CURRENT_DIR/ApkToolBoxGUI.sh" $RELEASE_DIR
+Copy-Item "$CURRENT_DIR/apktoolboxgui.properties" $RELEASE_DIR
 Copy-Item "$CURRENT_DIR/tools" $RELEASE_DIR -Recurse
 
 Compress-Archive -Path "$RELEASE_DIR\*" -DestinationPath "$TARGET_DIR/APKToolBoxGUI-$VERSION.zip" -Force
