@@ -34,7 +34,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 **Introduce**
 
 * Support password recovery from `PDF/ZIP/RAR/7Z...` files
-* Multi-threaded processing, high recovery efficiency
+* Multi-thread processing, high recovery efficiency
 * Support progress showing
 * Support brute force recovery and dictionary recovery (more methods will be supported in the future)
 * Brute force recovery supports customized character set and password length
