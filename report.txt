@@ -104,13 +104,13 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   209.               }
 
 #11
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:423: error: Resource Leak
-  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 423 is not released after line 423.
-  421.           String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-  422.           logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
-  423. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-  424.               setIsRecovering(true);
-  425.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:425: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 425 is not released after line 425.
+  423.           String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+  424.           logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+  425. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
+  426.               setIsRecovering(true);
+  427.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
 
 #12
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
