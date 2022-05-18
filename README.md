@@ -34,6 +34,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 **Introduce**
 
 * Support password recovery from `PDF/ZIP/RAR/7Z...` files
+* Support password recovery from Office files like: `doc/docx/ppt/pptx/xls/xlsx`
 * Multi-thread processing, high recovery efficiency
 * Support progress showing
 * Support brute force recovery and dictionary recovery (more methods will be supported in the future)
@@ -99,12 +100,12 @@ Using third-party tools to decompile package like jar, aar, war, apk, dex and so
 
 **Dependencies**
 
-| Name | Version | Website | License
-| ------ | ------ | ------ | ------ |
-| Apktool | v2.5.0 | <https://github.com/iBotPeaches/Apktool> | Apache 2.0 |
-| GD-GUI | 1.6.6 | <http://jd.benow.ca> | GNU GPL v3 |
-| JADX-GUI | v1.2.0 | <https://github.com/skylot/jadx> | Apache 2.0 |
-| ApkSigner | 1.3 | <http://apk.aq.163.com/apkpack.do#download> | Apache 2.0 |
+| Name         | Version        | Website                                        | License    |
+|--------------|----------------|------------------------------------------------|------------|
+| Apktool      | v2.5.0         | <https://github.com/iBotPeaches/Apktool>       | Apache 2.0 |
+| GD-GUI       | 1.6.6          | <http://jd.benow.ca>                           | GNU GPL v3 |
+| JADX-GUI     | v1.2.0         | <https://github.com/skylot/jadx>               | Apache 2.0 |
+| ApkSigner    | 1.3            | <http://apk.aq.163.com/apkpack.do#download>    | Apache 2.0 |
 | AXMLPrinter3 | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3> | Apache 2.0 |
 
 ### SnapShot(Android Develop)

@@ -111,6 +111,8 @@ public final class RecoveryPanel extends EasyPanel {
         checkerTypeComboBox.addItem(new RarChecker());
         checkerTypeComboBox.addItem(new SevenZipChecker());
         checkerTypeComboBox.addItem(new PdfChecker());
+        checkerTypeComboBox.addItem(new XmlBasedOfficeChecker());
+        checkerTypeComboBox.addItem(new BinaryOfficeChecker());
         checkerTypeComboBox.setSelectedIndex(0);
 
         JPanel filePanel = new JPanel();
