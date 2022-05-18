@@ -25,7 +25,13 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 ## Features
 
-### Recover password of PDF/ZIP/RAR/...
+### Recover password
+
+```
+You can use this function only when you have the express authorization of opening and operating the encrypted file.
+
+I am only providing a generic tool, you are the one who decides what to do with it and you should take the responsability of using it!
+```
 
 **Breadcrumb Navigation**
 
