@@ -1,19 +1,24 @@
-package edu.jiangxin.apktoolbox.file;
+package edu.jiangxin.apktoolbox.swing.extend;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
-import org.apache.commons.collections.ListUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileListPanel extends JPanel {
+
+    private static final Logger LOGGER = LogManager.getLogger(FileListPanel.class);
 
     private JPanel leftPanel;
 
@@ -22,18 +27,6 @@ public class FileListPanel extends JPanel {
     private JList<File> fileList;
 
     private DefaultListModel<File> fileListModel;
-
-    private JButton addFileButton;
-
-    private JButton addDirectoryButton;
-
-    private JButton removeSelectedButton;
-
-    private JButton clearButton;
-
-    private JButton selectAllButton;
-
-    private JButton inverseSelectedButton;
 
     public FileListPanel() {
         super();
@@ -82,54 +75,63 @@ public class FileListPanel extends JPanel {
         rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
-        addFileButton = new JButton("Add File");
+        JPanel rightContentPanel = new JPanel();
+        rightPanel.add(Box.createVerticalGlue());
+        rightPanel.add(rightContentPanel);
+        rightPanel.add(Box.createVerticalGlue());
+
+        rightContentPanel.setLayout(new GridLayout(6, 1, 0, Constants.DEFAULT_Y_BORDER));
+
+        JButton addFileButton = new JButton("Add File");
         addFileButton.addMouseListener(new AddFileButtonMouseAdapter());
-        rightPanel.add(addFileButton);
-        rightPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        rightContentPanel.add(addFileButton);
 
-        addDirectoryButton = new JButton("Add Directory");
+        JButton addDirectoryButton = new JButton("Add Directory");
         addDirectoryButton.addMouseListener(new AddDirectoryButtonMouseAdapter());
-        rightPanel.add(addDirectoryButton);
-        rightPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        rightContentPanel.add(addDirectoryButton);
 
-        removeSelectedButton = new JButton("Remove Selected");
+        JButton removeSelectedButton = new JButton("Remove Selected");
         removeSelectedButton.addMouseListener(new RemoveSelectedButtonMouseAdapter());
-        rightPanel.add(removeSelectedButton);
-        rightPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        rightContentPanel.add(removeSelectedButton);
 
-        clearButton = new JButton("Clear All");
+        JButton clearButton = new JButton("Clear All");
         clearButton.addMouseListener(new ClearButtonMouseAdapter());
-        rightPanel.add(clearButton);
-        rightPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        rightContentPanel.add(clearButton);
 
-        selectAllButton = new JButton("Select All");
+        JButton selectAllButton = new JButton("Select All");
         selectAllButton.addMouseListener(new SelectAllButtonMouseAdapter());
-        rightPanel.add(selectAllButton);
-        rightPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        rightContentPanel.add(selectAllButton);
 
-        inverseSelectedButton = new JButton("Inverse Selected");
+        JButton inverseSelectedButton = new JButton("Inverse Selected");
         inverseSelectedButton.addMouseListener(new InverseSelectedButtonMouseAdapter());
-        rightPanel.add(inverseSelectedButton);
+        rightContentPanel.add(inverseSelectedButton);
+
+        for (Component component : rightContentPanel.getComponents()) {
+            component.setPreferredSize(new Dimension(Constants.DEFAULT_BUTTON_WIDTH, Constants.DEFAULT_BUTTON_HEIGHT));
+        }
     }
 
     private final class FileListTransferHandler extends TransferHandler {
         @Override
         public boolean importData(JComponent comp, Transferable t) {
             try {
-                Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
-                for (File file : (List<File>)o) {
+                Object object = t.getTransferData(DataFlavor.javaFileListFlavor);
+                for (File file : (List<File>)object) {
                     fileListModel.addElement(file);
                 }
                 return true;
-            } catch (Exception e) {
+            } catch (IOException e) {
+                LOGGER.error("importData failed: IOException");
+            } catch (UnsupportedFlavorException e) {
+                LOGGER.error("importData failed: UnsupportedFlavorException");
             }
             return false;
         }
 
         @Override
         public boolean canImport(JComponent jComponent, DataFlavor[] dataFlavors) {
-            for (int i = 0; i < dataFlavors.length; i++) {
-                if (DataFlavor.javaFileListFlavor.equals(dataFlavors[i])) {
+            for (DataFlavor dataFlavor : dataFlavors) {
+                if (DataFlavor.javaFileListFlavor.equals(dataFlavor)) {
                     return true;
                 }
             }
@@ -145,15 +147,10 @@ public class FileListPanel extends JPanel {
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jfc.setDialogTitle("Select A File");
             int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    fileListModel.addElement(file);
-                    break;
-                default:
-                    break;
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = jfc.getSelectedFile();
+                fileListModel.addElement(file);
             }
-
         }
     }
 
@@ -165,13 +162,9 @@ public class FileListPanel extends JPanel {
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             jfc.setDialogTitle("Select A Directory");
             int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    fileListModel.addElement(file);
-                    break;
-                default:
-                    break;
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = jfc.getSelectedFile();
+                fileListModel.addElement(file);
             }
 
         }

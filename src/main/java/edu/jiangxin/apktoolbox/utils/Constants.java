@@ -7,9 +7,13 @@ package edu.jiangxin.apktoolbox.utils;
  */
 public class Constants {
     
-    public static final int DEFAULT_WIDTH = 800;
+    public static final int DEFAULT_PANEL_WIDTH = 800;
     
-    public static final int DEFAULT_HEIGHT = 500;
+    public static final int DEFAULT_PANEL_HEIGHT = 500;
+
+    public static final int DEFAULT_BUTTON_WIDTH = 150;
+
+    public static final int DEFAULT_BUTTON_HEIGHT = 23;
     
     public static final int DEFAULT_X_BORDER = 10;
     

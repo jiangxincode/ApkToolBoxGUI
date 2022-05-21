@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.file.zhconvert;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import edu.jiangxin.apktoolbox.file.FileListPanel;
+import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;

@@ -181,7 +181,7 @@ public class MonkeyPanel extends EasyPanel {
     public MonkeyPanel() {
         super();
 
-        setPreferredSize(new Dimension(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT));
+        setPreferredSize(new Dimension(Constants.DEFAULT_PANEL_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
 
         setLayout(null);
 

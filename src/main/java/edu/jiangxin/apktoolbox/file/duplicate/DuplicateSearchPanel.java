@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.file.duplicate;
 
 import edu.jiangxin.apktoolbox.convert.time.DateTransform;
-import edu.jiangxin.apktoolbox.file.FileListPanel;
+import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.FileUtilsEx;
