@@ -1,15 +1,19 @@
 package edu.jiangxin.apktoolbox.file.password.recovery;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTaskConst;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTask;
 import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceFuture;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTask;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTaskConst;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.FileHandle;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.FileTransferHandler;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,6 +21,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,6 +62,7 @@ public final class RecoveryPanel extends EasyPanel {
     private JProgressBar progressBar;
 
     private JComboBox<FileChecker> checkerTypeComboBox;
+
     private FileChecker currentFileChecker;
 
     private JTextField fileNameTextField;
@@ -64,8 +70,6 @@ public final class RecoveryPanel extends EasyPanel {
     private JButton startButton;
     private JButton stopButton;
 
-    private File selectedFile;
-    private File dictionaryFile;
     private ExecutorService workerPool;
 
     private BigFileReader bigFileReader;
@@ -131,6 +135,7 @@ public final class RecoveryPanel extends EasyPanel {
         optionPanel.add(progressBar);
 
         fileNameTextField = new JTextField();
+        fileNameTextField.setTransferHandler(new FileTransferHandler(fileNameTextField));
 
         JButton chooseFileButton = new JButton("Choose File");
         chooseFileButton.addActionListener(new OpenFileActionListener());
@@ -207,6 +212,7 @@ public final class RecoveryPanel extends EasyPanel {
 
         dictionaryFileTextField = new JTextField();
         dictionaryFileTextField.setPreferredSize(new Dimension(600, 0));
+        dictionaryFileTextField.setTransferHandler(new FileTransferHandler(dictionaryFileTextField));
 
         JButton chooseFileButton = new JButton("Choose Dictionary File");
         chooseFileButton.addActionListener(new OpenDictionaryFileActionListener());
@@ -238,15 +244,6 @@ public final class RecoveryPanel extends EasyPanel {
         operationPanel.add(stopButton);
 
         startButton.addActionListener(e -> {
-            if (selectedFile == null) {
-                logger.error("file is null");
-                return;
-            }
-            FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
-            if (fileChecker == null) {
-                logger.error("fileChecker is null");
-                return;
-            }
             new Thread(this::onStart).start();
         });
 
@@ -270,9 +267,8 @@ public final class RecoveryPanel extends EasyPanel {
             fileChooser.addChoosableFileFilter(filter);
             int returnVal = fileChooser.showOpenDialog(RecoveryPanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                selectedFile = fileChooser.getSelectedFile();
-                fileChecker.attachFile(selectedFile);
-                fileNameTextField.setText(selectedFile.getAbsolutePath());
+                File selectedFile = fileChooser.getSelectedFile();
+                fileNameTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
             }
         }
     }
@@ -288,15 +284,40 @@ public final class RecoveryPanel extends EasyPanel {
             fileChooser.addChoosableFileFilter(filter);
             int returnVal = fileChooser.showOpenDialog(RecoveryPanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                dictionaryFile = fileChooser.getSelectedFile();
-                if (dictionaryFile != null) {
-                    dictionaryFileTextField.setText(dictionaryFile.getAbsolutePath());
+                File selectedFile = fileChooser.getSelectedFile();
+                if (selectedFile != null) {
+                    dictionaryFileTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
                 }
             }
         }
     }
 
     private void onStart() {
+        FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
+        if (fileChecker == null) {
+            JOptionPane.showMessageDialog(this, "fileChecker is null");
+            return;
+        }
+        if (!fileChecker.prepareChecker()) {
+            JOptionPane.showMessageDialog(this, "onStart failed: Checker condition does not been prepared!");
+            return;
+        }
+
+        File selectedFile = new File(fileNameTextField.getText());
+        if (!selectedFile.isFile()) {
+            JOptionPane.showMessageDialog(this, "file is null");
+            return;
+        }
+
+        String extension = FilenameUtils.getExtension(fileNameTextField.getText());
+        if (!ArrayUtils.contains(fileChecker.getFileExtensions(), StringUtils.toRootLowerCase(extension))) {
+            JOptionPane.showMessageDialog(this, "invalid file");
+            return;
+        }
+
+        fileChecker.attachFile(selectedFile);
+        currentFileChecker = fileChecker;
+
         Component selectedPanel = categoryTabbedPane.getSelectedComponent();
         if (selectedPanel.equals(bruteForcePanel)) {
             currentCategory = CATEGORY.BRUTE_FORCE;
@@ -310,42 +331,20 @@ public final class RecoveryPanel extends EasyPanel {
         } else {
             currentCategory = CATEGORY.UNKNOWN;
         }
-
-        currentFileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
-        if (currentFileChecker == null || !currentFileChecker.prepareChecker()) {
-            JOptionPane.showMessageDialog(this, "onStart failed: Checker condition does not been prepared!");
-            return;
-        }
         switch (currentCategory) {
-            case BRUTE_FORCE:
-                onStartByBruteForceCategory();
-                break;
-            case DICTIONARY_SINGLE_THREAD:
-                onStartByDictionarySingleThreadCategory();
-                break;
-            case DICTIONARY_MULTI_THREAD:
-                onStartByDictionaryMultiThreadCategory();
-                break;
-            case UNKNOWN:
-                JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
-                break;
+            case BRUTE_FORCE -> onStartByBruteForceCategory();
+            case DICTIONARY_SINGLE_THREAD -> onStartByDictionarySingleThreadCategory();
+            case DICTIONARY_MULTI_THREAD -> onStartByDictionaryMultiThreadCategory();
+            case UNKNOWN -> JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
         }
     }
 
     private void onStop() {
         switch (currentCategory) {
-            case BRUTE_FORCE:
-                onStopByBruteForceCategory();
-                break;
-            case DICTIONARY_SINGLE_THREAD:
-                onStopByDictionarySingleThreadCategory();
-                break;
-            case DICTIONARY_MULTI_THREAD:
-                onStopByDictionaryMultiThreadCategory();
-                break;
-            case UNKNOWN:
-                JOptionPane.showMessageDialog(this, "onStop failed: Invalid category!");
-                break;
+            case BRUTE_FORCE -> onStopByBruteForceCategory();
+            case DICTIONARY_SINGLE_THREAD -> onStopByDictionarySingleThreadCategory();
+            case DICTIONARY_MULTI_THREAD -> onStopByDictionaryMultiThreadCategory();
+            case UNKNOWN -> JOptionPane.showMessageDialog(this, "onStop failed: Invalid category!");
         }
     }
 
@@ -406,17 +405,14 @@ public final class RecoveryPanel extends EasyPanel {
                 break;
             }
         }
-        if (password == null) {
-            JOptionPane.showMessageDialog(this, "Can not find password");
-        } else {
-            JOptionPane.showMessageDialog(this, password);
-        }
+        JOptionPane.showMessageDialog(this, Objects.requireNonNullElse(password, "Can not find password"));
         onStopByBruteForceCategory();
     }
 
     private void onStartByDictionarySingleThreadCategory() {
         logger.info("onStartByDictionarySingleThreadCategory");
-        if (dictionaryFile == null || !dictionaryFile.isFile()) {
+        File dictionaryFile = new File(dictionaryFileTextField.getText());
+        if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
             return;
         }
@@ -448,7 +444,8 @@ public final class RecoveryPanel extends EasyPanel {
 
     private void onStartByDictionaryMultiThreadCategory() {
         logger.info("onStartByDictionaryMultiThreadCategory");
-        if (dictionaryFile == null || !dictionaryFile.isFile()) {
+        File dictionaryFile = new File(dictionaryFileTextField.getText());
+        if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
             return;
         }

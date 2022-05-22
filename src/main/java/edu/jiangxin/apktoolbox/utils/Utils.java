@@ -219,4 +219,17 @@ public class Utils {
             return 0;
         }
     }
+
+    public static String getCanonicalPathQuiet(File file) {
+        if (file == null) {
+            logger.warn("getCanonicalPathQuiet failed: file is null");
+            return null;
+        }
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            logger.error("getCanonicalPathQuiet failed: IOException");
+            return null;
+        }
+    }
 }

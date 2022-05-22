@@ -34,6 +34,11 @@ public abstract class FileChecker implements IChecker {
         return getDescription();
     }
 
+    /**
+     * Return all supported file extensions in LOWERCASE, for example: ["zip", "7z", "rar"]
+     *
+     * @return All supported file extensions in LOWERCASE
+     */
     public abstract String[] getFileExtensions();
 
     public abstract String getFileDescription();

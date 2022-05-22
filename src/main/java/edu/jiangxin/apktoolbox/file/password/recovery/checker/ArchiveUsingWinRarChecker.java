@@ -19,7 +19,7 @@ public class ArchiveUsingWinRarChecker extends FileChecker {
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"RAR", "ZIP", "7Z", "ARJ", "BZ2", "CAB", "GZ", "ISO", "JAR", "LZ", "LZH", "TAR", "UUE", "XZ", "Z", "ZST"};
+        return new String[]{"rar", "zip", "7z", "arj", "bz2", "cab", "gz", "iso", "jar", "lz", "lzh", "tar", "uue", "xz", "z", "zst"};
     }
 
     @Override

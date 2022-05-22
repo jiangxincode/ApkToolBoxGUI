@@ -19,7 +19,7 @@ public final class ArchiveUsing7ZipChecker extends FileChecker {
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"7Z", "ZIP", "RAR", "GZ", "TAR", "XZ", "Z"};
+        return new String[]{"7z", "zip", "rar", "gz", "tar", "xz", "z"};
     }
 
     @Override
