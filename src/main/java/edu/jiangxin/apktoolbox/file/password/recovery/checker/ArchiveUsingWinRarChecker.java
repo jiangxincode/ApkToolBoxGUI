@@ -50,7 +50,7 @@ public class ArchiveUsingWinRarChecker extends FileChecker {
     @Override
     public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t -inul -ibck -p%s \"%s\"", toolPath, password, target);
+        String cmd = String.format("%s t -inul -ibck -p\"%s\" \"%s\"", toolPath, password, target);
         if (DEBUG) {
             logger.info("checkPassword cmd: " + cmd);
         }

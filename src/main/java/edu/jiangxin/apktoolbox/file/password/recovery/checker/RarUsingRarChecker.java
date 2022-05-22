@@ -49,7 +49,7 @@ public final class RarUsingRarChecker extends FileChecker {
     @Override
     public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
-        String cmd = String.format("%s t -p%s \"%s\"", toolPath, password, target);
+        String cmd = String.format("%s t -p\"%s\" \"%s\"", toolPath, password, target);
         if (DEBUG) {
             logger.info("checkPassword cmd: " + cmd);
         }
