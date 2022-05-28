@@ -104,15 +104,6 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   209.               }
 
 #11
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:421: error: Resource Leak
-  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 421 is not released after line 421.
-  419.           String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-  420.           logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
-  421. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-  422.               setIsRecovering(true);
-  423.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-
-#12
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -122,7 +113,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   34.       private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
   35.       private String result = null;
 
-#13
+#12
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because this access may occur on a background thread.
@@ -132,7 +123,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   76.       }
   77.   
 
-#14
+#13
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -142,7 +133,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   84.       }
   85.   
 
-Found 15 issues
+Found 14 issues
                         Issue Type(ISSUED_TYPE_ID): #
-                      Resource Leak(RESOURCE_LEAK): 12
+                      Resource Leak(RESOURCE_LEAK): 11
   Thread Safety Violation(THREAD_SAFETY_VIOLATION): 3
