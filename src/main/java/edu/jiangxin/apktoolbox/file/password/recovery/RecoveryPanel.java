@@ -8,18 +8,16 @@ import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.FileHandle;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.swing.extend.FileTransferHandler;
+import edu.jiangxin.apktoolbox.swing.extend.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,9 +32,15 @@ import java.util.stream.Stream;
 public final class RecoveryPanel extends EasyPanel {
     private JPanel optionPanel;
 
+    private FilePanel recoveryFilePanel;
+
     private JTabbedPane categoryTabbedPane;
-    private JPanel bruteForcePanel;
-    private JPanel dictionaryPanel;
+
+    private JPanel bruteForceCategoryPanel;
+
+    private JPanel dictionaryCategoryPanel;
+
+    private FilePanel dictionaryFilePanel;
 
     private enum CATEGORY {
         UNKNOWN,
@@ -44,6 +48,7 @@ public final class RecoveryPanel extends EasyPanel {
         DICTIONARY_SINGLE_THREAD,
         DICTIONARY_MULTI_THREAD
     }
+
     private CATEGORY currentCategory = CATEGORY.UNKNOWN;
 
     private JPanel operationPanel;
@@ -55,8 +60,6 @@ public final class RecoveryPanel extends EasyPanel {
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
 
-    private JTextField dictionaryFileTextField;
-
     private JSpinner threadNumSpinner;
 
     private JProgressBar progressBar;
@@ -64,8 +67,6 @@ public final class RecoveryPanel extends EasyPanel {
     private JComboBox<FileChecker> checkerTypeComboBox;
 
     private FileChecker currentFileChecker;
-
-    private JTextField fileNameTextField;
 
     private JButton startButton;
     private JButton stopButton;
@@ -98,15 +99,6 @@ public final class RecoveryPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
-        categoryTabbedPane = new JTabbedPane();
-
-        createBruteForcePanel();
-        categoryTabbedPane.addTab("Brute Force", null, bruteForcePanel, "Brute Force");
-        categoryTabbedPane.setSelectedIndex(0);
-
-        createDictionaryPanel();
-        categoryTabbedPane.addTab("Dictionary", null, dictionaryPanel, "Dictionary");
-
         checkerTypeComboBox = new JComboBox<>();
         checkerTypeComboBox.addItem(new ArchiveUsing7ZipChecker());
         checkerTypeComboBox.addItem(new ArchiveUsingWinRarChecker());
@@ -118,39 +110,54 @@ public final class RecoveryPanel extends EasyPanel {
         checkerTypeComboBox.addItem(new XmlBasedOfficeChecker());
         checkerTypeComboBox.addItem(new BinaryOfficeChecker());
         checkerTypeComboBox.setSelectedIndex(0);
+        checkerTypeComboBox.addItemListener(e -> {
+            FileChecker fileChecker = (FileChecker)e.getItem();
+            if (fileChecker == null) {
+                logger.error("fileChecker is null");
+                return;
+            }
+            recoveryFilePanel.updateDescriptionAndFileExtensions(
+                    fileChecker.getDescription(), fileChecker.getFileExtensions());
+        });
 
-        JPanel filePanel = new JPanel();
-        filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
+        FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
+        if (fileChecker == null) {
+            logger.error("fileChecker is null");
+            return;
+        }
+
+        recoveryFilePanel = new FilePanel("Choose Recovery File", ".",
+                false, JFileChooser.FILES_ONLY, false,
+                fileChecker.getDescription(), fileChecker.getFileExtensions());
+
+        categoryTabbedPane = new JTabbedPane();
+
+        createBruteForcePanel();
+        categoryTabbedPane.addTab("Brute Force", null, bruteForceCategoryPanel, "Brute Force");
+        categoryTabbedPane.setSelectedIndex(0);
+
+        createDictionaryPanel();
+        categoryTabbedPane.addTab("Dictionary", null, dictionaryCategoryPanel, "Dictionary");
 
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
         progressBar.setValue(0);
 
-        optionPanel.add(categoryTabbedPane);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(checkerTypeComboBox);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(filePanel);
+        optionPanel.add(recoveryFilePanel);
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        optionPanel.add(categoryTabbedPane);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(progressBar);
-
-        fileNameTextField = new JTextField();
-        fileNameTextField.setTransferHandler(new FileTransferHandler(fileNameTextField));
-
-        JButton chooseFileButton = new JButton("Choose File");
-        chooseFileButton.addActionListener(new OpenFileActionListener());
-
-        filePanel.add(fileNameTextField);
-        filePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        filePanel.add(chooseFileButton);
     }
 
     private void createBruteForcePanel() {
-        bruteForcePanel = new JPanel();
+        bruteForceCategoryPanel = new JPanel();
 
         JPanel topLevelPanel = new JPanel();
         topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));
-        bruteForcePanel.add(topLevelPanel);
+        bruteForceCategoryPanel.add(topLevelPanel);
 
         JPanel charsetPanel = new JPanel();
         charsetPanel.setLayout(new BoxLayout(charsetPanel, BoxLayout.X_AXIS));
@@ -194,37 +201,27 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     private void createDictionaryPanel() {
-        dictionaryPanel = new JPanel();
+        dictionaryCategoryPanel = new JPanel();
 
         JPanel topLevelPanel = new JPanel();
         topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));
-        dictionaryPanel.add(topLevelPanel);
+        dictionaryCategoryPanel.add(topLevelPanel);
 
-        JPanel dictionaryPathPanel = new JPanel();
-        dictionaryPathPanel.setLayout(new BoxLayout(dictionaryPathPanel, BoxLayout.X_AXIS));
+        dictionaryFilePanel = new FilePanel("Choose Dictionary File", ".",
+                false, JFileChooser.FILES_ONLY, false,
+                "*.dic;*.txt", new String[]{"dic", "txt"});
 
         JPanel threadNumPanel = new JPanel();
         threadNumPanel.setLayout(new BoxLayout(threadNumPanel, BoxLayout.X_AXIS));
 
-        topLevelPanel.add(dictionaryPathPanel);
+        topLevelPanel.add(dictionaryFilePanel);
         topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         topLevelPanel.add(threadNumPanel);
-
-        dictionaryFileTextField = new JTextField();
-        dictionaryFileTextField.setPreferredSize(new Dimension(600, 0));
-        dictionaryFileTextField.setTransferHandler(new FileTransferHandler(dictionaryFileTextField));
-
-        JButton chooseFileButton = new JButton("Choose Dictionary File");
-        chooseFileButton.addActionListener(new OpenDictionaryFileActionListener());
-
-        dictionaryPathPanel.add(dictionaryFileTextField);
-        dictionaryPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        dictionaryPathPanel.add(chooseFileButton);
 
         JLabel threadNumLabel = new JLabel("Thread Number: ");
 
         threadNumSpinner = new JSpinner();
-        threadNumSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
+        threadNumSpinner.setModel(new SpinnerNumberModel(1, 1, 1000, 1));
         threadNumSpinner.setToolTipText("Thread Number");
 
         threadNumPanel.add(threadNumLabel);
@@ -243,53 +240,9 @@ public final class RecoveryPanel extends EasyPanel {
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(stopButton);
 
-        startButton.addActionListener(e -> {
-            new Thread(this::onStart).start();
-        });
+        startButton.addActionListener(e -> new Thread(this::onStart).start());
 
         stopButton.addActionListener(e -> new Thread(this::onStop).start());
-    }
-
-    class OpenFileActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
-            if (fileChecker == null) {
-                logger.error("fileChecker is null");
-                return;
-            }
-
-            JFileChooser fileChooser = new JFileChooser(".");
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            fileChooser.setMultiSelectionEnabled(false);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(fileChecker.getFileDescription(), fileChecker.getFileExtensions());
-            fileChooser.addChoosableFileFilter(filter);
-            int returnVal = fileChooser.showOpenDialog(RecoveryPanel.this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                fileNameTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
-            }
-        }
-    }
-
-    class OpenDictionaryFileActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser(".");
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            fileChooser.setMultiSelectionEnabled(false);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("*.dic;*.txt", "dic", "txt");
-            fileChooser.addChoosableFileFilter(filter);
-            int returnVal = fileChooser.showOpenDialog(RecoveryPanel.this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                if (selectedFile != null) {
-                    dictionaryFileTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
-                }
-            }
-        }
     }
 
     private void onStart() {
@@ -303,13 +256,13 @@ public final class RecoveryPanel extends EasyPanel {
             return;
         }
 
-        File selectedFile = new File(fileNameTextField.getText());
+        File selectedFile = recoveryFilePanel.getFile();
         if (!selectedFile.isFile()) {
             JOptionPane.showMessageDialog(this, "file is null");
             return;
         }
 
-        String extension = FilenameUtils.getExtension(fileNameTextField.getText());
+        String extension = FilenameUtils.getExtension(recoveryFilePanel.getFile().getName());
         if (!ArrayUtils.contains(fileChecker.getFileExtensions(), StringUtils.toRootLowerCase(extension))) {
             JOptionPane.showMessageDialog(this, "invalid file");
             return;
@@ -319,9 +272,9 @@ public final class RecoveryPanel extends EasyPanel {
         currentFileChecker = fileChecker;
 
         Component selectedPanel = categoryTabbedPane.getSelectedComponent();
-        if (selectedPanel.equals(bruteForcePanel)) {
+        if (selectedPanel.equals(bruteForceCategoryPanel)) {
             currentCategory = CATEGORY.BRUTE_FORCE;
-        } else if (selectedPanel.equals(dictionaryPanel)) {
+        } else if (selectedPanel.equals(dictionaryCategoryPanel)) {
             int threadNum = (Integer) threadNumSpinner.getValue();
             if (threadNum == 1) {
                 currentCategory = CATEGORY.DICTIONARY_SINGLE_THREAD;
@@ -376,7 +329,7 @@ public final class RecoveryPanel extends EasyPanel {
         setIsRecovering(true);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
-            setProgressMaxValue((int)Math.pow(charSet.length(), length));
+            setProgressMaxValue((int) Math.pow(charSet.length(), length));
             setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
             int numThreads = Math.min(getThreadCount(charSet.length(), length), currentFileChecker.getMaxThreadNum());
@@ -411,13 +364,16 @@ public final class RecoveryPanel extends EasyPanel {
 
     private void onStartByDictionarySingleThreadCategory() {
         logger.info("onStartByDictionarySingleThreadCategory");
-        File dictionaryFile = new File(dictionaryFileTextField.getText());
+        File dictionaryFile = dictionaryFilePanel.getFile();
         if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
             return;
         }
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+        if (charsetName == null) {
+            return;
+        }
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
             setIsRecovering(true);
             setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
@@ -444,7 +400,7 @@ public final class RecoveryPanel extends EasyPanel {
 
     private void onStartByDictionaryMultiThreadCategory() {
         logger.info("onStartByDictionaryMultiThreadCategory");
-        File dictionaryFile = new File(dictionaryFileTextField.getText());
+        File dictionaryFile = dictionaryFilePanel.getFile();
         if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
             return;
@@ -523,11 +479,13 @@ public final class RecoveryPanel extends EasyPanel {
             progressBar.setMaximum(maxValue);
         }
     }
+
     public void setProgressBarValue(int value) {
         if (progressBar != null) {
             progressBar.setValue(value);
         }
     }
+
     public void increaseProgressBarValue() {
         if (progressBar != null) {
             int currentValue = progressBar.getValue();
