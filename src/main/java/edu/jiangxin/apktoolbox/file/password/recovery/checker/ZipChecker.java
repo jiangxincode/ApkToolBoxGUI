@@ -1,10 +1,10 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnknownException;
-import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.io.inputstream.ZipInputStream;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -27,7 +27,7 @@ public final class ZipChecker extends FileChecker {
 
     @Override
     public String getDescription() {
-        return "ZIP Checker";
+        return "ZIP Checker(Not support Non-ASCII password)";
     }
 
     @Override
@@ -41,19 +41,17 @@ public final class ZipChecker extends FileChecker {
             logger.info("checkPassword: " + password);
         }
         boolean result = false;
-        try (ZipFile zFile = new ZipFile(file)) {
-            zFile.setCharset(StandardCharsets.UTF_8);
-            String dest = file.getAbsolutePath().replace(".zip", "Tmp" + File.separator + Thread.currentThread().getId());
-            File destDir = new File(dest);
-            if (!destDir.exists()) {
-                destDir.mkdirs();
+        byte[] readBuffer = new byte[4096];
+        try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file), password.toCharArray(), StandardCharsets.UTF_8)) {
+            while (zipInputStream.getNextEntry() != null) {
+                while (zipInputStream.read(readBuffer) != -1) {
+                }
             }
-            if (zFile.isEncrypted()) {
-                zFile.setPassword(password.toCharArray());
-            }
-            zFile.extractAll(dest);
             result = true;
         } catch (ZipException e) {
+            if (DEBUG) {
+                logger.error("checkPassword", e);
+            }
         } catch (IOException e) {
             throw new UnknownException(e);
         }
