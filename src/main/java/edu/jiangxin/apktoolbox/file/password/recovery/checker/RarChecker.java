@@ -1,14 +1,15 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
-import com.github.junrar.Junrar;
+import com.github.junrar.Archive;
 import com.github.junrar.exception.CrcErrorException;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
+import com.github.junrar.rarfile.FileHeader;
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnknownException;
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 public final class RarChecker extends FileChecker {
     private static final boolean DEBUG = false;
@@ -40,13 +41,17 @@ public final class RarChecker extends FileChecker {
     @Override
     public boolean checkPassword(String password) {
         boolean result = false;
-        try {
-            String dest = file.getAbsolutePath().replace(".rar", "Tmp" + File.separator + Thread.currentThread().getId());
-            File destDir = new File(dest);
-            if (!destDir.exists()) {
-                destDir.mkdirs();
+        try (Archive archive = new Archive(file, password)) {
+            while (true) {
+                FileHeader fileHeader = archive.nextFileHeader();
+                if (fileHeader == null) {
+                    break;
+                }
+                archive.extractFile(fileHeader, new OutputStream() {
+                    @Override
+                    public void write(int b) {}
+                });
             }
-            Junrar.extract(file, destDir, password);
             result = true;
         } catch (CrcErrorException e) {
             if (DEBUG) {
