@@ -13,17 +13,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Update pom.xml
+        run: |
+          sed -i 's/<source>17<\/source>/<source>16<\/source>/g' pom.xml
+          sed -i 's/<target>17<\/target>/<target>16<\/target>/g' pom.xml
+      - name: Set up JDK 16
         uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 16
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - uses: vapier/coverity-scan-action@v0
+      - uses: vapier/coverity-scan-action@v1.2.0
         with:
           project: 'jiangxincode/ApkToolBoxGUI'
           token: ${{ secrets.COVERITY_SCAN_TOKEN }}
@@ -31,3 +35,9 @@ jobs:
           build_language: 'java'
           build_platform: 'linux64'
           command: 'mvn -DskipTests=true compile'
+      - name: Print build-log.txt
+        run: |
+          # https://scan.coverity.com/download/
+          # https://dev.sig-docs.synopsys.com/polaris/topics/r_coverity-compatible-platforms_2022.3.html
+          # https://github.com/vapier/coverity-scan-action/issues/4
+          cat /home/runner/work/ApkToolBoxGUI/ApkToolBoxGUI/cov-int/build-log.txt
