@@ -10,12 +10,22 @@
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 [![墨菲安全](https://img.shields.io/badge/%E5%A2%A8%E8%8F%B2%E5%AE%89%E5%85%A8-%E6%8A%A5%E5%91%8A-blue)](https://www.murphysec.com/pd/1523240128993079296/1523240128636563456)
-[![Release Version](https://img.shields.io/github/v/release/jiangxincode/ApkToolBoxGUI?include_prereleases&sort=semver)](https://github.com/jiangxincode/ApkToolBoxGUI/releases/latest)
 
 
 APKToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
 
 It's a collection of common tools, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
+
+## How to use
+
+Download the latest Release: 
+
+[![Release Version](https://img.shields.io/github/v/release/jiangxincode/ApkToolBoxGUI?include_prereleases&sort=semver)](https://github.com/jiangxincode/ApkToolBoxGUI/releases/latest)
+
+There are two types of package:
+
+* `APKToolBoxGUI-${VERSION}-with-JRE.zip` This package contains JRE already, you do not need to download JRE individually. This package can only work on Windows.
+* `APKToolBoxGUI-${VERSION}-without-JRE.zip` This package does not contain JRE, if your PC has install JRE(1.8+), this package is recommended. This package can work on all platforms(Windows/Linux/Mac).
 
 ## Features
 

@@ -285,19 +285,35 @@ public final class RecoveryPanel extends EasyPanel {
             currentCategory = CATEGORY.UNKNOWN;
         }
         switch (currentCategory) {
-            case BRUTE_FORCE -> onStartByBruteForceCategory();
-            case DICTIONARY_SINGLE_THREAD -> onStartByDictionarySingleThreadCategory();
-            case DICTIONARY_MULTI_THREAD -> onStartByDictionaryMultiThreadCategory();
-            case UNKNOWN -> JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
+            case BRUTE_FORCE:
+                onStartByBruteForceCategory();
+                break;
+            case DICTIONARY_SINGLE_THREAD:
+                onStartByDictionarySingleThreadCategory();
+                break;
+            case DICTIONARY_MULTI_THREAD:
+                onStartByDictionaryMultiThreadCategory();
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
+                break;
         }
     }
 
     private void onStop() {
         switch (currentCategory) {
-            case BRUTE_FORCE -> onStopByBruteForceCategory();
-            case DICTIONARY_SINGLE_THREAD -> onStopByDictionarySingleThreadCategory();
-            case DICTIONARY_MULTI_THREAD -> onStopByDictionaryMultiThreadCategory();
-            case UNKNOWN -> JOptionPane.showMessageDialog(this, "onStop failed: Invalid category!");
+            case BRUTE_FORCE:
+                onStopByBruteForceCategory();
+                break;
+            case DICTIONARY_SINGLE_THREAD:
+                onStopByDictionarySingleThreadCategory();
+                break;
+            case DICTIONARY_MULTI_THREAD:
+                onStopByDictionaryMultiThreadCategory();
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "onStop failed: Invalid category!");
+                break;
         }
     }
 
