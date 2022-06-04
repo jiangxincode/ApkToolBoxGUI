@@ -1,13 +1,11 @@
 name: Build and Release
 
+# ref: https://github.com/LukeOnuke/lmark/blob/e3ccc75d104208754a8c4a6187fbc159b5ff90fd/.github/workflows/main.yml
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
-env:
-  VERSION: 1.0.0
 
 jobs:
   build-windows:
@@ -30,11 +28,13 @@ jobs:
         run: |
           mvn clean package
           mkdir staging
-          mkdir jpackage-temp && cp target/APKToolBoxGUI-${{env.VERSION}}.jar jpackage-temp
-          jpackage --type msi --name APKToolBoxGUI --input jpackage-temp/ --main-jar APKToolBoxGUI-${{env.VERSION}}.jar --main-class edu.jiangxin.apktoolbox.main.MainFrame --verbose --dest staging/app --description "APKToolBoxGUI is a handy tool for programmer with user-friendly GUI." --copyright "jiangxinnju@163.com 2022" --icon src/main/resources/icon.jpg --vendor "Aloys and contributors" --win-shortcut --win-menu --app-version ${{env.VERSION}}
-      - uses: actions/upload-artifact@v1
+          mkdir jpackage-tmp
+          $VERSION=$(mvn help:evaluate -D"expression=project.version" -q -DforceStdout)
+          cp target/APKToolBoxGUI-$VERSION.jar jpackage-tmp
+          jpackage --type app-image --name ApkToolBoxGUI-$VERSION-windows-with-JRE --input jpackage-tmp --main-jar APKToolBoxGUI-$VERSION.jar --dest staging --verbose
+      - uses: actions/upload-artifact@v3
         with:
-          name: APKToolBoxGUI-${{env.VERSION}}-windows
+          name: ApkToolBoxGUI-windows-with-JRE
           path: staging
   build-linux:
 
@@ -56,11 +56,13 @@ jobs:
         run: |
           mvn clean package
           mkdir staging
-          mkdir jpackage-temp && cp target/APKToolBoxGUI-${{env.VERSION}}.jar jpackage-temp
-          jpackage --name APKToolBoxGUI --input jpackage-temp --main-jar APKToolBoxGUI-${{env.VERSION}}.jar --main-class edu.jiangxin.apktoolbox.main.MainFrame --verbose --dest staging/app --description "APKToolBoxGUI is a handy tool for programmer with user-friendly GUI." --copyright "jiangxinnju@163.com 2022" --icon src/main/resources/icon.jpg --linux-shortcut --vendor "Aloys and contributors" --app-version ${{env.VERSION}}
-      - uses: actions/upload-artifact@v1
+          mkdir jpackage-tmp
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          cp target/APKToolBoxGUI-$VERSION.jar jpackage-tmp
+          jpackage --type app-image --name ApkToolBoxGUI-$VERSION-windows-with-JRE --input jpackage-tmp --main-jar APKToolBoxGUI-$VERSION.jar --dest staging --verbose
+      - uses: actions/upload-artifact@v3
         with:
-          name: APKToolBoxGUI-${{env.VERSION}}-linux
+          name: ApkToolBoxGUI-linux-with-JRE
           path: staging
   build-macos:
 
@@ -82,9 +84,11 @@ jobs:
         run: |
           mvn clean package
           mkdir staging
-          mkdir jpackage-temp && cp target/APKToolBoxGUI-${{env.VERSION}}.jar jpackage-temp
-          jpackage --name APKToolBoxGUI --input jpackage-temp --main-jar APKToolBoxGUI-${{env.VERSION}}.jar --main-class edu.jiangxin.apktoolbox.main.MainFrame --verbose --dest staging/app --description "APKToolBoxGUI is a handy tool for programmer with user-friendly GUI." --copyright "jiangxinnju@163.com 2022" --icon src/main/resources/icon.jpg --vendor "Aloys and contributors" --app-version ${{env.VERSION}}
-      - uses: actions/upload-artifact@v1
+          mkdir jpackage-tmp
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          cp target/APKToolBoxGUI-$VERSION.jar jpackage-tmp
+          jpackage --type app-image --name ApkToolBoxGUI-$VERSION-windows-with-JRE --input jpackage-tmp --main-jar APKToolBoxGUI-$VERSION.jar --dest staging --verbose
+      - uses: actions/upload-artifact@v3
         with:
-          name: APKToolBoxGUI-${{env.VERSION}}-macos
+          name: ApkToolBoxGUI-macos-with-JRE
           path: staging

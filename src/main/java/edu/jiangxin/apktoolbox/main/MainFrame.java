@@ -100,7 +100,8 @@ public class MainFrame extends EasyFrame {
             Configuration conf = Utils.getConfiguration();
             String lookAndFeelClassName = conf.getString("look.and.feel.class.name");
             if (StringUtils.isEmpty(lookAndFeelClassName)) {
-                lookAndFeelClassName = UIManager.getSystemLookAndFeelClassName();
+                lookAndFeelClassName = "com.formdev.flatlaf.FlatDarculaLaf";
+                conf.setProperty("look.and.feel.class.name", lookAndFeelClassName);
             }
             try {
                 UIManager.setLookAndFeel(lookAndFeelClassName);
