@@ -68,7 +68,6 @@ public class BigFileReader {
             logger.info("pair: " + pair);
             executorService.execute(new SliceReaderTask(pair));
         }
-        handle.init();
     }
 
     private void calculateStartEnd(long start, long size) throws IOException {

@@ -32,10 +32,6 @@ public class FileHandle {
         return this.success;
     }
 
-    public void init() {
-        recoveryPanel.setIsRecovering(false);
-    }
-
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
         if (success.compareAndSet(true, true) || stop) {
             return;
