@@ -188,6 +188,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-help-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.3.0</version>
                     <configuration>
@@ -385,6 +390,13 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- https://stackoverflow.com/questions/3545292/how-to-get-maven-project-version-to-the-bash-command-line -->
+            <!-- mvn help:evaluate -D"expression=project.version" -q -DforceStdout -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
