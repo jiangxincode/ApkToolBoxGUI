@@ -345,6 +345,10 @@ public final class RecoveryPanel extends EasyPanel {
         setIsRecovering(true);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
+            if (!isRecovering) {
+                logger.info("Stop try next length");
+                break;
+            }
             setProgressMaxValue((int) Math.pow(charSet.length(), length));
             setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
@@ -446,17 +450,17 @@ public final class RecoveryPanel extends EasyPanel {
         if (workerPool != null && !workerPool.isShutdown()) {
             workerPool.shutdownNow();
         }
+        setProgressBarValue(0);
+        setIsRecovering(false);
         while (workerPool != null && !workerPool.isTerminated()) {
             try {
-                final boolean isTimeout = workerPool.awaitTermination(100, TimeUnit.SECONDS);
+                final boolean isTimeout = !workerPool.awaitTermination(100, TimeUnit.SECONDS);
                 logger.info("awaitTermination isTimeout: " + isTimeout);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination failed");
                 Thread.currentThread().interrupt();
             }
         }
-        setProgressBarValue(0);
-        setIsRecovering(false);
     }
 
     private void onStopByDictionarySingleThreadCategory() {
