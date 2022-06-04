@@ -36,6 +36,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.MessageFormat;
+import java.util.Locale;
 
 /**
  * @author jiangxin
@@ -89,6 +90,7 @@ public class MainFrame extends EasyFrame {
 
     private JMenu helpMenu;
     private JMenuItem lookAndFeelMenuItem;
+    private JMenuItem localeMenuItem;
     private JMenuItem feedbackMenuItem;
     private JMenuItem checkUpdateMenuItem;
     private JMenuItem contributeMenuItem;
@@ -108,6 +110,14 @@ public class MainFrame extends EasyFrame {
             } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
                 logger.error("setLookAndFeel failed, use default instead", e);
             }
+
+            String currentLocaleLanguage = conf.getString("locale.language");
+            if (StringUtils.isEmpty(currentLocaleLanguage)) {
+                currentLocaleLanguage = Locale.ENGLISH.getLanguage();
+                conf.setProperty("locale.language", currentLocaleLanguage);
+            }
+            Locale.setDefault(new Locale(currentLocaleLanguage));
+
             MainFrame frame = new MainFrame();
             frame.setVisible(true);
         });
@@ -189,6 +199,10 @@ public class MainFrame extends EasyFrame {
         lookAndFeelMenuItem = new JMenuItem(bundle.getString("help.look.and.feel.title"));
         lookAndFeelMenuItem.addActionListener(new ChangePanelListener(LookAndFeelPanel.class, lookAndFeelMenuItem.getText()));
         helpMenu.add(lookAndFeelMenuItem);
+
+        localeMenuItem = new JMenuItem(bundle.getString("help.locale.title"));
+        localeMenuItem.addActionListener(new ChangePanelListener(LocalePanel.class, localeMenuItem.getText()));
+        helpMenu.add(localeMenuItem);
 
         feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
         feedbackMenuItem.addActionListener(new OpenWebsiteListener(Constant.URL_FEEDBACK));
