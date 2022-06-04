@@ -17,7 +17,6 @@ Copy-Item $RELEASE_JAR_FILE.FullName "$TMP_DIR/APKToolBoxGUI.jar"
 
 Copy-Item "$CURRENT_DIR/ApkToolBoxGUI.bat" $TMP_DIR
 Copy-Item "$CURRENT_DIR/ApkToolBoxGUI.sh" $TMP_DIR
-Copy-Item "$CURRENT_DIR/apktoolboxgui.properties" $TMP_DIR
 
 Compress-Archive -Path "$TMP_DIR\*" -DestinationPath "$TARGET_DIR/APKToolBoxGUI-$VERSION-without-JRE.zip" -Force
 
@@ -36,8 +35,6 @@ if (Test-Path "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE") {
 Copy-Item $RELEASE_JAR_FILE.FullName "$TMP_DIR/APKToolBoxGUI.jar"
 
 jpackage --input $TMP_DIR --type app-image --name "ApkToolBoxGUI-$VERSION-with-JRE" --main-jar 'APKToolBoxGUI.jar' --dest "$TARGET_DIR" --verbose
-
-Copy-Item "$CURRENT_DIR/apktoolboxgui.properties" "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE"
 
 Compress-Archive -Path "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE\*" -DestinationPath "$TARGET_DIR/APKToolBoxGUI-$VERSION-with-JRE.zip" -Force
 

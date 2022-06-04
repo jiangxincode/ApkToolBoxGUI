@@ -27,16 +27,11 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package
-          mkdir staging
-          mkdir jpackage-tmp
-          $VERSION=$(mvn help:evaluate -D"expression=project.version" -q -DforceStdout)
-          cp target/APKToolBoxGUI-$VERSION.jar jpackage-tmp
-          jpackage --type app-image --name ApkToolBoxGUI-$VERSION-windows-with-JRE --input jpackage-tmp --main-jar APKToolBoxGUI-$VERSION.jar --dest staging --verbose
-          zip -r APKToolBoxGUI-$VERSION-windows-with-JRE.zip staging/*
+          ./PackageWindows.ps1
       - uses: actions/upload-artifact@v3
         with:
-          name: ApkToolBoxGUI-windows-with-JRE
-          path: staging/APKToolBoxGUI-*.zip
+          name: ApkToolBoxGUI-windows
+          path: target/APKToolBoxGUI-*-with-JRE.zip
   build-linux:
 
     runs-on: ubuntu-latest
@@ -56,16 +51,12 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package
-          mkdir staging
-          mkdir jpackage-tmp
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          cp target/APKToolBoxGUI-$VERSION.jar jpackage-tmp
-          jpackage --type app-image --name ApkToolBoxGUI-$VERSION-linux-with-JRE --input jpackage-tmp --main-jar APKToolBoxGUI-$VERSION.jar --dest staging --verbose
-          zip -r APKToolBoxGUI-$VERSION-linux-with-JRE.zip staging/*
+          chmod u+x ./PackageLinuxOrMacos.sh
+          ./PackageLinuxOrMacos.sh
       - uses: actions/upload-artifact@v3
         with:
-          name: ApkToolBoxGUI-linux-with-JRE
-          path: staging/APKToolBoxGUI-*.zip
+          name: ApkToolBoxGUI-linux
+          path: target/APKToolBoxGUI-*-with-JRE.zip
   build-macos:
 
     runs-on: macos-latest
@@ -85,13 +76,9 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package
-          mkdir staging
-          mkdir jpackage-tmp
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          cp target/APKToolBoxGUI-$VERSION.jar jpackage-tmp
-          jpackage --type app-image --name ApkToolBoxGUI-$VERSION-macos-with-JRE --input jpackage-tmp --main-jar APKToolBoxGUI-$VERSION.jar --dest staging --verbose
-          zip -r APKToolBoxGUI-$VERSION-macos-with-JRE.zip staging/*
+          chmod u+x ./PackageLinuxOrMacos.sh
+          ./PackageLinuxOrMacos.sh
       - uses: actions/upload-artifact@v3
         with:
-          name: ApkToolBoxGUI-macos-with-JRE
-          path: staging/APKToolBoxGUI-*.zip
+          name: ApkToolBoxGUI-macos
+          path: target/APKToolBoxGUI-*-with-JRE.zip
