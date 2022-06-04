@@ -45,6 +45,11 @@ public final class ArchiveUsing7ZipChecker extends FileChecker {
     @Override
     public boolean checkPassword(String password) {
         String target = file.getAbsolutePath();
+        if (password != null && password.contains("\"")) {
+            // It is useless to escape the password
+            logger.warn("checkPassword password contain double quote characters[Not Supported]");
+            return false;
+        }
         String cmd = String.format("%s t \"%s\" -p\"%s\"", toolPath, target, password);
         if (DEBUG) {
             logger.info("checkPassword cmd: " + cmd);

@@ -423,7 +423,9 @@ public final class RecoveryPanel extends EasyPanel {
         }
         int threadNum = (Integer) threadNumSpinner.getValue();
         setIsRecovering(true);
-        setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+        int fileLineCount = Utils.getFileLineCount(dictionaryFile);
+        logger.info("[TaskTracing]File line count: " + fileLineCount);
+        setProgressMaxValue(fileLineCount);
         setProgressBarValue(0);
         fileHandle = new FileHandle(currentFileChecker, new AtomicBoolean(false), this);
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());

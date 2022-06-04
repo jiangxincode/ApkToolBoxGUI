@@ -57,7 +57,9 @@ public class BigFileReader {
         }
 
         final long startTime = System.currentTimeMillis();
-        cyclicBarrier = new CyclicBarrier(startEndPairs.size(), () -> {
+        int parties = startEndPairs.size();
+        logger.info("[TaskTracing]Parties: " + parties);
+        cyclicBarrier = new CyclicBarrier(parties, () -> {
             logger.info("use time: " + (System.currentTimeMillis() - startTime) + "ms");
             logger.info("all line: " + counter.get());
             completeCallback.onComplete();
@@ -125,9 +127,7 @@ public class BigFileReader {
         } else {
             line = new String(bytes, charset);
         }
-        if (StringUtils.isNotEmpty(line)) {
-            handle.handle(line, counter.incrementAndGet(), this);
-        }
+        handle.handle(line, counter.incrementAndGet(), this);
     }
 
     private static class StartEndPair {
@@ -193,7 +193,9 @@ public class BigFileReader {
                     for (int i = 0; i < readLength; i++) {
                         byte tmp = readBuff[i];
                         if (tmp == '\n' || tmp == '\r') {
-                            handle(bos.toByteArray());
+                            if (bos.size() > 0) {
+                                handle(bos.toByteArray());
+                            }
                             bos.reset();
                         } else {
                             bos.write(tmp);
@@ -203,7 +205,8 @@ public class BigFileReader {
                 if (bos.size() > 0) {
                     handle(bos.toByteArray());
                 }
-                cyclicBarrier.await();//测试性能用
+                logger.info("[TaskTracing]Waiting number: " + cyclicBarrier.getNumberWaiting());
+                cyclicBarrier.await();
             } catch (InterruptedException e) {
                 logger.error("run InterruptedException");
                 Thread.currentThread().interrupt();

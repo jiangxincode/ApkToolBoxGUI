@@ -211,9 +211,10 @@ public class Utils {
 
     public static int getFileLineCount(File file) {
         try (LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file))) {
-            lineNumberReader.skip(Integer.MAX_VALUE);
-            int dictCount = lineNumberReader.getLineNumber() + 1;
-            return dictCount;
+            while (lineNumberReader.skip(Long.MAX_VALUE) > 0) {
+                logger.info("getFileLineCount skip " + Long.MAX_VALUE + " characters");
+            }
+            return lineNumberReader.getLineNumber();
         } catch (IOException e) {
             logger.error("getFileLineCount IOException");
             return 0;
