@@ -97,7 +97,7 @@ public class MainFrame extends EasyFrame {
     private JMenuItem aboutMenuItem;
 
     public static void main(String[] args) {
-        Logger logger = LogManager.getLogger(MainFrame.class);
+        final Logger logger = LogManager.getLogger(MainFrame.class.getSimpleName());
         EventQueue.invokeLater(() -> {
             Configuration conf = Utils.getConfiguration();
             String lookAndFeelClassName = conf.getString("look.and.feel.class.name");

@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileHandle {
 
-    private static Logger logger = LogManager.getLogger(FileHandle.class);
+    private static final Logger logger = LogManager.getLogger(FileHandle.class.getSimpleName());
 
     private AtomicBoolean success;
     private boolean stop = false;

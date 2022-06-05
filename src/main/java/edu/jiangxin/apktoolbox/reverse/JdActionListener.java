@@ -20,7 +20,7 @@ import java.io.File;
  */
 public class JdActionListener implements ActionListener {
 
-    private static final Logger logger = LogManager.getLogger(JdActionListener.class);
+    private static final Logger logger = LogManager.getLogger(JdActionListener.class.getSimpleName());
 
     private Configuration conf;
 

@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class OsPatternConvert {
 
-    private static final Logger logger = LogManager.getLogger("OsPatternConvert");
+    private static final Logger logger = LogManager.getLogger(OsPatternConvert.class.getSimpleName());
 
     /**
      * 不同操作系统文件格式之间的转换.

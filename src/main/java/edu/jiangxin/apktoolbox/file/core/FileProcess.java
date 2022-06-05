@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class FileProcess {
 
-    private static final Logger logger = LogManager.getLogger(FileProcess.class);
+    private static final Logger logger = LogManager.getLogger(FileProcess.class.getSimpleName());
     /**
      * The size of the buffer
      */

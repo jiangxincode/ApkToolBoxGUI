@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class BruteForceTask implements Runnable {
-    private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
+    private static final Logger logger = LogManager.getLogger(BruteForceTask.class.getSimpleName());
     private int taskId;
     private boolean isEarlyTermination;
     private BruteForceFuture bruteForceFuture;

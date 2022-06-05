@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BigFileReader {
-    private static Logger logger = LogManager.getLogger(BigFileReader.class);
+    private static final Logger logger = LogManager.getLogger(BigFileReader.class.getSimpleName());
 
     private int threadSize;
     private String charset;

@@ -10,13 +10,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class DirectorySelectButtonMouseAdapter extends MouseAdapter {
-    private Logger logger;
+    private static final Logger logger = LogManager.getLogger(DirectorySelectButtonMouseAdapter.class.getSimpleName());
     private String dialogTitle;
     private JTextField pathTextField;
 
     public DirectorySelectButtonMouseAdapter(String dialogTitle, JTextField pathTextField) {
         super();
-        logger = LogManager.getLogger(this.getClass().getSimpleName());
         this.dialogTitle = dialogTitle;
         this.pathTextField = pathTextField;
     }

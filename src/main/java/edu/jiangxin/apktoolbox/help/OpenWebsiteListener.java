@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class OpenWebsiteListener implements ActionListener {
 
-    private static Logger logger = LogManager.getLogger(OpenWebsiteListener.class);
+    private static final Logger logger = LogManager.getLogger(OpenWebsiteListener.class.getSimpleName());
 
     private String url;
 

@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 public class ZHConverterUtils {
-    private static final Logger logger = LogManager.getLogger(ZHConverterUtils.class);
+    private static final Logger logger = LogManager.getLogger(ZHConverterUtils.class.getSimpleName());
 
     private Properties charMap = new Properties();
 

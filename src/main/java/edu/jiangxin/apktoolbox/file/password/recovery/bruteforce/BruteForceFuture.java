@@ -31,7 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 // Complete this class using a lock and the condition variable
 public class BruteForceFuture implements Future<String> {
-    private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
+    private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
     private String result = null;
     private AtomicInteger finishedTaskCount = new AtomicInteger(0);
     private int taskCount;

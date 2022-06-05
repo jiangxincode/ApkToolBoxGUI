@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class JadxActionListener implements ActionListener {
 
-    private static final Logger logger = LogManager.getLogger(JadxActionListener.class);
+    private static final Logger logger = LogManager.getLogger(JadxActionListener.class.getSimpleName());
 
     private Configuration conf;
 

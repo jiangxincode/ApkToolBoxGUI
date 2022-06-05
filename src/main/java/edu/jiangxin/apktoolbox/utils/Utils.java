@@ -26,7 +26,7 @@ import java.util.Date;
  *
  */
 public class Utils {
-    private static final Logger logger = LogManager.getLogger(Utils.class);
+    private static final Logger logger = LogManager.getLogger(Utils.class.getSimpleName());
 
     private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
 

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class FileListPanel extends JPanel {
 
-    private static final Logger LOGGER = LogManager.getLogger(FileListPanel.class);
+    private static final Logger LOGGER = LogManager.getLogger(FileListPanel.class.getSimpleName());
 
     private JPanel leftPanel;
 

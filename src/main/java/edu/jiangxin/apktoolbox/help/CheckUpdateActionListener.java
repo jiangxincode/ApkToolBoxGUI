@@ -36,7 +36,7 @@ public class CheckUpdateActionListener implements ActionListener {
     
     private static final int CONNECT_TIMEOUT_TIME = 4000;
 
-    private static Logger logger = LogManager.getLogger(CheckUpdateActionListener.class);
+    private static final Logger logger = LogManager.getLogger(CheckUpdateActionListener.class.getSimpleName());
 
     private Component parent;
 

@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTransform {
-    private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
+    private static final Logger LOGGER = LogManager.getLogger(MainFrame.class.getSimpleName());
 
     private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 

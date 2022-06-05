@@ -404,6 +404,7 @@ public final class RecoveryPanel extends EasyPanel {
                 return Stream.of(password.toLowerCase(), password.toUpperCase());
             };
             Predicate<String> verifier = currentFileChecker::checkPassword;
+            // java.util.stream.BaseStream.parallel can not increase the speed in test
             Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
             if (password.isPresent()) {
                 JOptionPane.showMessageDialog(this, password.get());

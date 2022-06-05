@@ -23,7 +23,7 @@ import info.monitorenter.cpdetector.io.UnicodeDetector;
  *
  */
 public class EncoderDetector {
-    private static Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
+    private static final Logger logger = LogManager.getLogger(EncoderDetector.class.getSimpleName());
     private static String[] detectorCharsets;
     private static CountDownLatch countDownLatch;
 

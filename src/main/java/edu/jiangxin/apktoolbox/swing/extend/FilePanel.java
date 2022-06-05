@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FilePanel extends JPanel {
-    private static final Logger LOGGER = LogManager.getLogger(FilePanel.class);
+    private static final Logger LOGGER = LogManager.getLogger(FilePanel.class.getSimpleName());
     private JTextField fileTextField;
     private JButton chooseButton;
 
