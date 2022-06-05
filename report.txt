@@ -80,7 +80,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   31.   
   32.   // Complete this class using a lock and the condition variable
   33. > public class BruteForceFuture implements Future<String> {
-  34.       private final Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
+  34.       private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
   35.       private String result = null;
 
 #9
