@@ -4,6 +4,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.io.File;
@@ -174,8 +175,12 @@ public class CheckDigestPanel extends EasyPanel {
                     result = DigestUtils.sha512Hex(fis);
                     break;
                 }
+                case CRC32: {
+                    result = Long.toHexString(FileUtils.checksumCRC32(file));
+                    break;
+                }
                 default: {
-                    result = "return of the jedi";
+                    result = "Not support";
                     break;
                 }
             }

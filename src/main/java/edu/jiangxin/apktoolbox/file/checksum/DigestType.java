@@ -1,7 +1,12 @@
 package edu.jiangxin.apktoolbox.file.checksum;
 
 public enum DigestType {
-    MD5(1, "MD5"), Sha1(2, "Sha1"), Sha256(3, "Sha256"), Sha384(4, "Sha384"), Sha512(5, "Sha512");
+    MD5(1, "MD5"),
+    Sha1(2, "Sha1"),
+    Sha256(3, "Sha256"),
+    Sha384(4, "Sha384"),
+    Sha512(5, "Sha512"),
+    CRC32(6, "Crc32");
 
     private int id;
     private String name;
