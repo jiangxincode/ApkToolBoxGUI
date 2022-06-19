@@ -63,19 +63,26 @@ I am only providing a generic tool, you are the one who decides what to do with 
 * Support batch conversion of multiple folders and files
 * Support automatic identification of source file encoding, automatic identification adopts multi-engine scheme, high identification rate
 
-![FileEncoding](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/FileEncoding_01.png)
-
 ### Convert between different OS types
 
-![OSType](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/OSType_01.png)
+**Breadcrumb Navigation**
+
+`File->Convert OS Pattern`
+
+**Introduce**
+
+* Used to convert plain text files to and from DOS/Mac/Unix format
 
 ### Convert between Simplified Chinese and Traditional Chinese
 
 ![SimpleTraditional](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/SimpleTraditional_01.png)
 
-### Check files digest
+### Calculate and Compare File Hash
 
-![CheckDigest](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/CheckDigest_01.png)
+`File->Check Summary`
+
+* Support calculate file hash with MD5/SHA1/SHA256/SHA384/SHA512
+* Support file drag and drop
 
 ### Find duplicated files(Not Finished)
 

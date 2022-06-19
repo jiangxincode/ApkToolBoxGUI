@@ -1,25 +1,20 @@
 package edu.jiangxin.apktoolbox.file.checksum;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Vector;
 
 public class CheckDigestPanel extends EasyPanel {
     private static final long serialVersionUID = 63924900336217723L;
 
-    private JPanel fileNamePanel;
-
-    private JTextField fileNameTextField;
-    private JButton fileNameButton;
+    private FilePanel filePanel;
 
     private JTextArea fileSums;
     private JScrollPane fileSumScrollPanel;
@@ -33,11 +28,9 @@ public class CheckDigestPanel extends EasyPanel {
 
     private JTextField compareResult;
 
-    private JComboBox<Hash> digestTypeComboBox;
-    private final String calculating = "Calculating...";
-
-    private static File selectedFile;
-    private static Hash selectedHash;
+    private JComboBox<DigestType> digestTypeComboBox;
+    private static final String calculating = "Calculating...";
+    private static DigestType selectedHash;
     private static String hashResult;
 
     public CheckDigestPanel() {
@@ -50,7 +43,7 @@ public class CheckDigestPanel extends EasyPanel {
         setLayout(boxLayout);
 
         createFileNamePanel();
-        add(fileNamePanel);
+        add(filePanel);
 
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
@@ -69,44 +62,13 @@ public class CheckDigestPanel extends EasyPanel {
     }
 
     private void createFileNamePanel() {
-        fileNamePanel = new JPanel();
-
-        fileNameTextField = new JTextField();
-
-        fileNameButton = new JButton("Choose File");
-        fileNameButton.setFocusPainted(false);
-        fileNameButton.addActionListener(arg0 -> {
-
-            JFileChooser openFile = new JFileChooser();
-            openFile.setCurrentDirectory(new File(System.getProperty("user.dir")));
-            openFile.setPreferredSize(new Dimension(400, 300));
-
-            int fileSelect = openFile.showSaveDialog(null);
-            if (fileSelect == JFileChooser.APPROVE_OPTION) {
-                selectedFile = null;
-
-                Thread fileThread = (new Thread(() -> {
-                    fileNameButton.setEnabled(false);
-                    selectedFile = openFile.getSelectedFile();
-
-                    if (selectedFile != null) {
-                        fileNameTextField.setText(selectedFile.getName());
-                        selectedHash = null;
-                        selectedHash = (Hash) digestTypeComboBox.getSelectedItem();
-                        calculate();
-                    }
-                    fileNameButton.setEnabled(true);
-                }));
-                fileThread.start();
-
-                fileSums.setText(calculating);
+        filePanel = new FilePanel("Choose File");
+        filePanel.setFileReadyCallback(file -> {
+            if (file != null) {
+                selectedHash = (DigestType) digestTypeComboBox.getSelectedItem();
+                calculate();
             }
         });
-
-        fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
-        fileNamePanel.add(fileNameTextField);
-        fileNamePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        fileNamePanel.add(fileNameButton);
     }
 
     private void createFileSumScrollPanel() {
@@ -132,7 +94,7 @@ public class CheckDigestPanel extends EasyPanel {
         compareButton.addActionListener(arg0 -> {
 
             if (!fileSums.getText().equals(calculating)) {
-                if (selectedHash != null && selectedFile != null && inputSums.getText() != null
+                if (selectedHash != null && filePanel.getFile() != null && inputSums.getText() != null
                         && !inputSums.getText().equals("")) {
 
                     if (fileSums.getText().equals(inputSums.getText())) {
@@ -152,18 +114,17 @@ public class CheckDigestPanel extends EasyPanel {
             JOptionPane.showMessageDialog(null, "Something not right :(", ":(", JOptionPane.ERROR_MESSAGE);
         });
 
-        digestTypeComboBox = new JComboBox<>(new Vector<>(Arrays.asList(Hash.values())));
+        digestTypeComboBox = new JComboBox<>();
+        digestTypeComboBox.setModel(new DefaultComboBoxModel<>(DigestType.values()));
+        digestTypeComboBox.setSelectedIndex(0);
         digestTypeComboBox.addActionListener(e -> {
-            Hash selectItem = (Hash) digestTypeComboBox.getSelectedItem();
-
-            if (selectedHash == null || (selectedHash.getId() != selectItem.getId())) {
-                selectedHash = selectItem;
-                if (selectedFile != null) {
+            DigestType selectedDigestItem = (DigestType) digestTypeComboBox.getSelectedItem();
+            if (selectedHash == null || (selectedHash.getId() != selectedDigestItem.getId())) {
+                selectedHash = selectedDigestItem;
+                if (filePanel.getFile() != null) {
                     Thread calculateThread = (new Thread(() -> {
-                        fileNameButton.setEnabled(false);
                         compareResult.setText("");
                         calculate();
-                        fileNameButton.setEnabled(true);
                     }));
                     calculateThread.start();
                     fileSums.setText(calculating);
@@ -185,11 +146,11 @@ public class CheckDigestPanel extends EasyPanel {
     }
 
     private void calculate() {
-        hashResult = calculate(selectedHash, selectedFile);
+        hashResult = calculate(selectedHash, filePanel.getFile());
         fileSums.setText(hashResult);
     }
 
-    private String calculate(final Hash selectedHash, final File file) {
+    private String calculate(final DigestType selectedHash, final File file) {
         String result = "";
         try (FileInputStream fis = new FileInputStream(file)) {
             switch (selectedHash) {
@@ -224,25 +185,5 @@ public class CheckDigestPanel extends EasyPanel {
             logger.error("calculate, IOException");
         }
         return result;
-    }
-
-    enum Hash {
-        MD5(1, "MD5"), Sha1(2, "Sha1"), Sha256(3, "Sha256"), Sha384(4, "Sha384"), Sha512(5, "Sha512");
-
-        private int id;
-        private String name;
-
-        Hash(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 }

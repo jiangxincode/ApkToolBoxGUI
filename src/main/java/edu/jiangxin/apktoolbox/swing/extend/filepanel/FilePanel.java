@@ -1,7 +1,9 @@
-package edu.jiangxin.apktoolbox.swing.extend;
+package edu.jiangxin.apktoolbox.swing.extend.filepanel;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,13 +26,9 @@ public class FilePanel extends JPanel {
 
     private String buttonText;
 
-    private String currentDirectoryPath;
+    private String currentDirectoryPath = ".";
 
-    private boolean acceptAllFileFilterUsed;
-
-    private int fileSelectionMode;
-
-    private boolean multiSelectionEnabled;
+    private int fileSelectionMode = JFileChooser.FILES_ONLY;
 
     private String description;
 
@@ -38,18 +36,42 @@ public class FilePanel extends JPanel {
 
     private JFileChooser fileChooser;
 
-    public FilePanel(String buttonText, String currentDirectoryPath, boolean acceptAllFileFilterUsed, int fileSelectionMode,
-                     boolean multiSelectionEnabled, String description, String[] extensions) {
+    private IFileReadyCallback callback;
+
+    public FilePanel(String buttonText) {
         super();
         fileChooser = new JFileChooser();
         this.buttonText = buttonText;
+        initUI();
+    }
+
+    public void setCurrentDirectoryPath(String currentDirectoryPath) {
         this.currentDirectoryPath = currentDirectoryPath;
-        this.acceptAllFileFilterUsed = acceptAllFileFilterUsed;
+    }
+
+    public void setFileReadyCallback(IFileReadyCallback callback) {
+        this.callback = callback;
+    }
+
+    public void setFileSelectionMode(int fileSelectionMode) {
         this.fileSelectionMode = fileSelectionMode;
-        this.multiSelectionEnabled = multiSelectionEnabled;
+    }
+
+    public void setDescriptionAndFileExtensions(String description, String[] extensions) {
         this.description = description;
         this.extensions = extensions;
-        initUI();
+        if (StringUtils.isNotEmpty(description) || (ArrayUtils.isNotEmpty(extensions))) {
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
+            if (fileChooser != null) {
+                fileChooser.addChoosableFileFilter(filter);
+                fileChooser.setAcceptAllFileFilterUsed(false);
+            }
+        } else {
+            if (fileChooser != null) {
+                fileChooser.resetChoosableFileFilters();
+                fileChooser.setAcceptAllFileFilterUsed(true);
+            }
+        }
     }
 
     private void initUI() {
@@ -68,31 +90,29 @@ public class FilePanel extends JPanel {
     }
 
     public File getFile() {
-        File file = new File(fileTextField.getText());
-        return file;
-    }
-
-    public void updateDescriptionAndFileExtensions(String description, String[] extensions) {
-        this.description = description;
-        this.extensions = extensions;
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
-        fileChooser.addChoosableFileFilter(filter);
+        return new File(fileTextField.getText());
     }
 
     class OpenDictionaryFileActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             fileChooser.setCurrentDirectory(new File(currentDirectoryPath));
-            fileChooser.setAcceptAllFileFilterUsed(acceptAllFileFilterUsed);
             fileChooser.setFileSelectionMode(fileSelectionMode);
-            fileChooser.setMultiSelectionEnabled(multiSelectionEnabled);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
-            fileChooser.addChoosableFileFilter(filter);
+            fileChooser.setMultiSelectionEnabled(false);
+            if (StringUtils.isNotEmpty(description) || (ArrayUtils.isNotEmpty(extensions))) {
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
+                fileChooser.addChoosableFileFilter(filter);
+                fileChooser.setAcceptAllFileFilterUsed(false);
+            } else {
+                fileChooser.resetChoosableFileFilters();
+                fileChooser.setAcceptAllFileFilterUsed(true);
+            }
             int returnVal = fileChooser.showOpenDialog(FilePanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                if (selectedFile != null) {
-                    fileTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
+                fileTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
+                if (callback != null) {
+                    callback.onFileReady(selectedFile);
                 }
             }
         }
@@ -104,18 +124,29 @@ public class FilePanel extends JPanel {
 
         @Override
         public boolean importData(JComponent comp, Transferable t) {
+            List<File> files = null;
             try {
-                Object object = t.getTransferData(DataFlavor.javaFileListFlavor);
-                for (File file : (List<File>)object) {
-                    fileTextField.setText(file.getCanonicalPath());
-                }
-                return true;
+                files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
             } catch (IOException e) {
                 LOGGER.error("importData failed: IOException");
             } catch (UnsupportedFlavorException e) {
                 LOGGER.error("importData failed: UnsupportedFlavorException");
             }
-            return false;
+            if (files == null || files.size() != 1) {
+                LOGGER.error("importData failed: getTransferData failed");
+                return false;
+            }
+            File file = files.get(0);
+            if ((!file.isFile() && fileSelectionMode == JFileChooser.FILES_ONLY)
+                    ||(!file.isDirectory() && fileSelectionMode == JFileChooser.DIRECTORIES_ONLY)) {
+                LOGGER.error("importData failed: fileSelectionMode is not match");
+                return false;
+            }
+            fileTextField.setText(Utils.getCanonicalPathQuiet(file));
+            if (callback != null) {
+                callback.onFileReady(file);
+            }
+            return true;
         }
 
         @Override
