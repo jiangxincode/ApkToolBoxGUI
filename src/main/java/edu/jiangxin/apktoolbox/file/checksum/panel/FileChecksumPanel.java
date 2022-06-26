@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.file.checksum.panel;
 
-import com.github.houbb.heaven.util.io.StreamUtil;
-import edu.jiangxin.apktoolbox.file.checksum.DigestType;
+import edu.jiangxin.apktoolbox.file.checksum.CalculateType;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -37,6 +36,7 @@ public class FileChecksumPanel extends EasyPanel {
     private JTextField crc32TextField;
 
     private JPanel operationPanel;
+    private JProgressBar progressBar;
 
     public FileChecksumPanel() {
         super();
@@ -162,53 +162,93 @@ public class FileChecksumPanel extends EasyPanel {
             calculate(file);
         });
 
+        progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setMaximum(100);
+
+
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         operationPanel.add(compareButton);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        operationPanel.add(progressBar);
+
     }
 
     private void calculate(File file) {
-        if (fileSizeCheckBox.isSelected()) {
-            fileSizeTextField.setText(String.valueOf(FileUtils.sizeOf(file)));
-        } else {
-            fileSizeTextField.setText("");
-        }
-        if (md5CheckBox.isSelected()) {
-            md5TextField.setText(calculate(DigestType.MD5, file));
-        } else {
-            md5TextField.setText("");
-        }
-        if (sha1CheckBox.isSelected()) {
-            sha1TextField.setText(calculate(DigestType.Sha1, file));
-        } else {
-            sha1TextField.setText("");
-        }
-        if (sha256CheckBox.isSelected()) {
-            sha256TextField.setText(calculate(DigestType.Sha256, file));
-        } else {
-            sha256TextField.setText("");
-        }
-        if (sha384CheckBox.isSelected()) {
-            sha384TextField.setText(calculate(DigestType.Sha384, file));
-        } else {
-            sha384TextField.setText("");
-        }
-        if (sha512CheckBox.isSelected()) {
-            sha512TextField.setText(calculate(DigestType.Sha512, file));
-        } else {
-            sha512TextField.setText("");
-        }
-        if (crc32CheckBox.isSelected()) {
-            crc32TextField.setText(calculate(DigestType.CRC32, file));
-        } else {
-            crc32TextField.setText("");
-        }
+        progressBar.setValue(0);
+        new Thread(()->{
+            if (fileSizeCheckBox.isSelected()) {
+                fileSizeTextField.setText(calculate(CalculateType.FileSize, file));
+            } else {
+                fileSizeTextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 10);
+        }).start();
+
+        new Thread(()->{
+            if (md5CheckBox.isSelected()) {
+                md5TextField.setText(calculate(CalculateType.Md5, file));
+            } else {
+                md5TextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 15);
+        }).start();
+
+        new Thread(()->{
+            if (sha1CheckBox.isSelected()) {
+                sha1TextField.setText(calculate(CalculateType.Sha1, file));
+            } else {
+                sha1TextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 15);
+        }).start();
+
+        new Thread(()->{
+            if (sha256CheckBox.isSelected()) {
+                sha256TextField.setText(calculate(CalculateType.Sha256, file));
+            } else {
+                sha256TextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 15);
+        }).start();
+
+        new Thread(()->{
+            if (sha384CheckBox.isSelected()) {
+                sha384TextField.setText(calculate(CalculateType.Sha384, file));
+            } else {
+                sha384TextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 15);
+        }).start();
+
+        new Thread(()->{
+            if (sha512CheckBox.isSelected()) {
+                sha512TextField.setText(calculate(CalculateType.Sha512, file));
+            } else {
+                sha512TextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 15);
+        }).start();
+
+        new Thread(()->{
+            if (crc32CheckBox.isSelected()) {
+                crc32TextField.setText(calculate(CalculateType.Crc32, file));
+            } else {
+                crc32TextField.setText("");
+            }
+            progressBar.setValue(progressBar.getValue() + 15);
+        }).start();
     }
 
-    private String calculate(final DigestType selectedHash, final File file) {
+    private String calculate(final CalculateType selectedHash, final File file) {
         String result = "";
         try (FileInputStream fis = new FileInputStream(file)) {
             switch (selectedHash) {
-                case MD5: {
+                case FileSize: {
+                    result = String.valueOf(FileUtils.sizeOf(file));
+                    break;
+                }
+                case Md5: {
                     result = DigestUtils.md5Hex(fis);
                     break;
                 }
@@ -228,7 +268,7 @@ public class FileChecksumPanel extends EasyPanel {
                     result = DigestUtils.sha512Hex(fis);
                     break;
                 }
-                case CRC32: {
+                case Crc32: {
                     result = Long.toHexString(FileUtils.checksumCRC32(file));
                     break;
                 }
