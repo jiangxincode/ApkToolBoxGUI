@@ -9,18 +9,12 @@ import java.awt.*;
 
 public class VerifyChecksumPanel extends EasyPanel {
     private JPanel fileSumPanel;
-    private JLabel fileSumLabel;
     private JTextArea fileSumTextArea;
-    private JScrollPane fileSumScrollPanel;
 
     private JPanel compareSumPanel;
-    private JLabel compareSumLabel;
     private JTextArea compareSumTextArea;
-    private JScrollPane compareSumScrollPanel;
 
     private JPanel operationPanel;
-
-    private JButton compareButton;
 
     private JTextField resultTextField;
 
@@ -54,10 +48,10 @@ public class VerifyChecksumPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(fileSumPanel, BoxLayout.Y_AXIS);
         fileSumPanel.setLayout(boxLayout);
 
-        fileSumLabel = new JLabel("Paste calculated file summary from \"File Checksum\" tabbed panel here:");
+        JLabel fileSumLabel = new JLabel("Paste calculated file summary from \"File Checksum\" tabbed panel here:");
         fileSumTextArea = new JTextArea(5, 4);
         fileSumTextArea.setLineWrap(true);
-        fileSumScrollPanel = new JScrollPane(fileSumTextArea);
+        JScrollPane fileSumScrollPanel = new JScrollPane(fileSumTextArea);
 
         fileSumPanel.add(fileSumLabel);
         fileSumPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -69,10 +63,10 @@ public class VerifyChecksumPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(compareSumPanel, BoxLayout.Y_AXIS);
         compareSumPanel.setLayout(boxLayout);
 
-        compareSumLabel = new JLabel("Paste your compared file summary here:");
+        JLabel compareSumLabel = new JLabel("Paste your compared file summary here:");
         compareSumTextArea = new JTextArea(5, 4);
         compareSumTextArea.setLineWrap(true);
-        compareSumScrollPanel = new JScrollPane(compareSumTextArea);
+        JScrollPane compareSumScrollPanel = new JScrollPane(compareSumTextArea);
 
         compareSumPanel.add(compareSumLabel);
         compareSumPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -82,7 +76,7 @@ public class VerifyChecksumPanel extends EasyPanel {
     private void createOperationPanel() {
         operationPanel = new JPanel();
 
-        compareButton = new JButton("Compare");
+        JButton compareButton = new JButton("Compare");
         compareButton.setFocusPainted(false);
         compareButton.addActionListener(event -> {
             String fileSum = fileSumTextArea.getText();
