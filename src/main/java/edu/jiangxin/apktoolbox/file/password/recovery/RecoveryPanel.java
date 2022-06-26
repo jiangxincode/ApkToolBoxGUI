@@ -8,10 +8,9 @@ import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.FileHandle;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.swing.extend.FilePanel;
+import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -116,7 +115,7 @@ public final class RecoveryPanel extends EasyPanel {
                 logger.error("fileChecker is null");
                 return;
             }
-            recoveryFilePanel.updateDescriptionAndFileExtensions(
+            recoveryFilePanel.setDescriptionAndFileExtensions(
                     fileChecker.getDescription(), fileChecker.getFileExtensions());
         });
 
@@ -126,9 +125,8 @@ public final class RecoveryPanel extends EasyPanel {
             return;
         }
 
-        recoveryFilePanel = new FilePanel("Choose Recovery File", ".",
-                false, JFileChooser.FILES_ONLY, false,
-                fileChecker.getDescription(), fileChecker.getFileExtensions());
+        recoveryFilePanel = new FilePanel("Choose Recovery File");
+        recoveryFilePanel.setDescriptionAndFileExtensions(fileChecker.getDescription(), fileChecker.getFileExtensions());
 
         categoryTabbedPane = new JTabbedPane();
 
@@ -207,9 +205,8 @@ public final class RecoveryPanel extends EasyPanel {
         topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));
         dictionaryCategoryPanel.add(topLevelPanel);
 
-        dictionaryFilePanel = new FilePanel("Choose Dictionary File", ".",
-                false, JFileChooser.FILES_ONLY, false,
-                "*.dic;*.txt", new String[]{"dic", "txt"});
+        dictionaryFilePanel = new FilePanel("Choose Dictionary File");
+        dictionaryFilePanel.setDescriptionAndFileExtensions("*.dic;*.txt", new String[]{"dic", "txt"});
 
         JPanel threadNumPanel = new JPanel();
         threadNumPanel.setLayout(new BoxLayout(threadNumPanel, BoxLayout.X_AXIS));
