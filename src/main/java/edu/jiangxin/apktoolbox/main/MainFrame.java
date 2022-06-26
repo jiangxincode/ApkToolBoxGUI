@@ -12,7 +12,7 @@ import edu.jiangxin.apktoolbox.android.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
-import edu.jiangxin.apktoolbox.file.checksum.CheckDigestPanel;
+import edu.jiangxin.apktoolbox.file.checksum.ChecksumPanel;
 import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
 import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
 import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
@@ -246,7 +246,7 @@ public class MainFrame extends EasyFrame {
         fileMenu.add(batchRenameMenuItem);
 
         checkSumMenuItem = new JMenuItem(bundle.getString("file.check.summary.title"));
-        checkSumMenuItem.addActionListener(new ChangePanelListener(CheckDigestPanel.class, checkSumMenuItem.getText()));
+        checkSumMenuItem.addActionListener(new ChangePanelListener(ChecksumPanel.class, checkSumMenuItem.getText()));
         fileMenu.add(checkSumMenuItem);
 
         recoveryMenuItem = new JMenuItem(bundle.getString("file.password.recovery.title"));
