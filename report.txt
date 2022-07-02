@@ -44,6 +44,16 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsin
   45.               return false;
 
 #5
+src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/CompareFilesPanel.java:88: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 83 is not released after line 88.
+**Note**: potential exception at line 84
+  86.                   String secondSha512 = DigestUtils.sha512Hex(secondFis);
+  87.                   isChecksumSame = StringUtils.equalsIgnoreCase(firstSha512, secondSha512);
+  88. >             } catch (FileNotFoundException e) {
+  89.                   logger.error("calculate, FileNotFoundException");
+  90.               } catch (IOException e) {
+
+#6
 src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:92: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 90 is not released after line 92.
 **Note**: potential exception at line 91
@@ -53,7 +63,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:92: e
   93.               logger.error("storeDataToProperties failed: IOException");
   94.           }
 
-#6
+#7
 src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 97 is not released after line 99.
 **Note**: potential exception at line 91
@@ -63,7 +73,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: e
   100.               logger.error("storeDataToProperties failed: IOException");
   101.           }
 
-#7
+#8
 src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: Resource Leak
   resource of type `java.util.zip.ZipFile` acquired by call to `ZipFile(...)` at line 175 is not released after line 207.
 **Note**: potential exception at line 197
@@ -73,7 +83,7 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   208.                   logger.error("axmlprinter fail", e1);
   209.               }
 
-#8
+#9
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:394: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 394 is not released after line 394.
   392.               return;
@@ -82,7 +92,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:
   395.               setIsRecovering(true);
   396.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
 
-#9
+#10
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -92,7 +102,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   34.       private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
   35.       private String result = null;
 
-#10
+#11
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because this access may occur on a background thread.
@@ -102,7 +112,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   76.       }
   77.   
 
-#11
+#12
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -112,7 +122,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   84.       }
   85.   
 
-Found 12 issues
+Found 13 issues
                         Issue Type(ISSUED_TYPE_ID): #
-                      Resource Leak(RESOURCE_LEAK): 9
+                      Resource Leak(RESOURCE_LEAK): 10
   Thread Safety Violation(THREAD_SAFETY_VIOLATION): 3
