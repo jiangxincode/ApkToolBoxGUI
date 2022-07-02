@@ -7,7 +7,8 @@ public enum CalculateType {
     Sha384(4, "Sha384"),
     Sha512(5, "Sha512"),
     Crc32(6, "Crc32"),
-    FileSize(7, "FileSize");
+    FileSize(7, "FileSize"),
+    StringLength(8, "StringLength");
 
     private int id;
     private String name;
