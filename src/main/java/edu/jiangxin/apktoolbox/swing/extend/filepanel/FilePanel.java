@@ -78,7 +78,8 @@ public class FilePanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         fileTextField = new JTextField();
-        fileTextField.setPreferredSize(new Dimension(600, 0));
+        fileTextField.setPreferredSize(new Dimension(600, 30));
+        fileTextField.setMaximumSize(new Dimension(1200, 30));
         fileTextField.setTransferHandler(new FileTransferHandler());
 
         chooseButton = new JButton(buttonText);

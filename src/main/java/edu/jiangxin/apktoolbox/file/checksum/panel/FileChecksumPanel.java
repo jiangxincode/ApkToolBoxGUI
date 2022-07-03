@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.file.checksum.panel;
 
 import edu.jiangxin.apktoolbox.file.checksum.CalculateType;
+import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -8,12 +9,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class FileChecksumPanel extends EasyPanel {
+public class FileChecksumPanel extends EasyChildTabbedPanel {
     private static final long serialVersionUID = 63924900336217723L;
 
     private FilePanel filePanel;
@@ -38,28 +40,30 @@ public class FileChecksumPanel extends EasyPanel {
     private JPanel operationPanel;
     private JProgressBar progressBar;
 
-    public FileChecksumPanel() {
-        super();
-        initUI();
+    public FileChecksumPanel(boolean isSelected) {
+        super(isSelected);
     }
 
-    private void initUI() {
-        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        setLayout(boxLayout);
+    @Override
+    public void createUI() {
+        JPanel panel = new JPanel();
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        setViewportView(panel);
+
+        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(boxLayout);
+
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createFileNamePanel();
-        add(filePanel);
+        panel.add(filePanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOptionPanel();
-        add(optionPanel);
+        panel.add(optionPanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
-        add(operationPanel);
-
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 8));
+        panel.add(operationPanel);
     }
 
     private void createFileNamePanel() {

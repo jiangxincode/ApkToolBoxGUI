@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.file.checksum.panel;
 
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -13,8 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class CompareFilesPanel extends EasyPanel {
-    private JPanel filePanel;
+public class CompareFilesPanel extends EasyChildTabbedPanel {
     private FilePanel firstFilePanel;
     private FilePanel secondFilePanel;
 
@@ -22,46 +21,31 @@ public class CompareFilesPanel extends EasyPanel {
 
     private JTextField resultTextField;
 
-    public CompareFilesPanel() {
-        super();
-        initUI();
-    }
+    @Override
+    public void createUI() {
+        JPanel panel = new JPanel();
 
-    private void initUI() {
-        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        setLayout(boxLayout);
+        setViewportView(panel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(boxLayout);
 
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createFilePanel();
-        add(filePanel);
+        panel.add(firstFilePanel);
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(secondFilePanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
-        add(operationPanel);
+        panel.add(operationPanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 24));
+        panel.add(Box.createVerticalGlue());
     }
 
     private void createFilePanel() {
-        filePanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(filePanel, BoxLayout.Y_AXIS);
-        filePanel.setLayout(boxLayout);
-
-        JLabel firstFileLabel = new JLabel("Select the first file:");
-        firstFilePanel = new FilePanel("Choose");
-
-        JLabel secondFileLabel = new JLabel("Select the second file:");
-        secondFilePanel = new FilePanel("Choose");
-
-        filePanel.add(firstFileLabel);
-        filePanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        filePanel.add(firstFilePanel);
-        filePanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        filePanel.add(secondFileLabel);
-        filePanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        filePanel.add(secondFilePanel);
+        firstFilePanel = new FilePanel("First File");
+        secondFilePanel = new FilePanel("Second File");
     }
 
     private void createOperationPanel() {

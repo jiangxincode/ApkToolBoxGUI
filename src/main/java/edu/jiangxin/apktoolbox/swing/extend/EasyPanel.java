@@ -1,9 +1,9 @@
 package edu.jiangxin.apktoolbox.swing.extend;
 
-import java.awt.HeadlessException;
+import java.awt.*;
 import java.util.ResourceBundle;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
@@ -22,8 +22,6 @@ public class EasyPanel extends JPanel {
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
-
-    private EasyFrame rootFrame;
     
     public EasyPanel() throws HeadlessException {
         super();
@@ -34,10 +32,12 @@ public class EasyPanel extends JPanel {
     }
 
     protected EasyFrame getFrame() {
-        return rootFrame;
-    }
-
-    public void setFrame(EasyFrame frame) {
-        rootFrame = frame;
+        //Java/Swing: Obtain Window/JFrame from inside a JPanel:
+        // https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof EasyFrame) {
+            return (EasyFrame) window;
+        }
+        return null;
     }
 }

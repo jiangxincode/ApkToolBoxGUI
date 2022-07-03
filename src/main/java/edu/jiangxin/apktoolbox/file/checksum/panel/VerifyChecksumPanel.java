@@ -1,13 +1,13 @@
 package edu.jiangxin.apktoolbox.file.checksum.panel;
 
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class VerifyChecksumPanel extends EasyPanel {
+public class VerifyChecksumPanel extends EasyChildTabbedPanel {
     private JPanel fileSumPanel;
     private JTextArea fileSumTextArea;
 
@@ -18,29 +18,30 @@ public class VerifyChecksumPanel extends EasyPanel {
 
     private JTextField resultTextField;
 
-    public VerifyChecksumPanel() {
-        super();
-        initUI();
-    }
 
-    private void initUI() {
-        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        setLayout(boxLayout);
+    @Override
+    public void createUI() {
+        JPanel panel = new JPanel();
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        setViewportView(panel);
+
+        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(boxLayout);
+
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createFileSumPanel();
-        add(fileSumPanel);
+        panel.add(fileSumPanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createCompareSumPanel();
-        add(compareSumPanel);
+        panel.add(compareSumPanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createOperationPanel();
-        add(operationPanel);
+        panel.add(operationPanel);
     }
 
     private void createFileSumPanel() {

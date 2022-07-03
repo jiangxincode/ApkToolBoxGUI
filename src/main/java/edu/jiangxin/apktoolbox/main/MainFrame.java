@@ -370,7 +370,6 @@ public class MainFrame extends EasyFrame {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
             EasyPanel panel = createEasyPanel();
-            panel.setFrame(MainFrame.this);
             panel.setBorder(BorderFactory.createTitledBorder(title));
             contentPane.add(panel);
             logger.info("Panel changed: " + panel.getClass().getSimpleName());

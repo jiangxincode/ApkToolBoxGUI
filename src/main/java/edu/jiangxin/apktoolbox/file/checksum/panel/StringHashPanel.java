@@ -1,17 +1,18 @@
 package edu.jiangxin.apktoolbox.file.checksum.panel;
 
 import edu.jiangxin.apktoolbox.file.checksum.CalculateType;
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 
-public class StringHashPanel extends EasyPanel {
+public class StringHashPanel extends EasyChildTabbedPanel {
     private static final long serialVersionUID = 63924900336217723L;
 
     private JPanel stringInputPanel;
@@ -37,26 +38,26 @@ public class StringHashPanel extends EasyPanel {
     private JPanel operationPanel;
     private JProgressBar progressBar;
 
-    public StringHashPanel() {
-        super();
-        initUI();
-    }
+    @Override
+    public void createUI() {
+        JPanel panel = new JPanel();
 
-    private void initUI() {
-        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        setLayout(boxLayout);
+        setViewportView(panel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(boxLayout);
+
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createStringInputPanel();
-        add(stringInputPanel);
+        panel.add(stringInputPanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOptionPanel();
-        add(optionPanel);
+        panel.add(optionPanel);
 
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
-        add(operationPanel);
+        panel.add(operationPanel);
     }
 
     private void createStringInputPanel() {
