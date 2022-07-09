@@ -81,7 +81,10 @@ I am only providing a generic tool, you are the one who decides what to do with 
 
 `File->Check Summary`
 
-* Support calculate file hash with MD5/SHA1/SHA256/SHA384/SHA512
+* Support calculate file hash with MD5/SHA1/SHA256/SHA384/SHA512/CRC32
+* Support calculate string hash with MD5/SHA1/SHA256/SHA384/SHA512/CRC32
+* Support compare two hash values
+* Support compare two file
 * Support file drag and drop
 
 ### Find duplicated files(Not Finished)

@@ -2,14 +2,12 @@ package edu.jiangxin.apktoolbox.file.checksum.panel;
 
 import edu.jiangxin.apktoolbox.file.checksum.CalculateType;
 import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,8 +20,8 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
 
     private JPanel optionPanel;
 
-    private JCheckBox fileSizeCheckBox;
     private JTextField fileSizeTextField;
+    private JTextField fileLastModifiedTimeTextField;
     private JCheckBox md5CheckBox;
     private JTextField md5TextField;
     private JCheckBox sha1CheckBox;
@@ -83,6 +81,7 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         optionPanel.setLayout(boxLayout);
 
         JPanel fileSizeOptionPanel = new JPanel();
+        JPanel fileLastModifiedTimeOptionPanel = new JPanel();
         JPanel md5OptionPanel = new JPanel();
         JPanel sha1OptionPanel = new JPanel();
         JPanel sha256OptionPanel = new JPanel();
@@ -91,6 +90,8 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         JPanel crc32OptionPanel = new JPanel();
 
         optionPanel.add(fileSizeOptionPanel);
+        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        optionPanel.add(fileLastModifiedTimeOptionPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(md5OptionPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -105,11 +106,18 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         optionPanel.add(crc32OptionPanel);
 
         fileSizeOptionPanel.setLayout(new BoxLayout(fileSizeOptionPanel, BoxLayout.X_AXIS));
-        fileSizeCheckBox = new JCheckBox("File Size:");
+        JLabel fileSizeLabel = new JLabel("File Size:");
         fileSizeTextField = new JTextField();
-        fileSizeOptionPanel.add(fileSizeCheckBox);
+        fileSizeOptionPanel.add(fileSizeLabel);
         fileSizeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         fileSizeOptionPanel.add(fileSizeTextField);
+
+        fileLastModifiedTimeOptionPanel.setLayout(new BoxLayout(fileLastModifiedTimeOptionPanel, BoxLayout.X_AXIS));
+        JLabel fileLastModifiedTimeLabel = new JLabel("File Last Modified Time:");
+        fileLastModifiedTimeTextField = new JTextField();
+        fileLastModifiedTimeOptionPanel.add(fileLastModifiedTimeLabel);
+        fileLastModifiedTimeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        fileLastModifiedTimeOptionPanel.add(fileLastModifiedTimeTextField);
 
         md5OptionPanel.setLayout(new BoxLayout(md5OptionPanel, BoxLayout.X_AXIS));
         md5CheckBox = new JCheckBox("MD5 checksum:");
@@ -183,12 +191,17 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
     private void calculate(File file) {
         progressBar.setValue(0);
         new Thread(()->{
-            if (fileSizeCheckBox.isSelected()) {
-                fileSizeTextField.setText(calculate(CalculateType.FileSize, file));
-            } else {
-                fileSizeTextField.setText("");
+            fileSizeTextField.setText(String.valueOf(FileUtils.sizeOf(file)));
+            progressBar.setValue(progressBar.getValue() + 5);
+        }).start();
+
+        new Thread(()->{
+            try {
+                fileLastModifiedTimeTextField.setText(String.valueOf(FileUtils.lastModified(file)));
+            } catch (IOException e) {
+                fileLastModifiedTimeTextField.setText("Unknown");
             }
-            progressBar.setValue(progressBar.getValue() + 10);
+            progressBar.setValue(progressBar.getValue() + 5);
         }).start();
 
         new Thread(()->{
@@ -250,10 +263,6 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         String result = "";
         try (FileInputStream fis = new FileInputStream(file)) {
             switch (selectedHash) {
-                case FileSize: {
-                    result = String.valueOf(FileUtils.sizeOf(file));
-                    break;
-                }
                 case Md5: {
                     result = DigestUtils.md5Hex(fis);
                     break;

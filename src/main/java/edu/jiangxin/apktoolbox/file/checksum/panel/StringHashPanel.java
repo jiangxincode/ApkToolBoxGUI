@@ -20,7 +20,6 @@ public class StringHashPanel extends EasyChildTabbedPanel {
 
     private JPanel optionPanel;
 
-    private JCheckBox stringLengthCheckBox;
     private JTextField stringLengthTextField;
     private JCheckBox md5CheckBox;
     private JTextField md5TextField;
@@ -103,9 +102,9 @@ public class StringHashPanel extends EasyChildTabbedPanel {
         optionPanel.add(crc32OptionPanel);
 
         stringLengthOptionPanel.setLayout(new BoxLayout(stringLengthOptionPanel, BoxLayout.X_AXIS));
-        stringLengthCheckBox = new JCheckBox("String length:");
+        JLabel stringLengthLabel = new JLabel("String length:");
         stringLengthTextField = new JTextField();
-        stringLengthOptionPanel.add(stringLengthCheckBox);
+        stringLengthOptionPanel.add(stringLengthLabel);
         stringLengthOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         stringLengthOptionPanel.add(stringLengthTextField);
 
@@ -181,11 +180,7 @@ public class StringHashPanel extends EasyChildTabbedPanel {
     private void calculate(String text) {
         progressBar.setValue(0);
         new Thread(() -> {
-            if (stringLengthCheckBox.isSelected()) {
-                stringLengthTextField.setText(calculate(CalculateType.StringLength, text));
-            } else {
-                stringLengthTextField.setText("");
-            }
+            stringLengthTextField.setText(String.valueOf(text.length()));
             progressBar.setValue(progressBar.getValue() + 10);
         }).start();
 
@@ -248,10 +243,6 @@ public class StringHashPanel extends EasyChildTabbedPanel {
         String result = "";
         try (ByteArrayInputStream bais = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8))) {
             switch (selectedHash) {
-                case StringLength: {
-                    result = String.valueOf(text.length());
-                    break;
-                }
                 case Md5: {
                     result = DigestUtils.md5Hex(bais);
                     break;
