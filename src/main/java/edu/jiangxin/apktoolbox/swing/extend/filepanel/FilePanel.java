@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.swing.extend.filepanel;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -111,7 +111,7 @@ public class FilePanel extends JPanel {
             int returnVal = fileChooser.showOpenDialog(FilePanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                fileTextField.setText(Utils.getCanonicalPathQuiet(selectedFile));
+                fileTextField.setText(FileUtils.getCanonicalPathQuiet(selectedFile));
                 if (callback != null) {
                     callback.onFileReady(selectedFile);
                 }
@@ -143,7 +143,7 @@ public class FilePanel extends JPanel {
                 LOGGER.error("importData failed: fileSelectionMode is not match");
                 return false;
             }
-            fileTextField.setText(Utils.getCanonicalPathQuiet(file));
+            fileTextField.setText(FileUtils.getCanonicalPathQuiet(file));
             if (callback != null) {
                 callback.onFileReady(file);
             }

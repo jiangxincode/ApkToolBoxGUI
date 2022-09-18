@@ -2,6 +2,7 @@ package edu.jiangxin.apktoolbox.android.screenshot;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.DateUtils;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -168,7 +169,7 @@ public class ScreenShotPanel extends EasyPanel {
             }
             String fileName = fileNameTextField.getText();
             if (StringUtils.isEmpty(fileName)) {
-                fileName = Utils.getCurrentDateString() + ".png";
+                fileName = DateUtils.getCurrentDateString() + ".png";
             }
             File file = new File(dirName, fileName);
             try {

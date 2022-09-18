@@ -20,8 +20,8 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
 
     private JPanel optionPanel;
 
-    private JTextField fileSizeTextField;
-    private JTextField fileLastModifiedTimeTextField;
+    private JTextField sizeTextField;
+    private JTextField lastModifiedTimeTextField;
     private JCheckBox md5CheckBox;
     private JTextField md5TextField;
     private JCheckBox sha1CheckBox;
@@ -80,8 +80,8 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         BoxLayout boxLayout = new BoxLayout(optionPanel, BoxLayout.Y_AXIS);
         optionPanel.setLayout(boxLayout);
 
-        JPanel fileSizeOptionPanel = new JPanel();
-        JPanel fileLastModifiedTimeOptionPanel = new JPanel();
+        JPanel sizeOptionPanel = new JPanel();
+        JPanel lastModifiedTimeOptionPanel = new JPanel();
         JPanel md5OptionPanel = new JPanel();
         JPanel sha1OptionPanel = new JPanel();
         JPanel sha256OptionPanel = new JPanel();
@@ -89,9 +89,9 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         JPanel sha512OptionPanel = new JPanel();
         JPanel crc32OptionPanel = new JPanel();
 
-        optionPanel.add(fileSizeOptionPanel);
+        optionPanel.add(sizeOptionPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(fileLastModifiedTimeOptionPanel);
+        optionPanel.add(lastModifiedTimeOptionPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(md5OptionPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -105,22 +105,23 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(crc32OptionPanel);
 
-        fileSizeOptionPanel.setLayout(new BoxLayout(fileSizeOptionPanel, BoxLayout.X_AXIS));
-        JLabel fileSizeLabel = new JLabel("File Size:");
-        fileSizeTextField = new JTextField();
-        fileSizeOptionPanel.add(fileSizeLabel);
-        fileSizeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        fileSizeOptionPanel.add(fileSizeTextField);
+        sizeOptionPanel.setLayout(new BoxLayout(sizeOptionPanel, BoxLayout.X_AXIS));
+        JLabel fileSizeLabel = new JLabel("Size:");
+        sizeTextField = new JTextField();
+        sizeOptionPanel.add(fileSizeLabel);
+        sizeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        sizeOptionPanel.add(sizeTextField);
 
-        fileLastModifiedTimeOptionPanel.setLayout(new BoxLayout(fileLastModifiedTimeOptionPanel, BoxLayout.X_AXIS));
-        JLabel fileLastModifiedTimeLabel = new JLabel("File Last Modified Time:");
-        fileLastModifiedTimeTextField = new JTextField();
-        fileLastModifiedTimeOptionPanel.add(fileLastModifiedTimeLabel);
-        fileLastModifiedTimeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        fileLastModifiedTimeOptionPanel.add(fileLastModifiedTimeTextField);
+        lastModifiedTimeOptionPanel.setLayout(new BoxLayout(lastModifiedTimeOptionPanel, BoxLayout.X_AXIS));
+        JLabel fileLastModifiedTimeLabel = new JLabel("Last Modified Time:");
+        lastModifiedTimeTextField = new JTextField();
+        lastModifiedTimeOptionPanel.add(fileLastModifiedTimeLabel);
+        lastModifiedTimeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        lastModifiedTimeOptionPanel.add(lastModifiedTimeTextField);
 
         md5OptionPanel.setLayout(new BoxLayout(md5OptionPanel, BoxLayout.X_AXIS));
         md5CheckBox = new JCheckBox("MD5 checksum:");
+        md5CheckBox.setSelected(true);
         md5TextField = new JTextField();
         md5OptionPanel.add(md5CheckBox);
         md5OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -156,6 +157,7 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
 
         crc32OptionPanel.setLayout(new BoxLayout(crc32OptionPanel, BoxLayout.X_AXIS));
         crc32CheckBox = new JCheckBox("CRC32 checksum:");
+        crc32CheckBox.setSelected(true);
         crc32TextField = new JTextField();
         crc32OptionPanel.add(crc32CheckBox);
         crc32OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -191,15 +193,15 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
     private void calculate(File file) {
         progressBar.setValue(0);
         new Thread(()->{
-            fileSizeTextField.setText(String.valueOf(FileUtils.sizeOf(file)));
+            sizeTextField.setText(edu.jiangxin.apktoolbox.utils.FileUtils.sizeOfInHumanFormat(file));
             progressBar.setValue(progressBar.getValue() + 5);
         }).start();
 
         new Thread(()->{
             try {
-                fileLastModifiedTimeTextField.setText(String.valueOf(FileUtils.lastModified(file)));
+                lastModifiedTimeTextField.setText(String.valueOf(FileUtils.lastModified(file)));
             } catch (IOException e) {
-                fileLastModifiedTimeTextField.setText("Unknown");
+                lastModifiedTimeTextField.setText("Unknown");
             }
             progressBar.setValue(progressBar.getValue() + 5);
         }).start();

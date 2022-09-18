@@ -1,9 +1,16 @@
 package edu.jiangxin.apktoolbox.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class FileUtilsEx {
+public class FileUtils {
+
+    private static final Logger LOGGER = LogManager.getLogger(FileUtils.class.getSimpleName());
 
     public static final long ONE_KB = 1024;
 
@@ -19,8 +26,8 @@ public class FileUtilsEx {
 
     public static final BigInteger ONE_EB_BI = ONE_KB_BI.multiply(ONE_PB_BI);
 
-    public static String byteCountToDisplaySize(final long longSize) {
-        BigInteger size = BigInteger.valueOf(longSize);
+    public static String sizeOfInHumanFormat(final File file) {
+        BigInteger size = BigInteger.valueOf(file.length());
         String displaySize;
 
         if (size.divide(ONE_EB_BI).compareTo(BigInteger.ZERO) > 0) {
@@ -41,10 +48,28 @@ public class FileUtilsEx {
         return displaySize;
     }
 
+    public static String lastModifiedInHumanFormat(File file) {
+        long lastModified = file.lastModified();
+        return DateUtils.millisecondToHumanFormat(lastModified);
+    }
+
     public static double divide(BigInteger size, BigInteger one_bi) {
         BigDecimal decimalSize = BigDecimal.valueOf(size.doubleValue())
                 .divide(BigDecimal.valueOf(one_bi.doubleValue()), 2, BigDecimal.ROUND_HALF_UP);
         return decimalSize.doubleValue();
+    }
+
+    public static String getCanonicalPathQuiet(File file) {
+        if (file == null) {
+            LOGGER.warn("getCanonicalPathQuiet failed: file is null");
+            return null;
+        }
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            LOGGER.error("getCanonicalPathQuiet failed: IOException");
+            return null;
+        }
     }
 }
 

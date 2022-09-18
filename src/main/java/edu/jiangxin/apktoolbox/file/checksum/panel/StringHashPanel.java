@@ -110,6 +110,7 @@ public class StringHashPanel extends EasyChildTabbedPanel {
 
         md5OptionPanel.setLayout(new BoxLayout(md5OptionPanel, BoxLayout.X_AXIS));
         md5CheckBox = new JCheckBox("MD5 checksum:");
+        md5CheckBox.setSelected(true);
         md5TextField = new JTextField();
         md5OptionPanel.add(md5CheckBox);
         md5OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));

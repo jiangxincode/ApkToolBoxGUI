@@ -30,16 +30,6 @@ public class Utils {
 
     private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
 
-    public static String getCurrentDateString() {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            return dateFormat.format(new Date());
-        } catch (Exception e) {
-            logger.error("getCurrentDateString error", e);
-        }
-        return null;
-    }
-
     public static Configuration getConfiguration() {
         if (builder == null) {
             File confiFile = new File("apktoolboxgui.properties");
@@ -218,19 +208,6 @@ public class Utils {
         } catch (IOException e) {
             logger.error("getFileLineCount IOException");
             return 0;
-        }
-    }
-
-    public static String getCanonicalPathQuiet(File file) {
-        if (file == null) {
-            logger.warn("getCanonicalPathQuiet failed: file is null");
-            return null;
-        }
-        try {
-            return file.getCanonicalPath();
-        } catch (IOException e) {
-            logger.error("getCanonicalPathQuiet failed: IOException");
-            return null;
         }
     }
 }

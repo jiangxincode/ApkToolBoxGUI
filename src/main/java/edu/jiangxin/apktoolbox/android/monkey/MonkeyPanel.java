@@ -3,7 +3,7 @@ package edu.jiangxin.apktoolbox.android.monkey;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.NumberPlainDocument;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
+import edu.jiangxin.apktoolbox.utils.DateUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
@@ -662,7 +662,7 @@ public class MonkeyPanel extends EasyPanel {
                 if (list.size() == 0) {
                     String log = textLogPath.getText();
                     System.out.println(textLogPath.getText());
-                    String getDate = Utils.getCurrentDateString();
+                    String getDate = DateUtils.getCurrentDateString();
                     // 日志文件路径
                     String logFile = log.substring(0, log.indexOf("java_monkey_log")) + LOG_NAME + getDate + ".txt";
                     textLogPath.setText(logFile);
@@ -808,7 +808,7 @@ public class MonkeyPanel extends EasyPanel {
             } else if (radioButton2.isSelected()) {
                 logLevel = LEVEL_2;
             }
-            String logFile = textLogPath.getText() + "\\" + LOG_NAME + Utils.getCurrentDateString() + ".txt";
+            String logFile = textLogPath.getText() + "\\" + LOG_NAME + DateUtils.getCurrentDateString() + ".txt";
 
             monkeyCmd = new String[] { "cmd.exe", "/C",
                     "adb -s " + comboBoxDevices.getSelectedItem() + " shell monkey -p "

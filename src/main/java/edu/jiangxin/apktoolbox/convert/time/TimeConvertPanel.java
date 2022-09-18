@@ -2,6 +2,7 @@ package edu.jiangxin.apktoolbox.convert.time;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.DateUtils;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
@@ -22,7 +23,7 @@ public class TimeConvertPanel extends EasyPanel {
 
     private JLabel timestamp1Label;
 
-    private JTextField timestamp1TextField;
+    private JSpinner timestamp1Spinner;
 
     private JComboBox<Object> timestamp1ComboBox;
 
@@ -42,7 +43,7 @@ public class TimeConvertPanel extends EasyPanel {
 
     private JLabel timestamp2Label;
 
-    private JTextField timestamp2TextField;
+    private JSpinner timestamp2Spinner;
 
     private JComboBox<Object> timestamp2ComboBox;
 
@@ -118,8 +119,9 @@ public class TimeConvertPanel extends EasyPanel {
         convert1Panel.add(timestamp1Label);
         convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        timestamp1TextField = new JTextField(20);
-        convert1Panel.add(timestamp1TextField);
+        timestamp1Spinner = new JSpinner();
+        timestamp1Spinner.setModel(new SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
+        convert1Panel.add(timestamp1Spinner);
         convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         timestamp1ComboBox = new JComboBox<>();
@@ -165,8 +167,9 @@ public class TimeConvertPanel extends EasyPanel {
         convert2Panel.add(timestamp2Label);
         convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        timestamp2TextField = new JTextField(20);
-        convert2Panel.add(timestamp2TextField);
+        timestamp2Spinner = new JSpinner();
+        timestamp2Spinner.setModel(new SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
+        convert2Panel.add(timestamp2Spinner);
         convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         timestamp2ComboBox = new JComboBox<>();
@@ -213,7 +216,7 @@ public class TimeConvertPanel extends EasyPanel {
                 long currentTimeStamp = System.currentTimeMillis() / 1000;
                 if (!isPaused) {
                     currentTimestampTextField.setText(String.valueOf(currentTimeStamp));
-                    currentTimeTextField.setText(DateTransform.secondToDate(String.valueOf(currentTimeStamp)));
+                    currentTimeTextField.setText(DateUtils.secondToHumanFormat(currentTimeStamp));
                 }
                 try {
                     Thread.sleep(1000);
@@ -306,13 +309,13 @@ public class TimeConvertPanel extends EasyPanel {
     private final class Convert1ButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String timestamp = timestamp1TextField.getText();
+            Long timestamp = (Long)timestamp1Spinner.getValue();
             Integer index = timestamp1ComboBox.getSelectedIndex();
             String result = "";
             if (index.equals(0)) {
-                result = DateTransform.secondToDate(timestamp);
+                result = DateUtils.secondToHumanFormat(timestamp);
             } else if (index.equals(1)) {
-                result = DateTransform.milliSecondToDate(timestamp);
+                result = DateUtils.millisecondToHumanFormat(timestamp);
             }
             time1TextField.setText(result);
         }
@@ -323,13 +326,13 @@ public class TimeConvertPanel extends EasyPanel {
         public void actionPerformed(ActionEvent e) {
             String string = time2TextField.getText();
             Integer index = timestamp2ComboBox.getSelectedIndex();
-            String result = "";
+            Long result = 0L;
             if (index.equals(0)) {
-                result = DateTransform.dateToSecond(string);
+                result = DateUtils.humanFormatToSecond(string);
             } else if (index.equals(1)) {
-                result = DateTransform.dateToMilliSecond(string);
+                result = DateUtils.humanFormatToMillisecond(string);
             }
-            timestamp2TextField.setText(result);
+            timestamp2Spinner.setValue(result);
         }
     }
 

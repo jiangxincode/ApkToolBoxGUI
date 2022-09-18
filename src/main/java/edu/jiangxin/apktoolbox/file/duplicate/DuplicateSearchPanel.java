@@ -1,12 +1,11 @@
 package edu.jiangxin.apktoolbox.file.duplicate;
 
-import edu.jiangxin.apktoolbox.convert.time.DateTransform;
+import edu.jiangxin.apktoolbox.utils.DateUtils;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.FileUtilsEx;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -348,8 +347,8 @@ public class DuplicateSearchPanel extends EasyPanel {
         rowData.add(file.getParent());
         rowData.add(file.getName());
         rowData.add(FilenameUtils.getExtension(file.getName()));
-        rowData.add(FileUtilsEx.byteCountToDisplaySize(file.length()));
-        rowData.add(DateTransform.milliSecondToDate(String.valueOf(file.lastModified())));
+        rowData.add(FileUtils.sizeOfInHumanFormat(file));
+        rowData.add(DateUtils.millisecondToHumanFormat(file.lastModified()));
         return rowData;
     }
 
@@ -375,7 +374,7 @@ public class DuplicateSearchPanel extends EasyPanel {
 
             Set<File> fileSet = new TreeSet<>(fileList);
             for (File file : fileList) {
-                fileSet.addAll(FileUtils.listFiles(file, extensions, isRecursiveSearched));
+                fileSet.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, isRecursiveSearched));
             }
 
             for (File file : fileSet) {
