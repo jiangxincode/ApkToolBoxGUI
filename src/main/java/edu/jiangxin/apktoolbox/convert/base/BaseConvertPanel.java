@@ -260,7 +260,7 @@ public class BaseConvertPanel extends EasyPanel {
             isChangedByUser = false;
             binTextField.setText(Long.toBinaryString(value));
             octTextField.setText(Long.toOctalString(value));
-            decTextField.setText(Long.toHexString(value));
+            decTextField.setText(Long.toString(value));
             isChangedByUser = true;
         }
         strBin = binTextField.getText();
