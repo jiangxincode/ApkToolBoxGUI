@@ -25,33 +25,23 @@ public class BaseConvertPanel extends EasyPanel {
 
     private JPanel binPanel;
 
-    private JLabel binLabel;
-
     private JTextField binTextField;
 
     private JPanel octPanel;
-
-    private JLabel octLabel;
 
     private JTextField octTextField;
 
     private JPanel decPanel;
 
-    private JLabel decLabel;
-
     private JTextField decTextField;
 
     private JPanel hexPanel;
 
-    private JLabel hexLabel;
-
     private JTextField hexTextField;
 
-    private JButton clearBtn;
+    private final DocumentListener documentListener;
 
-    private DocumentListener documentListener;
-
-    private DocumentFilter documentFilter;
+    private final DocumentFilter documentFilter;
 
     private boolean isChangedByUser;
 
@@ -80,7 +70,7 @@ public class BaseConvertPanel extends EasyPanel {
         add(hexPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        clearBtn = new JButton("Clear");
+        JButton clearBtn = new JButton("Clear");
         clearBtn.addActionListener(new ClearButtonActionListener());
         add(clearBtn);
     }
@@ -89,7 +79,7 @@ public class BaseConvertPanel extends EasyPanel {
         binPanel = new JPanel();
         binPanel.setLayout(new BoxLayout(binPanel, BoxLayout.X_AXIS));
 
-        binLabel = new JLabel(BINARY + ":");
+        JLabel binLabel = new JLabel(BINARY + ":");
 
         binTextField = new JTextField();
         binTextField.getDocument().addDocumentListener(documentListener);
@@ -105,7 +95,7 @@ public class BaseConvertPanel extends EasyPanel {
         octPanel = new JPanel();
         octPanel.setLayout(new BoxLayout(octPanel, BoxLayout.X_AXIS));
 
-        octLabel = new JLabel(OCTAL + ":");
+        JLabel octLabel = new JLabel(OCTAL + ":");
 
         octTextField = new JTextField();
         octTextField.getDocument().addDocumentListener(documentListener);
@@ -121,7 +111,7 @@ public class BaseConvertPanel extends EasyPanel {
         decPanel = new JPanel();
         decPanel.setLayout(new BoxLayout(decPanel, BoxLayout.X_AXIS));
 
-        decLabel = new JLabel(DECIMAL + ":");
+        JLabel decLabel = new JLabel(DECIMAL + ":");
 
         decTextField = new JTextField();
         decTextField.getDocument().addDocumentListener(documentListener);
@@ -137,7 +127,7 @@ public class BaseConvertPanel extends EasyPanel {
         hexPanel = new JPanel();
         hexPanel.setLayout(new BoxLayout(hexPanel, BoxLayout.X_AXIS));
 
-        hexLabel = new JLabel(HEX + ":");
+        JLabel hexLabel = new JLabel(HEX + ":");
 
         hexTextField = new JTextField();
         hexTextField.getDocument().addDocumentListener(documentListener);
@@ -231,7 +221,7 @@ public class BaseConvertPanel extends EasyPanel {
         convertMe(propertyObj.toString());
     }
 
-    public void convertMe(String type) {
+    private void convertMe(String type) {
         if (!isChangedByUser) {
             return;
         }
@@ -266,44 +256,50 @@ public class BaseConvertPanel extends EasyPanel {
     }
 
     private boolean isBinStr(String str) {
-        int len = str.length();
-        for (int i = 0; i < len; i++)
-            if ((str.charAt(i) == '1') || (str.charAt(i) == '0'))
-                ;
-            else
+        if (str == null) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if ((str.charAt(i) != '1') && (str.charAt(i) != '0')) {
                 return false;
-        return true;
-    }
-
-    private boolean isDecStr(String deci) {
-        int len = deci.length();
-        char ch;
-        for (int i = 0; i < len; i++) {
-            ch = deci.charAt(i);
-            if ((ch >= '0') && (ch <= '9')) ;
-            else
-                return false;
+            }
         }
         return true;
     }
 
-    private boolean isOctStr(String octal) {
-        int len = octal.length();
-        for (int i = 0; i < len; i++)
-            if ((octal.charAt(i) >= '0') && (octal.charAt(i) <= '7')) ;
-            else
+    private boolean isDecStr(String str) {
+        if (str == null) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if ((str.charAt(i) < '0') || (str.charAt(i) > '9')) {
                 return false;
+            }
+        }
         return true;
     }
 
-    private boolean isHexStr(String hex) {
-        int len = hex.length();
-        int c;
-        for (int i = 0; i < len; i++) {
-            c = (int) hex.charAt(i);
-            if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')) ;
-            else
+    private boolean isOctStr(String str) {
+        if (str == null) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if ((str.charAt(i) < '0') || (str.charAt(i) > '7')) {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isHexStr(String str) {
+        if (str == null) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if ((c < '0' || c > '9') && (c < 'A' || c > 'F') && (c < 'a' || c > 'f')) {
+                return false;
+            }
         }
         return true;
     }
