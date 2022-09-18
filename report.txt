@@ -93,6 +93,26 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   209.               }
 
 #10
+src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java:297: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 266 is not released after line 297.
+**Note**: potential exception at line 289
+  295.                   }
+  296.               }
+  297. >         } catch (FileNotFoundException e) {
+  298.               logger.error("calculate, FileNotFoundException");
+  299.           } catch (IOException e) {
+
+#11
+src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java:299: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 266 is not released after line 299.
+**Note**: potential exception at line 289
+  297.           } catch (FileNotFoundException e) {
+  298.               logger.error("calculate, FileNotFoundException");
+  299. >         } catch (IOException e) {
+  300.               logger.error("calculate, IOException");
+  301.           }
+
+#12
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:394: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 394 is not released after line 394.
   392.               return;
@@ -101,7 +121,11 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:
   395.               setIsRecovering(true);
   396.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
 
-#11
+#13
+src/main/java/edu/jiangxin/apktoolbox/utils/FileUtils.java:1097: error: Resource Leak
+  resource of type `java.net.HttpURLConnection` acquired by call to `openConnection()` at line 1094 is not released after line 1097.
+
+#14
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -111,7 +135,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   34.       private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
   35.       private String result = null;
 
-#12
+#15
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because this access may occur on a background thread.
@@ -121,7 +145,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   76.       }
   77.   
 
-#13
+#16
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -131,8 +155,8 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   84.       }
   85.   
 
-Found 14 issues
+Found 17 issues
                         Issue Type(ISSUED_TYPE_ID): #
-                      Resource Leak(RESOURCE_LEAK): 10
+                      Resource Leak(RESOURCE_LEAK): 13
   Thread Safety Violation(THREAD_SAFETY_VIOLATION): 3
                 Null Dereference(NULL_DEREFERENCE): 1
