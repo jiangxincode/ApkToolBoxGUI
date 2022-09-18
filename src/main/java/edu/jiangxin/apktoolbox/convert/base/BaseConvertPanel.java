@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseConvertPanel extends EasyPanel {
     private static final String PROPERTY_KEY = "name";
@@ -23,27 +25,13 @@ public class BaseConvertPanel extends EasyPanel {
 
     private static final String HEX = "Hex";
 
-    private JPanel binPanel;
-
-    private JTextField binTextField;
-
-    private JPanel octPanel;
-
-    private JTextField octTextField;
-
-    private JPanel decPanel;
-
-    private JTextField decTextField;
-
-    private JPanel hexPanel;
-
-    private JTextField hexTextField;
-
     private final DocumentListener documentListener;
 
     private final DocumentFilter documentFilter;
 
     private boolean isChangedByUser;
+
+    private final List<BaseObject> baseObjects = new ArrayList<>();
 
     public BaseConvertPanel() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -54,99 +42,33 @@ public class BaseConvertPanel extends EasyPanel {
 
         isChangedByUser = true;
 
-        createBinPanel();
-        add(binPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        BaseObject binBaseObject = new BaseObject(2);
+        baseObjects.add(binBaseObject);
+        BaseObject octBaseObject = new BaseObject(8);
+        baseObjects.add(octBaseObject);
+        BaseObject decBaseObject = new BaseObject(10);
+        baseObjects.add(decBaseObject);
+        BaseObject hexBaseObject = new BaseObject(16);
+        baseObjects.add(hexBaseObject);
 
-        createOctPanel();
-        add(octPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
-        createDecPanel();
-        add(decPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
-        createHexPanel();
-        add(hexPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        for (BaseObject baseObject : baseObjects) {
+            add(baseObject.panel);
+            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        }
 
         JButton clearBtn = new JButton("Clear");
         clearBtn.addActionListener(new ClearButtonActionListener());
         add(clearBtn);
     }
 
-    private void createBinPanel() {
-        binPanel = new JPanel();
-        binPanel.setLayout(new BoxLayout(binPanel, BoxLayout.X_AXIS));
-
-        JLabel binLabel = new JLabel(BINARY + ":");
-
-        binTextField = new JTextField();
-        binTextField.getDocument().addDocumentListener(documentListener);
-        ((PlainDocument) binTextField.getDocument()).setDocumentFilter(documentFilter);
-        binTextField.getDocument().putProperty(PROPERTY_KEY, BINARY);
-
-        binPanel.add(binLabel);
-        binPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        binPanel.add(binTextField);
-    }
-
-    private void createOctPanel() {
-        octPanel = new JPanel();
-        octPanel.setLayout(new BoxLayout(octPanel, BoxLayout.X_AXIS));
-
-        JLabel octLabel = new JLabel(OCTAL + ":");
-
-        octTextField = new JTextField();
-        octTextField.getDocument().addDocumentListener(documentListener);
-        ((PlainDocument) octTextField.getDocument()).setDocumentFilter(documentFilter);
-        octTextField.getDocument().putProperty(PROPERTY_KEY, OCTAL);
-
-        octPanel.add(octLabel);
-        octPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        octPanel.add(octTextField);
-    }
-
-    private void createDecPanel() {
-        decPanel = new JPanel();
-        decPanel.setLayout(new BoxLayout(decPanel, BoxLayout.X_AXIS));
-
-        JLabel decLabel = new JLabel(DECIMAL + ":");
-
-        decTextField = new JTextField();
-        decTextField.getDocument().addDocumentListener(documentListener);
-        ((PlainDocument) decTextField.getDocument()).setDocumentFilter(documentFilter);
-        decTextField.getDocument().putProperty(PROPERTY_KEY, DECIMAL);
-
-        decPanel.add(decLabel);
-        decPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        decPanel.add(decTextField);
-    }
-
-    private void createHexPanel() {
-        hexPanel = new JPanel();
-        hexPanel.setLayout(new BoxLayout(hexPanel, BoxLayout.X_AXIS));
-
-        JLabel hexLabel = new JLabel(HEX + ":");
-
-        hexTextField = new JTextField();
-        hexTextField.getDocument().addDocumentListener(documentListener);
-        ((PlainDocument) hexTextField.getDocument()).setDocumentFilter(documentFilter);
-        hexTextField.getDocument().putProperty(PROPERTY_KEY, HEX);
-
-        hexPanel.add(hexLabel);
-        hexPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        hexPanel.add(hexTextField);
-    }
 
     class ClearButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             isChangedByUser = false;
-            binTextField.setText("");
-            octTextField.setText("");
-            decTextField.setText("");
-            hexTextField.setText("");
+            for (BaseObject baseObject : baseObjects) {
+                baseObject.textField.setText("");
+            }
             isChangedByUser = true;
         }
     }
@@ -180,9 +102,8 @@ public class BaseConvertPanel extends EasyPanel {
                 Toolkit.getDefaultToolkit().beep();
                 return;
             }
-            String propertyStr = propertyObj.toString();
-
-            if (isValidText(propertyStr, sb.toString())) {
+            Integer radix = (Integer) doc.getProperty(PROPERTY_KEY);
+            if (isValidText(radix, sb.toString())) {
                 super.insertString(fb, offset, string, attr);
             } else {
                 Toolkit.getDefaultToolkit().beep();
@@ -201,9 +122,8 @@ public class BaseConvertPanel extends EasyPanel {
                 Toolkit.getDefaultToolkit().beep();
                 return;
             }
-            String propertyStr = propertyObj.toString();
-
-            if (isValidText(propertyStr, sb.toString())) {
+            Integer radix = (Integer) doc.getProperty(PROPERTY_KEY);
+            if (isValidText(radix, sb.toString())) {
                 super.replace(fb, offset, length, text, attrs);
             } else {
                 Toolkit.getDefaultToolkit().beep();
@@ -213,44 +133,30 @@ public class BaseConvertPanel extends EasyPanel {
 
     private void detect(DocumentEvent documentEvent) {
         Document doc = documentEvent.getDocument();
-        Object propertyObj = doc.getProperty(PROPERTY_KEY);
-        if (propertyObj == null) {
-            logger.warn("property is null");
-            return;
-        }
-        convertMe(propertyObj.toString());
+        Integer radix = (Integer) doc.getProperty(PROPERTY_KEY);
+        convertMe(radix);
     }
 
-    private void convertMe(String type) {
+    private void convertMe(int radix) {
         if (!isChangedByUser) {
             return;
         }
 
-        String valueStr = getText(type);
-        BigInteger value = new BigInteger(valueStr, getRadix(type));
-
+        BigInteger value = null;
+        for (BaseObject baseObject : baseObjects) {
+            if (baseObject.radix == radix) {
+                value = new BigInteger(baseObject.textField.getText(), radix);
+            }
+        }
+        if (value == null) {
+            logger.error("value is null");
+            return;
+        }
         isChangedByUser = false;
-        switch (type) {
-            case BINARY:
-                octTextField.setText(value.toString(8));
-                decTextField.setText(value.toString(10));
-                hexTextField.setText(value.toString(16));
-                break;
-            case OCTAL:
-                binTextField.setText(value.toString(2));
-                decTextField.setText(value.toString(10));
-                hexTextField.setText(value.toString(16));
-                break;
-            case DECIMAL:
-                binTextField.setText(value.toString(2));
-                octTextField.setText(value.toString(8));
-                hexTextField.setText(value.toString(16));
-                break;
-            case HEX:
-                binTextField.setText(value.toString(2));
-                octTextField.setText(value.toString(8));
-                decTextField.setText(value.toString(10));
-                break;
+        for (BaseObject baseObject : baseObjects) {
+            if (baseObject.radix != radix) {
+                baseObject.textField.setText(value.toString(baseObject.radix));
+            }
         }
         isChangedByUser = true;
     }
@@ -304,18 +210,18 @@ public class BaseConvertPanel extends EasyPanel {
         return true;
     }
 
-    private boolean isValidText(String type, String text) {
-        switch (type) {
-            case BINARY: {
+    private boolean isValidText(int radix, String text) {
+        switch (radix) {
+            case 2: {
                 return isBinStr(text);
             }
-            case OCTAL: {
+            case 8: {
                 return isOctStr(text);
             }
-            case DECIMAL: {
+            case 10: {
                 return isDecStr(text);
             }
-            case HEX: {
+            case 16: {
                 return isHexStr(text);
             }
             default: {
@@ -324,39 +230,50 @@ public class BaseConvertPanel extends EasyPanel {
         }
     }
 
-    private String getText(String type) {
-        switch (type) {
-            case BINARY: {
-                return binTextField.getText();
-            }
-            case OCTAL: {
-                return octTextField.getText();
-            }
-            case DECIMAL: {
-                return decTextField.getText();
-            }
-            case HEX: {
-                return hexTextField.getText();
-            }
-            default: {
-                return "0";
-            }
-        }
-    }
+    class BaseObject {
+        int radix;
 
-    private int getRadix(String type) {
-        switch (type) {
-            case BINARY: {
-                return 2;
-            }
-            case OCTAL: {
-                return 8;
-            }
-            case HEX: {
-                return 16;
-            }
-            default: {
-                return 10;
+        JPanel panel;
+
+        JLabel label;
+
+        JTextField textField;
+
+        BaseObject(int radix) {
+            this.radix = radix;
+            panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+            label = new JLabel(this + ":");
+
+            textField = new JTextField();
+            textField.getDocument().addDocumentListener(documentListener);
+            ((PlainDocument) textField.getDocument()).setDocumentFilter(documentFilter);
+            textField.getDocument().putProperty(PROPERTY_KEY, radix);
+
+            panel.add(label);
+            panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+            panel.add(textField);
+        }
+
+        @Override
+        public String toString() {
+            switch (radix) {
+                case 2: {
+                    return BINARY;
+                }
+                case 8: {
+                    return OCTAL;
+                }
+                case 10: {
+                    return DECIMAL;
+                }
+                case 16: {
+                    return HEX;
+                }
+                default: {
+                    return String.valueOf(radix);
+                }
             }
         }
     }
