@@ -31,7 +31,7 @@ public class BaseConvertPanel extends EasyPanel {
 
     private boolean isChangedByUser;
 
-    private final List<BaseObject> baseObjects = new ArrayList<>();
+    private final List<BaseUiObject> baseUiObjects = new ArrayList<>();
 
     public BaseConvertPanel() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -42,17 +42,13 @@ public class BaseConvertPanel extends EasyPanel {
 
         isChangedByUser = true;
 
-        BaseObject binBaseObject = new BaseObject(2);
-        baseObjects.add(binBaseObject);
-        BaseObject octBaseObject = new BaseObject(8);
-        baseObjects.add(octBaseObject);
-        BaseObject decBaseObject = new BaseObject(10);
-        baseObjects.add(decBaseObject);
-        BaseObject hexBaseObject = new BaseObject(16);
-        baseObjects.add(hexBaseObject);
+        baseUiObjects.add(new BaseUiObject(2));
+        baseUiObjects.add(new BaseUiObject(8));
+        baseUiObjects.add(new BaseUiObject(10));
+        baseUiObjects.add(new BaseUiObject(16));
 
-        for (BaseObject baseObject : baseObjects) {
-            add(baseObject.panel);
+        for (BaseUiObject baseUiObject : baseUiObjects) {
+            add(baseUiObject.panel);
             add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         }
 
@@ -66,8 +62,8 @@ public class BaseConvertPanel extends EasyPanel {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             isChangedByUser = false;
-            for (BaseObject baseObject : baseObjects) {
-                baseObject.textField.setText("");
+            for (BaseUiObject baseUiObject : baseUiObjects) {
+                baseUiObject.textField.setText("");
             }
             isChangedByUser = true;
         }
@@ -143,9 +139,9 @@ public class BaseConvertPanel extends EasyPanel {
         }
 
         BigInteger value = null;
-        for (BaseObject baseObject : baseObjects) {
-            if (baseObject.radix == radix) {
-                value = new BigInteger(baseObject.textField.getText(), radix);
+        for (BaseUiObject baseUiObject : baseUiObjects) {
+            if (baseUiObject.radix == radix) {
+                value = new BigInteger(baseUiObject.textField.getText(), radix);
             }
         }
         if (value == null) {
@@ -153,9 +149,9 @@ public class BaseConvertPanel extends EasyPanel {
             return;
         }
         isChangedByUser = false;
-        for (BaseObject baseObject : baseObjects) {
-            if (baseObject.radix != radix) {
-                baseObject.textField.setText(value.toString(baseObject.radix));
+        for (BaseUiObject baseUiObject : baseUiObjects) {
+            if (baseUiObject.radix != radix) {
+                baseUiObject.textField.setText(value.toString(baseUiObject.radix));
             }
         }
         isChangedByUser = true;
@@ -230,7 +226,7 @@ public class BaseConvertPanel extends EasyPanel {
         }
     }
 
-    class BaseObject {
+    class BaseUiObject {
         int radix;
 
         JPanel panel;
@@ -239,12 +235,13 @@ public class BaseConvertPanel extends EasyPanel {
 
         JTextField textField;
 
-        BaseObject(int radix) {
+        BaseUiObject(int radix) {
             this.radix = radix;
             panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
             label = new JLabel(this + ":");
+            label.setPreferredSize(new Dimension(50, 25));
 
             textField = new JTextField();
             textField.getDocument().addDocumentListener(documentListener);

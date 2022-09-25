@@ -79,7 +79,11 @@ I am only providing a generic tool, you are the one who decides what to do with 
 
 ### Calculate and Compare File Hash
 
+**Breadcrumb Navigation**
+
 `File->Check Summary`
+
+**Introduce**
 
 * Support calculate file hash with MD5/SHA1/SHA256/SHA384/SHA512/CRC32
 * Support calculate string hash with MD5/SHA1/SHA256/SHA384/SHA512/CRC32
@@ -98,11 +102,15 @@ I am only providing a generic tool, you are the one who decides what to do with 
 
 ### Convert between color formats
 
+**Introduce**
+
 Convert between common color formats: `RGB`/`HEX`/`CMYK`/`HSB`(`HSV`)
 
 ![ColorConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/ColorConvert_01.png)
 
 ### Color picker
+
+**Introduce**
 
 A useful little color picker that grabs the pixel under your mouse and transforms it into a number of different color formats. You can use the built-in magnifier to zoom in on your screen, click on a color value to copy it directly to the clipboard.
 
@@ -110,7 +118,17 @@ A useful little color picker that grabs the pixel under your mouse and transform
 
 ### Convert between different base
 
-![BaseConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/BaseConvert_01.png)
+**Breadcrumb Navigation**
+
+`Convert->Base`
+
+**Introduce**
+
+* A base converter between Binary/Octal/Decimal/Hex
+* Show result as long as you input
+* Support calculate big number
+
+![BaseConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/BaseConvert_en.gif)
 
 ### Convert between Chinese character and Unicode character
 
