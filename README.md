@@ -1,5 +1,6 @@
 # ApkToolBoxGUI
 
+[![GitHub all releases](https://img.shields.io/github/downloads/jiangxincode/ApkToolBoxGUI/total)](https://github.com/jiangxincode/ApkToolBoxGUI/releases)
 ![Java CI with Maven](https://github.com/jiangxincode/ApkToolBoxGUI/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![Project Documentation](https://img.shields.io/badge/Aloys-Project%20Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/dab038ef9ed04bf1b73bd0031422b814)](https://www.codacy.com/gh/jiangxincode/ApkToolBoxGUI/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jiangxincode/ApkToolBoxGUI&amp;utm_campaign=Badge_Grade)
