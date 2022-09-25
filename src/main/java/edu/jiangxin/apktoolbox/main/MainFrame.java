@@ -132,7 +132,7 @@ public class MainFrame extends EasyFrame {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMenuBar();
-        contentPane = new JPanel();
+        contentPane = new AboutPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         setContentPane(contentPane);
