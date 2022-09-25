@@ -99,9 +99,19 @@ I am only providing a generic tool, you are the one who decides what to do with 
 ![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_01.png)
 ![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_02.png)
 
-### Convert between timestamp and formatted time
+### Convert between time formats
 
-![Timestamp](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Timestamp_01.png)
+**Breadcrumb Navigation**
+
+`Convert->Time`
+
+**Introduce**
+
+* Transform between timestamp and time
+* Transform between different time zones
+* Get current time
+
+![TimeConvert](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/TimeConvert_en.gif)
 
 ### Convert between color formats
 

@@ -19,33 +19,23 @@ import static java.util.Calendar.*;
 
 public class TimeConvertPanel extends EasyPanel {
 
-    private JPanel convert1Panel;
+    private JPanel convertPanel;
 
-    private JLabel timestamp1Label;
-
-    private JSpinner timestamp1Spinner;
-
-    private JComboBox<Object> timestamp1ComboBox;
-
-    private JButton convert1Button;
-
-    private JLabel time1Lable;
-
-    private JTextField time1TextField;
-
-    private JPanel convert2Panel;
-
-    private JLabel time2Label;
-
-    private JTextField time2TextField;
-
-    private JButton convert2Button;
-
-    private JLabel timestamp2Label;
+    private JLabel timestampLabel;
 
     private JSpinner timestamp2Spinner;
 
-    private JComboBox<Object> timestamp2ComboBox;
+    private JComboBox<Object> timestampComboBox;
+
+    private JLabel timeLabel;
+
+    private JTextField timeTextField;
+
+    private JPanel convertButtonsPanel;
+
+    private JButton timestamp2TimeButton;
+
+    private JButton time2TimestampButton;
 
     private JPanel currentPanel;
 
@@ -75,6 +65,7 @@ public class TimeConvertPanel extends EasyPanel {
     private final DateFormatter dtFormatter = new DateFormatter(SDF);
 
     final static String[] sortedTimeZones;
+
     static {
         String[] t = TimeZone.getAvailableIDs();
         sortedTimeZones = Arrays.copyOf(t, t.length);
@@ -90,92 +81,83 @@ public class TimeConvertPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
-        createConvert1Panel();
-        add(convert1Panel);
+        createConvertPanel();
+        add(convertPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createConvert2Panel();
-        add(convert2Panel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createConvertButtonsPanel();
+        add(convertButtonsPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));
 
         createCurrentPanel();
         add(currentPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));
 
         createCommentPanel();
         add(commentPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));
 
         createTimezonePanel();
         add(timezonePanel);
     }
 
-    private void createConvert1Panel() {
-        convert1Panel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(convert1Panel, BoxLayout.X_AXIS);
-        convert1Panel.setLayout(boxLayout);
+    private void createConvertPanel() {
+        convertPanel = new JPanel();
+        convertPanel.setLayout(new BoxLayout(convertPanel, BoxLayout.X_AXIS));
 
-        timestamp1Label = new JLabel("时间戳：");
-        convert1Panel.add(timestamp1Label);
-        convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        JPanel timestampPanel = new JPanel();
+        timestampPanel.setLayout(new BoxLayout(timestampPanel, BoxLayout.X_AXIS));
 
-        timestamp1Spinner = new JSpinner();
-        timestamp1Spinner.setModel(new SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
-        convert1Panel.add(timestamp1Spinner);
-        convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        JPanel timePanel = new JPanel();
+        timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.X_AXIS));
 
-        timestamp1ComboBox = new JComboBox<>();
-        timestamp1ComboBox.addItem("秒(s)");
-        timestamp1ComboBox.addItem("毫秒(ms)");
-        convert1Panel.add(timestamp1ComboBox);
-        convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        convertPanel.add(timestampPanel);
+        convertPanel.add(Box.createHorizontalStrut(40));
+        convertPanel.add(timePanel);
 
-        convert1Button = new JButton();
-        convert1Button.setText("时间戳转换为时间");
-        convert1Button.addActionListener(new Convert1ButtonActionListener());
-        convert1Panel.add(convert1Button);
-        convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-
-        time1Lable = new JLabel("时间：");
-        convert1Panel.add(time1Lable);
-        convert1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-
-        time1TextField = new JTextField(20);
-        convert1Panel.add(time1TextField);
-    }
-
-    private void createConvert2Panel() {
-        convert2Panel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(convert2Panel, BoxLayout.X_AXIS);
-        convert2Panel.setLayout(boxLayout);
-
-        time2Label = new JLabel("时间：");
-        convert2Panel.add(time2Label);
-        convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-
-        time2TextField = new JTextField(20);
-        convert2Panel.add(time2TextField);
-        convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-
-        convert2Button = new JButton();
-        convert2Button.setText("时间转换为时间戳");
-        convert2Button.addActionListener(new Convert2ButtonActionListener());
-        convert2Panel.add(convert2Button);
-        convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-
-        timestamp2Label = new JLabel("时间戳：");
-        convert2Panel.add(timestamp2Label);
-        convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timestampLabel = new JLabel("TimeStamp: ");
 
         timestamp2Spinner = new JSpinner();
+        timestamp2Spinner.setPreferredSize(new Dimension(150, 25));
         timestamp2Spinner.setModel(new SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
-        convert2Panel.add(timestamp2Spinner);
-        convert2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        timestamp2ComboBox = new JComboBox<>();
-        timestamp2ComboBox.addItem("秒(s)");
-        timestamp2ComboBox.addItem("毫秒(ms)");
-        convert2Panel.add(timestamp2ComboBox);
+        timestampComboBox = new JComboBox<>();
+        timestampComboBox.addItem("Second(s)");
+        timestampComboBox.addItem("Millisecond(ms)");
+
+        timestampPanel.add(timestampLabel);
+        timestampPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timestampPanel.add(timestamp2Spinner);
+        timestampPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timestampPanel.add(timestampComboBox);
+
+        timeLabel = new JLabel("Time: ");
+
+        timeTextField = new JTextField(20);
+
+        timePanel.add(timeLabel);
+        timePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        timePanel.add(timeTextField);
+    }
+
+    private void createConvertButtonsPanel() {
+        convertButtonsPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(convertButtonsPanel, BoxLayout.X_AXIS);
+        convertButtonsPanel.setLayout(boxLayout);
+
+        timestamp2TimeButton = new JButton();
+        timestamp2TimeButton.setText("Timestamp->Time");
+        timestamp2TimeButton.addActionListener(new Timestamp2TimeButtonActionListener());
+        convertButtonsPanel.add(timestamp2TimeButton);
+
+        convertButtonsPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        time2TimestampButton = new JButton();
+        time2TimestampButton.setText("Time->Timestamp");
+        time2TimestampButton.addActionListener(new Time2TimestampButtonActionListener());
+        convertButtonsPanel.add(time2TimestampButton);
+
+        convertButtonsPanel.add(Box.createHorizontalGlue());
     }
 
     private void createCurrentPanel() {
@@ -183,7 +165,7 @@ public class TimeConvertPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(currentPanel, BoxLayout.X_AXIS);
         currentPanel.setLayout(boxLayout);
 
-        currentTimestampLabel = new JLabel("当前时间戳：");
+        currentTimestampLabel = new JLabel("Current timestamp: ");
         currentPanel.add(currentTimestampLabel);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -191,7 +173,7 @@ public class TimeConvertPanel extends EasyPanel {
         currentPanel.add(currentTimestampTextField);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        currentTimeTitleLabel = new JLabel("当前时间：");
+        currentTimeTitleLabel = new JLabel("Current time: ");
         currentPanel.add(currentTimeTitleLabel);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -306,26 +288,26 @@ public class TimeConvertPanel extends EasyPanel {
         timezonePanel.add(swapButton);
     }
 
-    private final class Convert1ButtonActionListener implements ActionListener {
+    private final class Timestamp2TimeButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Long timestamp = (Long)timestamp1Spinner.getValue();
-            Integer index = timestamp1ComboBox.getSelectedIndex();
+            Long timestamp = (Long) timestamp2Spinner.getValue();
+            Integer index = timestampComboBox.getSelectedIndex();
             String result = "";
             if (index.equals(0)) {
                 result = DateUtils.secondToHumanFormat(timestamp);
             } else if (index.equals(1)) {
                 result = DateUtils.millisecondToHumanFormat(timestamp);
             }
-            time1TextField.setText(result);
+            timeTextField.setText(result);
         }
     }
 
-    private final class Convert2ButtonActionListener implements ActionListener {
+    private final class Time2TimestampButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String string = time2TextField.getText();
-            Integer index = timestamp2ComboBox.getSelectedIndex();
+            String string = timeTextField.getText();
+            Integer index = timestampComboBox.getSelectedIndex();
             Long result = 0L;
             if (index.equals(0)) {
                 result = DateUtils.humanFormatToSecond(string);
