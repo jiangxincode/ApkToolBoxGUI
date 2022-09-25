@@ -2,6 +2,7 @@ package edu.jiangxin.apktoolbox.convert.base;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -141,17 +142,22 @@ public class BaseConvertPanel extends EasyPanel {
         BigInteger value = null;
         for (BaseUiObject baseUiObject : baseUiObjects) {
             if (baseUiObject.radix == radix) {
-                value = new BigInteger(baseUiObject.textField.getText(), radix);
+                String text = baseUiObject.textField.getText();
+                if (StringUtils.isEmpty(text)) {
+                    value = null;
+                } else {
+                    value = new BigInteger(text, radix);
+                }
             }
-        }
-        if (value == null) {
-            logger.error("value is null");
-            return;
         }
         isChangedByUser = false;
         for (BaseUiObject baseUiObject : baseUiObjects) {
             if (baseUiObject.radix != radix) {
-                baseUiObject.textField.setText(value.toString(baseUiObject.radix));
+                if (value == null) {
+                    baseUiObject.textField.setText("");
+                } else {
+                    baseUiObject.textField.setText(value.toString(baseUiObject.radix));
+                }
             }
         }
         isChangedByUser = true;
