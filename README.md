@@ -91,6 +91,8 @@ I am only providing a generic tool, you are the one who decides what to do with 
 * Support compare two file
 * Support file drag and drop
 
+![CheckSum](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Checksum_01.png)
+
 ### Find duplicated files(Not Finished)
 
 ![DuplicateFile](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/DuplicateFile_01.png)
