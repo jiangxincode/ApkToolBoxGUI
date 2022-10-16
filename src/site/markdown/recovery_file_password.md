@@ -57,16 +57,16 @@ Select the file which need to be recovered, the file format is need to be matche
 There are two types of generating possible passwords: brute-force and dictionary. The latter is more efficient, but you need select one password dictionary. 
 `ApkToolBoxGUI` does not provide any dictionary for legal reasons. However, it is quite easy to find and download the dictionary on Internet.
 
-If you select dictionary: 
+If you select dictionary:
 
 * Select on password dictionary
 * Set thread number depend on your PC power
 
 ![Recover_Password](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Recover_Password_05.png)
 
-If you select brute-force
+If you select brute-force:
 
-* Select/Unselect the character type of the possible password
+* Select/Unselect the character type of possible password
 * Set the length of the possible password
 
 ![Recover_Password](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Recover_Password_06.png)
