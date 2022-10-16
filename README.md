@@ -10,7 +10,6 @@
 [![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/fb8d289a4b0ee14f9d8b/maintainability)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
-[![墨菲安全](https://img.shields.io/badge/%E5%A2%A8%E8%8F%B2%E5%AE%89%E5%85%A8-%E6%8A%A5%E5%91%8A-blue)](https://www.murphysec.com/pd/1523240128993079296/1523240128636563456)
 
 
 APKToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
