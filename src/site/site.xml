@@ -40,6 +40,9 @@ under the License.
             <item name="Android Develop" href="android_develop.html"/>
         </menu>
         <menu name="Faq">
+            <item name="How To Change Language" href="how_to_change_language.html"/>
+            <item name="How To Change Look And Feel" href="how_to_change_look_and_feel.html"/>
+            <item name="How To Contribute" href="how_to_contribute.html"/>
         </menu>
         <menu name="Project Reports">
             <item name="Dependencies" href="dependencies.html"/>

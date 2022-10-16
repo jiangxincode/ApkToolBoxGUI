@@ -16,7 +16,7 @@ I am only providing a generic tool, you are the one who decides what to do with 
 * Support progress showing
 * Support brute force recovery and dictionary recovery (more methods will be supported in the future)
 * Brute force recovery supports customized character set and password length
-* Dictionary recovery supports customized dictionaries. The default dictionary currently covers various common download sites, gentlemen's sites, and other network resource passwords (if you find a password that is not covered in the dictionary, please provide feedback to help more people)
+* Dictionary recovery supports customized dictionaries
 
 ### Usage
 
