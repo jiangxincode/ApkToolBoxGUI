@@ -21,9 +21,25 @@ under the License.
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
     <body>
-        <menu name="Overview">
-            <item name="Features" href="features.html"/>
-            <item name="Usage" href="usage.html"/>
+        <menu name="Download and Install">
+            <item name="Download and Install" href="download_and_install.html"/>
+        </menu>
+        <menu name="Features">
+            <item name="Recovery File Password" href="recovery_file_password.html"/>
+            <item name="Convert Encoding" href="convert_encoding.html"/>
+            <item name="Convert OS Pattern" href="convert_os_pattern.html"/>
+            <item name="Convert Simplified/Traditional Chinese" href="convert_simplified_traditional_chinese.html"/>
+            <item name="Check Summary" href="check_summary.html"/>
+            <item name="Find Duplicate Files" href="find_duplicate_files.html"/>
+            <item name="Convert Time Format" href="convert_time_format.html"/>
+            <item name="Convert Color Format" href="convert_color_format.html"/>
+            <item name="Color Picker" href="color_picker.html"/>
+            <item name="Convert Base" href="convert_base.html"/>
+            <item name="Convert Unicode Character" href="convert_unicode_character.html"/>
+            <item name="Reverse Engineer" href="reverse_engineer.html"/>
+            <item name="Android Develop" href="android_develop.html"/>
+        </menu>
+        <menu name="Faq">
         </menu>
         <menu name="Project Reports">
             <item name="Dependencies" href="dependencies.html"/>
