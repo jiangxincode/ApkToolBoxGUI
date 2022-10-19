@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,12 +37,13 @@ public class FileHandle {
         if (success.compareAndSet(true, true) || stop) {
             return;
         }
+        recoveryPanel.setCurrentPassword(line);
         recoveryPanel.setProgressBarValue(Math.toIntExact(currentLineCount));
 
         if (fileChecker.checkPassword(line) ) {
             if (success.compareAndSet(false, true)) {
                 logger.info("find password: " + line);
-                recoveryPanel.setIsRecovering(false);
+                recoveryPanel.setState(State.IDLE);
                 bigFileReader.shutdown();
                 JOptionPane.showMessageDialog(recoveryPanel, "Password[" + line + "]");
                 recoveryPanel.setProgressBarValue(0);

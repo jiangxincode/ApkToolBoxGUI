@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;
 import org.apache.logging.log4j.LogManager;
@@ -8,15 +9,15 @@ import org.apache.logging.log4j.Logger;
 
 public class BruteForceTask implements Runnable {
     private static final Logger logger = LogManager.getLogger(BruteForceTask.class.getSimpleName());
-    private int taskId;
-    private boolean isEarlyTermination;
-    private BruteForceFuture bruteForceFuture;
-    private BruteForceTaskConst consts;
-    private RecoveryPanel recoveryPanel;
+    private final int taskId;
+    private final BruteForceFuture bruteForceFuture;
+    private final BruteForceTaskConst consts;
+    private final RecoveryPanel recoveryPanel;
 
-    public BruteForceTask(int taskId, boolean isEarlyTermination, BruteForceTaskConst consts, BruteForceFuture bruteForceFuture, RecoveryPanel recoveryPanel) {
+    private boolean isStopped;
+
+    public BruteForceTask(int taskId, BruteForceTaskConst consts, BruteForceFuture bruteForceFuture, RecoveryPanel recoveryPanel) {
         this.taskId = taskId;
-        this.isEarlyTermination = isEarlyTermination;
         this.consts = consts;
         this.bruteForceFuture = bruteForceFuture;
         this.recoveryPanel = recoveryPanel;
@@ -38,8 +39,16 @@ public class BruteForceTask implements Runnable {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
-            if ((isEarlyTermination && bruteForceFuture.isDone()) || Thread.currentThread().isInterrupted()) {
-                logger.info("isInterrupted");
+            if (bruteForceFuture.isDone()) {
+                logger.info("isDone: " + Thread.currentThread().getName());
+                return null;
+            }
+            if (Thread.currentThread().isInterrupted()) {
+                logger.info("isInterrupted: " + Thread.currentThread().getName());
+                return null;
+            }
+            if (recoveryPanel.getState() == State.STOPPING) {
+                logger.info("isStopped: " + Thread.currentThread().getName());
                 return null;
             }
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());
@@ -53,6 +62,7 @@ public class BruteForceTask implements Runnable {
                 logger.error("Exception, stop", e);
                 result = -1;
             } finally {
+                recoveryPanel.setCurrentPassword(password);
                 recoveryPanel.increaseProgressBarValue();
             }
             if (result == 0) {
