@@ -43,7 +43,7 @@ public class FileHandle {
         if (fileChecker.checkPassword(line) ) {
             if (success.compareAndSet(false, true)) {
                 logger.info("find password: " + line);
-                recoveryPanel.setState(State.IDLE);
+                recoveryPanel.setCurrentState(State.IDLE);
                 bigFileReader.shutdown();
                 JOptionPane.showMessageDialog(recoveryPanel, "Password[" + line + "]");
                 recoveryPanel.setProgressBarValue(0);

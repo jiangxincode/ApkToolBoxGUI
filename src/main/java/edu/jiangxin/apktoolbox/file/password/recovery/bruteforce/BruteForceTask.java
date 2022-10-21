@@ -47,7 +47,7 @@ public class BruteForceTask implements Runnable {
                 logger.info("isInterrupted: " + Thread.currentThread().getName());
                 return null;
             }
-            if (recoveryPanel.getState() == State.STOPPING) {
+            if (recoveryPanel.getCurrentState() == State.STOPPING) {
                 logger.info("isStopped: " + Thread.currentThread().getName());
                 return null;
             }
