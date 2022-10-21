@@ -365,7 +365,7 @@ public final class RecoveryPanel extends EasyPanel {
             setProgressMaxValue((int) Math.pow(charSet.length(), length));
             setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
-            int numThreads = Math.min(getThreadCount(charSet.length(), length), currentFileChecker.getMaxThreadNum());
+            int numThreads = getThreadCount(charSet.length(), length, currentFileChecker.getMaxThreadNum());
             logger.info("[" + currentFileChecker + "]Current attempt length: " + length + ", thread number: " + numThreads);
 
             workerPool = Executors.newFixedThreadPool(numThreads);
@@ -498,10 +498,13 @@ public final class RecoveryPanel extends EasyPanel {
         setCurrentState(State.IDLE);
     }
 
-    private int getThreadCount(int charSetSize, int length) {
+    private int getThreadCount(int charSetSize, int length, int maxThreadCount) {
         int result = 1;
         for (int i = 1; i <= length; i++) {
             result *= charSetSize;
+            if (result >= maxThreadCount) {
+                return maxThreadCount;
+            }
         }
         return result;
     }
