@@ -68,18 +68,24 @@ public final class RecoveryPanel extends EasyPanel {
 
     private JLabel currentPasswordLabel;
 
-    private JLabel currentProgressLabel;
-
     private ExecutorService workerPool;
 
     private BigFileReader bigFileReader;
     private LineHandler lineHandler;
 
+    private NumberFormat numberFormat;
+
     private static State currentState = State.IDLE;
 
     public RecoveryPanel() {
         super();
+        initBase();
         initUI();
+    }
+
+    private void initBase() {
+        numberFormat = NumberFormat.getPercentInstance();
+        numberFormat.setMinimumFractionDigits(3);
     }
 
     private void initUI() {
@@ -139,7 +145,8 @@ public final class RecoveryPanel extends EasyPanel {
 
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
-        progressBar.setValue(0);
+        String text = numberFormat.format(0);
+        progressBar.setString(text);
 
         optionPanel.add(checkerTypeComboBox);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -234,7 +241,6 @@ public final class RecoveryPanel extends EasyPanel {
         stopButton = new JButton("Stop");
         currentStateLabel = new JLabel();
         currentPasswordLabel = new JLabel();
-        currentProgressLabel = new JLabel();
 
         operationPanel.add(startButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -243,8 +249,6 @@ public final class RecoveryPanel extends EasyPanel {
         operationPanel.add(currentStateLabel);
         operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));
         operationPanel.add(currentPasswordLabel);
-        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));
-        operationPanel.add(currentProgressLabel);
         operationPanel.add(Box.createHorizontalGlue());
 
         startButton.addActionListener(e -> new Thread(this::onStart).start());
@@ -523,7 +527,6 @@ public final class RecoveryPanel extends EasyPanel {
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
             currentPasswordLabel.setText("");
-            currentProgressLabel.setText("");
         }
     }
 
@@ -532,33 +535,18 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     public void setProgressMaxValue(int maxValue) {
-        if (progressBar != null) {
-            progressBar.setMaximum(maxValue);
-        }
-    }
-
-    public void setProgressBarValue(int value) {
-        if (progressBar != null) {
-            progressBar.setValue(value);
-            setCurrentProgress(progressBar.getMaximum(), value);
-        }
+        progressBar.setMaximum(maxValue);
     }
 
     public void increaseProgressBarValue() {
-        if (progressBar != null) {
-            int currentValue = progressBar.getValue();
-            progressBar.setValue(currentValue + 1);
-            setCurrentProgress(progressBar.getMaximum(), currentValue + 1);
-        }
+        int currentValue = progressBar.getValue();
+        setProgressBarValue(currentValue + 1);
     }
 
-    public void setCurrentProgress(int total, int current) {
-        if (currentProgressLabel != null) {
-            NumberFormat numberFormat = NumberFormat.getPercentInstance();
-            numberFormat.setMinimumFractionDigits(3);
-            String value = numberFormat.format(((double)current) / total);
-            currentProgressLabel.setText("Progress: " + value);
-        }
+    public void setProgressBarValue(int value) {
+        progressBar.setValue(value);
+        String text = numberFormat.format(((double)value) / progressBar.getMaximum());
+        progressBar.setString(text);
     }
 
     public void setCurrentPassword(String password) {
