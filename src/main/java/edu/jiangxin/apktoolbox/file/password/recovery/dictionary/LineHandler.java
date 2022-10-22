@@ -9,24 +9,19 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class FileHandle {
+public class LineHandler {
 
-    private static final Logger logger = LogManager.getLogger(FileHandle.class.getSimpleName());
+    private static final Logger logger = LogManager.getLogger(LineHandler.class.getSimpleName());
 
     private AtomicBoolean success;
-    private boolean stop = false;
 
     RecoveryPanel recoveryPanel;
     private FileChecker fileChecker;
 
-    public FileHandle(FileChecker fileChecker, AtomicBoolean success, RecoveryPanel recoveryPanel) {
+    public LineHandler(FileChecker fileChecker, AtomicBoolean success, RecoveryPanel recoveryPanel) {
         this.fileChecker = fileChecker;
         this.success = success;
         this.recoveryPanel = recoveryPanel;
-    }
-
-    public void stop() {
-        this.stop = true;
     }
 
     public AtomicBoolean getSuccess() {
@@ -34,7 +29,7 @@ public class FileHandle {
     }
 
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
-        if (success.compareAndSet(true, true) || stop) {
+        if (success.compareAndSet(true, true) || recoveryPanel.getCurrentState() != State.WORKING) {
             return;
         }
         recoveryPanel.setCurrentPassword(line);
@@ -47,10 +42,9 @@ public class FileHandle {
                 bigFileReader.shutdown();
                 JOptionPane.showMessageDialog(recoveryPanel, "Password[" + line + "]");
                 recoveryPanel.setProgressBarValue(0);
-                return;
             }
         } else {
-            if (!success.compareAndSet(true, true) && !stop) {
+            if (!success.compareAndSet(true, true) && recoveryPanel.getCurrentState() == State.WORKING) {
                 logger.info("try password[" + line + "] failed");
             }
         }

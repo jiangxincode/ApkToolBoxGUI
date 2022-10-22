@@ -6,7 +6,7 @@ import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTask;
 import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTaskConst;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.FileHandle;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.LineHandler;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -73,9 +73,7 @@ public final class RecoveryPanel extends EasyPanel {
     private ExecutorService workerPool;
 
     private BigFileReader bigFileReader;
-    private FileHandle fileHandle;
-
-    private static boolean isRecovering = false;
+    private LineHandler lineHandler;
 
     private static State currentState = State.IDLE;
 
@@ -411,7 +409,7 @@ public final class RecoveryPanel extends EasyPanel {
             setCurrentState(State.WORKING);
             setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
             setProgressBarValue(0);
-            Predicate<String> isRecoveringPredicate = password -> isRecovering;
+            Predicate<String> isRecoveringPredicate = password -> getCurrentState() == State.WORKING;
             Function<String, Stream<String>> generator = password -> {
                 setCurrentPassword(password);
                 increaseProgressBarValue();
@@ -446,12 +444,12 @@ public final class RecoveryPanel extends EasyPanel {
         logger.info("[TaskTracing]File line count: " + fileLineCount);
         setProgressMaxValue(fileLineCount);
         setProgressBarValue(0);
-        fileHandle = new FileHandle(currentFileChecker, new AtomicBoolean(false), this);
+        lineHandler = new LineHandler(currentFileChecker, new AtomicBoolean(false), this);
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-        BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), fileHandle);
+        BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), lineHandler);
         bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
         bigFileReader.setCompleteCallback(() -> {
-            if (fileHandle != null && !fileHandle.getSuccess().get()) {
+            if (lineHandler != null && !lineHandler.getSuccess().get()) {
                 logger.error("Can not find password");
                 JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
                 onStopByDictionaryMultiThreadCategory();
@@ -488,14 +486,12 @@ public final class RecoveryPanel extends EasyPanel {
 
     private void onStopByDictionaryMultiThreadCategory() {
         logger.info("onStopByDictionaryMultiThreadCategory");
-        if (bigFileReader != null) {
-            fileHandle.stop();
-        }
+        setCurrentState(State.STOPPING);
         if (bigFileReader != null) {
             bigFileReader.shutdown();
         }
-        setProgressBarValue(0);
         setCurrentState(State.IDLE);
+        setProgressBarValue(0);
     }
 
     private int getThreadCount(int charSetSize, int length, int maxThreadCount) {
@@ -507,10 +503,6 @@ public final class RecoveryPanel extends EasyPanel {
             }
         }
         return result;
-    }
-
-    public boolean isStopped() {
-        return isRecovering;
     }
 
     public void setCurrentState(State currentState) {

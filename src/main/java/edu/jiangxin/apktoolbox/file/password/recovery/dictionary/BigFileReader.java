@@ -1,6 +1,5 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +18,7 @@ public class BigFileReader {
     private int threadSize;
     private String charset;
     private int bufferSize;
-    private FileHandle handle;
+    private LineHandler lineHandler;
     private ScheduledThreadPoolExecutor executorService;
     private long fileLength;
     private RandomAccessFile rAccessFile;
@@ -28,9 +27,9 @@ public class BigFileReader {
     private AtomicLong counter = new AtomicLong(0);
     private CompleteCallback completeCallback;
 
-    private BigFileReader(File file, FileHandle handle, String charset, int bufferSize, int threadSize) {
+    private BigFileReader(File file, LineHandler lineHandler, String charset, int bufferSize, int threadSize) {
         this.fileLength = file.length();
-        this.handle = handle;
+        this.lineHandler = lineHandler;
         this.charset = charset;
         this.bufferSize = bufferSize;
         this.threadSize = threadSize;
@@ -126,7 +125,7 @@ public class BigFileReader {
         } else {
             line = new String(bytes, charset);
         }
-        handle.handle(line, counter.incrementAndGet(), this);
+        lineHandler.handle(line, counter.incrementAndGet(), this);
     }
 
     private static class StartEndPair {
@@ -220,10 +219,10 @@ public class BigFileReader {
         private int threadSize = 1;
         private String charset = null;
         private int bufferSize = 1024 * 1024;
-        private FileHandle handle;
+        private LineHandler handle;
         private File file;
 
-        public Builder(String file, FileHandle handle) {
+        public Builder(String file, LineHandler handle) {
             this.file = new File(file);
             if (!this.file.exists())
                 throw new IllegalArgumentException("文件不存在！");
