@@ -1,25 +1,24 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
 
-import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.State;
+import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class BruteForceTask implements Runnable {
-    private static final Logger logger = LogManager.getLogger(BruteForceTask.class.getSimpleName());
-    private int taskId;
-    private boolean isEarlyTermination;
-    private BruteForceFuture bruteForceFuture;
-    private BruteForceTaskConst consts;
-    private RecoveryPanel recoveryPanel;
+public class BruteForceRunnable implements Runnable {
+    private static final Logger logger = LogManager.getLogger(BruteForceRunnable.class.getSimpleName());
+    private final int taskId;
+    private final BruteForceFuture bruteForceFuture;
+    private final BruteForceTaskParam consts;
+    private final Synchronizer synchronizer;
 
-    public BruteForceTask(int taskId, boolean isEarlyTermination, BruteForceTaskConst consts, BruteForceFuture bruteForceFuture, RecoveryPanel recoveryPanel) {
+    public BruteForceRunnable(int taskId, BruteForceTaskParam consts, BruteForceFuture bruteForceFuture, Synchronizer synchronizer) {
         this.taskId = taskId;
-        this.isEarlyTermination = isEarlyTermination;
         this.consts = consts;
         this.bruteForceFuture = bruteForceFuture;
-        this.recoveryPanel = recoveryPanel;
+        this.synchronizer = synchronizer;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class BruteForceTask implements Runnable {
         bruteForceFuture.set(passwordOrNull);
     }
 
-    /*	### findPasswordInRange	###
+    /*
      * The findPasswordInRange method find the original password using md5 hash function
      * if a thread discovers the password, it returns original password string; otherwise, it returns null;
      */
@@ -38,8 +37,12 @@ public class BruteForceTask implements Runnable {
         int[] passwordIterator = new int[consts.getPasswordLength()];
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
-            if ((isEarlyTermination && bruteForceFuture.isDone()) || Thread.currentThread().isInterrupted()) {
-                logger.info("isInterrupted");
+            if (bruteForceFuture.isDone()) {
+                logger.info("isDone: " + Thread.currentThread().getName());
+                return null;
+            }
+            if (bruteForceFuture.isCancelled()) {
+                logger.info("isCancelled: " + Thread.currentThread().getName());
                 return null;
             }
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());
@@ -53,7 +56,8 @@ public class BruteForceTask implements Runnable {
                 logger.error("Exception, stop", e);
                 result = -1;
             } finally {
-                recoveryPanel.increaseProgressBarValue();
+                synchronizer.setCurrentPassword(password);
+                synchronizer.increaseProgressBarValue();
             }
             if (result == 0) {
                 getNextCandidate(passwordIterator, consts.getCharsSet().length());
@@ -66,7 +70,7 @@ public class BruteForceTask implements Runnable {
         return null;
     }
 
-    /* ###	transformDecToBaseN  ###
+    /*
      * The transformDecToBaseN transforms decimal into numArray that is base N number system
      * If you don't understand, refer to the homework01 overview
      */

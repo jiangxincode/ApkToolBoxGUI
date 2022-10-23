@@ -1,12 +1,10 @@
 package edu.jiangxin.apktoolbox.file.password.recovery;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceFuture;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTask;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTaskConst;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceProxy;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.FileHandle;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.DictionaryMultiThreadProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread.DictionarySingleThreadProxy;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -17,18 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.io.File;
+import java.text.NumberFormat;
 
-public final class RecoveryPanel extends EasyPanel {
+public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     private JPanel optionPanel;
 
     private FilePanel recoveryFilePanel;
@@ -41,14 +31,7 @@ public final class RecoveryPanel extends EasyPanel {
 
     private FilePanel dictionaryFilePanel;
 
-    private enum CATEGORY {
-        UNKNOWN,
-        BRUTE_FORCE,
-        DICTIONARY_SINGLE_THREAD,
-        DICTIONARY_MULTI_THREAD
-    }
-
-    private CATEGORY currentCategory = CATEGORY.UNKNOWN;
+    private Category currentCategory = Category.UNKNOWN;
 
     private JPanel operationPanel;
 
@@ -70,16 +53,23 @@ public final class RecoveryPanel extends EasyPanel {
     private JButton startButton;
     private JButton stopButton;
 
-    private ExecutorService workerPool;
+    private JLabel currentStateLabel;
 
-    private BigFileReader bigFileReader;
-    private FileHandle fileHandle;
+    private JLabel currentPasswordLabel;
 
-    private static boolean isRecovering = false;
+    private NumberFormat numberFormat;
+
+    private State currentState = State.IDLE;
 
     public RecoveryPanel() {
         super();
+        initBase();
         initUI();
+    }
+
+    private void initBase() {
+        numberFormat = NumberFormat.getPercentInstance();
+        numberFormat.setMinimumFractionDigits(3);
     }
 
     private void initUI() {
@@ -110,7 +100,7 @@ public final class RecoveryPanel extends EasyPanel {
         checkerTypeComboBox.addItem(new BinaryOfficeChecker());
         checkerTypeComboBox.setSelectedIndex(0);
         checkerTypeComboBox.addItemListener(e -> {
-            FileChecker fileChecker = (FileChecker)e.getItem();
+            FileChecker fileChecker = (FileChecker) e.getItem();
             if (fileChecker == null) {
                 logger.error("fileChecker is null");
                 return;
@@ -139,7 +129,8 @@ public final class RecoveryPanel extends EasyPanel {
 
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
-        progressBar.setValue(0);
+        String text = numberFormat.format(0);
+        progressBar.setString(text);
 
         optionPanel.add(checkerTypeComboBox);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
@@ -232,14 +223,24 @@ public final class RecoveryPanel extends EasyPanel {
 
         startButton = new JButton("Start");
         stopButton = new JButton("Stop");
+        currentStateLabel = new JLabel();
+        currentPasswordLabel = new JLabel();
+        currentPasswordLabel.setText("");
 
         operationPanel.add(startButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(stopButton);
+        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));
+        operationPanel.add(currentStateLabel);
+        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));
+        operationPanel.add(currentPasswordLabel);
+        operationPanel.add(Box.createHorizontalGlue());
 
         startButton.addActionListener(e -> new Thread(this::onStart).start());
 
         stopButton.addActionListener(e -> new Thread(this::onStop).start());
+
+        setCurrentState(State.IDLE);
     }
 
     private void onStart() {
@@ -270,17 +271,18 @@ public final class RecoveryPanel extends EasyPanel {
 
         Component selectedPanel = categoryTabbedPane.getSelectedComponent();
         if (selectedPanel.equals(bruteForceCategoryPanel)) {
-            currentCategory = CATEGORY.BRUTE_FORCE;
+            currentCategory = Category.BRUTE_FORCE;
         } else if (selectedPanel.equals(dictionaryCategoryPanel)) {
             int threadNum = (Integer) threadNumSpinner.getValue();
             if (threadNum == 1) {
-                currentCategory = CATEGORY.DICTIONARY_SINGLE_THREAD;
+                currentCategory = Category.DICTIONARY_SINGLE_THREAD;
             } else {
-                currentCategory = CATEGORY.DICTIONARY_MULTI_THREAD;
+                currentCategory = Category.DICTIONARY_MULTI_THREAD;
             }
         } else {
-            currentCategory = CATEGORY.UNKNOWN;
+            currentCategory = Category.UNKNOWN;
         }
+        logger.info("onStart: " + currentCategory);
         switch (currentCategory) {
             case BRUTE_FORCE:
                 onStartByBruteForceCategory();
@@ -298,6 +300,7 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     private void onStop() {
+        logger.info("onStop: " + currentCategory);
         switch (currentCategory) {
             case BRUTE_FORCE:
                 onStopByBruteForceCategory();
@@ -315,7 +318,6 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     private void onStartByBruteForceCategory() {
-        logger.info("onStartByBruteForceCategory");
         StringBuilder sb = new StringBuilder();
         if (numberCheckBox.isSelected()) {
             sb.append("0123456789");
@@ -330,7 +332,7 @@ public final class RecoveryPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "Character set is empty!");
             return;
         }
-        final String charSet = sb.toString();
+        final String charset = sb.toString();
 
         int minLength = (Integer) minSpinner.getValue();
         int maxLength = (Integer) maxSpinner.getValue();
@@ -339,48 +341,31 @@ public final class RecoveryPanel extends EasyPanel {
             return;
         }
 
-        setIsRecovering(true);
+        setCurrentState(State.WORKING);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
-            if (!isRecovering) {
-                logger.info("Stop try next length");
+            if (currentState != State.WORKING) {
+                logger.info("Break because of state: " + currentState);
                 break;
             }
-            setProgressMaxValue((int) Math.pow(charSet.length(), length));
+            setProgressMaxValue((int) Math.pow(charset.length(), length));
             setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
-            int numThreads = Math.min(getThreadCount(charSet.length(), length), currentFileChecker.getMaxThreadNum());
+            int numThreads = getThreadCount(charset.length(), length, currentFileChecker.getMaxThreadNum());
             logger.info("[" + currentFileChecker + "]Current attempt length: " + length + ", thread number: " + numThreads);
-
-            workerPool = Executors.newFixedThreadPool(numThreads);
-            BruteForceFuture bruteForceFuture = new BruteForceFuture(numThreads);
-            BruteForceTaskConst consts = new BruteForceTaskConst(numThreads, length, currentFileChecker, charSet);
-
-            for (int taskId = 0; taskId < numThreads; taskId++) {
-                BruteForceTask task = new BruteForceTask(taskId, true, consts, bruteForceFuture, this);
-                workerPool.execute(task);
-            }
-            try {
-                password = bruteForceFuture.get();
-            } catch (Exception e) {
-                logger.info("Exception test: ", e);
-            } finally {
-                if (workerPool.isShutdown()) {
-                    workerPool.shutdown();
-                }
-            }
+            BruteForceProxy proxy = BruteForceProxy.getInstance();
+            password = proxy.startAndGet(numThreads, length, currentFileChecker, charset, this);
             long endTime = System.currentTimeMillis();
             logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
             if (password != null) {
                 break;
             }
         }
-        JOptionPane.showMessageDialog(this, Objects.requireNonNullElse(password, "Can not find password"));
+        showResultWithDialog(password);
         onStopByBruteForceCategory();
     }
 
     private void onStartByDictionarySingleThreadCategory() {
-        logger.info("onStartByDictionarySingleThreadCategory");
         File dictionaryFile = dictionaryFilePanel.getFile();
         if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
@@ -389,128 +374,133 @@ public final class RecoveryPanel extends EasyPanel {
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
         if (charsetName == null) {
+            JOptionPane.showMessageDialog(this, "Invalid charsetName");
             return;
         }
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-            setIsRecovering(true);
-            setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-            setProgressBarValue(0);
-            Predicate<String> isRecoveringPredicate = password -> isRecovering;
-            Function<String, Stream<String>> generator = password -> {
-                increaseProgressBarValue();
-                return Stream.of(password.toLowerCase(), password.toUpperCase());
-            };
-            Predicate<String> verifier = currentFileChecker::checkPassword;
-            // java.util.stream.BaseStream.parallel can not increase the speed in test
-            Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
-            if (password.isPresent()) {
-                JOptionPane.showMessageDialog(this, password.get());
-            } else {
-                JOptionPane.showMessageDialog(this, "Can not find password");
-            }
-        } catch (FileNotFoundException e) {
-            logger.info("FileNotFoundException");
-        } catch (IOException e) {
-            logger.info("IOException");
-        }
+        setCurrentState(State.WORKING);
+        setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+        setProgressBarValue(0);
+        DictionarySingleThreadProxy proxy = DictionarySingleThreadProxy.getInstance();
+        String password = proxy.startAndGet(dictionaryFile, currentFileChecker, charsetName, this);
+        showResultWithDialog(password);
         onStopByDictionarySingleThreadCategory();
     }
 
     private void onStartByDictionaryMultiThreadCategory() {
-        logger.info("onStartByDictionaryMultiThreadCategory");
         File dictionaryFile = dictionaryFilePanel.getFile();
         if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
             return;
         }
         int threadNum = (Integer) threadNumSpinner.getValue();
-        setIsRecovering(true);
         int fileLineCount = Utils.getFileLineCount(dictionaryFile);
-        logger.info("[TaskTracing]File line count: " + fileLineCount);
+        logger.info("File line count: " + fileLineCount);
+
+        setCurrentState(State.WORKING);
         setProgressMaxValue(fileLineCount);
         setProgressBarValue(0);
-        fileHandle = new FileHandle(currentFileChecker, new AtomicBoolean(false), this);
-        String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-        BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), fileHandle);
-        bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
-        bigFileReader.setCompleteCallback(() -> {
-            if (fileHandle != null && !fileHandle.getSuccess().get()) {
-                logger.error("Can not find password");
-                JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
-                onStopByDictionaryMultiThreadCategory();
-            }
-        });
-        bigFileReader.start();
+
+        DictionaryMultiThreadProxy proxy = DictionaryMultiThreadProxy.getInstance();
+        String password = proxy.startAndGet(threadNum, dictionaryFile, currentFileChecker, this);
+        showResultWithDialog(password);
+        onStopByDictionaryMultiThreadCategory();
     }
 
     private void onStopByBruteForceCategory() {
-        logger.info("onStopByBruteForceCategory");
-        if (workerPool != null && !workerPool.isShutdown()) {
-            workerPool.shutdownNow();
+        if (getCurrentState() != State.WORKING) {
+            return;
         }
-        setProgressBarValue(0);
-        setIsRecovering(false);
-        while (workerPool != null && !workerPool.isTerminated()) {
-            try {
-                final boolean isTimeout = !workerPool.awaitTermination(100, TimeUnit.SECONDS);
-                logger.info("awaitTermination isTimeout: " + isTimeout);
-            } catch (InterruptedException e) {
-                logger.error("awaitTermination failed");
-                Thread.currentThread().interrupt();
-            }
-        }
+        setCurrentState(State.STOPPING);
+        BruteForceProxy.getInstance().cancel();
+        setCurrentState(State.IDLE);
     }
 
     private void onStopByDictionarySingleThreadCategory() {
-        logger.info("onStopByDictionarySingleThreadCategory");
-        setProgressBarValue(0);
-        setIsRecovering(false);
+        if (getCurrentState() != State.WORKING) {
+            return;
+        }
+        setCurrentState(State.STOPPING);
+        DictionarySingleThreadProxy.getInstance().cancel();
+        setCurrentState(State.IDLE);
     }
 
     private void onStopByDictionaryMultiThreadCategory() {
-        logger.info("onStopByDictionaryMultiThreadCategory");
-        if (bigFileReader != null) {
-            fileHandle.stop();
+        if (getCurrentState() != State.WORKING) {
+            return;
         }
-        if (bigFileReader != null) {
-            bigFileReader.shutdown();
-        }
-        setProgressBarValue(0);
-        setIsRecovering(false);
+        setCurrentState(State.STOPPING);
+        DictionaryMultiThreadProxy.getInstance().cancel();
+        setCurrentState(State.IDLE);
     }
 
-    private int getThreadCount(int charSetSize, int length) {
+    private int getThreadCount(int charSetSize, int length, int maxThreadCount) {
         int result = 1;
         for (int i = 1; i <= length; i++) {
             result *= charSetSize;
+            if (result >= maxThreadCount) {
+                return maxThreadCount;
+            }
         }
         return result;
     }
 
-    public void setIsRecovering(boolean isRecovering) {
-        RecoveryPanel.isRecovering = isRecovering;
-        setCursor(Cursor.getPredefinedCursor(isRecovering ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
-        startButton.setEnabled(!isRecovering);
-        stopButton.setEnabled(isRecovering);
+    private void showResultWithDialog(String password) {
+        if (password == null) {
+            logger.error("Can not find password");
+            JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
+        } else {
+            logger.info("Find out the password: " + password);
+            JOptionPane.showMessageDialog(RecoveryPanel.this, "Find out the password: " + password);
+        }
     }
 
+    @Override
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+        if (currentStateLabel != null) {
+            currentStateLabel.setText("State: " + currentState.toString());
+        }
+        if (currentState == State.WORKING) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            startButton.setEnabled(false);
+            stopButton.setEnabled(true);
+        } else if (currentState == State.STOPPING) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            startButton.setEnabled(false);
+            stopButton.setEnabled(false);
+        } else if (currentState == State.IDLE) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            startButton.setEnabled(true);
+            stopButton.setEnabled(false);
+            currentPasswordLabel.setText("");
+        }
+    }
+
+    @Override
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    @Override
     public void setProgressMaxValue(int maxValue) {
-        if (progressBar != null) {
-            progressBar.setMaximum(maxValue);
-        }
+        progressBar.setMaximum(maxValue);
     }
 
-    public void setProgressBarValue(int value) {
-        if (progressBar != null) {
-            progressBar.setValue(value);
-        }
-    }
-
+    @Override
     public void increaseProgressBarValue() {
-        if (progressBar != null) {
-            int currentValue = progressBar.getValue();
-            progressBar.setValue(currentValue + 1);
-        }
+        setProgressBarValue(progressBar.getValue() + 1);
+    }
+
+    @Override
+    public void setProgressBarValue(int value) {
+        progressBar.setValue(value);
+        String text = numberFormat.format(((double) value) / progressBar.getMaximum());
+        progressBar.setString(text);
+    }
+
+    @Override
+    public void setCurrentPassword(String password) {
+        currentPasswordLabel.setText("Trying: " + password);
     }
 }
 

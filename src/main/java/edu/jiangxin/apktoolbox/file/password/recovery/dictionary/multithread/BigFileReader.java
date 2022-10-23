@@ -1,6 +1,5 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
+package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,18 +18,18 @@ public class BigFileReader {
     private int threadSize;
     private String charset;
     private int bufferSize;
-    private FileHandle handle;
+    private LineHandler lineHandler;
     private ScheduledThreadPoolExecutor executorService;
     private long fileLength;
     private RandomAccessFile rAccessFile;
     private Set<StartEndPair> startEndPairs;
     private CyclicBarrier cyclicBarrier;
     private AtomicLong counter = new AtomicLong(0);
-    private CompleteCallback completeCallback;
+    private CompleteCallback callback;
 
-    private BigFileReader(File file, FileHandle handle, String charset, int bufferSize, int threadSize) {
+    private BigFileReader(File file, LineHandler lineHandler, String charset, int bufferSize, int threadSize, CompleteCallback callback) {
         this.fileLength = file.length();
-        this.handle = handle;
+        this.lineHandler = lineHandler;
         this.charset = charset;
         this.bufferSize = bufferSize;
         this.threadSize = threadSize;
@@ -41,10 +40,7 @@ public class BigFileReader {
         }
         this.executorService = new ScheduledThreadPoolExecutor(threadSize);
         startEndPairs = new HashSet<>();
-    }
-
-    public void setCompleteCallback(CompleteCallback completeCallback) {
-        this.completeCallback = completeCallback;
+        this.callback = callback;
     }
 
     public void start() {
@@ -62,7 +58,7 @@ public class BigFileReader {
         cyclicBarrier = new CyclicBarrier(parties, () -> {
             logger.info("use time: " + (System.currentTimeMillis() - startTime) + "ms");
             logger.info("all line: " + counter.get());
-            completeCallback.onComplete();
+            callback.onComplete(null);
         });
         for (StartEndPair pair : startEndPairs) {
             logger.info("pair: " + pair);
@@ -126,7 +122,7 @@ public class BigFileReader {
         } else {
             line = new String(bytes, charset);
         }
-        handle.handle(line, counter.incrementAndGet(), this);
+        lineHandler.handle(line, counter.incrementAndGet(), this);
     }
 
     private static class StartEndPair {
@@ -220,10 +216,12 @@ public class BigFileReader {
         private int threadSize = 1;
         private String charset = null;
         private int bufferSize = 1024 * 1024;
-        private FileHandle handle;
+        private LineHandler handle;
         private File file;
 
-        public Builder(String file, FileHandle handle) {
+        private CompleteCallback callback;
+
+        public Builder(String file, LineHandler handle) {
             this.file = new File(file);
             if (!this.file.exists())
                 throw new IllegalArgumentException("文件不存在！");
@@ -245,8 +243,13 @@ public class BigFileReader {
             return this;
         }
 
+        public Builder withOnCompleteCallback(CompleteCallback callback) {
+            this.callback = callback;
+            return this;
+        }
+
         public BigFileReader build() {
-            return new BigFileReader(this.file, this.handle, this.charset, this.bufferSize, this.threadSize);
+            return new BigFileReader(this.file, this.handle, this.charset, this.bufferSize, this.threadSize, this.callback);
         }
     }
 }
