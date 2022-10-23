@@ -2,7 +2,7 @@ package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 
-public class BruteForceTaskConst {
+public class BruteForceTaskParam {
     final int numThreads;
     final int passwordLength;
     final long passwordRangeSize;
@@ -10,7 +10,7 @@ public class BruteForceTaskConst {
     final IChecker checker;
     final String charsSet;
 
-    public BruteForceTaskConst(int numThreads, int passwordLength, IChecker checker, String charsSet) {
+    public BruteForceTaskParam(int numThreads, int passwordLength, IChecker checker, String charsSet) {
         this.numThreads = numThreads;
         this.passwordLength = passwordLength;
         this.checker = checker;

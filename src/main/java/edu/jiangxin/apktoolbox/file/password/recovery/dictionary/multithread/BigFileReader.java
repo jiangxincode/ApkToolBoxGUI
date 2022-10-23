@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
+package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,7 +61,7 @@ public class BigFileReader {
         cyclicBarrier = new CyclicBarrier(parties, () -> {
             logger.info("use time: " + (System.currentTimeMillis() - startTime) + "ms");
             logger.info("all line: " + counter.get());
-            completeCallback.onComplete();
+            notifyAll();
         });
         for (StartEndPair pair : startEndPairs) {
             logger.info("pair: " + pair);

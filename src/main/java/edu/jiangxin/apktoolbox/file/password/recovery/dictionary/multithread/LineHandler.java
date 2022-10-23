@@ -1,12 +1,11 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary;
+package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
 
-import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
 import edu.jiangxin.apktoolbox.file.password.recovery.State;
+import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LineHandler {
@@ -15,13 +14,16 @@ public class LineHandler {
 
     private AtomicBoolean success;
 
-    RecoveryPanel recoveryPanel;
+    private Synchronizer synchronizer;
     private FileChecker fileChecker;
 
-    public LineHandler(FileChecker fileChecker, AtomicBoolean success, RecoveryPanel recoveryPanel) {
+    private CompleteCallback completeCallback;
+
+    public LineHandler(FileChecker fileChecker, AtomicBoolean success, Synchronizer synchronizer, CompleteCallback completeCallback) {
         this.fileChecker = fileChecker;
         this.success = success;
-        this.recoveryPanel = recoveryPanel;
+        this.synchronizer = synchronizer;
+        this.completeCallback = completeCallback;
     }
 
     public AtomicBoolean getSuccess() {
@@ -29,22 +31,19 @@ public class LineHandler {
     }
 
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
-        if (success.compareAndSet(true, true) || recoveryPanel.getCurrentState() != State.WORKING) {
+        if (success.compareAndSet(true, true) || synchronizer.getCurrentState() != State.WORKING) {
             return;
         }
-        recoveryPanel.setCurrentPassword(line);
-        recoveryPanel.setProgressBarValue(Math.toIntExact(currentLineCount));
+        synchronizer.setCurrentPassword(line);
+        synchronizer.setProgressBarValue(Math.toIntExact(currentLineCount));
 
         if (fileChecker.checkPassword(line) ) {
             if (success.compareAndSet(false, true)) {
                 logger.info("find password: " + line);
-                recoveryPanel.setCurrentState(State.IDLE);
-                bigFileReader.shutdown();
-                JOptionPane.showMessageDialog(recoveryPanel, "Password[" + line + "]");
-                recoveryPanel.setProgressBarValue(0);
+                completeCallback.onComplete(line);
             }
         } else {
-            if (!success.compareAndSet(true, true) && recoveryPanel.getCurrentState() == State.WORKING) {
+            if (!success.compareAndSet(true, true) && synchronizer.getCurrentState() == State.WORKING) {
                 logger.info("try password[" + line + "] failed");
             }
         }

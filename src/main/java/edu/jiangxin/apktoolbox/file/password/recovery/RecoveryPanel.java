@@ -1,12 +1,13 @@
 package edu.jiangxin.apktoolbox.file.password.recovery;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceFuture;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTask;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceTaskConst;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceProxy;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.BigFileReader;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.LineHandler;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.BigFileReader;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.CompleteCallback;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.DictionaryMultiThreadProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.LineHandler;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread.DictionarySingleThreadProxy;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -20,16 +21,9 @@ import java.awt.*;
 import java.io.*;
 import java.text.NumberFormat;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-public final class RecoveryPanel extends EasyPanel {
+public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     private JPanel optionPanel;
 
     private FilePanel recoveryFilePanel;
@@ -68,14 +62,9 @@ public final class RecoveryPanel extends EasyPanel {
 
     private JLabel currentPasswordLabel;
 
-    private ExecutorService workerPool;
-
-    private BigFileReader bigFileReader;
-    private LineHandler lineHandler;
-
     private NumberFormat numberFormat;
 
-    private static State currentState = State.IDLE;
+    private State currentState = State.IDLE;
 
     public RecoveryPanel() {
         super();
@@ -356,7 +345,6 @@ public final class RecoveryPanel extends EasyPanel {
             return;
         }
 
-
         setCurrentState(State.WORKING);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
@@ -369,24 +357,8 @@ public final class RecoveryPanel extends EasyPanel {
             long startTime = System.currentTimeMillis();
             int numThreads = getThreadCount(charSet.length(), length, currentFileChecker.getMaxThreadNum());
             logger.info("[" + currentFileChecker + "]Current attempt length: " + length + ", thread number: " + numThreads);
-
-            workerPool = Executors.newFixedThreadPool(numThreads);
-            BruteForceFuture bruteForceFuture = new BruteForceFuture(numThreads);
-            BruteForceTaskConst consts = new BruteForceTaskConst(numThreads, length, currentFileChecker, charSet);
-
-            for (int taskId = 0; taskId < numThreads; taskId++) {
-                BruteForceTask task = new BruteForceTask(taskId, consts, bruteForceFuture, this);
-                workerPool.execute(task);
-            }
-            try {
-                password = bruteForceFuture.get();
-            } catch (Exception e) {
-                logger.info("Exception test: ", e);
-            } finally {
-                if (workerPool.isShutdown()) {
-                    workerPool.shutdown();
-                }
-            }
+            BruteForceProxy proxy = BruteForceProxy.getInstance();
+            password = proxy.startAndGet(numThreads, length, currentFileChecker, charSet, this);
             long endTime = System.currentTimeMillis();
             logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
             if (password != null) {
@@ -409,28 +381,15 @@ public final class RecoveryPanel extends EasyPanel {
         if (charsetName == null) {
             return;
         }
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-            setCurrentState(State.WORKING);
-            setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-            setProgressBarValue(0);
-            Predicate<String> isRecoveringPredicate = password -> getCurrentState() == State.WORKING;
-            Function<String, Stream<String>> generator = password -> {
-                setCurrentPassword(password);
-                increaseProgressBarValue();
-                return Stream.of(password.toLowerCase(), password.toUpperCase());
-            };
-            Predicate<String> verifier = currentFileChecker::checkPassword;
-            // java.util.stream.BaseStream.parallel can not increase the speed in test
-            Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
-            if (password.isPresent()) {
-                JOptionPane.showMessageDialog(this, password.get());
-            } else {
-                JOptionPane.showMessageDialog(this, "Can not find password");
-            }
-        } catch (FileNotFoundException e) {
-            logger.info("FileNotFoundException");
-        } catch (IOException e) {
-            logger.info("IOException");
+        setCurrentState(State.WORKING);
+        setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+        setProgressBarValue(0);
+        DictionarySingleThreadProxy proxy = DictionarySingleThreadProxy.getInstance();
+        String password = proxy.startAndGet(dictionaryFile, currentFileChecker, charsetName, this);
+        if (password != null) {
+            JOptionPane.showMessageDialog(this, password);
+        } else {
+            JOptionPane.showMessageDialog(this, "Can not find password");
         }
         onStopByDictionarySingleThreadCategory();
     }
@@ -448,54 +407,50 @@ public final class RecoveryPanel extends EasyPanel {
         logger.info("[TaskTracing]File line count: " + fileLineCount);
         setProgressMaxValue(fileLineCount);
         setProgressBarValue(0);
-        lineHandler = new LineHandler(currentFileChecker, new AtomicBoolean(false), this);
-        String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-        BigFileReader.Builder builder = new BigFileReader.Builder(dictionaryFile.getAbsolutePath(), lineHandler);
-        bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
-        bigFileReader.setCompleteCallback(() -> {
-            if (lineHandler != null && !lineHandler.getSuccess().get()) {
-                logger.error("Can not find password");
-                JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
+
+        DictionaryMultiThreadProxy proxy = DictionaryMultiThreadProxy.getInstance();
+        proxy.start(threadNum, dictionaryFile, currentFileChecker, this, new CompleteCallback() {
+            @Override
+            public void onComplete(String password) {
+                if (password == null) {
+                    logger.error("Can not find password");
+                    JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
+                } else {
+                    JOptionPane.showMessageDialog(RecoveryPanel.this, password);
+                }
                 onStopByDictionaryMultiThreadCategory();
             }
         });
-        bigFileReader.start();
     }
 
     private void onStopByBruteForceCategory() {
+        if (getCurrentState() != State.WORKING) {
+            return;
+        }
         logger.info("onStopByBruteForceCategory");
-        if (workerPool != null && !workerPool.isShutdown()) {
-            setCurrentState(State.STOPPING);
-        }
-        workerPool.shutdown();
-
-        while (workerPool != null && !workerPool.isTerminated()) {
-            try {
-                final boolean isTimeout = !workerPool.awaitTermination(100, TimeUnit.SECONDS);
-                logger.info("awaitTermination isTimeout: " + isTimeout);
-            } catch (InterruptedException e) {
-                logger.error("awaitTermination failed");
-                Thread.currentThread().interrupt();
-            }
-        }
-        setProgressBarValue(0);
+        setCurrentState(State.STOPPING);
+        BruteForceProxy.getInstance().cancel(this);
         setCurrentState(State.IDLE);
     }
 
     private void onStopByDictionarySingleThreadCategory() {
+        if (getCurrentState() != State.WORKING) {
+            return;
+        }
         logger.info("onStopByDictionarySingleThreadCategory");
-        setProgressBarValue(0);
+        setCurrentState(State.STOPPING);
+        DictionarySingleThreadProxy.getInstance().cancel(this);
         setCurrentState(State.IDLE);
     }
 
     private void onStopByDictionaryMultiThreadCategory() {
+        if (getCurrentState() != State.WORKING) {
+            return;
+        }
         logger.info("onStopByDictionaryMultiThreadCategory");
         setCurrentState(State.STOPPING);
-        if (bigFileReader != null) {
-            bigFileReader.shutdown();
-        }
+        DictionaryMultiThreadProxy.getInstance().cancel(this);
         setCurrentState(State.IDLE);
-        setProgressBarValue(0);
     }
 
     private int getThreadCount(int charSetSize, int length, int maxThreadCount) {
@@ -509,8 +464,9 @@ public final class RecoveryPanel extends EasyPanel {
         return result;
     }
 
+    @Override
     public void setCurrentState(State currentState) {
-        RecoveryPanel.currentState = currentState;
+        this.currentState = currentState;
         if (currentStateLabel != null) {
             currentStateLabel.setText("State: " + currentState.toString());
         }
@@ -530,29 +486,39 @@ public final class RecoveryPanel extends EasyPanel {
         }
     }
 
+    @Override
     public State getCurrentState() {
         return currentState;
     }
 
+    @Override
     public void setProgressMaxValue(int maxValue) {
         progressBar.setMaximum(maxValue);
     }
 
+    @Override
     public void increaseProgressBarValue() {
         int currentValue = progressBar.getValue();
         setProgressBarValue(currentValue + 1);
     }
 
+    @Override
     public void setProgressBarValue(int value) {
         progressBar.setValue(value);
         String text = numberFormat.format(((double)value) / progressBar.getMaximum());
         progressBar.setString(text);
     }
 
+    @Override
     public void setCurrentPassword(String password) {
         if (currentPasswordLabel != null) {
             currentPasswordLabel.setText("Trying: " + password);
         }
+    }
+
+    @Override
+    public void setFoundPassword(String password) {
+        JOptionPane.showMessageDialog(this, "Password[" + password + "]");
     }
 }
 
