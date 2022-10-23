@@ -3,10 +3,7 @@ package edu.jiangxin.apktoolbox.file.password.recovery;
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceProxy;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.BigFileReader;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.CompleteCallback;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.DictionaryMultiThreadProxy;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.LineHandler;
 import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread.DictionarySingleThreadProxy;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
@@ -18,10 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
 import java.text.NumberFormat;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     private JPanel optionPanel;
@@ -230,6 +225,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         stopButton = new JButton("Stop");
         currentStateLabel = new JLabel();
         currentPasswordLabel = new JLabel();
+        currentPasswordLabel.setText("");
 
         operationPanel.add(startButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -245,7 +241,6 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         stopButton.addActionListener(e -> new Thread(this::onStop).start());
 
         setCurrentState(State.IDLE);
-        setCurrentPassword("");
     }
 
     private void onStart() {
@@ -287,6 +282,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         } else {
             currentCategory = Category.UNKNOWN;
         }
+        logger.info("onStart: " + currentCategory);
         switch (currentCategory) {
             case BRUTE_FORCE:
                 onStartByBruteForceCategory();
@@ -304,6 +300,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     }
 
     private void onStop() {
+        logger.info("onStop: " + currentCategory);
         switch (currentCategory) {
             case BRUTE_FORCE:
                 onStopByBruteForceCategory();
@@ -321,7 +318,6 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     }
 
     private void onStartByBruteForceCategory() {
-        logger.info("onStartByBruteForceCategory");
         StringBuilder sb = new StringBuilder();
         if (numberCheckBox.isSelected()) {
             sb.append("0123456789");
@@ -336,7 +332,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
             JOptionPane.showMessageDialog(this, "Character set is empty!");
             return;
         }
-        final String charSet = sb.toString();
+        final String charset = sb.toString();
 
         int minLength = (Integer) minSpinner.getValue();
         int maxLength = (Integer) maxSpinner.getValue();
@@ -348,29 +344,28 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         setCurrentState(State.WORKING);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
-            if (currentState == State.STOPPING || currentState == State.IDLE) {
-                logger.info("Stop try next length");
+            if (currentState != State.WORKING) {
+                logger.info("Break because of state: " + currentState);
                 break;
             }
-            setProgressMaxValue((int) Math.pow(charSet.length(), length));
+            setProgressMaxValue((int) Math.pow(charset.length(), length));
             setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
-            int numThreads = getThreadCount(charSet.length(), length, currentFileChecker.getMaxThreadNum());
+            int numThreads = getThreadCount(charset.length(), length, currentFileChecker.getMaxThreadNum());
             logger.info("[" + currentFileChecker + "]Current attempt length: " + length + ", thread number: " + numThreads);
             BruteForceProxy proxy = BruteForceProxy.getInstance();
-            password = proxy.startAndGet(numThreads, length, currentFileChecker, charSet, this);
+            password = proxy.startAndGet(numThreads, length, currentFileChecker, charset, this);
             long endTime = System.currentTimeMillis();
             logger.info("Current attempt length: " + length + ", Cost time: " + (endTime - startTime) + "ms");
             if (password != null) {
                 break;
             }
         }
-        JOptionPane.showMessageDialog(this, Objects.requireNonNullElse(password, "Can not find password"));
+        showResultWithDialog(password);
         onStopByBruteForceCategory();
     }
 
     private void onStartByDictionarySingleThreadCategory() {
-        logger.info("onStartByDictionarySingleThreadCategory");
         File dictionaryFile = dictionaryFilePanel.getFile();
         if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
@@ -379,6 +374,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
         logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
         if (charsetName == null) {
+            JOptionPane.showMessageDialog(this, "Invalid charsetName");
             return;
         }
         setCurrentState(State.WORKING);
@@ -386,50 +382,36 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         setProgressBarValue(0);
         DictionarySingleThreadProxy proxy = DictionarySingleThreadProxy.getInstance();
         String password = proxy.startAndGet(dictionaryFile, currentFileChecker, charsetName, this);
-        if (password != null) {
-            JOptionPane.showMessageDialog(this, password);
-        } else {
-            JOptionPane.showMessageDialog(this, "Can not find password");
-        }
+        showResultWithDialog(password);
         onStopByDictionarySingleThreadCategory();
     }
 
     private void onStartByDictionaryMultiThreadCategory() {
-        logger.info("onStartByDictionaryMultiThreadCategory");
         File dictionaryFile = dictionaryFilePanel.getFile();
         if (!dictionaryFile.isFile()) {
             JOptionPane.showMessageDialog(this, "Invalid dictionary file");
             return;
         }
         int threadNum = (Integer) threadNumSpinner.getValue();
-        setCurrentState(State.WORKING);
         int fileLineCount = Utils.getFileLineCount(dictionaryFile);
-        logger.info("[TaskTracing]File line count: " + fileLineCount);
+        logger.info("File line count: " + fileLineCount);
+
+        setCurrentState(State.WORKING);
         setProgressMaxValue(fileLineCount);
         setProgressBarValue(0);
 
         DictionaryMultiThreadProxy proxy = DictionaryMultiThreadProxy.getInstance();
-        proxy.start(threadNum, dictionaryFile, currentFileChecker, this, new CompleteCallback() {
-            @Override
-            public void onComplete(String password) {
-                if (password == null) {
-                    logger.error("Can not find password");
-                    JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
-                } else {
-                    JOptionPane.showMessageDialog(RecoveryPanel.this, password);
-                }
-                onStopByDictionaryMultiThreadCategory();
-            }
-        });
+        String password = proxy.startAndGet(threadNum, dictionaryFile, currentFileChecker, this);
+        showResultWithDialog(password);
+        onStopByDictionaryMultiThreadCategory();
     }
 
     private void onStopByBruteForceCategory() {
         if (getCurrentState() != State.WORKING) {
             return;
         }
-        logger.info("onStopByBruteForceCategory");
         setCurrentState(State.STOPPING);
-        BruteForceProxy.getInstance().cancel(this);
+        BruteForceProxy.getInstance().cancel();
         setCurrentState(State.IDLE);
     }
 
@@ -437,9 +419,8 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         if (getCurrentState() != State.WORKING) {
             return;
         }
-        logger.info("onStopByDictionarySingleThreadCategory");
         setCurrentState(State.STOPPING);
-        DictionarySingleThreadProxy.getInstance().cancel(this);
+        DictionarySingleThreadProxy.getInstance().cancel();
         setCurrentState(State.IDLE);
     }
 
@@ -447,9 +428,8 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         if (getCurrentState() != State.WORKING) {
             return;
         }
-        logger.info("onStopByDictionaryMultiThreadCategory");
         setCurrentState(State.STOPPING);
-        DictionaryMultiThreadProxy.getInstance().cancel(this);
+        DictionaryMultiThreadProxy.getInstance().cancel();
         setCurrentState(State.IDLE);
     }
 
@@ -462,6 +442,16 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
             }
         }
         return result;
+    }
+
+    private void showResultWithDialog(String password) {
+        if (password == null) {
+            logger.error("Can not find password");
+            JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
+        } else {
+            logger.info("Find out the password: " + password);
+            JOptionPane.showMessageDialog(RecoveryPanel.this, "Find out the password: " + password);
+        }
     }
 
     @Override
@@ -498,8 +488,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
 
     @Override
     public void increaseProgressBarValue() {
-        int currentValue = progressBar.getValue();
-        setProgressBarValue(currentValue + 1);
+        setProgressBarValue(progressBar.getValue() + 1);
     }
 
     @Override
@@ -511,14 +500,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
 
     @Override
     public void setCurrentPassword(String password) {
-        if (currentPasswordLabel != null) {
-            currentPasswordLabel.setText("Trying: " + password);
-        }
-    }
-
-    @Override
-    public void setFoundPassword(String password) {
-        JOptionPane.showMessageDialog(this, "Password[" + password + "]");
+        currentPasswordLabel.setText("Trying: " + password);
     }
 }
 

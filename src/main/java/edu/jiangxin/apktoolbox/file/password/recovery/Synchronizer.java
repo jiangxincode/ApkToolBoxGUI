@@ -12,6 +12,4 @@ public interface Synchronizer {
     void setProgressBarValue(int value);
 
     void setCurrentPassword(String password);
-
-    void setFoundPassword(String password);
 }

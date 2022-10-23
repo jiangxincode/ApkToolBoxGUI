@@ -48,7 +48,7 @@ public class BruteForceProxy {
         return password;
     }
 
-    public void cancel(Synchronizer synchronizer) {
+    public void cancel() {
         bruteForceFuture.cancel(false);
         if (executorService != null && !executorService.isShutdown()) {
             executorService.shutdown();

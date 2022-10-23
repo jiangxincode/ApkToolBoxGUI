@@ -15,6 +15,10 @@ public class DictionaryMultiThreadProxy {
     private BigFileReader bigFileReader;
     private LineHandler lineHandler;
 
+    private String password;
+
+    private Object lock = new Object();
+
     private static class DictionaryMultiThreadProxyHolder {
         private static final DictionaryMultiThreadProxy instance = new DictionaryMultiThreadProxy();
     }
@@ -26,16 +30,34 @@ public class DictionaryMultiThreadProxy {
         return DictionaryMultiThreadProxy.DictionaryMultiThreadProxyHolder.instance;
     }
 
-    public void start(int threadNum, File file, FileChecker checker, Synchronizer synchronizer, CompleteCallback completeCallback) {
-        lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, completeCallback);
+    public String startAndGet(int threadNum, File file, FileChecker checker, Synchronizer synchronizer) {
+        CompleteCallback callback = password -> {
+            synchronized (lock) {
+                DictionaryMultiThreadProxy.this.password = password;
+                lock.notifyAll();
+            }
+        };
+        lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, callback);
         String charsetName = EncoderDetector.judgeFile(file.getAbsolutePath());
         BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
-        bigFileReader = builder.withThreadSize(threadNum).withCharset(charsetName).withBufferSize(1024 * 1024).build();
-        bigFileReader.setCompleteCallback(completeCallback);
+        bigFileReader = builder
+                .withThreadSize(threadNum)
+                .withCharset(charsetName)
+                .withBufferSize(1024 * 1024)
+                .withOnCompleteCallback(callback)
+                .build();
         bigFileReader.start();
+        try {
+            synchronized (lock) {
+                lock.wait();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return password;
     }
 
-    public void cancel(Synchronizer synchronizer) {
+    public void cancel() {
         if (bigFileReader != null) {
             bigFileReader.shutdown();
         }

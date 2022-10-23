@@ -48,7 +48,7 @@ public class DictionarySingleThreadProxy {
         return null;
     }
 
-    public void cancel(Synchronizer synchronizer) {
+    public void cancel() {
         isCancelled = true;
     }
 }
