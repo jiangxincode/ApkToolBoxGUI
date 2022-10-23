@@ -61,7 +61,7 @@ public class BigFileReader {
         cyclicBarrier = new CyclicBarrier(parties, () -> {
             logger.info("use time: " + (System.currentTimeMillis() - startTime) + "ms");
             logger.info("all line: " + counter.get());
-            notifyAll();
+            completeCallback.onComplete(null);
         });
         for (StartEndPair pair : startEndPairs) {
             logger.info("pair: " + pair);

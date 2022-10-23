@@ -3,11 +3,9 @@ package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
-import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 

@@ -105,7 +105,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         checkerTypeComboBox.addItem(new BinaryOfficeChecker());
         checkerTypeComboBox.setSelectedIndex(0);
         checkerTypeComboBox.addItemListener(e -> {
-            FileChecker fileChecker = (FileChecker)e.getItem();
+            FileChecker fileChecker = (FileChecker) e.getItem();
             if (fileChecker == null) {
                 logger.error("fileChecker is null");
                 return;
@@ -505,7 +505,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     @Override
     public void setProgressBarValue(int value) {
         progressBar.setValue(value);
-        String text = numberFormat.format(((double)value) / progressBar.getMaximum());
+        String text = numberFormat.format(((double) value) / progressBar.getMaximum());
         progressBar.setString(text);
     }
 

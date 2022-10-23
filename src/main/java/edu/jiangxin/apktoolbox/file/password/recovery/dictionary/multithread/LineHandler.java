@@ -37,7 +37,7 @@ public class LineHandler {
         synchronizer.setCurrentPassword(line);
         synchronizer.setProgressBarValue(Math.toIntExact(currentLineCount));
 
-        if (fileChecker.checkPassword(line) ) {
+        if (fileChecker.checkPassword(line)) {
             if (success.compareAndSet(false, true)) {
                 logger.info("find password: " + line);
                 completeCallback.onComplete(line);

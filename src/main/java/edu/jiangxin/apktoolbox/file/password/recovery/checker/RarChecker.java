@@ -49,7 +49,8 @@ public final class RarChecker extends FileChecker {
                 }
                 archive.extractFile(fileHeader, new OutputStream() {
                     @Override
-                    public void write(int b) {}
+                    public void write(int b) {
+                    }
                 });
             }
             result = true;
