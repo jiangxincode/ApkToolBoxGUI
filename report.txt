@@ -1,4 +1,13 @@
 #0
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/singlethread/DictionarySingleThreadProxy.java:39: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 39 is not released after line 39.
+  37.           };
+  38.           Predicate<String> verifier = checker::checkPassword;
+  39. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsSet))) {
+  40.               // java.util.stream.BaseStream.parallel can not increase the speed in test
+  41.               Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
+
+#1
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsing7ZipChecker.java:38: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 38 is not released after line 38.
   36.       public boolean prepareChecker() {
@@ -7,7 +16,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsin
   39.           } catch (IOException e) {
   40.               return false;
 
-#1
+#2
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/RarUsingRarChecker.java:42: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 42 is not released after line 42.
   40.       public boolean prepareChecker() {
@@ -16,7 +25,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/RarUsingRar
   43.           } catch (IOException e) {
   44.               return false;
 
-#2
+#3
 src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:59: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 59 is not released after line 59.
   57.   
@@ -25,7 +34,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:59: error: R
   60.                   new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
   61.                   BufferedWriter writer = new BufferedWriter(
 
-#3
+#4
 src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:61: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 61 is not released after line 61.
   59.           try (BufferedReader reader = new BufferedReader(
@@ -34,7 +43,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/core/EncoderConvert.java:61: error: R
   62.                           new OutputStreamWriter(new FileOutputStream(desFileFile), desEncoder))) {
   63.               int ch = 0;
 
-#4
+#5
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsingWinRarChecker.java:43: error: Resource Leak
   resource of type `java.lang.Process` acquired by call to `exec(...)` at line 43 is not released after line 43.
   41.       public boolean prepareChecker() {
@@ -43,7 +52,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/checker/ArchiveUsin
   44.           } catch (IOException e) {
   45.               return false;
 
-#5
+#6
 src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/CompareFilesPanel.java:72: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 67 is not released after line 72.
 **Note**: potential exception at line 68
@@ -53,7 +62,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/CompareFilesPanel.java
   73.                   logger.error("calculate, FileNotFoundException");
   74.               } catch (IOException e) {
 
-#6
+#7
 src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:92: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 90 is not released after line 92.
 **Note**: potential exception at line 91
@@ -63,7 +72,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:92: e
   93.               logger.error("storeDataToProperties failed: IOException");
   94.           }
 
-#7
+#8
 src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: error: Resource Leak
   resource of type `java.io.FileOutputStream` acquired by call to `FileOutputStream(...)` at line 97 is not released after line 99.
 **Note**: potential exception at line 91
@@ -73,7 +82,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: e
   100.               logger.error("storeDataToProperties failed: IOException");
   101.           }
 
-#8
+#9
 src/main/java/edu/jiangxin/apktoolbox/help/LookAndFeelPanel.java:106: error: Null Dereference
   object returned by `LookAndFeelPanel$ApplyButtonMouseAdapter.this$0.getFrame()` could be null and is dereferenced at line 106.
   104.               }
@@ -82,7 +91,7 @@ src/main/java/edu/jiangxin/apktoolbox/help/LookAndFeelPanel.java:106: error: Nul
   107.           }
   108.       }
 
-#9
+#10
 src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: Resource Leak
   resource of type `java.util.zip.ZipFile` acquired by call to `ZipFile(...)` at line 175 is not released after line 207.
 **Note**: potential exception at line 197
@@ -92,7 +101,7 @@ src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: 
   208.                   logger.error("axmlprinter fail", e1);
   209.               }
 
-#10
+#11
 src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java:297: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 266 is not released after line 297.
 **Note**: potential exception at line 289
@@ -102,7 +111,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java
   298.               logger.error("calculate, FileNotFoundException");
   299.           } catch (IOException e) {
 
-#11
+#12
 src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java:299: error: Resource Leak
   resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 266 is not released after line 299.
 **Note**: potential exception at line 289
@@ -112,51 +121,102 @@ src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java
   300.               logger.error("calculate, IOException");
   301.           }
 
-#12
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/RecoveryPanel.java:394: error: Resource Leak
-  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 394 is not released after line 394.
-  392.               return;
-  393.           }
-  394. >         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charsetName))) {
-  395.               setIsRecovering(true);
-  396.               setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-
 #13
 src/main/java/edu/jiangxin/apktoolbox/utils/FileUtils.java:1097: error: Resource Leak
   resource of type `java.net.HttpURLConnection` acquired by call to `openConnection()` at line 1094 is not released after line 1097.
 
 #14
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:33: warning: Thread Safety Violation
-  Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:61: warning: Thread Safety Violation
+  Read/Write race. Non-private method `DictionaryMultiThreadProxy.cancel()` reads without synchronization from `this.bigFileReader`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
-  31.   
-  32.   // Complete this class using a lock and the condition variable
-  33. > public class BruteForceFuture implements Future<String> {
-  34.       private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
-  35.       private String result = null;
+  59.   
+  60.       public void cancel() {
+  61. >         if (bigFileReader != null) {
+  62.               bigFileReader.shutdown();
+  63.           }
 
 #15
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:75: warning: Thread Safety Violation
-  Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
- Reporting because this access may occur on a background thread.
-  73.               lock.unlock();
-  74.           }
-  75. >         return result;
-  76.       }
-  77.   
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:15: warning: Thread Safety Violation
+  Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
+ Reporting because another access to the same memory occurs on a background thread, although this access may not.
+  13.   import java.util.concurrent.locks.ReentrantLock;
+  14.   
+  15. > public class BruteForceFuture implements Future<String> {
+  16.       private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
+  17.       private String result = null;
 
 #16
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:83: warning: Thread Safety Violation
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:52: warning: Thread Safety Violation
+  Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
+ Reporting because this access may occur on a background thread.
+  50.               lock.unlock();
+  51.           }
+  52. >         return result;
+  53.       }
+  54.   
+
+#17
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:57: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
-  81.       @Override
-  82.       public boolean isDone() {
-  83. >         return result != null;
-  84.       }
-  85.   
+  55.       @Override
+  56.       public boolean isDone() {
+  57. >         return result != null;
+  58.       }
+  59.   
 
-Found 17 issues
+#18
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:41: warning: Thread Safety Violation
+  Unprotected write. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` indirectly writes to field `core.EncoderDetector.countDownLatch` outside of synchronization.
+ Reporting because this access may occur on a background thread.
+  39.           };
+  40.           lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, callback);
+  41. >         String charsetName = EncoderDetector.judgeFile(file.getAbsolutePath());
+  42.           BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
+  43.           bigFileReader = builder
+
+#19
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:48: warning: Thread Safety Violation
+  Unprotected write. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` writes to field `this.bigFileReader` outside of synchronization.
+ Reporting because this access may occur on a background thread.
+  46.                   .withBufferSize(1024 * 1024)
+  47.                   .withOnCompleteCallback(callback)
+  48. >                 .build();
+  49.           bigFileReader.start();
+  50.           try {
+
+#20
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:40: warning: Thread Safety Violation
+  Unprotected write. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` writes to field `this.lineHandler` outside of synchronization.
+ Reporting because this access may occur on a background thread.
+  38.               }
+  39.           };
+  40. >         lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, callback);
+  41.           String charsetName = EncoderDetector.judgeFile(file.getAbsolutePath());
+  42.           BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
+
+#21
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:49: warning: Thread Safety Violation
+  Read/Write race. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` reads without synchronization from `this.bigFileReader`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
+ Reporting because this access may occur on a background thread.
+  47.                   .withOnCompleteCallback(callback)
+  48.                   .build();
+  49. >         bigFileReader.start();
+  50.           try {
+  51.               synchronized (lock) {
+
+#22
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:42: warning: Thread Safety Violation
+  Read/Write race. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` reads without synchronization from `this.lineHandler`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
+ Reporting because this access may occur on a background thread.
+  40.           lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, callback);
+  41.           String charsetName = EncoderDetector.judgeFile(file.getAbsolutePath());
+  42. >         BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
+  43.           bigFileReader = builder
+  44.                   .withThreadSize(threadNum)
+
+Found 23 issues
                         Issue Type(ISSUED_TYPE_ID): #
                       Resource Leak(RESOURCE_LEAK): 13
-  Thread Safety Violation(THREAD_SAFETY_VIOLATION): 3
+  Thread Safety Violation(THREAD_SAFETY_VIOLATION): 9
                 Null Dereference(NULL_DEREFERENCE): 1
