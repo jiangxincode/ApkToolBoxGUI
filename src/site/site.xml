@@ -21,8 +21,10 @@ under the License.
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
     <body>
-        <menu name="Download and Install">
-            <item name="Download and Install" href="download_and_install.html"/>
+        <menu name="Getting Started Guide">
+            <item name="Getting Started Guide" href="getting_started_guide.html"/>
+            <item name="How To Change Language" href="how_to_change_language.html"/>
+            <item name="How To Change Look And Feel" href="how_to_change_look_and_feel.html"/>
         </menu>
         <menu name="Features">
             <item name="Recovery File Password" href="recovery_file_password.html"/>
@@ -39,9 +41,7 @@ under the License.
             <item name="Reverse Engineer" href="reverse_engineer.html"/>
             <item name="Android Develop" href="android_develop.html"/>
         </menu>
-        <menu name="Faq">
-            <item name="How To Change Language" href="how_to_change_language.html"/>
-            <item name="How To Change Look And Feel" href="how_to_change_look_and_feel.html"/>
+        <menu name="Contribute">
             <item name="How To Contribute" href="how_to_contribute.html"/>
         </menu>
         <menu name="Project Reports">

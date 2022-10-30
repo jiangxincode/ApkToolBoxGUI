@@ -51,8 +51,8 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package
-          chmod u+x ./PackageLinuxOrMacos.sh
-          ./PackageLinuxOrMacos.sh
+          chmod u+x ./PackageLinux.sh
+          ./PackageLinux.sh
       - uses: actions/upload-artifact@v3
         with:
           name: ApkToolBoxGUI-linux
@@ -76,8 +76,8 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package
-          chmod u+x ./PackageLinuxOrMacos.sh
-          ./PackageLinuxOrMacos.sh
+          chmod u+x ./PackageMacos.sh
+          ./PackageMacos.sh
       - uses: actions/upload-artifact@v3
         with:
           name: ApkToolBoxGUI-macos

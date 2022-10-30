@@ -14,3 +14,5 @@ There are two types of package:
 ### Install
 
 Not need at all, unzip and enjoy it.
+
+### Run
