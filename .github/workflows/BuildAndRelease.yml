@@ -1,6 +1,5 @@
 name: Build and Release
 
-# ref: https://github.com/LukeOnuke/lmark/blob/e3ccc75d104208754a8c4a6187fbc159b5ff90fd/.github/workflows/main.yml
 on:
   push:
     branches: [ master ]
@@ -31,7 +30,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ApkToolBoxGUI-windows
-          path: target/APKToolBoxGUI-*-with-JRE.zip
+          path: target/ApkToolBoxGUI-*-with-JRE.zip
   build-linux:
 
     runs-on: ubuntu-latest
@@ -56,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ApkToolBoxGUI-linux
-          path: target/APKToolBoxGUI-*-with-JRE.zip
+          path: target/ApkToolBoxGUI-*-with-JRE.zip
   build-macos:
 
     runs-on: macos-latest
@@ -81,4 +80,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ApkToolBoxGUI-macos
-          path: target/APKToolBoxGUI-*-with-JRE.zip
+          path: target/ApkToolBoxGUI-*-with-JRE.zip

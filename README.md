@@ -12,7 +12,7 @@
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 
 
-APKToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
+ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
 
 It's a collection of common tools, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
 

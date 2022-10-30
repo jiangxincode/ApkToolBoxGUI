@@ -1,2 +1,2 @@
 #!/bin/sh
-java -jar ./APKToolBoxGUI.jar
+java -jar ./ApkToolBoxGUI.jar
