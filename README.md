@@ -1,7 +1,7 @@
 # ApkToolBoxGUI
 
 [![GitHub all releases](https://img.shields.io/github/downloads/jiangxincode/ApkToolBoxGUI/total)](https://github.com/jiangxincode/ApkToolBoxGUI/releases)
-![Java CI with Maven](https://github.com/jiangxincode/ApkToolBoxGUI/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![Build and Release](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml/badge.svg)](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml)
 [![Project Reports](https://img.shields.io/badge/ApkToolBoxGUI-Reports-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/project-reports.html)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/dab038ef9ed04bf1b73bd0031422b814)](https://www.codacy.com/gh/jiangxincode/ApkToolBoxGUI/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jiangxincode/ApkToolBoxGUI&amp;utm_campaign=Badge_Grade)
 [![Infer Check](https://img.shields.io/badge/Facebook-InferCheck-green)](https://github.com/jiangxincode/ApkToolBoxGUI/blob/infer-out/report.txt)
