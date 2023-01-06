@@ -134,7 +134,7 @@ public class ColorConvertPanel extends EasyPanel {
         hsbPanel = new JPanel();
         hsbPanel.setLayout(new BoxLayout(hsbPanel, BoxLayout.X_AXIS));
 
-        JLabel hueLabel = new JLabel("H(Hue, [0-360])");
+        JLabel hueLabel = new JLabel("H(Hue, [0-1])");
         hueTextField = new JTextField();
         hueTextField.setText(new DecimalFormat("0.0000").format(0.0f));
 
