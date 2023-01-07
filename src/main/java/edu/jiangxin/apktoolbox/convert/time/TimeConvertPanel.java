@@ -203,7 +203,8 @@ public class TimeConvertPanel extends EasyPanel {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    logger.error("InterruptedException occurred");
+                    logger.error("sleep InterruptedException");
+                    Thread.currentThread().interrupt();
                 }
             }
         }).start();

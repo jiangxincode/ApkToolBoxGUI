@@ -44,7 +44,7 @@ public class BruteForceFuture implements Future<String> {
         try {
             condition.await();
         } catch (InterruptedException e) {
-            logger.error("get InterruptedException");
+            logger.error("await InterruptedException");
             Thread.currentThread().interrupt();
         } finally {
             lock.unlock();

@@ -8,6 +8,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
@@ -201,12 +202,16 @@ public class BigFileReader {
                     handle(bos.toByteArray());
                 }
                 logger.info("[TaskTracing]Waiting number: " + cyclicBarrier.getNumberWaiting());
-                cyclicBarrier.await();
-            } catch (InterruptedException e) {
-                logger.error("run InterruptedException");
-                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 logger.error("run Exception" + e.getMessage());
+            }
+            try {
+                cyclicBarrier.await();
+            } catch (InterruptedException e) {
+                logger.error("await InterruptedException");
+                Thread.currentThread().interrupt();
+            } catch (BrokenBarrierException e) {
+                logger.error("await BrokenBarrierException");
             }
         }
 

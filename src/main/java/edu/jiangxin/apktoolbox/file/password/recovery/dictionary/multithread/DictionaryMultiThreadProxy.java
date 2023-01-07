@@ -52,7 +52,8 @@ public class DictionaryMultiThreadProxy {
                 lock.wait();
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            logger.error("wait InterruptedException");
+            Thread.currentThread().interrupt();
         }
         return password;
     }

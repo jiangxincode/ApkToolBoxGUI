@@ -58,7 +58,7 @@ public class BruteForceProxy {
                 final boolean isTimeout = !executorService.awaitTermination(100, TimeUnit.SECONDS);
                 logger.info("awaitTermination isTimeout: " + isTimeout);
             } catch (InterruptedException e) {
-                logger.error("awaitTermination failed");
+                logger.error("awaitTermination InterruptedException");
                 Thread.currentThread().interrupt();
             }
         }
