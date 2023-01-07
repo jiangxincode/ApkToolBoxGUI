@@ -126,14 +126,14 @@ src/main/java/edu/jiangxin/apktoolbox/utils/FileUtils.java:1097: error: Resource
   resource of type `java.net.HttpURLConnection` acquired by call to `openConnection()` at line 1094 is not released after line 1097.
 
 #14
-src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:61: warning: Thread Safety Violation
+src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:62: warning: Thread Safety Violation
   Read/Write race. Non-private method `DictionaryMultiThreadProxy.cancel()` reads without synchronization from `this.bigFileReader`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
-  59.   
-  60.       public void cancel() {
-  61. >         if (bigFileReader != null) {
-  62.               bigFileReader.shutdown();
-  63.           }
+  60.   
+  61.       public void cancel() {
+  62. >         if (bigFileReader != null) {
+  63.               bigFileReader.shutdown();
+  64.           }
 
 #15
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:15: warning: Thread Safety Violation
