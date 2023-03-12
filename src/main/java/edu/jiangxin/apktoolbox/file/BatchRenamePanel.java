@@ -13,21 +13,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
 //https://www.zhihu.com/question/50890909
 public class BatchRenamePanel extends EasyPanel {
+    private JPanel warningPanel;
+
     private JPanel sourcePanel;
 
-    private JPanel targetPanel;
-
     private JPanel rulePanel;
-
-    private JPanel hierarchyPanel;
-
-    private JPanel othersPanel;
 
     private JPanel operationPanel;
 
@@ -36,18 +34,12 @@ public class BatchRenamePanel extends EasyPanel {
     private JTextField sourceTextField;
     private JTextField suffixTextField;
     private JCheckBox recursiveCheckBox;
-    private JTextField targetTextField;
     private JRadioButton ruleRadioButton1;
     private JRadioButton ruleRadioButton2;
     private JRadioButton ruleRadioButton3;
     private JRadioButton ruleRadioButton4;
     private JRadioButton ruleRadioButton5;
     private JRadioButton ruleRadioButton6;
-    private JRadioButton hierarchyRadioButton1;
-    private JRadioButton hierarchyRadioButton2;
-    private JRadioButton othersRadioButton1;
-    private JRadioButton othersRadioButton2;
-    private JRadioButton othersRadioButton3;
     private JTextField textField21;
     private JSpinner spinner21;
     private JCheckBox checkBox31;
@@ -63,7 +55,7 @@ public class BatchRenamePanel extends EasyPanel {
     private JSpinner spinner52;
     private JTextField textField61;
     private JTextField textField62;
-    private JTextField currentFileTextField;
+    private JTextField currentTextField;
 
     public BatchRenamePanel() throws HeadlessException {
         super();
@@ -74,24 +66,16 @@ public class BatchRenamePanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
+        createWarningPanel();
+        add(warningPanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
         createSourcePanel();
         add(sourcePanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createTargetPanel();
-        add(targetPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createRulePanel();
         add(rulePanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
-        createHierarchyPanel();
-        add(hierarchyPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
-        createOthersPanel();
-        add(othersPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createOperationPanel();
@@ -100,6 +84,21 @@ public class BatchRenamePanel extends EasyPanel {
 
         createStatusPanel();
         add(statusPanel);
+    }
+
+    private void createWarningPanel() {
+        warningPanel = new JPanel();
+        warningPanel.setLayout(new BoxLayout(warningPanel, BoxLayout.X_AXIS));
+
+        JTextArea warningTextArea = new JTextArea();
+        warningTextArea.setText("It is dangerous to operate on the original files! \nPlease back up at first and check the result carefully at end!");
+        warningTextArea.setForeground(Color.RED);
+        warningTextArea.setFont(new Font("宋体", Font.BOLD, 20));
+        warningTextArea.setBorder(null);
+        warningTextArea.setEditable(false);
+
+        warningPanel.add(warningTextArea);
+        warningPanel.add(Box.createHorizontalGlue());
     }
 
     private void createSourcePanel() {
@@ -133,7 +132,7 @@ public class BatchRenamePanel extends EasyPanel {
 
         JLabel label2 = new JLabel("后缀：");
         suffixTextField = new JTextField();
-        suffixTextField.setToolTipText("an array of extensions, ex. {\"java\",\"xml\"}. If this parameter is empty, all files are returned.");
+        suffixTextField.setToolTipText("an array of extensions, ex. java,xml,mp4. If this parameter is empty, all files are returned.");
         recursiveCheckBox = new JCheckBox("包括子目录");
 
         thirdLevelPanel2.add(label2);
@@ -141,26 +140,6 @@ public class BatchRenamePanel extends EasyPanel {
         thirdLevelPanel2.add(suffixTextField);
         thirdLevelPanel2.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         thirdLevelPanel2.add(recursiveCheckBox);
-    }
-
-    private void createTargetPanel() {
-        targetPanel = new JPanel();
-        targetPanel.setBorder(BorderFactory.createTitledBorder("2. 目标文件"));
-        targetPanel.setLayout(new BorderLayout());
-
-        JPanel secondLevelPanel = new JPanel();
-        secondLevelPanel.setLayout(new BoxLayout(secondLevelPanel, BoxLayout.X_AXIS));
-        targetPanel.add(secondLevelPanel);
-
-        JLabel label = new JLabel("存放新文件的目录：");
-        targetTextField = new JTextField();
-        JButton button = new JButton("选择");
-        button.addMouseListener(new DirectorySelectButtonMouseAdapter("Select a directory", targetTextField));
-        secondLevelPanel.add(label);
-        secondLevelPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        secondLevelPanel.add(targetTextField);
-        secondLevelPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        secondLevelPanel.add(button);
     }
 
     private void createRulePanel() {
@@ -307,52 +286,6 @@ public class BatchRenamePanel extends EasyPanel {
         }
     }
 
-    private void createHierarchyPanel() {
-        hierarchyPanel = new JPanel();
-        hierarchyPanel.setBorder(BorderFactory.createTitledBorder("4. 新文件的目录结构"));
-        hierarchyPanel.setLayout(new BorderLayout());
-
-        JPanel secondLevelPanel = new JPanel();
-        secondLevelPanel.setLayout(new BoxLayout(secondLevelPanel, BoxLayout.Y_AXIS));
-        hierarchyPanel.add(secondLevelPanel);
-
-        ButtonGroup buttonGroup = new ButtonGroup();
-
-        hierarchyRadioButton1 = new JRadioButton("所有文件均放在同一个目录下");
-        secondLevelPanel.add(hierarchyRadioButton1);
-        buttonGroup.add(hierarchyRadioButton1);
-
-        hierarchyRadioButton2 = new JRadioButton("保持原有目录结构");
-        hierarchyRadioButton2.setSelected(true);
-        secondLevelPanel.add(hierarchyRadioButton2);
-        buttonGroup.add(hierarchyRadioButton2);
-    }
-
-    private void createOthersPanel() {
-        othersPanel = new JPanel();
-        othersPanel.setBorder(BorderFactory.createTitledBorder("5. 其它"));
-        othersPanel.setLayout(new BorderLayout());
-
-        JPanel secondLevelPanel = new JPanel();
-        secondLevelPanel.setLayout(new BoxLayout(secondLevelPanel, BoxLayout.Y_AXIS));
-        othersPanel.add(secondLevelPanel);
-
-        ButtonGroup buttonGroup = new ButtonGroup();
-
-        othersRadioButton1 = new JRadioButton("保留源文件");
-        othersRadioButton1.setSelected(true);
-        secondLevelPanel.add(othersRadioButton1);
-        buttonGroup.add(othersRadioButton1);
-
-        othersRadioButton2 = new JRadioButton("删除源文件");
-        secondLevelPanel.add(othersRadioButton2);
-        buttonGroup.add(othersRadioButton2);
-
-        othersRadioButton3 = new JRadioButton("删除源目录下所有文件及子目录");
-        secondLevelPanel.add(othersRadioButton3);
-        buttonGroup.add(othersRadioButton3);
-    }
-
     private void createOperationPanel() {
         operationPanel = new JPanel();
         operationPanel.setBorder(BorderFactory.createTitledBorder("6. 操作"));
@@ -377,8 +310,8 @@ public class BatchRenamePanel extends EasyPanel {
         secondLevelPanel.setLayout(new BoxLayout(secondLevelPanel, BoxLayout.Y_AXIS));
         statusPanel.add(secondLevelPanel);
 
-        currentFileTextField = new JTextField();
-        secondLevelPanel.add(currentFileTextField);
+        currentTextField = new JTextField();
+        secondLevelPanel.add(currentTextField);
     }
 
     private final class StartButtonMouseAdapter extends MouseAdapter {
@@ -410,13 +343,6 @@ public class BatchRenamePanel extends EasyPanel {
             }
             for (File file : fileSet) {
                 renameSingleFile(file);
-                try {
-                    String path = file.getCanonicalPath();
-                    currentFileTextField.setText(path);
-                    logger.info("current: " + path);
-                } catch (IOException ex) {
-                    logger.error("getCanonicalPath failed: IOException");
-                }
             }
         }
     }
@@ -424,10 +350,8 @@ public class BatchRenamePanel extends EasyPanel {
     private void renameSingleFile(File file) {
         String sourceFile = FilenameUtils.normalizeNoEndSeparator(file.getAbsolutePath());
         String sourceFileName = FilenameUtils.getName(sourceFile);
-        String targetFileName = sourceFileName;
-        String sourceDir = FilenameUtils.normalizeNoEndSeparator(sourceTextField.getText());
-        String targetDir = FilenameUtils.normalizeNoEndSeparator(targetTextField.getText());
-        String middleStr = StringUtils.substringBetween(sourceFile, sourceDir, sourceFileName);
+        String currentDir = FilenameUtils.getPath(sourceFile);
+        String targetFileName = "";
         if (ruleRadioButton1.isSelected()) {
         } else if (ruleRadioButton2.isSelected()) {
 
@@ -442,29 +366,16 @@ public class BatchRenamePanel extends EasyPanel {
             logger.error("ruleRadioButton select status error");
             return;
         }
-        String targetFile = null;
-        if (hierarchyRadioButton1.isSelected()) {
-            targetFile = targetDir + File.separatorChar + targetFileName;
-        } else if (hierarchyRadioButton2.isSelected()) {
-            targetFile = targetDir + File.separatorChar + middleStr + targetFileName;
-        } else {
-            logger.error("hierarchyRadioButton select status error");
-            return;
-        }
+
         try {
-            FileUtils.copyFile(new File(sourceFile), new File(targetFile));
+            Path sourcePath = new File(sourceFile).toPath();
+            Files.move(sourcePath, sourcePath.resolveSibling(targetFileName));
+            StringBuilder sb = new StringBuilder();
+            sb.append(currentDir).append(" [").append(sourceFileName).append("]->[").append(targetFileName).append("]");
+            currentTextField.setText(sb.toString());
+            logger.info(sb.toString());
         } catch (IOException e) {
             logger.error("copy file failed: IOException. current: " + sourceFile);
-        }
-        if (othersRadioButton1.isSelected()) {
-
-        } else if (othersRadioButton2.isSelected()) {
-            logger.info("delete: " + sourceFile);
-        } else if (othersRadioButton3.isSelected()) {
-            logger.info("delete: " + sourceFile);
-        } else {
-            logger.error("othersRadioButton select status error");
-            return;
         }
     }
 }

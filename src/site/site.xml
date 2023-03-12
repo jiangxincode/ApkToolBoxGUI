@@ -33,6 +33,7 @@ under the License.
             <item name="Convert Simplified/Traditional Chinese" href="convert_simplified_traditional_chinese.html"/>
             <item name="Check Summary" href="check_summary.html"/>
             <item name="Find Duplicate Files" href="find_duplicate_files.html"/>
+            <item name="Batch Rename" href="batch_rename.html"/>
             <item name="Convert Time Format" href="convert_time_format.html"/>
             <item name="Convert Color Format" href="convert_color_format.html"/>
             <item name="Color Picker" href="color_picker.html"/>
