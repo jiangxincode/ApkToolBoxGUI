@@ -9,7 +9,7 @@ import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
 import edu.jiangxin.apktoolbox.android.dumpsys.alarm.DumpsysAlarmPanel;
-import edu.jiangxin.apktoolbox.file.BatchRenamePanel;
+import edu.jiangxin.apktoolbox.file.batchrename.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
 import edu.jiangxin.apktoolbox.file.checksum.ChecksumPanel;

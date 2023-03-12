@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file;
+package edu.jiangxin.apktoolbox.file.batchrename;
 
 import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
@@ -21,6 +21,12 @@ import java.util.TreeSet;
 
 //https://www.zhihu.com/question/50890909
 public class BatchRenamePanel extends EasyPanel {
+    private static final String STRING_TYPE_PARENT_NAME = "使用父目录名";
+
+    private static final String STRING_TYPE_PARENT_PATH = "使用目录路径";
+
+    private static final String STRING_TYPE_SPECIALISE_STRING = "使用指定字符";
+
     private JPanel warningPanel;
 
     private JPanel sourcePanel;
@@ -50,7 +56,8 @@ public class BatchRenamePanel extends EasyPanel {
     private JSpinner spinner31;
     private JSpinner spinner32;
     private JSpinner spinner41;
-    private JTextField textField42;
+    private JComboBox<String> comboBoxStringType;
+    private JTextField textField43;
     private JSpinner spinner51;
     private JSpinner spinner52;
     private JTextField textField61;
@@ -242,15 +249,28 @@ public class BatchRenamePanel extends EasyPanel {
             thirdLevelPanel4.add(ruleRadioButton4);
             buttonGroup.add(ruleRadioButton4);
 
+            JLabel stringType = new JLabel("字符串类型");
+
+            comboBoxStringType = new JComboBox<>();
+            comboBoxStringType.addItem(STRING_TYPE_PARENT_NAME);
+            comboBoxStringType.addItem(STRING_TYPE_PARENT_PATH);
+            comboBoxStringType.addItem(STRING_TYPE_SPECIALISE_STRING);
+            comboBoxStringType.setSelectedItem(STRING_TYPE_SPECIALISE_STRING);
+            comboBoxStringType.addItemListener(e -> textField43.setEditable(e.getItem().equals(STRING_TYPE_SPECIALISE_STRING)));
+
             JLabel label41 = new JLabel("Int");
             spinner41 = new JSpinner();
             spinner41.setValue(0);
-            JLabel label42 = new JLabel("String");
-            textField42 = new JTextField("");
+
+            JLabel label43 = new JLabel("String");
+            textField43 = new JTextField("");
+
             thirdLevelPanel4.add(label41);
             thirdLevelPanel4.add(spinner41);
-            thirdLevelPanel4.add(label42);
-            thirdLevelPanel4.add(textField42);
+            thirdLevelPanel4.add(label43);
+            thirdLevelPanel4.add(textField43);
+            thirdLevelPanel4.add(stringType);
+            thirdLevelPanel4.add(comboBoxStringType);
         }
 
         {
@@ -358,7 +378,21 @@ public class BatchRenamePanel extends EasyPanel {
         } else if (ruleRadioButton3.isSelected()) {
 
         } else if (ruleRadioButton4.isSelected()) {
+            int index = (Integer) spinner41.getValue();
 
+            String insertString = "";
+            switch ((String) comboBoxStringType.getSelectedItem()) {
+                case STRING_TYPE_PARENT_PATH:
+                    break;
+                case STRING_TYPE_PARENT_NAME:
+                    String parentFile = FilenameUtils.normalizeNoEndSeparator(file.getParentFile().getAbsolutePath());
+                    insertString = FilenameUtils.getName(parentFile);
+                    break;
+                case STRING_TYPE_SPECIALISE_STRING:
+                    insertString = textField43.getText();
+                    break;
+            }
+            targetFileName = StringUtils.substring(sourceFileName, 0, index) + insertString + StringUtils.substring(sourceFileName, index);
         } else if (ruleRadioButton5.isSelected()) {
         } else if (ruleRadioButton6.isSelected()) {
             targetFileName = StringUtils.replace(sourceFileName, textField61.getText(), textField62.getText());
