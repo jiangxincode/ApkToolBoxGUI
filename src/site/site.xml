@@ -20,6 +20,12 @@ under the License.
 <project xmlns="http://maven.apache.org/DECORATION/1.6.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
+    <!-- https://maven.apache.org/skins/index.html -->
+    <skin>
+        <groupId>io.github.olamy.maven.skins</groupId>
+        <artifactId>reflow-maven-skin</artifactId>
+        <version>2.0.0</version>
+    </skin>
     <body>
         <menu name="Getting Started Guide">
             <item name="Getting Started Guide" href="getting_started_guide.html"/>
