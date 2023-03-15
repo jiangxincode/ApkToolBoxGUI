@@ -1,4 +1,4 @@
-## Convert Encodings
+## Convert Encoding
 
 ### Feature
 

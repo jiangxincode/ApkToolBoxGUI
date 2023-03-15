@@ -1,4 +1,4 @@
-## Find Duplicate Files
+## Batch Rename
 
 ### Snapshot
 
