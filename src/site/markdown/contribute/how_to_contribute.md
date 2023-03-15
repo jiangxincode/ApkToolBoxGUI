@@ -1,4 +1,4 @@
-## Contribute
+## How To Contribute
 
 Feel free to dive in! [Open an issue](https://github.com/jiangxincode/ApkToolBoxGUI/issues/new) or submit PRs.
 

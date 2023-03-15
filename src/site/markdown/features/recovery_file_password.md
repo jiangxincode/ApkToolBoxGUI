@@ -1,4 +1,4 @@
-## Recover password
+## Recovery File Password
 
 ### WARNING
 

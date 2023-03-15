@@ -1,57 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 <project xmlns="http://maven.apache.org/DECORATION/1.6.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
     <!-- https://maven.apache.org/skins/index.html -->
+
+    <publishDate position="bottom" format="yyyy-MM-dd" />
+    <version position="bottom" />
+
     <skin>
         <groupId>io.github.olamy.maven.skins</groupId>
         <artifactId>reflow-maven-skin</artifactId>
         <version>2.0.0</version>
     </skin>
+    <custom>
+        <reflowSkin>
+            <brand>
+                <name>ApkToolBoxGUI</name>
+                <href>https://jiangxincode.github.io/ApkToolBoxGUI</href>
+            </brand>
+            <toc>top</toc>
+            <tocTopMax>6</tocTopMax>
+            <topNav>Getting Started Guide|Features|Contribute|Project Reports</topNav>
+            <bottomNav maxSpan="9" >
+                <column>Getting Started Guide</column>
+                <column>Features</column>
+                <column>Contribute</column>
+                <column>Project Reports</column>
+            </bottomNav>
+        </reflowSkin>
+        <gitHub combine.children="append">
+            <projectId>jiangxincode/ApkToolBoxGUI</projectId>
+            <ribbonOrientation>right</ribbonOrientation>
+            <ribbonColor>green</ribbonColor>
+        </gitHub>
+    </custom>
     <body>
-        <menu name="Getting Started Guide">
-            <item name="Getting Started Guide" href="getting_started_guide.html"/>
-            <item name="How To Change Language" href="how_to_change_language.html"/>
-            <item name="How To Change Look And Feel" href="how_to_change_look_and_feel.html"/>
+        <breadcrumbs>
+            <item name="${project.name}" href="./index.html" />
+        </breadcrumbs>
+        <menu name="Getting Started Guide" inherit="bottom">
+            <item name="Getting Started Guide" href="getting_started_guide/getting_started_guide.html"/>
+            <item name="How To Change Language" href="getting_started_guide/how_to_change_language.html"/>
+            <item name="How To Change Look And Feel" href="getting_started_guide/how_to_change_look_and_feel.html"/>
         </menu>
-        <menu name="Features">
-            <item name="Recovery File Password" href="recovery_file_password.html"/>
-            <item name="Convert Encoding" href="convert_encoding.html"/>
-            <item name="Convert OS Pattern" href="convert_os_pattern.html"/>
-            <item name="Convert Simplified/Traditional Chinese" href="convert_simplified_traditional_chinese.html"/>
-            <item name="Check Summary" href="check_summary.html"/>
-            <item name="Find Duplicate Files" href="find_duplicate_files.html"/>
-            <item name="Batch Rename" href="batch_rename.html"/>
-            <item name="Convert Time Format" href="convert_time_format.html"/>
-            <item name="Convert Color Format" href="convert_color_format.html"/>
-            <item name="Color Picker" href="color_picker.html"/>
-            <item name="Convert Base" href="convert_base.html"/>
-            <item name="Convert Unicode Character" href="convert_unicode_character.html"/>
-            <item name="Reverse Engineer" href="reverse_engineer.html"/>
-            <item name="Android Develop" href="android_develop.html"/>
+        <menu name="Features" inherit="bottom">
+            <item name="Recovery File Password" href="features/recovery_file_password.html"/>
+            <item name="Convert Encoding" href="features/convert_encoding.html"/>
+            <item name="Convert OS Pattern" href="features/convert_os_pattern.html"/>
+            <item name="Convert Simplified/Traditional Chinese" href="features/convert_simplified_traditional_chinese.html"/>
+            <item name="Check Summary" href="features/check_summary.html"/>
+            <item name="Find Duplicate Files" href="features/find_duplicate_files.html"/>
+            <item name="Batch Rename" href="features/batch_rename.html"/>
+            <item name="Convert Time Format" href="features/convert_time_format.html"/>
+            <item name="Convert Color Format" href="features/convert_color_format.html"/>
+            <item name="Color Picker" href="features/color_picker.html"/>
+            <item name="Convert Base" href="features/convert_base.html"/>
+            <item name="Convert Unicode Character" href="features/convert_unicode_character.html"/>
+            <item name="Reverse Engineer" href="features/reverse_engineer.html"/>
+            <item name="Android Develop" href="features/android_develop.html"/>
         </menu>
-        <menu name="Contribute">
-            <item name="How To Contribute" href="how_to_contribute.html"/>
+        <menu name="Contribute" inherit="bottom">
+            <item name="How To Contribute" href="contribute/how_to_contribute.html"/>
         </menu>
-        <menu name="Project Reports">
+        <menu name="Project Reports" inherit="bottom">
             <item name="Dependencies" href="dependencies.html"/>
             <item name="Dependency Information" href="dependency-info.html"/>
             <item name="Plugin Management" href="plugin-management.html"/>

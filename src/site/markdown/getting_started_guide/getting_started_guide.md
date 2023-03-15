@@ -1,4 +1,4 @@
-## Download and Install
+## Getting Started Guide
 
 ### Download
 
