@@ -2,6 +2,10 @@
     color: #225E9B;
 }
 
+body {
+    background-image:url(../images/bg.png);
+}
+
 body[class*="page-themes-bootswatch"] {
     background-image: none;
 }
