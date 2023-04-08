@@ -21,7 +21,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - uses: vapier/coverity-scan-action@v1.6.0
+      - uses: vapier/coverity-scan-action@v1.7.0
         with:
           project: 'jiangxincode/ApkToolBoxGUI'
           token: ${{ secrets.COVERITY_SCAN_TOKEN }}
