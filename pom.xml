@@ -320,9 +320,6 @@
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>4.3.0</version>
-                    <configuration>
-                        <repoToken>6OAVlHHg2npJeu5glNsupUqI6KDd6aSGc</repoToken>
-                    </configuration>
                     <dependencies>
                         <dependency>
                             <groupId>javax.xml.bind</groupId>
