@@ -122,10 +122,6 @@ src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java
   301.           }
 
 #13
-src/main/java/edu/jiangxin/apktoolbox/utils/FileUtils.java:1097: error: Resource Leak
-  resource of type `java.net.HttpURLConnection` acquired by call to `openConnection()` at line 1094 is not released after line 1097.
-
-#14
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:62: warning: Thread Safety Violation
   Read/Write race. Non-private method `DictionaryMultiThreadProxy.cancel()` reads without synchronization from `this.bigFileReader`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -135,7 +131,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithr
   63.               bigFileReader.shutdown();
   64.           }
 
-#15
+#14
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:15: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` indirectly reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -145,7 +141,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   16.       private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
   17.       private String result = null;
 
-#16
+#15
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:52: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.get()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because this access may occur on a background thread.
@@ -155,7 +151,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   53.       }
   54.   
 
-#17
+#16
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteForceFuture.java:57: warning: Thread Safety Violation
   Read/Write race. Non-private method `BruteForceFuture.isDone()` reads without synchronization from `this.result`. Potentially races with write in method `BruteForceFuture.set(...)`.
  Reporting because another access to the same memory occurs on a background thread, although this access may not.
@@ -165,7 +161,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/bruteforce/BruteFor
   58.       }
   59.   
 
-#18
+#17
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:41: warning: Thread Safety Violation
   Unprotected write. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` indirectly writes to field `core.EncoderDetector.countDownLatch` outside of synchronization.
  Reporting because this access may occur on a background thread.
@@ -175,7 +171,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithr
   42.           BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
   43.           bigFileReader = builder
 
-#19
+#18
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:48: warning: Thread Safety Violation
   Unprotected write. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` writes to field `this.bigFileReader` outside of synchronization.
  Reporting because this access may occur on a background thread.
@@ -185,7 +181,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithr
   49.           bigFileReader.start();
   50.           try {
 
-#20
+#19
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:40: warning: Thread Safety Violation
   Unprotected write. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` writes to field `this.lineHandler` outside of synchronization.
  Reporting because this access may occur on a background thread.
@@ -195,7 +191,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithr
   41.           String charsetName = EncoderDetector.judgeFile(file.getAbsolutePath());
   42.           BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
 
-#21
+#20
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:49: warning: Thread Safety Violation
   Read/Write race. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` reads without synchronization from `this.bigFileReader`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
  Reporting because this access may occur on a background thread.
@@ -205,7 +201,7 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithr
   50.           try {
   51.               synchronized (lock) {
 
-#22
+#21
 src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithread/DictionaryMultiThreadProxy.java:42: warning: Thread Safety Violation
   Read/Write race. Non-private method `DictionaryMultiThreadProxy.startAndGet(...)` reads without synchronization from `this.lineHandler`. Potentially races with write in method `DictionaryMultiThreadProxy.startAndGet(...)`.
  Reporting because this access may occur on a background thread.
@@ -215,8 +211,8 @@ src/main/java/edu/jiangxin/apktoolbox/file/password/recovery/dictionary/multithr
   43.           bigFileReader = builder
   44.                   .withThreadSize(threadNum)
 
-Found 23 issues
+Found 22 issues
                         Issue Type(ISSUED_TYPE_ID): #
-                      Resource Leak(RESOURCE_LEAK): 13
+                      Resource Leak(RESOURCE_LEAK): 12
   Thread Safety Violation(THREAD_SAFETY_VIOLATION): 9
                 Null Dereference(NULL_DEREFERENCE): 1
