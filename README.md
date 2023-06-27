@@ -11,6 +11,7 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/fb8d289a4b0ee14f9d8b/maintainability)](https://codeclimate.com/github/jiangxincode/ApkToolBoxGUI/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
+[![Project Map](https://sourcespy.com/shield.svg)](https://sourcespy.com/github/jiangxincodeapktoolboxgui/)
 
 
 ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
