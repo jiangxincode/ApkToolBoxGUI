@@ -4,9 +4,13 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
 
 public class ColorConvertPanel extends EasyPanel {
@@ -47,6 +51,8 @@ public class ColorConvertPanel extends EasyPanel {
     private JScrollPane colorTableScrollPane;
 
     private JTextField colorBoxTextField;
+
+    private JComboBox<String> colorTableTypeComboBox;
 
     private JTable colorTable;
 
@@ -229,7 +235,7 @@ public class ColorConvertPanel extends EasyPanel {
             syncToOthersFormat();
         });
 
-        JButton cmyk2OthersConvertBtn = new JButton("HSB->Others");
+        JButton cmyk2OthersConvertBtn = new JButton("CMYK->Others");
         cmyk2OthersConvertBtn.addActionListener(e -> {
             float cyan = Float.valueOf(cyanTextField.getText());
             float magenta = Float.valueOf(magentaTextField.getText());
@@ -237,6 +243,23 @@ public class ColorConvertPanel extends EasyPanel {
             float black = Float.valueOf(blackTextField.getText());
             color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);
             syncToOthersFormat();
+        });
+
+        colorTableTypeComboBox = new JComboBox<>();
+        colorTableTypeComboBox.addItem("Ordinary Colors");
+        colorTableTypeComboBox.addItem("Ral Colors");
+        colorTableTypeComboBox.addItem("GSB Colors");
+        colorTableTypeComboBox.setSelectedItem("Ordinary Colors");
+        colorTableTypeComboBox.addItemListener(itemEvent -> {
+            ColorDefaultTableModel model = (ColorDefaultTableModel) colorTable.getModel();
+            if (itemEvent.getItem().equals("Ordinary Colors")) {
+                model.setDataVector(ColorTableConstant.ORDINARY_COLORS_TABLE_ROW_DATA, ColorTableConstant.ORDINARY_COLORS_COLUMN_NAMES);
+            } else if (itemEvent.getItem().equals("Ral Colors")) {
+                model.setDataVector(ColorTableConstant.RAL_COLORS_TABLE_ROW_DATA, ColorTableConstant.RAL_COLORS_COLUMN_NAMES);
+            } else {
+                model.setDataVector(ColorTableConstant.ORDINARY_COLORS_TABLE_ROW_DATA, ColorTableConstant.ORDINARY_COLORS_COLUMN_NAMES);
+            }
+            onColorTableChanged();
         });
 
         colorBoxTextField = new JTextField();
@@ -251,12 +274,18 @@ public class ColorConvertPanel extends EasyPanel {
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(cmyk2OthersConvertBtn);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        operationPanel.add(colorTableTypeComboBox);
+        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(colorBoxTextField);
     }
 
     private void createOrdinaryColorTable() {
-        colorTable = new JTable(new ColorDefaultTableModel(ColorTableConstant.COLOR_TABLE_ROW_DATA, ColorTableConstant.COLUMN_NAMES));
+        colorTable = new JTable(new ColorDefaultTableModel(ColorTableConstant.ORDINARY_COLORS_TABLE_ROW_DATA, ColorTableConstant.ORDINARY_COLORS_COLUMN_NAMES));
         colorTableScrollPane = new JScrollPane(colorTable);
+        onColorTableChanged();
+    }
+
+    private void onColorTableChanged() {
         int columnCount = colorTable.getColumnCount();
         for (int i = 0; i < columnCount; i++) {
             colorTable.getColumn(colorTable.getColumnName(0)).setCellRenderer(new ColorTableCellRenderer());
@@ -272,7 +301,6 @@ public class ColorConvertPanel extends EasyPanel {
         public boolean isCellEditable(int row, int column) {
             return true;
         }
-
     }
 
     private class ColorTableCellRenderer extends DefaultTableCellRenderer {
