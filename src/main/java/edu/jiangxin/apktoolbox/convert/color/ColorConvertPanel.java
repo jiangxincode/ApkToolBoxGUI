@@ -1,16 +1,15 @@
 package edu.jiangxin.apktoolbox.convert.color;
 
+import edu.jiangxin.apktoolbox.convert.color.colortable.IColorTable;
+import edu.jiangxin.apktoolbox.convert.color.colortable.OrdinaryColorTable;
+import edu.jiangxin.apktoolbox.convert.color.colortable.RalColorTable;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
 
 public class ColorConvertPanel extends EasyPanel {
@@ -48,11 +47,11 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JPanel operationPanel;
 
-    private JScrollPane colorTableScrollPane;
-
     private JTextField colorBoxTextField;
 
-    private JComboBox<String> colorTableTypeComboBox;
+    private JPanel colorTablePanel;
+
+    private JComboBox<IColorTable> colorTableTypeComboBox;
 
     private JTable colorTable;
 
@@ -85,8 +84,8 @@ public class ColorConvertPanel extends EasyPanel {
         add(operationPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        createOrdinaryColorTable();
-        add(colorTableScrollPane);
+        createColorTablePanel();
+        add(colorTablePanel);
     }
 
     private void createRgbPanel() {
@@ -185,7 +184,7 @@ public class ColorConvertPanel extends EasyPanel {
         yellowTextField = new JTextField();
         yellowTextField.setText(new DecimalFormat("0.0000").format(0.0f));
 
-        JLabel blaceLabel = new JLabel("K(Black, [0-1])");
+        JLabel blackLabel = new JLabel("K(Black, [0-1])");
         blackTextField = new JTextField();
         blackTextField.setText(new DecimalFormat("0.0000").format(0.0f));
 
@@ -201,7 +200,7 @@ public class ColorConvertPanel extends EasyPanel {
         cmykPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         cmykPanel.add(yellowTextField);
         cmykPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        cmykPanel.add(blaceLabel);
+        cmykPanel.add(blackLabel);
         cmykPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         cmykPanel.add(blackTextField);
     }
@@ -228,38 +227,21 @@ public class ColorConvertPanel extends EasyPanel {
 
         JButton hsb2OthersConvertBtn = new JButton("HSB->Others");
         hsb2OthersConvertBtn.addActionListener(e -> {
-            float hue = Float.valueOf(hueTextField.getText());
-            float saturation = Float.valueOf(saturationTextField.getText());
-            float brightness = Float.valueOf(brightnessTextField.getText());
+            float hue = Float.parseFloat(hueTextField.getText());
+            float saturation = Float.parseFloat(saturationTextField.getText());
+            float brightness = Float.parseFloat(brightnessTextField.getText());
             color = Color.getHSBColor(hue, saturation, brightness);
             syncToOthersFormat();
         });
 
         JButton cmyk2OthersConvertBtn = new JButton("CMYK->Others");
         cmyk2OthersConvertBtn.addActionListener(e -> {
-            float cyan = Float.valueOf(cyanTextField.getText());
-            float magenta = Float.valueOf(magentaTextField.getText());
-            float yellow = Float.valueOf(yellowTextField.getText());
-            float black = Float.valueOf(blackTextField.getText());
+            float cyan = Float.parseFloat(cyanTextField.getText());
+            float magenta = Float.parseFloat(magentaTextField.getText());
+            float yellow = Float.parseFloat(yellowTextField.getText());
+            float black = Float.parseFloat(blackTextField.getText());
             color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);
             syncToOthersFormat();
-        });
-
-        colorTableTypeComboBox = new JComboBox<>();
-        colorTableTypeComboBox.addItem("Ordinary Colors");
-        colorTableTypeComboBox.addItem("Ral Colors");
-        colorTableTypeComboBox.addItem("GSB Colors");
-        colorTableTypeComboBox.setSelectedItem("Ordinary Colors");
-        colorTableTypeComboBox.addItemListener(itemEvent -> {
-            ColorDefaultTableModel model = (ColorDefaultTableModel) colorTable.getModel();
-            if (itemEvent.getItem().equals("Ordinary Colors")) {
-                model.setDataVector(ColorTableConstant.ORDINARY_COLORS_TABLE_ROW_DATA, ColorTableConstant.ORDINARY_COLORS_COLUMN_NAMES);
-            } else if (itemEvent.getItem().equals("Ral Colors")) {
-                model.setDataVector(ColorTableConstant.RAL_COLORS_TABLE_ROW_DATA, ColorTableConstant.RAL_COLORS_COLUMN_NAMES);
-            } else {
-                model.setDataVector(ColorTableConstant.ORDINARY_COLORS_TABLE_ROW_DATA, ColorTableConstant.ORDINARY_COLORS_COLUMN_NAMES);
-            }
-            onColorTableChanged();
         });
 
         colorBoxTextField = new JTextField();
@@ -274,22 +256,41 @@ public class ColorConvertPanel extends EasyPanel {
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(cmyk2OthersConvertBtn);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        operationPanel.add(colorTableTypeComboBox);
-        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         operationPanel.add(colorBoxTextField);
     }
 
-    private void createOrdinaryColorTable() {
-        colorTable = new JTable(new ColorDefaultTableModel(ColorTableConstant.ORDINARY_COLORS_TABLE_ROW_DATA, ColorTableConstant.ORDINARY_COLORS_COLUMN_NAMES));
-        colorTableScrollPane = new JScrollPane(colorTable);
+    private void createColorTablePanel() {
+        colorTablePanel = new JPanel();
+        colorTablePanel.setLayout(new BoxLayout(colorTablePanel, BoxLayout.Y_AXIS));
+
+        colorTableTypeComboBox = new JComboBox<>();
+        IColorTable ordinaryColorTable = new OrdinaryColorTable();
+        IColorTable ralColorTable = new RalColorTable();
+        colorTableTypeComboBox.addItem(ordinaryColorTable);
+        colorTableTypeComboBox.addItem(ralColorTable);
+        colorTableTypeComboBox.setSelectedItem(ordinaryColorTable);
+        colorTableTypeComboBox.addItemListener(itemEvent -> {
+            ColorDefaultTableModel model = (ColorDefaultTableModel) colorTable.getModel();
+            IColorTable selectedColorTable = (IColorTable) itemEvent.getItem();
+            model.setDataVector(selectedColorTable.getTableRowData(), selectedColorTable.getColumnNames());
+            onColorTableChanged();
+        });
+
+        IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();
+        colorTable = new JTable(new ColorDefaultTableModel(selectedColorTable.getTableRowData(), selectedColorTable.getColumnNames()));
+        JScrollPane colorTableScrollPane = new JScrollPane(colorTable);
         onColorTableChanged();
+
+        colorTablePanel.add(colorTableTypeComboBox);
+        colorTablePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        colorTablePanel.add(colorTableScrollPane);
     }
 
     private void onColorTableChanged() {
-        int columnCount = colorTable.getColumnCount();
-        for (int i = 0; i < columnCount; i++) {
-            colorTable.getColumn(colorTable.getColumnName(0)).setCellRenderer(new ColorTableCellRenderer());
-        }
+        IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();
+        int labelIndex = selectedColorTable.getLabelIndex();
+        String labelName = colorTable.getColumnName(labelIndex);
+        colorTable.getColumn(labelName).setCellRenderer(new ColorTableCellRenderer());
     }
 
     private class ColorDefaultTableModel extends DefaultTableModel {
@@ -307,7 +308,13 @@ public class ColorConvertPanel extends EasyPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            renderer.setBackground(ColorUtils.hex2Color((String) colorTable.getValueAt(row, 3)));
+            IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();
+            if (selectedColorTable == null) {
+                return renderer;
+            }
+            String hex = (String) colorTable.getValueAt(row, selectedColorTable.getHexIndex());
+            Color color = ColorUtils.hex2Color(hex);
+            renderer.setBackground(color);
             return renderer;
         }
     }
