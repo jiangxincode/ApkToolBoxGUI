@@ -9,6 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>jiangxincode-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <pdf.version>3.0.0</pdf.version>
         <poi.version>5.2.4</poi.version>
         <log4j.version>2.20.0</log4j.version>
     </properties>
@@ -51,7 +52,12 @@
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.29</version>
+            <version>${pdf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox-io</artifactId>
+            <version>${pdf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>

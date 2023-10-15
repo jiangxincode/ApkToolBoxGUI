@@ -2,6 +2,8 @@ package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnknownException;
 import org.apache.commons.io.IOUtils;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.io.RandomAccessReadBufferedFile;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
@@ -47,7 +49,7 @@ public class PdfChecker extends FileChecker {
         boolean result = false;
         PDDocument pdDocument = null;
         try {
-            pdDocument = PDDocument.load(file, password);
+            pdDocument = Loader.loadPDF(new RandomAccessReadBufferedFile(file), password);
             result = true;
         } catch (InvalidPasswordException e) {
             if (DEBUG) {
