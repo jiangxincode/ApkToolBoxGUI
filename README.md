@@ -28,7 +28,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 ## Contribute
 
-<https://jiangxincode.github.io/ApkToolBoxGUI/how_to_contribute.html>
+<https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html>
 
 ## Contributors
 
