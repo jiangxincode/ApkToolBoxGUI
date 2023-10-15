@@ -14,7 +14,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.DecimalFormat;
 
 public class ColorConvertPanel extends EasyPanel {
     private Color color;
@@ -27,11 +26,17 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JTextField hexTextField;
 
-    private JSpinner hueSpinner;
+    private JSpinner hueInHsbSpinner;
 
-    private JSpinner saturationSpinner;
+    private JSpinner saturationInHsbSpinner;
 
-    private JSpinner brightnessSpinner;
+    private JSpinner brightnessInHsbSpinner;
+
+    private JSpinner hueInHslSpinner;
+
+    private JSpinner saturationInHslSpinner;
+
+    private JSpinner lightnessInHslSpinner;
 
     private JSpinner cyanSpinner;
 
@@ -67,6 +72,9 @@ public class ColorConvertPanel extends EasyPanel {
 
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createHsbPanel();
+
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createHslPanel();
 
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createCmykPanel();
@@ -151,32 +159,71 @@ public class ColorConvertPanel extends EasyPanel {
         xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
 
         JLabel hueLabel = new JLabel("H(Hue, [0-360])");
-        hueSpinner = new JSpinner();
-        hueSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 1));
-        hueSpinner.addChangeListener(new HsbChangeListener());
+        hueInHsbSpinner = new JSpinner();
+        hueInHsbSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 1));
+        hueInHsbSpinner.addChangeListener(new HsbChangeListener());
 
         JLabel saturationLabel = new JLabel("S(Saturation, [0-100])");
-        saturationSpinner = new JSpinner();
-        saturationSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
-        saturationSpinner.addChangeListener(new HsbChangeListener());
+        saturationInHsbSpinner = new JSpinner();
+        saturationInHsbSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        saturationInHsbSpinner.addChangeListener(new HsbChangeListener());
 
 
         JLabel brightnessLabel = new JLabel("B/V(Brightness/Value, [0-100])");
-        brightnessSpinner = new JSpinner();
-        brightnessSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
-        brightnessSpinner.addChangeListener(new HsbChangeListener());
+        brightnessInHsbSpinner = new JSpinner();
+        brightnessInHsbSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        brightnessInHsbSpinner.addChangeListener(new HsbChangeListener());
 
         xPanel.add(hueLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(hueSpinner);
+        xPanel.add(hueInHsbSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(saturationLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(saturationSpinner);
+        xPanel.add(saturationInHsbSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(brightnessLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(brightnessSpinner);
+        xPanel.add(brightnessInHsbSpinner);
+    }
+
+    private void createHslPanel() {
+        JPanel hslPanel = new JPanel();
+        add(hslPanel);
+        hslPanel.setLayout(new BorderLayout());
+        hslPanel.setBorder(BorderFactory.createTitledBorder("HSL"));
+
+        JPanel xPanel = new JPanel();
+        hslPanel.add(xPanel);
+        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
+
+        JLabel hueLabel = new JLabel("H(Hue, [0-360])");
+        hueInHslSpinner = new JSpinner();
+        hueInHslSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 1));
+        hueInHslSpinner.addChangeListener(new HslChangeListener());
+
+        JLabel saturationLabel = new JLabel("S(Saturation, [0-100])");
+        saturationInHslSpinner = new JSpinner();
+        saturationInHslSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        saturationInHslSpinner.addChangeListener(new HslChangeListener());
+
+
+        JLabel lightnessLabel = new JLabel("L(Lightness, [0-100])");
+        lightnessInHslSpinner = new JSpinner();
+        lightnessInHslSpinner.setModel(new SpinnerNumberModel(50, 0, 100, 1));
+        lightnessInHslSpinner.addChangeListener(new HslChangeListener());
+
+        xPanel.add(hueLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(hueInHslSpinner);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(saturationLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(saturationInHslSpinner);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(lightnessLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(lightnessInHslSpinner);
     }
 
     private void createCmykPanel() {
@@ -304,9 +351,15 @@ public class ColorConvertPanel extends EasyPanel {
         }
         if (!colorMode.equalsIgnoreCase("HSB")) {
             int[] hsbArray = ColorUtils.color2Hsb(color);
-            hueSpinner.setValue(hsbArray[0]);
-            saturationSpinner.setValue(hsbArray[1]);
-            brightnessSpinner.setValue(hsbArray[2]);
+            hueInHsbSpinner.setValue(hsbArray[0]);
+            saturationInHsbSpinner.setValue(hsbArray[1]);
+            brightnessInHsbSpinner.setValue(hsbArray[2]);
+        }
+        if (!colorMode.equalsIgnoreCase("HSL")) {
+            int[] hsbArray = ColorUtils.color2Hsl(color);
+            hueInHslSpinner.setValue(hsbArray[0]);
+            saturationInHslSpinner.setValue(hsbArray[1]);
+            lightnessInHslSpinner.setValue(hsbArray[2]);
         }
         if (!colorMode.equalsIgnoreCase("CMYK")) {
             int[] cmykArray = ColorUtils.color2Cmyk(color);
@@ -343,11 +396,27 @@ public class ColorConvertPanel extends EasyPanel {
                 return;
             }
             isChangedByUser = false;
-            int hue = (Integer) hueSpinner.getValue();
-            int saturation = (Integer) saturationSpinner.getValue();
-            int brightness = (Integer) brightnessSpinner.getValue();
+            int hue = (Integer) hueInHsbSpinner.getValue();
+            int saturation = (Integer) saturationInHsbSpinner.getValue();
+            int brightness = (Integer) brightnessInHsbSpinner.getValue();
             color = ColorUtils.hsb2Color(hue, saturation, brightness);
             syncToOthersFormat("HSB");
+            isChangedByUser = true;
+        }
+    }
+
+    class HslChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (!isChangedByUser) {
+                return;
+            }
+            isChangedByUser = false;
+            int hue = (Integer) hueInHslSpinner.getValue();
+            int saturation = (Integer) saturationInHslSpinner.getValue();
+            int lightness = (Integer) lightnessInHslSpinner.getValue();
+            color = ColorUtils.hsl2Color(hue, saturation, lightness);
+            syncToOthersFormat("HSL");
             isChangedByUser = true;
         }
     }

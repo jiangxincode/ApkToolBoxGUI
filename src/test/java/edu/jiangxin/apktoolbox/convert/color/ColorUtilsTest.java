@@ -32,6 +32,20 @@ public class ColorUtilsTest {
     }
 
     @Test
+    public void testHsl2Color() {
+        // Because of deviation, the calculated color is (194, 176, 121) instead of (194, 175, 120)
+        assertEquals(new Color(194, 176, 121), ColorUtils.hsl2Color(45, 38, 62));
+        // Because of deviation, the calculated color is (158, 152, 101) instead of (158, 151, 100)
+        assertEquals(new Color(158, 152, 101), ColorUtils.hsl2Color(53, 23, 51));
+    }
+
+    @Test
+    public void testColor2Hsl() {
+        assertArrayEquals(new int[]{45, 38, 62}, ColorUtils.color2Hsl(new Color(194, 175, 120)));
+        assertArrayEquals(new int[]{53, 23, 51}, ColorUtils.color2Hsl(new Color(158, 151, 100)));
+    }
+
+    @Test
     public void testCmyk2Color() {
         // Because of deviation, the calculated color is (194, 174, 120) instead of (194, 175, 120)
         assertEquals(new Color(194, 174, 120), ColorUtils.cmyk2Color(0, 10, 38, 24));
