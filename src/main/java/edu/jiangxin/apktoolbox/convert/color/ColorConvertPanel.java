@@ -27,19 +27,19 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JTextField hexTextField;
 
-    private JTextField hueTextField;
+    private JSpinner hueSpinner;
 
-    private JTextField saturationTextField;
+    private JSpinner saturationSpinner;
 
-    private JTextField brightnessTextField;
+    private JSpinner brightnessSpinner;
 
-    private JTextField cyanTextField;
+    private JSpinner cyanSpinner;
 
-    private JTextField magentaTextField;
+    private JSpinner magentaSpinner;
 
-    private JTextField yellowTextField;
+    private JSpinner yellowSpinner;
 
-    private JTextField blackTextField;
+    private JSpinner blackSpinner;
 
     private JTextField colorBoxTextField;
 
@@ -144,40 +144,39 @@ public class ColorConvertPanel extends EasyPanel {
         JPanel hsbPanel = new JPanel();
         add(hsbPanel);
         hsbPanel.setLayout(new BorderLayout());
-        hsbPanel.setBorder(BorderFactory.createTitledBorder("HSB"));
+        hsbPanel.setBorder(BorderFactory.createTitledBorder("HSB/HSV"));
 
         JPanel xPanel = new JPanel();
         hsbPanel.add(xPanel);
         xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
 
-        JLabel hueLabel = new JLabel("H(Hue, [0-1])");
-        hueTextField = new JTextField();
-        hueTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        hueTextField.getDocument().addDocumentListener(new HsbDocumentListener());
+        JLabel hueLabel = new JLabel("H(Hue, [0-360])");
+        hueSpinner = new JSpinner();
+        hueSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 1));
+        hueSpinner.addChangeListener(new HsbChangeListener());
+
+        JLabel saturationLabel = new JLabel("S(Saturation, [0-100])");
+        saturationSpinner = new JSpinner();
+        saturationSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        saturationSpinner.addChangeListener(new HsbChangeListener());
 
 
-        JLabel saturationLabel = new JLabel("S(Saturation, [0-1])");
-        saturationTextField = new JTextField();
-        saturationTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        saturationTextField.getDocument().addDocumentListener(new HsbDocumentListener());
-
-
-        JLabel brightnessLabel = new JLabel("B/V(Brightness or Value, [0-1])");
-        brightnessTextField = new JTextField();
-        brightnessTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        brightnessTextField.getDocument().addDocumentListener(new HsbDocumentListener());
+        JLabel brightnessLabel = new JLabel("B/V(Brightness/Value, [0-100])");
+        brightnessSpinner = new JSpinner();
+        brightnessSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        brightnessSpinner.addChangeListener(new HsbChangeListener());
 
         xPanel.add(hueLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(hueTextField);
+        xPanel.add(hueSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(saturationLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(saturationTextField);
+        xPanel.add(saturationSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(brightnessLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(brightnessTextField);
+        xPanel.add(brightnessSpinner);
     }
 
     private void createCmykPanel() {
@@ -190,43 +189,42 @@ public class ColorConvertPanel extends EasyPanel {
         cmykPanel.add(xPanel);
         xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
 
-        JLabel cyanLabel = new JLabel("C(Cyan, [0-1])");
-        cyanTextField = new JTextField();
-        cyanTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        cyanTextField.getDocument().addDocumentListener(new CmykDocumentListener());
+        JLabel cyanLabel = new JLabel("C(Cyan, [0-100])");
+        cyanSpinner = new JSpinner();
+        cyanSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        cyanSpinner.addChangeListener(new CmykChangeListener());
+
+        JLabel magentaLabel = new JLabel("M(Magenta, [0-100])");
+        magentaSpinner = new JSpinner();
+        magentaSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        magentaSpinner.addChangeListener(new CmykChangeListener());
 
 
-        JLabel magentaLabel = new JLabel("M(Magenta, [0-1])");
-        magentaTextField = new JTextField();
-        magentaTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        magentaTextField.getDocument().addDocumentListener(new CmykDocumentListener());
+        JLabel yellowLabel = new JLabel("Y(Yellow, [0-100])");
+        yellowSpinner = new JSpinner();
+        yellowSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        yellowSpinner.addChangeListener(new CmykChangeListener());
 
-
-        JLabel yellowLabel = new JLabel("Y(Yellow, [0-1])");
-        yellowTextField = new JTextField();
-        yellowTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        yellowTextField.getDocument().addDocumentListener(new CmykDocumentListener());
-
-        JLabel blackLabel = new JLabel("K(Black, [0-1])");
-        blackTextField = new JTextField();
-        blackTextField.setText(new DecimalFormat("0.0000").format(0.0f));
-        blackTextField.getDocument().addDocumentListener(new CmykDocumentListener());
+        JLabel blackLabel = new JLabel("K(Black, [0-100])");
+        blackSpinner = new JSpinner();
+        blackSpinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));
+        blackSpinner.addChangeListener(new CmykChangeListener());
 
         xPanel.add(cyanLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(cyanTextField);
+        xPanel.add(cyanSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(magentaLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(magentaTextField);
+        xPanel.add(magentaSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(yellowLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(yellowTextField);
+        xPanel.add(yellowSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(blackLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(blackTextField);
+        xPanel.add(blackSpinner);
     }
 
     private void createColorTablePanel() {
@@ -305,17 +303,17 @@ public class ColorConvertPanel extends EasyPanel {
             hexTextField.setText(ColorUtils.color2Hex(color));
         }
         if (!colorMode.equalsIgnoreCase("HSB")) {
-            float[] hsbArray = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-            hueTextField.setText(new DecimalFormat("0.0000").format(hsbArray[0]));
-            saturationTextField.setText(new DecimalFormat("0.0000").format(hsbArray[1]));
-            brightnessTextField.setText(new DecimalFormat("0.0000").format(hsbArray[2]));
+            int[] hsbArray = ColorUtils.color2Hsb(color);
+            hueSpinner.setValue(hsbArray[0]);
+            saturationSpinner.setValue(hsbArray[1]);
+            brightnessSpinner.setValue(hsbArray[2]);
         }
         if (!colorMode.equalsIgnoreCase("CMYK")) {
-            float[] cmykArray = ColorUtils.color2Cmyk(color);
-            cyanTextField.setText(new DecimalFormat("0.0000").format(cmykArray[0]));
-            magentaTextField.setText(new DecimalFormat("0.0000").format(cmykArray[1]));
-            yellowTextField.setText(new DecimalFormat("0.0000").format(cmykArray[2]));
-            blackTextField.setText(new DecimalFormat("0.0000").format(cmykArray[3]));
+            int[] cmykArray = ColorUtils.color2Cmyk(color);
+            cyanSpinner.setValue(cmykArray[0]);
+            magentaSpinner.setValue(cmykArray[1]);
+            yellowSpinner.setValue(cmykArray[2]);
+            blackSpinner.setValue(cmykArray[3]);
         }
         colorBoxTextField.setBackground(color);
         //paint the color box with the converted output color
@@ -334,6 +332,39 @@ public class ColorConvertPanel extends EasyPanel {
             int blue = (Integer) blueSpinner.getValue();
             color = new Color(red, green, blue);
             syncToOthersFormat("RGB");
+            isChangedByUser = true;
+        }
+    }
+
+    class HsbChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (!isChangedByUser) {
+                return;
+            }
+            isChangedByUser = false;
+            int hue = (Integer) hueSpinner.getValue();
+            int saturation = (Integer) saturationSpinner.getValue();
+            int brightness = (Integer) brightnessSpinner.getValue();
+            color = ColorUtils.hsb2Color(hue, saturation, brightness);
+            syncToOthersFormat("HSB");
+            isChangedByUser = true;
+        }
+    }
+
+    class CmykChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (!isChangedByUser) {
+                return;
+            }
+            isChangedByUser = false;
+            int cyan = (Integer) cyanSpinner.getValue();
+            int magenta = (Integer) magentaSpinner.getValue();
+            int yellow = (Integer) yellowSpinner.getValue();
+            int black = (Integer) blackSpinner.getValue();
+            color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);
+            syncToOthersFormat("CMYK");
             isChangedByUser = true;
         }
     }
@@ -363,73 +394,6 @@ public class ColorConvertPanel extends EasyPanel {
             try {
                 color = ColorUtils.hex2Color(hex);
                 syncToOthersFormat("HEX");
-            } catch (NumberFormatException e) {
-            }
-            isChangedByUser = true;
-        }
-    }
-
-    class HsbDocumentListener implements DocumentListener {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            onValueUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            onValueUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            onValueUpdate();
-        }
-
-        private void onValueUpdate() {
-            if (!isChangedByUser) {
-                return;
-            }
-            isChangedByUser = false;
-            try {
-                float hue = Float.parseFloat(hueTextField.getText());
-                float saturation = Float.parseFloat(saturationTextField.getText());
-                float brightness = Float.parseFloat(brightnessTextField.getText());
-                color = Color.getHSBColor(hue, saturation, brightness);
-                syncToOthersFormat("HSB");
-            } catch (NumberFormatException e) {
-            }
-            isChangedByUser = true;
-        }
-    }
-
-    class CmykDocumentListener implements DocumentListener {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            onValueUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            onValueUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            onValueUpdate();
-        }
-
-        private void onValueUpdate() {
-            if (!isChangedByUser) {
-                return;
-            }
-            isChangedByUser = false;
-            try {
-                float cyan = Float.parseFloat(cyanTextField.getText());
-                float magenta = Float.parseFloat(magentaTextField.getText());
-                float yellow = Float.parseFloat(yellowTextField.getText());
-                float black = Float.parseFloat(blackTextField.getText());
-                color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);
-                syncToOthersFormat("CMYK");
             } catch (NumberFormatException e) {
             }
             isChangedByUser = true;

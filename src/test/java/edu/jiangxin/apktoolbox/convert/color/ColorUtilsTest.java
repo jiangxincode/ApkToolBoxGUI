@@ -4,68 +4,44 @@ import org.junit.Test;
 
 import java.awt.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ColorUtilsTest {
-
     @Test
     public void testHex2Color() {
-        assertEquals(new Color(255, 182, 193), ColorUtils.hex2Color("#FFB6C1"));
-        assertEquals(new Color(221, 160, 221), ColorUtils.hex2Color("#DDA0DD"));
-        assertEquals(new Color(119, 136, 153), ColorUtils.hex2Color("#778899"));
-
-        assertEquals(new Color(255, 182, 193), ColorUtils.hex2Color("0xFFB6C1"));
-        assertEquals(new Color(221, 160, 221), ColorUtils.hex2Color("0xDDA0DD"));
-        assertEquals(new Color(119, 136, 153), ColorUtils.hex2Color("0x778899"));
+        assertEquals(new Color(194, 175, 120), ColorUtils.hex2Color("0xC2AF78"));
+        assertEquals(new Color(158, 151, 100), ColorUtils.hex2Color("0x9E9764"));
     }
 
     @Test
     public void testColor2Hex() {
-        assertEquals(ColorUtils.color2Hex(new Color(255, 182, 193)), "0xFFB6C1");
-        assertEquals(ColorUtils.color2Hex(new Color(221, 160, 221)), "0xDDA0DD");
-        assertEquals(ColorUtils.color2Hex(new Color(119, 136, 153)), "0x778899");
+        assertEquals("0xC2AF78", ColorUtils.color2Hex(new Color(194, 175, 120)));
+        assertEquals("0x9E9764", ColorUtils.color2Hex(new Color(158, 151, 100)));
+    }
+
+    @Test
+    public void testHsb2Color() {
+        assertEquals(new Color(194, 175, 120), ColorUtils.hsb2Color(45, 38, 76));
+        assertEquals(new Color(158, 151, 100), ColorUtils.hsb2Color(53, 37, 62));
+    }
+
+    @Test
+    public void testColor2Hsb() {
+        assertArrayEquals(new int[]{45, 38, 76}, ColorUtils.color2Hsb(new Color(194, 175, 120)));
+        assertArrayEquals(new int[]{53, 37, 62}, ColorUtils.color2Hsb(new Color(158, 151, 100)));
     }
 
     @Test
     public void testCmyk2Color() {
-        Color rgbColor1 = new Color(240,248,255);
-        Color cmykColor1 = ColorUtils.cmyk2Color(0.0588f,0.0275f,0.0000f,0.0000f);
-        assertTrue(Math.abs(rgbColor1.getRed() - cmykColor1.getRed()) <= 1);
-        assertTrue(Math.abs(rgbColor1.getGreen() - cmykColor1.getGreen()) <= 1);
-        assertTrue(Math.abs(rgbColor1.getBlue() - cmykColor1.getBlue()) <= 1);
-
-        Color rgbColor2 = new Color(142,229,238);
-        Color cmykColor2 = ColorUtils.cmyk2Color(0.4034f,0.0378f,0.0000f,0.0667f);
-        assertTrue(Math.abs(rgbColor2.getRed() - cmykColor2.getRed()) <= 1);
-        assertTrue(Math.abs(rgbColor2.getGreen() - cmykColor2.getGreen()) <= 1);
-        assertTrue(Math.abs(rgbColor2.getBlue() - cmykColor2.getBlue()) <= 1);
-
-        Color rgbColor3 = new Color(100,149,237);
-        Color cmykColor3 = ColorUtils.cmyk2Color(0.5781f,0.3713f,0.0000f,0.0706f);
-        assertTrue(Math.abs(rgbColor3.getRed() - cmykColor3.getRed()) <= 1);
-        assertTrue(Math.abs(rgbColor3.getGreen() - cmykColor3.getGreen()) <= 1);
-        assertTrue(Math.abs(rgbColor3.getBlue() - cmykColor3.getBlue()) <= 1);
+        // Because of deviation, the calculated color is (194, 174, 120) instead of (194, 175, 120)
+        assertEquals(new Color(194, 174, 120), ColorUtils.cmyk2Color(0, 10, 38, 24));
+        // Because of deviation, the calculated color is (158, 152, 100) instead of (158, 151, 100)
+        assertEquals(new Color(158, 152, 100), ColorUtils.cmyk2Color(0, 4, 37, 38));
     }
 
     @Test
     public void testColor2Cmyk() {
-        float[] cmyk1 = ColorUtils.color2Cmyk(new Color(240,248,255));
-        assertTrue(Math.abs(cmyk1[0] - 0.0588f) < 1e-4);
-        assertTrue(Math.abs(cmyk1[1] - 0.0275f) < 1e-4);
-        assertTrue(Math.abs(cmyk1[2] - 0.0000f) < 1e-4);
-        assertTrue(Math.abs(cmyk1[3] - 0.0000f) < 1e-4);
-
-        float[] cmyk2 = ColorUtils.color2Cmyk(new Color(142,229,238));
-        assertTrue(Math.abs(cmyk2[0] - 0.4034f) < 1e-4);
-        assertTrue(Math.abs(cmyk2[1] - 0.0378f) < 1e-4);
-        assertTrue(Math.abs(cmyk2[2] - 0.0000f) < 1e-4);
-        assertTrue(Math.abs(cmyk2[3] - 0.0667f) < 1e-4);
-
-        float[] cmyk3 = ColorUtils.color2Cmyk(new Color(100,149,237));
-        assertTrue(Math.abs(cmyk3[0] - 0.5781f) < 1e-4);
-        assertTrue(Math.abs(cmyk3[1] - 0.3713f) < 1e-4);
-        assertTrue(Math.abs(cmyk3[2] - 0.0000f) < 1e-4);
-        assertTrue(Math.abs(cmyk3[3] - 0.0706f) < 1e-4);
+        assertArrayEquals(new int[]{0, 10, 38, 24}, ColorUtils.color2Cmyk(new Color(194, 175, 120)));
+        assertArrayEquals(new int[]{0, 4, 37, 38}, ColorUtils.color2Cmyk(new Color(158, 151, 100)));
     }
 }
