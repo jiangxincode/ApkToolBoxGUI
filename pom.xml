@@ -137,7 +137,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.2.2</version>
+            <version>3.2.5</version>
         </dependency>
         <!-- We execute junit test from maven-surefire-plugin, so we can not set <scope>test</scope> -->
         <dependency>
