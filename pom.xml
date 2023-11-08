@@ -11,14 +11,14 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <pdf.version>3.0.0</pdf.version>
         <poi.version>5.2.4</poi.version>
-        <log4j.version>2.20.0</log4j.version>
+        <log4j.version>2.21.1</log4j.version>
         <surefire.version>3.2.2</surefire.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.13.0</version>
+            <version>2.15.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.2.1</version>
+            <version>3.2.5</version>
         </dependency>
         <!-- We execute junit test from maven-surefire-plugin, so we can not set <scope>test</scope> -->
         <dependency>
@@ -163,12 +163,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.3.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -211,12 +211,12 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.7.3.6</version>
+                    <version>4.8.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.21.0</version>
+                    <version>3.21.2</version>
                     <configuration>
                         <targetJdk>9</targetJdk>
                         <excludeRoots>
@@ -227,12 +227,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.12.3</version>
+                            <version>10.12.4</version>
                         </dependency>
                     </dependencies>
                     <configuration>
@@ -247,12 +247,12 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.10</version>
+                    <version>0.8.11</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.2</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
                         <charset>UTF-8</charset>
@@ -273,7 +273,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -411,7 +411,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>templating-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>filter-src</id>
