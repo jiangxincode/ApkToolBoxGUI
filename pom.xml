@@ -10,7 +10,7 @@
         <sonar.organization>jiangxincode-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <pdf.version>3.0.0</pdf.version>
-        <poi.version>5.2.4</poi.version>
+        <poi.version>5.2.5</poi.version>
         <log4j.version>2.22.0</log4j.version>
         <surefire.version>3.2.2</surefire.version>
     </properties>
