@@ -12,7 +12,7 @@
         <pdf.version>3.0.1</pdf.version>
         <poi.version>5.2.5</poi.version>
         <log4j.version>2.22.0</log4j.version>
-        <surefire.version>3.2.2</surefire.version>
+        <surefire.version>3.2.3</surefire.version>
     </properties>
     <dependencies>
         <dependency>
