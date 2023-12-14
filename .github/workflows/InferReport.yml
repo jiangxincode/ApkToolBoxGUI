@@ -50,7 +50,7 @@ jobs:
           git push -f https://jiangxincode:${{secrets.GITHUB_TOKEN}}@github.com/jiangxincode/ApkToolBoxGUI.git infer-out:infer-out
           cd ..
       - name: Upload SARIF output to GitHub Security Center
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
            sarif_file: infer-out/report.sarif
            category: infer
