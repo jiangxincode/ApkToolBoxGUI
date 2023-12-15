@@ -28,7 +28,7 @@ jobs:
         run: |
           mvn clean package
           ./PackageWindows.ps1
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ApkToolBoxGUI-windows
           path: target/ApkToolBoxGUI-*-with-JRE.zip
@@ -54,7 +54,7 @@ jobs:
           mvn clean package
           chmod u+x ./PackageLinux.sh
           ./PackageLinux.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ApkToolBoxGUI-linux
           path: target/ApkToolBoxGUI-*-with-JRE.zip
@@ -80,7 +80,7 @@ jobs:
           mvn clean package
           chmod u+x ./PackageMacos.sh
           ./PackageMacos.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ApkToolBoxGUI-macos
           path: target/ApkToolBoxGUI-*-with-JRE.zip
