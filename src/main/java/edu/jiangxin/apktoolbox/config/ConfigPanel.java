@@ -35,6 +35,9 @@ public class ConfigPanel extends EasyPanel {
         createPathPanel("Path of JD-GUI(e.g.\"D:/Portable/tools/jd-gui-1.6.6.jar\")", "http://jd.benow.ca", Constants.JD_GUI_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
+        createPathPanel("Path of Luyten(e.g.\"D:/Portable/tools/luyten-0.5.4.jar\")", "https://github.com/deathmarine/Luyten", Constants.LUYTEN_PATH_KEY);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
         createPathPanel("Path of JADX(e.g.\"D:/Portable/tools/jadx-1.2.0/bin/jadx-gui.bat\")", "https://github.com/skylot/jadx", Constants.JADX_PATH_KEY);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 

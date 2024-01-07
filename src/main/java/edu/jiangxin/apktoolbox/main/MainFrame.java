@@ -57,10 +57,10 @@ public class MainFrame extends EasyFrame {
     private JMenuItem configMenuItem;
 
     private JMenu reverseMenu;
-    private JMenuItem apktoolDecodeMenuItem;
-    private JMenuItem apktoolRebuildMenuItem;
+    private JMenuItem apktoolMenuItem;
     private JMenuItem apkSignMenuItem;
     private JMenuItem jDMenuItem;
+    private JMenuItem luytenMenuItem;
     private JMenuItem jADXMenuItem;
     private JMenuItem aXMLPrinter;
 
@@ -328,9 +328,9 @@ public class MainFrame extends EasyFrame {
         reverseMenu.setMnemonic(KeyEvent.VK_R);
         menuBar.add(reverseMenu);
 
-        apktoolDecodeMenuItem = new JMenuItem(bundle.getString("reverse.apktool.title"), KeyEvent.VK_D);
-        apktoolDecodeMenuItem.addActionListener(new ChangePanelListener(ApktoolPanel.class, apktoolDecodeMenuItem.getText()));
-        reverseMenu.add(apktoolDecodeMenuItem);
+        apktoolMenuItem = new JMenuItem(bundle.getString("reverse.apktool.title"), KeyEvent.VK_D);
+        apktoolMenuItem.addActionListener(new ChangePanelListener(ApktoolPanel.class, apktoolMenuItem.getText()));
+        reverseMenu.add(apktoolMenuItem);
 
         apkSignMenuItem = new JMenuItem(bundle.getString("reverse.apksigner.title"));
         apkSignMenuItem.addActionListener(new ChangePanelListener(ApkSignerPanel.class, apkSignMenuItem.getText()));
@@ -340,7 +340,11 @@ public class MainFrame extends EasyFrame {
         jDMenuItem.addActionListener(new JdActionListener());
         reverseMenu.add(jDMenuItem);
 
-        jADXMenuItem = new JMenuItem(bundle.getString("reverse.jadx.gui.title"));
+        luytenMenuItem = new JMenuItem(bundle.getString("reverse.luyten.title"));
+        luytenMenuItem.addActionListener(new LuytenActionListener());
+        reverseMenu.add(luytenMenuItem);
+
+        jADXMenuItem = new JMenuItem(bundle.getString("reverse.jadx.title"));
         jADXMenuItem.addActionListener(new JadxActionListener());
         reverseMenu.add(jADXMenuItem);
 

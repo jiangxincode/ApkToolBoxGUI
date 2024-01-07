@@ -29,6 +29,8 @@ public class Constants {
 
     public static final String JD_GUI_PATH_KEY = "jd-gui.path";
 
+    public static final String LUYTEN_PATH_KEY = "luyten.path";
+
     public static final String JADX_PATH_KEY = "jadx.path";
 
     public static final String AXMLPRINTER_PATH_KEY = "axmlprinter.path";
