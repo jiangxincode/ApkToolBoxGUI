@@ -23,6 +23,7 @@ import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
+import edu.jiangxin.apktoolbox.reverse.apktool.ApktoolPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -327,14 +328,9 @@ public class MainFrame extends EasyFrame {
         reverseMenu.setMnemonic(KeyEvent.VK_R);
         menuBar.add(reverseMenu);
 
-        apktoolDecodeMenuItem = new JMenuItem(bundle.getString("reverse.apktool.decode.title"), KeyEvent.VK_D);
-        apktoolDecodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK));
-        apktoolDecodeMenuItem.addActionListener(new ChangePanelListener(ApktoolDecodePanel.class, apktoolDecodeMenuItem.getText()));
+        apktoolDecodeMenuItem = new JMenuItem(bundle.getString("reverse.apktool.title"), KeyEvent.VK_D);
+        apktoolDecodeMenuItem.addActionListener(new ChangePanelListener(ApktoolPanel.class, apktoolDecodeMenuItem.getText()));
         reverseMenu.add(apktoolDecodeMenuItem);
-
-        apktoolRebuildMenuItem = new JMenuItem(bundle.getString("reverse.apktool.rebuild.title"));
-        apktoolRebuildMenuItem.addActionListener(new ChangePanelListener(ApktoolRebuildPanel.class, apktoolRebuildMenuItem.getText()));
-        reverseMenu.add(apktoolRebuildMenuItem);
 
         apkSignMenuItem = new JMenuItem(bundle.getString("reverse.apksigner.title"));
         apkSignMenuItem.addActionListener(new ChangePanelListener(ApkSignerPanel.class, apkSignMenuItem.getText()));

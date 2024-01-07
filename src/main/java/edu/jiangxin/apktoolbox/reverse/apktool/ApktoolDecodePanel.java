@@ -1,11 +1,10 @@
-package edu.jiangxin.apktoolbox.reverse;
+package edu.jiangxin.apktoolbox.reverse.apktool;
 
 import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,18 +50,6 @@ public class ApktoolDecodePanel extends EasyPanel {
     }
 
     private void initUI() {
-        String toolPath = conf.getString(Constants.APKTOOL_PATH_KEY);
-        File toolFile = null;
-        if (!StringUtils.isEmpty(toolPath)) {
-            toolFile = new File(toolPath);
-        }
-        if (StringUtils.isEmpty(toolPath) || toolFile == null || !toolFile.exists() || !toolFile.isFile()) {
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, "Need Configuration", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
