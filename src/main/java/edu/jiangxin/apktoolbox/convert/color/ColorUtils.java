@@ -101,37 +101,106 @@ public class ColorUtils {
         float x = c * (1 - Math.abs((hue * 6) % 2 - 1));
         float m = lightness - c / 2;
 
-        float r, g, b;
+        float red, green, blue;
         if (hue >= 0 && hue < 1.0 / 6.0) {
-            r = c;
-            g = x;
-            b = 0;
+            red = c;
+            green = x;
+            blue = 0;
         } else if (hue >= 1.0 / 6.0 && hue < 2.0 / 6.0) {
-            r = x;
-            g = c;
-            b = 0;
+            red = x;
+            green = c;
+            blue = 0;
         } else if (hue >= 2.0 / 6.0 && hue < 3.0 / 6.0) {
-            r = 0;
-            g = c;
-            b = x;
+            red = 0;
+            green = c;
+            blue = x;
         } else if (hue >= 3.0 / 6.0 && hue < 4.0 / 6.0) {
-            r = 0;
-            g = x;
-            b = c;
+            red = 0;
+            green = x;
+            blue = c;
         } else if (hue >= 4.0 / 6.0 && hue < 5.0 / 6.0) {
-            r = x;
-            g = 0;
-            b = c;
+            red = x;
+            green = 0;
+            blue = c;
         } else {
-            r = c;
-            g = 0;
-            b = x;
+            red = c;
+            green = 0;
+            blue = x;
         }
 
-        int redI = (int) ((r + m) * 255);
-        int greenI = (int) ((g + m) * 255);
-        int blueI = (int) ((b + m) * 255);
+        int redI = (int) ((red + m) * 255);
+        int greenI = (int) ((green + m) * 255);
+        int blueI = (int) ((blue + m) * 255);
 
         return new Color(redI, greenI, blueI);
+    }
+
+    public static double[] colorLab(Color color) {
+        double R = color.getRed() / 255.0;
+        double G = color.getGreen() / 255.0;
+        double B = color.getBlue() / 255.0;
+
+        R = pivotRgbComponent(R);
+        G = pivotRgbComponent(G);
+        B = pivotRgbComponent(B);
+
+        double X = R * 0.4124564 + G * 0.3575761 + B * 0.1804375;
+        double Y = R * 0.2126729 + G * 0.7151522 + B * 0.0721750;
+        double Z = R * 0.0193339 + G * 0.1191920 + B * 0.9503041;
+
+        X = X / 0.950470;
+        Y = Y / 1.000000;
+        Z = Z / 1.088830;
+
+        X = pivotLabComponent(X);
+        Y = pivotLabComponent(Y);
+        Z = pivotLabComponent(Z);
+
+        double L = Math.max(0, Math.min(116 * Y - 16, 100));
+        double a = (X - Y) * 500;
+        double bValue = (Y - Z) * 200;
+
+        return new double[] { L, a, bValue };
+    }
+
+    public static Color lab2Color(double L, double a, double b) {
+        double Y = (L + 16.0) / 116.0;
+        double X = a / 500.0 + Y;
+        double Z = Y - b / 200.0;
+
+        Y = pivotLabComponent(Y);
+        X = pivotLabComponent(X);
+        Z = pivotLabComponent(Z);
+
+        double r = X * 3.2404542 + Y * -1.5371385 + Z * -0.4985314;
+        double g = X * -0.9692660 + Y * 1.8760108 + Z * 0.0415560;
+        double bValue = X * 0.0556434 + Y * -0.2040259 + Z * 1.0572252;
+
+        r = pivotRgbComponent(r);
+        g = pivotRgbComponent(g);
+        bValue = pivotRgbComponent(bValue);
+
+        int red = (int) Math.round(r * 255);
+        int green = (int) Math.round(g * 255);
+        int blue = (int) Math.round(bValue * 255);
+
+        return new Color(red, green, blue);
+    }
+
+    private static double pivotRgbComponent(double value) {
+        if (value <= 0.04045) {
+            return value / 12.92;
+        } else {
+            return Math.pow((value + 0.055) / 1.055, 2.4);
+        }
+    }
+
+    private static double pivotLabComponent(double value) {
+        double threshold = 6.0 / 29.0;
+        if (value > threshold) {
+            return value * value * value;
+        } else {
+            return (value - 16.0 / 116.0) / 7.787;
+        }
     }
 }

@@ -1,8 +1,10 @@
 package edu.jiangxin.apktoolbox.convert.color;
 
+import edu.jiangxin.apktoolbox.convert.color.colorspace.CIELabColorSpace;
 import org.junit.Test;
 
 import java.awt.*;
+import java.awt.color.ColorSpace;
 
 import static org.junit.Assert.*;
 
@@ -55,6 +57,21 @@ public class ColorUtilsTest {
 
     @Test
     public void testColor2Cmyk() {
+        assertArrayEquals(new int[]{0, 10, 38, 24}, ColorUtils.color2Cmyk(new Color(194, 175, 120)));
+        assertArrayEquals(new int[]{0, 4, 37, 38}, ColorUtils.color2Cmyk(new Color(158, 151, 100)));
+    }
+
+    @Test
+    public void testCIELab2Color() {
+        ColorSpace colorSpace = CIELabColorSpace.getInstance();
+        // Because of deviation, the calculated color is (194, 174, 120) instead of (194, 175, 120)
+        assertEquals(new Color(99, 125, 125), new Color(colorSpace, new float[]{0.5f, 0.6f, 0.7f}, 1.0f));
+        // Because of deviation, the calculated color is (158, 152, 100) instead of (158, 151, 100)
+        assertEquals(new Color(158, 152, 100), ColorUtils.cmyk2Color(0, 4, 37, 38));
+    }
+
+    @Test
+    public void testColor2CIELab() {
         assertArrayEquals(new int[]{0, 10, 38, 24}, ColorUtils.color2Cmyk(new Color(194, 175, 120)));
         assertArrayEquals(new int[]{0, 4, 37, 38}, ColorUtils.color2Cmyk(new Color(158, 151, 100)));
     }

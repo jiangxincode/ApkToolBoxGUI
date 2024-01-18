@@ -20,11 +20,11 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JSpinner redSpinner;
 
-    private JSpinner greenSpinner;
+    private JSpinner greenInRgbSpinner;
 
-    private JSpinner blueSpinner;
+    private JSpinner blueInRgbSpinner;
 
-    private JTextField hexTextField;
+    private JTextField hexInRgbTextField;
 
     private JSpinner hueInHsbSpinner;
 
@@ -38,13 +38,13 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JSpinner lightnessInHslSpinner;
 
-    private JSpinner cyanSpinner;
+    private JSpinner cyanInCmykSpinner;
 
-    private JSpinner magentaSpinner;
+    private JSpinner magentaInCmykSpinner;
 
-    private JSpinner yellowSpinner;
+    private JSpinner yellowInCmykSpinner;
 
-    private JSpinner blackSpinner;
+    private JSpinner blackInCmykSpinner;
 
     private JTextField colorBoxTextField;
 
@@ -116,20 +116,20 @@ public class ColorConvertPanel extends EasyPanel {
         redSpinner.addChangeListener(new RgbChangeListener());
 
         JLabel greenLabel = new JLabel("G(Green, [0-255])");
-        greenSpinner = new JSpinner();
-        greenSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-        greenSpinner.addChangeListener(new RgbChangeListener());
+        greenInRgbSpinner = new JSpinner();
+        greenInRgbSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));
+        greenInRgbSpinner.addChangeListener(new RgbChangeListener());
 
         JLabel blueLabel = new JLabel("B(Blue, [0-255])");
-        blueSpinner = new JSpinner();
-        blueSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-        blueSpinner.addChangeListener(new RgbChangeListener());
+        blueInRgbSpinner = new JSpinner();
+        blueInRgbSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));
+        blueInRgbSpinner.addChangeListener(new RgbChangeListener());
 
         JLabel hexLabel = new JLabel("Hex");
-        hexTextField = new JTextField();
-        hexTextField.setToolTipText("0xFFFFFF格式常用在通用语言中(Java/C++等), #FFFFFF格式常用在标记语言中(XML/HTML等)");
-        hexTextField.setEditable(true);
-        hexTextField.getDocument().addDocumentListener(new HexDocumentListener());
+        hexInRgbTextField = new JTextField();
+        hexInRgbTextField.setToolTipText("0xFFFFFF格式常用在通用语言中(Java/C++等), #FFFFFF格式常用在标记语言中(XML/HTML等)");
+        hexInRgbTextField.setEditable(true);
+        hexInRgbTextField.getDocument().addDocumentListener(new HexDocumentListener());
 
         xPanel.add(rebLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -137,15 +137,15 @@ public class ColorConvertPanel extends EasyPanel {
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(greenLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(greenSpinner);
+        xPanel.add(greenInRgbSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(blueLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(blueSpinner);
+        xPanel.add(blueInRgbSpinner);
         xPanel.add(Box.createHorizontalBox().createHorizontalStrut(3 * Constants.DEFAULT_X_BORDER));
         xPanel.add(hexLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(hexTextField);
+        xPanel.add(hexInRgbTextField);
     }
 
     private void createHsbPanel() {
@@ -237,41 +237,41 @@ public class ColorConvertPanel extends EasyPanel {
         xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
 
         JLabel cyanLabel = new JLabel("C(Cyan, [0-100])");
-        cyanSpinner = new JSpinner();
-        cyanSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
-        cyanSpinner.addChangeListener(new CmykChangeListener());
+        cyanInCmykSpinner = new JSpinner();
+        cyanInCmykSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        cyanInCmykSpinner.addChangeListener(new CmykChangeListener());
 
         JLabel magentaLabel = new JLabel("M(Magenta, [0-100])");
-        magentaSpinner = new JSpinner();
-        magentaSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
-        magentaSpinner.addChangeListener(new CmykChangeListener());
+        magentaInCmykSpinner = new JSpinner();
+        magentaInCmykSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        magentaInCmykSpinner.addChangeListener(new CmykChangeListener());
 
 
         JLabel yellowLabel = new JLabel("Y(Yellow, [0-100])");
-        yellowSpinner = new JSpinner();
-        yellowSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
-        yellowSpinner.addChangeListener(new CmykChangeListener());
+        yellowInCmykSpinner = new JSpinner();
+        yellowInCmykSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));
+        yellowInCmykSpinner.addChangeListener(new CmykChangeListener());
 
         JLabel blackLabel = new JLabel("K(Black, [0-100])");
-        blackSpinner = new JSpinner();
-        blackSpinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));
-        blackSpinner.addChangeListener(new CmykChangeListener());
+        blackInCmykSpinner = new JSpinner();
+        blackInCmykSpinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));
+        blackInCmykSpinner.addChangeListener(new CmykChangeListener());
 
         xPanel.add(cyanLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(cyanSpinner);
+        xPanel.add(cyanInCmykSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(magentaLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(magentaSpinner);
+        xPanel.add(magentaInCmykSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(yellowLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(yellowSpinner);
+        xPanel.add(yellowInCmykSpinner);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(blackLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        xPanel.add(blackSpinner);
+        xPanel.add(blackInCmykSpinner);
     }
 
     private void createColorTablePanel() {
@@ -343,11 +343,11 @@ public class ColorConvertPanel extends EasyPanel {
     private void syncToOthersFormat(String colorMode) {
         if (!colorMode.equalsIgnoreCase("RGB")) {
             redSpinner.setValue(color.getRed());
-            greenSpinner.setValue(color.getGreen());
-            blueSpinner.setValue(color.getBlue());
+            greenInRgbSpinner.setValue(color.getGreen());
+            blueInRgbSpinner.setValue(color.getBlue());
         }
         if (!colorMode.equalsIgnoreCase("HEX")) {
-            hexTextField.setText(ColorUtils.color2Hex(color));
+            hexInRgbTextField.setText(ColorUtils.color2Hex(color));
         }
         if (!colorMode.equalsIgnoreCase("HSB")) {
             int[] hsbArray = ColorUtils.color2Hsb(color);
@@ -363,10 +363,10 @@ public class ColorConvertPanel extends EasyPanel {
         }
         if (!colorMode.equalsIgnoreCase("CMYK")) {
             int[] cmykArray = ColorUtils.color2Cmyk(color);
-            cyanSpinner.setValue(cmykArray[0]);
-            magentaSpinner.setValue(cmykArray[1]);
-            yellowSpinner.setValue(cmykArray[2]);
-            blackSpinner.setValue(cmykArray[3]);
+            cyanInCmykSpinner.setValue(cmykArray[0]);
+            magentaInCmykSpinner.setValue(cmykArray[1]);
+            yellowInCmykSpinner.setValue(cmykArray[2]);
+            blackInCmykSpinner.setValue(cmykArray[3]);
         }
         colorBoxTextField.setBackground(color);
         //paint the color box with the converted output color
@@ -381,8 +381,8 @@ public class ColorConvertPanel extends EasyPanel {
             }
             isChangedByUser = false;
             int red = (Integer) redSpinner.getValue();
-            int green = (Integer) greenSpinner.getValue();
-            int blue = (Integer) blueSpinner.getValue();
+            int green = (Integer) greenInRgbSpinner.getValue();
+            int blue = (Integer) blueInRgbSpinner.getValue();
             color = new Color(red, green, blue);
             syncToOthersFormat("RGB");
             isChangedByUser = true;
@@ -428,10 +428,10 @@ public class ColorConvertPanel extends EasyPanel {
                 return;
             }
             isChangedByUser = false;
-            int cyan = (Integer) cyanSpinner.getValue();
-            int magenta = (Integer) magentaSpinner.getValue();
-            int yellow = (Integer) yellowSpinner.getValue();
-            int black = (Integer) blackSpinner.getValue();
+            int cyan = (Integer) cyanInCmykSpinner.getValue();
+            int magenta = (Integer) magentaInCmykSpinner.getValue();
+            int yellow = (Integer) yellowInCmykSpinner.getValue();
+            int black = (Integer) blackInCmykSpinner.getValue();
             color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);
             syncToOthersFormat("CMYK");
             isChangedByUser = true;
@@ -459,7 +459,7 @@ public class ColorConvertPanel extends EasyPanel {
                 return;
             }
             isChangedByUser = false;
-            String hex = hexTextField.getText();
+            String hex = hexInRgbTextField.getText();
             try {
                 color = ColorUtils.hex2Color(hex);
                 syncToOthersFormat("HEX");
