@@ -13,6 +13,7 @@
         <poi.version>5.2.5</poi.version>
         <log4j.version>2.22.1</log4j.version>
         <surefire.version>3.2.5</surefire.version>
+        <protobuf.version>3.25.2</protobuf.version>
     </properties>
     <dependencies>
         <dependency>
@@ -134,6 +135,21 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fifesoft</groupId>
+            <artifactId>rsyntaxtextarea</artifactId>
+            <version>3.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
