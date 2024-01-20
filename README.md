@@ -24,6 +24,18 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 [![Project Documentation](https://img.shields.io/badge/ApkToolBoxGUI-Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
+* [Android Develop](./src/site/markdown/features/android_develop.md)
+* [Batch Rename](./src/site/markdown/features/batch_rename.md)
+* [Check Summary](./src/site/markdown/features/batch_rename.md)
+* [Color Picker](./src/site/markdown/features/color_picker.md)
+* [Base Convert](./src/site/markdown/features/convert_base.md)
+* [OS Pattern Convert](./src/site/markdown/features/convert_os_pattern.md)
+* [Time Convert](./src/site/markdown/features/convert_time_format.md)
+* [Decode protobuf](./src/site/markdown/features/decode_protobuf.md)
+* [Find Duplicate Files](./src/site/markdown/features/find_duplicate_files.md)
+* [Reverse Engineer](./src/site/markdown/features/reverse_engineer.md)
+* ...Much more
+
 ## Contribute
 
 <https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html>
