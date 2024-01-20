@@ -1,8 +1,8 @@
 #!/bin/sh
 set -x
-CURRENT_DIR=`pwd`
+CURRENT_DIR=$(pwd)
 TARGET_DIR=$CURRENT_DIR/target
-RELEASE_JAR_FILE=`ls -al target/ApkToolBoxGUI-*.jar | awk '{print $9}'`
+RELEASE_JAR_FILE=$(ls -al target/ApkToolBoxGUI-*.jar | awk '{print $9}')
 VERSION=${RELEASE_JAR_FILE#*ApkToolBoxGUI-}
 VERSION=${VERSION%*.jar}
 TMP_DIR="$TARGET_DIR/release"
@@ -24,7 +24,7 @@ cp $CURRENT_DIR/ApkToolBoxGUI.bat $TMP_DIR
 cp $CURRENT_DIR/ApkToolBoxGUI.sh $TMP_DIR
 
 cd $TMP_DIR
-zip -r ApkToolBoxGUI-$VERSION-without-JRE.zip *
+zip -r ApkToolBoxGUI-$VERSION-without-JRE.zip ./*
 cd $CURRENT_DIR
 mv $TMP_DIR/ApkToolBoxGUI-$VERSION-without-JRE.zip $TARGET_DIR
 
