@@ -67,4 +67,30 @@ public class ByteUtil {
         }
 
     }
+
+    public static String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder(2 * bytes.length);
+        for (byte b : bytes) {
+            hexString.append(String.format("%02X", b));
+        }
+        return hexString.toString();
+    }
+
+    public static byte[] hex2bytes(String hexString) {
+        String fixedHexString;
+        if (hexString.length() % 2 != 0) {
+            fixedHexString = hexString + "0";
+        } else {
+            fixedHexString = hexString;
+        }
+        int len = fixedHexString.length();
+        byte[] data = new byte[len / 2];
+
+        for (int i = 0; i < len-1; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(fixedHexString.charAt(i), 16) << 4)
+                    + Character.digit(fixedHexString.charAt(i + 1), 16));
+        }
+
+        return data;
+    }
 }

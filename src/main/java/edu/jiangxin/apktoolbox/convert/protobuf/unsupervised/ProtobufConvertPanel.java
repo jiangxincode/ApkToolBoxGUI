@@ -1,15 +1,13 @@
 package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-
-import javax.swing.*;
-import java.awt.*;
-
 import edu.jiangxin.apktoolbox.utils.Constants;
-import org.bouncycastle.util.encoders.Hex;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class ProtobufConvertPanel extends EasyPanel {
 
@@ -18,7 +16,7 @@ public class ProtobufConvertPanel extends EasyPanel {
     private JPanel operationPanel;
 
     private JTextArea inputTextArea;
-    private RSyntaxTextArea outputArea;
+    private RSyntaxTextArea outputTextArea;
 
     public ProtobufConvertPanel() {
         super();
@@ -46,17 +44,17 @@ public class ProtobufConvertPanel extends EasyPanel {
         inputTextArea = new JTextArea();
         inputTextArea.setLineWrap(true);
         inputTextArea.setWrapStyleWord(true);
-        inputTextArea.setText("0a 2f 0a 08 4a 6f 68 6e 20 44 6f 65 10 01 1a 10 6a 6f 68 6e 40 65 78 61 6d 70 6c 65 2e 63 6f 6d 22 0f 0a 0b 31 31 31 2d 32 32 32 2d 33 33 33 10 01 0a 1e 0a 08 4a 61 6e 65 20 44 6f 65 10 02 1a 10 6a 61 6e 65 40 65 78 61 6d 70 6c 65 2e 63 6f 6d");
+        inputTextArea.setText("0a2f0a084a6f686e20446f6510011a106a6f686e406578616d706c652e636f6d220f0a0b3131312d3232322d33333310010a1e0a084a616e6520446f6510021a106a616e65406578616d706c652e636f6d");
 
         JScrollPane inputScrollPanel = new JScrollPane(inputTextArea);
         inputScrollPanel.setPreferredSize(new Dimension(200, 500));
 
-        outputArea = new RSyntaxTextArea();
-        outputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
-        outputArea.setCodeFoldingEnabled(true);
-        outputArea.setEditable(false);
+        outputTextArea = new RSyntaxTextArea();
+        outputTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+        outputTextArea.setCodeFoldingEnabled(true);
+        outputTextArea.setEditable(false);
 
-        RTextScrollPane outputScrollPane = new RTextScrollPane(outputArea);
+        RTextScrollPane outputScrollPane = new RTextScrollPane(outputTextArea);
         outputScrollPane.setPreferredSize(new Dimension(200, 500));
 
         contentPanel.add(inputScrollPanel);
@@ -79,18 +77,8 @@ public class ProtobufConvertPanel extends EasyPanel {
 
     private void convertProtoToJson() {
         String hexString = inputTextArea.getText();
-
-        byte[] byteArray = Hex.decode(hexString);
-
-        // 解析Proto二进制数据
-        //YourProtoClass protoObject = YourProtoClass.parseFrom(byteArray);
-
-        // 将Proto对象转换为JSON格式
-        //String jsonString = JsonFormat.printer().print(protoObject);
+        byte[] byteArray = ByteUtil.hex2bytes(hexString);
         String jsonString = ProtobufDecoder.bytesDecoder(byteArray);
-
-
-        // 在输出框显示JSON字符串
-        outputArea.setText(jsonString);
+        outputTextArea.setText(jsonString);
     }
 }

@@ -14,66 +14,45 @@ public class BufferReader {
 
     public BufferReader(byte[] buffer) {
         this.buffer = buffer;
-        this.offset = 0;
-    }
-
-    public byte[] getBuffer() {
-        return buffer;
-    }
-
-    public void setBuffer(byte[] buffer) {
-        this.buffer = buffer;
+        offset = 0;
     }
 
     public int getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public int getSavedOffset() {
-        return savedOffset;
-    }
-
-    public void setSavedOffset(int savedOffset) {
-        this.savedOffset = savedOffset;
-    }
-
     public BigInteger readVarInt() {
-        Map<String, Object> result = VarintUtils.decodeVarint(this.buffer, this.offset);
-        this.offset += (int) result.get("length");
+        Map<String, Object> result = VarintUtils.decodeVarint(buffer, offset);
+        offset += (int) result.get("length");
         return (BigInteger) result.get("value");
     }
 
     public byte[] readBuffer(int length) {
         this.checkByte(length);
-        byte[] result = ArrayUtils.subarray(this.buffer, this.offset, this.offset + length);
-        this.offset += length;
+        byte[] result = ArrayUtils.subarray(buffer, offset, offset + length);
+        offset += length;
         return result;
     }
 
     public void trySkipGrpcHeader() {
-        int backupOffset = this.offset;
+        int backupOffset = offset;
+        if (buffer.length > 0 && buffer[offset] == 0 && leftBytes() >= 5) {
+            offset++;
+            int length = ByteUtil.bytesToInt(buffer, offset, ByteOrder.BIG_ENDIAN);
+            offset += 4;
 
-        if (this.buffer.length > 0 && this.buffer[this.offset] == 0 && this.leftBytes() >= 5) {
-            this.offset++;
-            int length = ByteUtil.bytesToInt(this.buffer, this.offset, ByteOrder.BIG_ENDIAN);
-            this.offset += 4;
-
-            if (length > this.leftBytes()) {
-                this.offset = backupOffset;
+            if (length > leftBytes()) {
+                offset = backupOffset;
             }
         }
     }
 
     public int leftBytes() {
-        return this.buffer.length - this.offset;
+        return buffer.length - offset;
     }
 
     public void checkByte(int length) {
-        int bytesAvailable = this.leftBytes();
+        int bytesAvailable = leftBytes();
         if (length > bytesAvailable) {
             throw new RuntimeException("Not enough bytes left. Requested: " + length + " left: " + bytesAvailable);
         } else if (length < 0) {
@@ -82,11 +61,11 @@ public class BufferReader {
     }
 
     public void checkpoint() {
-        this.savedOffset = this.offset;
+        this.savedOffset = offset;
     }
 
     public void resetToCheckpoint() {
-        this.offset = this.savedOffset;
+        offset = this.savedOffset;
     }
 
 }
