@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
 
 import com.google.protobuf.WireFormat;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
@@ -215,7 +216,7 @@ public class ProtobufDecoder {
      */
     private static Map<String, Object> decodeStringOrBytes(byte[] value) {
         Map<String, Object> result = new HashMap<>(2);
-        if (value.length == 0) {
+        if (ArrayUtils.isEmpty(value)) {
             result.put(KEY_TYPE, "string|bytes");
             result.put(KEY_VALUE, "");
             return result;
@@ -261,7 +262,7 @@ public class ProtobufDecoder {
      * @return
      */
     private static BigInteger twoComplements(BigInteger uintValue) {
-        if (uintValue.compareTo(new BigInteger("7fffffffffffffff", 16)) == 1) {
+        if (uintValue.compareTo(new BigInteger("7fffffffffffffff", 16)) > 0) {
             return uintValue.subtract(new BigInteger("10000000000000000", 16));
         } else {
             return uintValue;
