@@ -1,12 +1,13 @@
 package edu.jiangxin.apktoolbox.convert.color;
 
 import edu.jiangxin.apktoolbox.convert.color.colorspace.CIELabColorSpace;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ColorUtilsTest {
     @Test

@@ -1,14 +1,15 @@
 package edu.jiangxin.encode;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderConvert;
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jiangxin

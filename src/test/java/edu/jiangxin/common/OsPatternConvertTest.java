@@ -1,12 +1,12 @@
 package edu.jiangxin.common;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.jiangxin.apktoolbox.file.core.OsPatternConvert;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jiangxin
