@@ -5,7 +5,7 @@
 [![Build and Rel
 ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml/badge.svg)](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml)
 [![Project Reports](https://img.shields.io/badge/ApkToolBoxGUI-Reports-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/project-reports.html)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/dab038ef9ed04bf1b73bd0031422b814)](https://www.codacy.com/gh/jiangxincode/ApkToolBoxGUI/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jiangxincode/ApkToolBoxGUI&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/dab038ef9ed04bf1b73bd0031422b814)](https://app.codacy.com/gh/jiangxincode/ApkToolBoxGUI/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Infer Check](https://img.shields.io/badge/Facebook-InferCheck-green)](https://github.com/jiangxincode/ApkToolBoxGUI/blob/infer-out/report.txt)
 [![CodeQL Check](https://img.shields.io/badge/Github-CodeQL-yellow)](https://github.com/jiangxincode/ApkToolBoxGUI/security/code-scanning)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jiangxincode_ApkToolBoxGUI&metric=alert_status)](https://sonarcloud.io/dashboard?id=jiangxincode_ApkToolBoxGUI)
@@ -15,6 +15,7 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 [![Project Map](https://sourcespy.com/shield.svg)](https://sourcespy.com/github/jiangxincodeapktoolboxgui/)
 
+[![Security Status](https://www.murphysec.com/platform3/v31/badge/1749042420388737024.svg)](https://www.murphysec.com/console/report/1749042420174827520/1749042420388737024)
 
 ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
 
