@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout_Actions
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install MurphySec code scan cli
         run: |
           wget -q https://s.murphysec.com/release/install.sh -O - | /bin/bash
@@ -28,6 +28,6 @@ jobs:
           fi
       - name: Upload SARIF file
         if: env.file_exists == 'true'
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
