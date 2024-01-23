@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout_Actions
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install MurphySec code scan cli
         run: |
           wget -q https://s.murphysec.com/release/install.sh -O - | /bin/bash
