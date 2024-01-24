@@ -20,14 +20,9 @@ fi
 
 cp $RELEASE_JAR_FILE $TMP_DIR/ApkToolBoxGUI.jar
 
-cp $CURRENT_DIR/ApkToolBoxGUI.bat $TMP_DIR
 cp $CURRENT_DIR/ApkToolBoxGUI.sh $TMP_DIR
 
-cd $TMP_DIR
-zip -r ApkToolBoxGUI-$VERSION-without-JRE.zip ./*
-cd $CURRENT_DIR
-mv $TMP_DIR/ApkToolBoxGUI-$VERSION-without-JRE.zip $TARGET_DIR
-
+zip -rj $TARGET_DIR/ApkToolBoxGUI-$VERSION-without-JRE-Macos.zip $TMP_DIR/*
 
 # Build $TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE.zip
 if [ -d $TMP_DIR ];
@@ -50,7 +45,7 @@ cp $RELEASE_JAR_FILE $TMP_DIR/ApkToolBoxGUI.jar
 jpackage --input $TMP_DIR --type app-image --name ApkToolBoxGUI-$VERSION-with-JRE --main-jar ApkToolBoxGUI.jar --dest $TARGET_DIR --verbose
 
 cd $TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE.app
-zip -r $TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE.zip ./*
+zip -r $TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE-Macos.zip ./*
 cd $CURRENT_DIR
 
 if [ -d $TMP_DIR ];

@@ -16,9 +16,8 @@ If (!(Test-Path $TMP_DIR)) {
 Copy-Item $RELEASE_JAR_FILE.FullName "$TMP_DIR/ApkToolBoxGUI.jar"
 
 Copy-Item "$CURRENT_DIR/ApkToolBoxGUI.bat" $TMP_DIR
-Copy-Item "$CURRENT_DIR/ApkToolBoxGUI.sh" $TMP_DIR
 
-Compress-Archive -Path "$TMP_DIR\*" -DestinationPath "$TARGET_DIR/ApkToolBoxGUI-$VERSION-without-JRE.zip" -Force
+Compress-Archive -Path "$TMP_DIR\*" -DestinationPath "$TARGET_DIR/ApkToolBoxGUI-$VERSION-without-JRE-Windows.zip" -Force
 
 
 # Build $TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE.zip
@@ -36,7 +35,7 @@ Copy-Item $RELEASE_JAR_FILE.FullName "$TMP_DIR/ApkToolBoxGUI.jar"
 
 jpackage --input $TMP_DIR --type app-image --name "ApkToolBoxGUI-$VERSION-with-JRE" --main-jar 'ApkToolBoxGUI.jar' --dest "$TARGET_DIR" --verbose
 
-Compress-Archive -Path "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE\*" -DestinationPath "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE.zip" -Force
+Compress-Archive -Path "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE\*" -DestinationPath "$TARGET_DIR/ApkToolBoxGUI-$VERSION-with-JRE-Windows.zip" -Force
 
 if (Test-Path $TMP_DIR) {
     Remove-Item $TMP_DIR -Recurse -Force

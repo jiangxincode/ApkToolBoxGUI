@@ -1,15 +1,21 @@
 name: Build and Release
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  - push
+  - pull_request
 
 jobs:
-  build-windows:
+  build:
+    name: Build ApkToolBoxGUI
 
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -18,69 +24,62 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
+
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
       - name: Build with Maven
         run: |
           mvn clean package
+
+      - name: Package in Windows
+        run: |
           ./PackageWindows.ps1
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ApkToolBoxGUI-windows
-          path: target/ApkToolBoxGUI-*-with-JRE.zip
-  build-linux:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu'
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
+        if: runner.os == 'Windows'
+      - name: Package in Linux
         run: |
-          mvn clean package
           chmod u+x ./PackageLinux.sh
           ./PackageLinux.sh
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ApkToolBoxGUI-linux
-          path: target/ApkToolBoxGUI-*-with-JRE.zip
-  build-macos:
-
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu'
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
+        if: runner.os == 'Linux'
+      - name: Package in macOS
         run: |
-          mvn clean package
           chmod u+x ./PackageMacos.sh
           ./PackageMacos.sh
+        if: runner.os == 'macOS'
+
       - uses: actions/upload-artifact@v4
         with:
-          name: ApkToolBoxGUI-macos
-          path: target/ApkToolBoxGUI-*-with-JRE.zip
+          name: ApkToolBoxGUI-${{ runner.os }}
+          path: target/ApkToolBoxGUI-*-with*-JRE-*.zip
+
+      - name: Upload Release Asset
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            target/ApkToolBoxGUI-*-with*-JRE-*.zip
+          tag_name: ${{ github.ref }}
+          draft: true
+          prerelease: false
+          body: |
+            BEFORE PUBLISHING CHECKLIST:
+            1. Update the version in pom.xml and push the change to github.
+            2. Add a new tag according with the version in pom.xml and push the tag to github.
+            3. Check whether there are failed github actions and whether the gh-page is updated successfully.
+            4. Fill in the changelog below.
+            5. Download the release zips and test that the binaries works.Z
+            --- PUBLISH GITHUB RELEASE HERE ---
+            --- DELETE EVERYTHING ABOVE THIS LINE ---
+
+            This is a binary release of ApkToolBoxGUI for Linux/MacOS/Windows. To use it follow these [instructions](https://jiangxincode.github.io/ApkToolBoxGUI/).
+
+            - new feature 1
+            - new feature 2
+
+            ```
