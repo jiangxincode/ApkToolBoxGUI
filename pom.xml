@@ -5,6 +5,7 @@
     <groupId>edu.jiangxin.apktoolbox</groupId>
     <artifactId>ApkToolBoxGUI</artifactId>
     <version>1.0.2</version>
+    <description>ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. </description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>jiangxincode-github</sonar.organization>
@@ -447,19 +448,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.12.1</version>
+                <version>4.0.0-M13</version>
                 <configuration>
-                    <locales>en_US</locales>
+                    <locales>default,en_US</locales>
                     <outputDirectory>${project.build.directory}/site</outputDirectory>
-                    <relativizeDecorationLinks>false</relativizeDecorationLinks>
+                    <relativizeSiteLinks>false</relativizeSiteLinks>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.github.olamy.maven.skins</groupId>
-                        <artifactId>reflow-velocity-tools</artifactId>
-                        <version>2.0.0</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

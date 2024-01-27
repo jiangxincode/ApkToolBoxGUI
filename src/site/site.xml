@@ -1,50 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/DECORATION/1.6.0"
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
     <!-- https://maven.apache.org/skins/index.html -->
 
-    <publishDate position="bottom" format="yyyy-MM-dd" />
+    <publishDate position="bottom"/>
     <version position="bottom" />
 
     <skin>
-        <groupId>io.github.olamy.maven.skins</groupId>
-        <artifactId>reflow-maven-skin</artifactId>
-        <version>2.0.0</version>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>2.0.0-M8</version>
     </skin>
     <custom>
-        <reflowSkin>
-            <brand>
-                <name>ApkToolBoxGUI</name>
-                <href>https://jiangxincode.github.io/ApkToolBoxGUI</href>
-            </brand>
-            <toc>top</toc>
-            <tocTopMax>6</tocTopMax>
-            <topNav>Getting Started Guide|Features|Contribute|Project Reports</topNav>
-            <bottomNav maxSpan="9" >
-                <column>Getting Started Guide</column>
-                <column>Features</column>
-                <column>Contribute</column>
-                <column>Project Reports</column>
-            </bottomNav>
-        </reflowSkin>
-        <gitHub combine.children="append">
-            <projectId>jiangxincode/ApkToolBoxGUI</projectId>
-            <ribbonOrientation>right</ribbonOrientation>
-            <ribbonColor>green</ribbonColor>
-        </gitHub>
+        <fluidoSkin>
+            <gitHub>
+                <projectId>jiangxincode/ApkToolBoxGUI</projectId>
+                <ribbonOrientation>right</ribbonOrientation>
+                <ribbonColor>green</ribbonColor>
+            </gitHub>
+        </fluidoSkin>
     </custom>
     <body>
         <breadcrumbs>
             <item name="${project.name}" href="./index.html" />
         </breadcrumbs>
-        <menu name="Getting Started Guide" inherit="bottom">
+        <menu name="Getting Started Guide">
             <item name="Getting Started Guide" href="getting_started_guide/getting_started_guide.html"/>
             <item name="How To Change Language" href="getting_started_guide/how_to_change_language.html"/>
             <item name="How To Change Look And Feel" href="getting_started_guide/how_to_change_look_and_feel.html"/>
         </menu>
-        <menu name="Features" inherit="bottom">
+        <menu name="Features">
             <item name="Recovery File Password" href="features/recovery_file_password.html"/>
             <item name="Convert Encoding" href="features/convert_encoding.html"/>
             <item name="Convert OS Pattern" href="features/convert_os_pattern.html"/>
@@ -61,10 +48,10 @@
             <item name="Reverse Engineer" href="features/reverse_engineer.html"/>
             <item name="Android Develop" href="features/android_develop.html"/>
         </menu>
-        <menu name="Contribute" inherit="bottom">
+        <menu name="Contribute">
             <item name="How To Contribute" href="contribute/how_to_contribute.html"/>
         </menu>
-        <menu name="Project Reports" inherit="bottom">
+        <menu name="Project Reports">
             <item name="Dependencies" href="dependencies.html"/>
             <item name="Dependency Information" href="dependency-info.html"/>
             <item name="Plugin Management" href="plugin-management.html"/>
