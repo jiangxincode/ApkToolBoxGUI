@@ -15,6 +15,13 @@
     </skin>
     <custom>
         <fluidoSkin>
+            <topBarEnabled>true</topBarEnabled>
+            <topBarIcon>
+                <name>ApkToolBoxGUI</name>
+                <alt>ApkToolBoxGUI</alt>
+                <src>/images/topbar-logo.png</src>
+                <href>/index.html</href>
+            </topBarIcon>
             <gitHub>
                 <projectId>jiangxincode/ApkToolBoxGUI</projectId>
                 <ribbonOrientation>right</ribbonOrientation>
