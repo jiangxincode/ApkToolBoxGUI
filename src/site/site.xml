@@ -51,6 +51,7 @@
             <item name="Color Picker" href="features/color_picker.html"/>
             <item name="Convert Base" href="features/convert_base.html"/>
             <item name="Convert Unicode Character" href="features/convert_unicode_character.html"/>
+            <item name="Relationship" href="features/calculate_relationship.html"/>
             <item name="Decode Protobuf" href="features/decode_protobuf.html"/>
             <item name="Reverse Engineer" href="features/reverse_engineer.html"/>
             <item name="Android Develop" href="features/android_develop.html"/>
