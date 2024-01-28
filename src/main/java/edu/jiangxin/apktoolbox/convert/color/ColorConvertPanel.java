@@ -46,6 +46,12 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JSpinner blackInCmykSpinner;
 
+    private JSpinner lInCielabSpinner;
+
+    private JSpinner aInCielabSpinner;
+
+    private JSpinner bInCielabSpinner;
+
     private JTextField colorBoxTextField;
 
     private JComboBox<IColorTable> colorTableTypeComboBox;
@@ -78,6 +84,9 @@ public class ColorConvertPanel extends EasyPanel {
 
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createCmykPanel();
+
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createCielabPanel();
 
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createColorTablePanel();
@@ -274,6 +283,45 @@ public class ColorConvertPanel extends EasyPanel {
         xPanel.add(blackInCmykSpinner);
     }
 
+    private void createCielabPanel() {
+        JPanel cielabPanel = new JPanel();
+        add(cielabPanel);
+        cielabPanel.setLayout(new BorderLayout());
+        cielabPanel.setBorder(BorderFactory.createTitledBorder("CIELAB"));
+
+        JPanel xPanel = new JPanel();
+        cielabPanel.add(xPanel);
+        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
+
+        JLabel lLabel = new JLabel("L([0-100])");
+        lInCielabSpinner = new JSpinner();
+        lInCielabSpinner.setModel(new SpinnerNumberModel(50, 0, 100, 1));
+        lInCielabSpinner.addChangeListener(new CielabChangeListener());
+
+        JLabel magentaLabel = new JLabel("A([-128-127])");
+        aInCielabSpinner = new JSpinner();
+        aInCielabSpinner.setModel(new SpinnerNumberModel(0, -128, 127, 1));
+        aInCielabSpinner.addChangeListener(new CielabChangeListener());
+
+
+        JLabel yellowLabel = new JLabel("B([-128-127])");
+        bInCielabSpinner = new JSpinner();
+        bInCielabSpinner.setModel(new SpinnerNumberModel(0, -128, 127, 1));
+        bInCielabSpinner.addChangeListener(new CielabChangeListener());
+
+        xPanel.add(lLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(lInCielabSpinner);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(magentaLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(aInCielabSpinner);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(yellowLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(bInCielabSpinner);
+    }
+
     private void createColorTablePanel() {
         JPanel colorTablePanel = new JPanel();
         add(colorTablePanel);
@@ -368,6 +416,12 @@ public class ColorConvertPanel extends EasyPanel {
             yellowInCmykSpinner.setValue(cmykArray[2]);
             blackInCmykSpinner.setValue(cmykArray[3]);
         }
+        if (!colorMode.equalsIgnoreCase("CIELAB")) {
+            int[] cielabArray = ColorUtils.color2Cielab(color);
+            lInCielabSpinner.setValue(cielabArray[0]);
+            aInCielabSpinner.setValue(cielabArray[1]);
+            bInCielabSpinner.setValue(cielabArray[2]);
+        }
         colorBoxTextField.setBackground(color);
         //paint the color box with the converted output color
         colorBoxTextField.setOpaque(true);
@@ -434,6 +488,22 @@ public class ColorConvertPanel extends EasyPanel {
             int black = (Integer) blackInCmykSpinner.getValue();
             color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);
             syncToOthersFormat("CMYK");
+            isChangedByUser = true;
+        }
+    }
+
+    class CielabChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (!isChangedByUser) {
+                return;
+            }
+            isChangedByUser = false;
+            int l = (Integer) lInCielabSpinner.getValue();
+            int a = (Integer) aInCielabSpinner.getValue();
+            int b = (Integer) bInCielabSpinner.getValue();
+            color = ColorUtils.cielab2Color(l, a, b);
+            syncToOthersFormat("CIELAB");
             isChangedByUser = true;
         }
     }

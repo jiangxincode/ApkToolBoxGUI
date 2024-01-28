@@ -1,6 +1,9 @@
 package edu.jiangxin.apktoolbox.convert.color;
 
-import edu.jiangxin.apktoolbox.convert.color.colorspace.CIELabColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.CielabColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.CmykColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.HsbColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.HslColorSpace;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -24,56 +27,113 @@ public class ColorUtilsTest {
 
     @Test
     public void testHsb2Color() {
-        assertEquals(new Color(194, 175, 120), ColorUtils.hsb2Color(45, 38, 76));
-        assertEquals(new Color(158, 151, 100), ColorUtils.hsb2Color(53, 37, 62));
+        ColorSpace colorSpace = HsbColorSpace.getInstance();
+
+        float[] expectedRgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualRgbArray1 = colorSpace.toRGB(new float[]{0.125f, 0.38f, 0.76f});
+        assertArrayEquals(expectedRgbArray1, actualRgbArray1, 0.01f);
+
+        float[] expectedRgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualRgbArray2 = colorSpace.toRGB(new float[]{0.147f, 0.37f, 0.62f});
+        assertArrayEquals(expectedRgbArray2, actualRgbArray2, 0.01f);
     }
 
     @Test
     public void testColor2Hsb() {
-        assertArrayEquals(new int[]{45, 38, 76}, ColorUtils.color2Hsb(new Color(194, 175, 120)));
-        assertArrayEquals(new int[]{53, 37, 62}, ColorUtils.color2Hsb(new Color(158, 151, 100)));
+        ColorSpace colorSpace = HsbColorSpace.getInstance();
+
+        float[] expectedHsbArray1 = new float[]{0.125f, 0.38f, 0.76f};
+        float[] rgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualHsbArray1 = colorSpace.fromRGB(rgbArray1);
+        assertArrayEquals(expectedHsbArray1, actualHsbArray1, 0.01f);
+
+        float[] expectedHsbArray2 = new float[]{0.147f, 0.37f, 0.62f};
+        float[] rgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualHsbArray2 = colorSpace.fromRGB(rgbArray2);
+        assertArrayEquals(expectedHsbArray2, actualHsbArray2, 0.01f);
     }
 
     @Test
-    public void testHsl2Color() {
-        // Because of deviation, the calculated color is (194, 176, 121) instead of (194, 175, 120)
-        assertEquals(new Color(194, 176, 121), ColorUtils.hsl2Color(45, 38, 62));
-        // Because of deviation, the calculated color is (158, 152, 101) instead of (158, 151, 100)
-        assertEquals(new Color(158, 152, 101), ColorUtils.hsl2Color(53, 23, 51));
+    public void testHsl2Rgb() {
+        ColorSpace colorSpace = HslColorSpace.getInstance();
+
+        float[] expectedRgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualRgbArray1 = colorSpace.toRGB(new float[]{0.125f, 0.38f, 0.62f});
+        assertArrayEquals(expectedRgbArray1, actualRgbArray1, 0.01f);
+
+        float[] expectedRgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualRgbArray2 = colorSpace.toRGB(new float[]{0.147f, 0.23f, 0.51f});
+        assertArrayEquals(expectedRgbArray2, actualRgbArray2, 0.01f);
     }
 
     @Test
-    public void testColor2Hsl() {
-        assertArrayEquals(new int[]{45, 38, 62}, ColorUtils.color2Hsl(new Color(194, 175, 120)));
-        assertArrayEquals(new int[]{53, 23, 51}, ColorUtils.color2Hsl(new Color(158, 151, 100)));
+    public void testRgb2Hsl() {
+        ColorSpace colorSpace = HslColorSpace.getInstance();
+
+        float[] expectedHslArray1 = new float[]{0.125f, 0.38f, 0.62f};
+        float[] rgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualHslArray1 = colorSpace.fromRGB(rgbArray1);
+        assertArrayEquals(expectedHslArray1, actualHslArray1, 0.01f);
+
+        float[] expectedHslArray2 = new float[]{0.147f, 0.23f, 0.51f};
+        float[] rgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualHslArray2 = colorSpace.fromRGB(rgbArray2);
+        assertArrayEquals(expectedHslArray2, actualHslArray2, 0.01f);
     }
 
     @Test
-    public void testCmyk2Color() {
-        // Because of deviation, the calculated color is (194, 174, 120) instead of (194, 175, 120)
-        assertEquals(new Color(194, 174, 120), ColorUtils.cmyk2Color(0, 10, 38, 24));
-        // Because of deviation, the calculated color is (158, 152, 100) instead of (158, 151, 100)
-        assertEquals(new Color(158, 152, 100), ColorUtils.cmyk2Color(0, 4, 37, 38));
+    public void testCmyk2Rgb() {
+        ColorSpace colorSpace = CmykColorSpace.getInstance();
+
+        float[] expectedRgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualRgbArray1 = colorSpace.toRGB(new float[]{0f, 0.1f, 0.38f, 0.24f});
+        assertArrayEquals(expectedRgbArray1, actualRgbArray1, 0.01f);
+
+        float[] expectedRgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualRgbArray2 = colorSpace.toRGB(new float[]{0, 0.04f, 0.37f, 0.38f});
+        assertArrayEquals(expectedRgbArray2, actualRgbArray2, 0.01f);
     }
 
     @Test
-    public void testColor2Cmyk() {
-        assertArrayEquals(new int[]{0, 10, 38, 24}, ColorUtils.color2Cmyk(new Color(194, 175, 120)));
-        assertArrayEquals(new int[]{0, 4, 37, 38}, ColorUtils.color2Cmyk(new Color(158, 151, 100)));
+    public void testRgb2Cmyk() {
+        ColorSpace colorSpace = CmykColorSpace.getInstance();
+
+        float[] expectedCmykArray1 = new float[]{0f, 0.1f, 0.38f, 0.24f};
+        float[] rgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualCmykArray1 = colorSpace.fromRGB(rgbArray1);
+        assertArrayEquals(expectedCmykArray1, actualCmykArray1, 0.01f);
+
+        float[] expectedCmykArray2 = new float[]{0, 0.04f, 0.37f, 0.38f};
+        float[] rgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualCmykArray2 = colorSpace.fromRGB(rgbArray2);
+        assertArrayEquals(expectedCmykArray2, actualCmykArray2, 0.01f);
     }
 
     @Test
-    public void testCIELab2Color() {
-        ColorSpace colorSpace = CIELabColorSpace.getInstance();
-        // Because of deviation, the calculated color is (194, 174, 120) instead of (194, 175, 120)
-        //assertEquals(new Color(99, 125, 125), new Color(colorSpace, new float[]{0.5f, 0.6f, 0.7f}, 1.0f));
-        // Because of deviation, the calculated color is (158, 152, 100) instead of (158, 151, 100)
-        //assertEquals(new Color(158, 152, 100), ColorUtils.cmyk2Color(0, 4, 37, 38));
+    public void testCIELab2Rgb() {
+        ColorSpace colorSpace = CielabColorSpace.getInstance();
+
+        float[] expectedRgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualRgbArray1 = colorSpace.toRGB(new float[]{72.145f, -3.368f, 38.379f});
+        assertArrayEquals(expectedRgbArray1, actualRgbArray1, 0.01f);
+
+        float[] expectedRgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualRgbArray2 = colorSpace.toRGB(new float[]{62.140f, -7.192f, 34.513f});
+        assertArrayEquals(expectedRgbArray2, actualRgbArray2, 0.01f);
     }
 
     @Test
-    public void testColor2CIELab() {
-        assertArrayEquals(new int[]{0, 10, 38, 24}, ColorUtils.color2Cmyk(new Color(194, 175, 120)));
-        assertArrayEquals(new int[]{0, 4, 37, 38}, ColorUtils.color2Cmyk(new Color(158, 151, 100)));
+    public void testRgb2CIELab() {
+        ColorSpace colorSpace = CielabColorSpace.getInstance();
+
+        float[] expectedLabArray1 = new float[]{72.145f, -3.368f, 38.379f};
+        float[] rgbArray1 = new Color(194, 175, 120).getRGBColorComponents(null);
+        float[] actualLabArray1 = colorSpace.fromRGB(rgbArray1);
+        assertArrayEquals(expectedLabArray1, actualLabArray1, 0.01f);
+
+        float[] expectedLabArray2 = new float[]{62.140f, -7.192f, 34.513f};
+        float[] rgbArray2 = new Color(158, 151, 100).getRGBColorComponents(null);
+        float[] actualLabArray2 = colorSpace.fromRGB(rgbArray2);
+        assertArrayEquals(expectedLabArray2, actualLabArray2, 0.01f);
     }
 }

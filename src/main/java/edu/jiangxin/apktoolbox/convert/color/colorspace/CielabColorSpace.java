@@ -2,8 +2,7 @@ package edu.jiangxin.apktoolbox.convert.color.colorspace;
 
 import java.awt.color.ColorSpace;
 
-public class CIELabColorSpace extends ColorSpace {
-
+public class CielabColorSpace extends ColorSpace {
     private static ColorSpace instance = null;
 
     private static final long serialVersionUID = 5027741380892134289L;
@@ -13,13 +12,13 @@ public class CIELabColorSpace extends ColorSpace {
 
     private static final double N = 4.0 / 29.0;
 
-    CIELabColorSpace() {
+    CielabColorSpace() {
         super(ColorSpace.TYPE_Lab, 3);
     }
 
     public static synchronized ColorSpace getInstance() {
         if (instance == null) {
-            instance = new CIELabColorSpace();
+            instance = new CielabColorSpace();
         }
         return instance;
     }
@@ -88,7 +87,4 @@ public class CIELabColorSpace extends ColorSpace {
     private Object readResolve() {
         return getInstance();
     }
-
 }
-
-
