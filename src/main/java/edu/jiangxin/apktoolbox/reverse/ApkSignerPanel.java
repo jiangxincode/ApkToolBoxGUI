@@ -2,8 +2,8 @@ package edu.jiangxin.apktoolbox.reverse;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -123,10 +123,10 @@ public class ApkSignerPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
         recoverButton = new JButton("recover");
-        recoverButton.addMouseListener(new RecoverButtonMouseAdapter());
+        recoverButton.addActionListener(new RecoverButtonActionListener());
 
         apkSignButton = new JButton("apksigner");
-        apkSignButton.addMouseListener(new ApkSignButtonMouseAdapter());
+        apkSignButton.addActionListener(new ApkSignButtonActionListener());
 
         operationPanel.add(recoverButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -183,7 +183,7 @@ public class ApkSignerPanel extends EasyPanel {
         keyStorePathTextField.setText(conf.getString("apksigner.keystore.path"));
 
         keyStorePathButton = new JButton("Select KeyStore");
-        keyStorePathButton.addMouseListener(new KeyStorePathButtonMouseAdapter());
+        keyStorePathButton.addActionListener(new KeyStorePathButtonActionListener());
 
         keyStorePathPanel.add(keyStorePathTextField);
         keyStorePathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -198,17 +198,16 @@ public class ApkSignerPanel extends EasyPanel {
         apkPathTextField.setText(conf.getString("apksigner.apk.path"));
 
         apkPathButton = new JButton("Select APK");
-        apkPathButton.addMouseListener(new ApkPathButtonMouseAdapter());
+        apkPathButton.addActionListener(new ApkPathButtonActionListener());
 
         apkPathPanel.add(apkPathTextField);
         apkPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         apkPathPanel.add(apkPathButton);
     }
 
-    private final class ApkPathButtonMouseAdapter extends MouseAdapter {
+    private final class ApkPathButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jfc.setDialogTitle("select a APK file");
@@ -225,10 +224,9 @@ public class ApkSignerPanel extends EasyPanel {
         }
     }
 
-    private final class KeyStorePathButtonMouseAdapter extends MouseAdapter {
+    private final class KeyStorePathButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jfc.setDialogTitle("select a keystore file");
@@ -245,10 +243,9 @@ public class ApkSignerPanel extends EasyPanel {
         }
     }
     
-    private final class RecoverButtonMouseAdapter extends MouseAdapter {
+    private final class RecoverButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             keyStorePathTextField.setText(conf.getString("default.apksigner.keystore.path"));
             keyStorePasswordField.setText(conf.getString("default.apksigner.keystore.password"));
             aliasTextField.setText(conf.getString("default.apksigner.alias"));
@@ -256,7 +253,7 @@ public class ApkSignerPanel extends EasyPanel {
         }
     }
 
-    private final class ApkSignButtonMouseAdapter extends MouseAdapter {
+    private final class ApkSignButtonActionListener implements ActionListener {
         private File apkFile;
         private String apkPath;
         private File keystoreFile;
@@ -266,8 +263,7 @@ public class ApkSignerPanel extends EasyPanel {
         private String alisaPassword;
 
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             apkFile = new File(apkPathTextField.getText());
             if (!apkFile.exists()) {
                 logger.error("srcFile is invalid");

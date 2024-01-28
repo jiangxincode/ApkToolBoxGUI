@@ -7,8 +7,8 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -73,7 +73,7 @@ public class ApktoolRebuildPanel extends EasyPanel {
         srcTextField.setText(conf.getString("apktool.rebuild.src.dir"));
 
         srcButton = new JButton(bundle.getString("choose.dir.button"));
-        srcButton.addMouseListener(new SrcButtonMouseAdapter());
+        srcButton.addActionListener(new SrcButtonActionListener());
 
         srcPanel.add(srcTextField);
         srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -88,7 +88,7 @@ public class ApktoolRebuildPanel extends EasyPanel {
         targetTextField.setText(conf.getString("apktool.rebuild.target.file"));
 
         targetButton = new JButton(bundle.getString("save.file.button"));
-        targetButton.addMouseListener(new TargetButtonMouseAdapter());
+        targetButton.addActionListener(new TargetButtonActionListener());
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -110,13 +110,12 @@ public class ApktoolRebuildPanel extends EasyPanel {
         add(operationPanel);
 
         rebuildButton = new JButton("Rebuild");
-        rebuildButton.addMouseListener(new RebuildButtonMouseAdapter());
+        rebuildButton.addActionListener(new RebuildButtonActionListener());
     }
 
-    private final class SrcButtonMouseAdapter extends MouseAdapter {
+    private final class SrcButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             jfc.setDialogTitle("select a directory");
@@ -132,10 +131,9 @@ public class ApktoolRebuildPanel extends EasyPanel {
         }
     }
 
-    private final class TargetButtonMouseAdapter extends MouseAdapter {
+    private final class TargetButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setDialogType(JFileChooser.SAVE_DIALOG);
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -155,10 +153,9 @@ public class ApktoolRebuildPanel extends EasyPanel {
         }
     }
 
-    private final class RebuildButtonMouseAdapter extends MouseAdapter {
+    private final class RebuildButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             File srcFile = new File(srcTextField.getText());
             if (!srcFile.exists() || !srcFile.isDirectory()) {
                 logger.error("srcFile is invalid");

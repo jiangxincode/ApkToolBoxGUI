@@ -13,8 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -110,10 +110,10 @@ public class DumpsysAlarmPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
         loadFromDeviceButton = new JButton("Load From Device");
-        loadFromDeviceButton.addMouseListener(new LoadFromDeviceButtonMouseAdapter());
+        loadFromDeviceButton.addActionListener(new LoadFromDeviceButtonActionListener());
 
         loadFromFileButton = new JButton("Load From File");
-        loadFromFileButton.addMouseListener(new LoadFromFileButtonMouseAdapter());
+        loadFromFileButton.addActionListener(new LoadFromFileButtonActionListener());
 
         operationPanel.add(loadFromDeviceButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -335,19 +335,17 @@ public class DumpsysAlarmPanel extends EasyPanel {
         return sonList;
     }
 
-    private final class LoadFromDeviceButtonMouseAdapter extends MouseAdapter {
+    private final class LoadFromDeviceButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             getAlarmInfoStringFromDevice();
             updateUIFromString();
         }
     }
 
-    private final class LoadFromFileButtonMouseAdapter extends MouseAdapter {
+    private final class LoadFromFileButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             getAlarmInfoStringFromFile();
             updateUIFromString();
         }

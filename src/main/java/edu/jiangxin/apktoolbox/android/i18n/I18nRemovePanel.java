@@ -2,8 +2,8 @@ package edu.jiangxin.apktoolbox.android.i18n;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -80,10 +80,9 @@ public class I18nRemovePanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
         removeButton = new JButton(bundle.getString("android.i18n.remove.title"));
-        removeButton.addMouseListener(new MouseAdapter() {
+        removeButton.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
+            public void actionPerformed(ActionEvent e) {
                 infos.clear();
                 File srcFile = new File(srcTextField.getText());
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
@@ -143,10 +142,9 @@ public class I18nRemovePanel extends EasyPanel {
         srcTextField.setText(conf.getString("android.i18n.remove.src.dir"));
 
         srcButton = new JButton("Source Directory");
-        srcButton.addMouseListener(new MouseAdapter() {
+        srcButton.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
+            public void actionPerformed(ActionEvent e) {
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 jfc.setDialogTitle("select a directory");

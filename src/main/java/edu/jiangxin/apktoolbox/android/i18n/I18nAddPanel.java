@@ -5,8 +5,8 @@ package edu.jiangxin.apktoolbox.android.i18n;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -111,10 +111,9 @@ public class I18nAddPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         
         addButton = new JButton(bundle.getString("android.i18n.add.title"));
-        addButton.addMouseListener(new MouseAdapter() {
+        addButton.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
+            public void actionPerformed(ActionEvent e) {
                 File srcFile = new File(srcTextField.getText());
                 if (!srcFile.exists() || !srcFile.isDirectory()) {
                     logger.error("srcFile is invalid");
@@ -200,10 +199,9 @@ public class I18nAddPanel extends EasyPanel {
         targetTextField.setText(conf.getString("android.i18n.add.target.dir"));
 
         targetButton = new JButton("Save Directory");
-        targetButton.addMouseListener(new MouseAdapter() {
+        targetButton.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
+            public void actionPerformed(ActionEvent e) {
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 jfc.setDialogTitle("save to");
@@ -234,10 +232,9 @@ public class I18nAddPanel extends EasyPanel {
         srcTextField.setText(conf.getString("android.i18n.add.src.dir"));
 
         srcButton = new JButton("Source Directory");
-        srcButton.addMouseListener(new MouseAdapter() {
+        srcButton.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
+            public void actionPerformed(ActionEvent e) {
                 JFileChooser jFileChooser = new JFileChooser();
                 jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 jFileChooser.setDialogTitle("select a directory");

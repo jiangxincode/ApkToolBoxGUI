@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
+import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonActionListener;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Level;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -81,7 +81,7 @@ public class AxmlPrinterPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         getFileButton = new JButton("Get File");
-        getFileButton.addMouseListener(new GetFileButtonMouseAdapter());
+        getFileButton.addActionListener(new GetFileButtonActionListener());
 
         operationPanel.add(getFileButton);
     }
@@ -93,7 +93,7 @@ public class AxmlPrinterPanel extends EasyPanel {
         targetTextField.setText(conf.getString("axmlprinter.target.dir"));
 
         targetButton = new JButton("Save Dir");
-        targetButton.addMouseListener(new DirectorySelectButtonMouseAdapter("Save To", targetTextField));
+        targetButton.addActionListener(new DirectorySelectButtonActionListener("Save To", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -107,17 +107,16 @@ public class AxmlPrinterPanel extends EasyPanel {
         srcTextField.setText(conf.getString("axmlprinter.src.file"));
 
         srcButton = new JButton("Source File");
-        srcButton.addMouseListener(new SrcButtonMouseAdapter());
+        srcButton.addActionListener(new SrcButtonActionListener());
 
         srcPanel.add(srcTextField);
         srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         srcPanel.add(srcButton);
     }
 
-    private final class SrcButtonMouseAdapter extends MouseAdapter {
+    private final class SrcButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jfc.setDialogTitle("select a file");
@@ -134,10 +133,9 @@ public class AxmlPrinterPanel extends EasyPanel {
         }
     }
 
-    private final class GetFileButtonMouseAdapter extends MouseAdapter {
+    private final class GetFileButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             File srcFile = new File(srcTextField.getText());
             if (!srcFile.exists() || !srcFile.isFile()) {
                 logger.error("srcFile is invalid");

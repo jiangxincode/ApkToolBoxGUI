@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 
 public class LocalePanel extends EasyPanel {
@@ -71,15 +71,14 @@ public class LocalePanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
         ApplyButton = new JButton("Apply");
-        ApplyButton.addMouseListener(new ApplyButtonMouseAdapter());
+        ApplyButton.addActionListener(new ApplyButtonActionListener());
 
         operationPanel.add(ApplyButton);
     }
 
-    private final class ApplyButtonMouseAdapter extends MouseAdapter {
+    private final class ApplyButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-            super.mousePressed(mouseEvent);
+        public void actionPerformed(ActionEvent e) {
             String language = (String)typeComboBox.getSelectedItem();
             if (StringUtils.isNotEmpty(language)) {
                 conf.setProperty("locale.language", language);

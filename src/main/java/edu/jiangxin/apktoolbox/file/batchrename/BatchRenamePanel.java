@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.file.batchrename;
 
-import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
+import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonActionListener;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;
@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -130,7 +130,7 @@ public class BatchRenamePanel extends EasyPanel {
         JLabel label = new JLabel("源文件所在目录：");
         sourceTextField = new JTextField();
         JButton button = new JButton("选择");
-        button.addMouseListener(new DirectorySelectButtonMouseAdapter("Select a directory", sourceTextField));
+        button.addActionListener(new DirectorySelectButtonActionListener("Select a directory", sourceTextField));
         thirdLevelPanel1.add(label);
         thirdLevelPanel1.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         thirdLevelPanel1.add(sourceTextField);
@@ -316,7 +316,7 @@ public class BatchRenamePanel extends EasyPanel {
         operationPanel.add(secondLevelPanel);
 
         JButton button = new JButton("开始");
-        button.addMouseListener(new StartButtonMouseAdapter());
+        button.addActionListener(new StartButtonActionListener());
         secondLevelPanel.add(button);
         secondLevelPanel.add(Box.createHorizontalGlue());
     }
@@ -334,10 +334,9 @@ public class BatchRenamePanel extends EasyPanel {
         secondLevelPanel.add(currentTextField);
     }
 
-    private final class StartButtonMouseAdapter extends MouseAdapter {
+    private final class StartButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             String sourceString = sourceTextField.getText();
             if (StringUtils.isEmpty(sourceString)) {
                 JOptionPane.showMessageDialog(BatchRenamePanel.this, "sourceString is empty", "ERROR",

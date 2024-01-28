@@ -9,8 +9,8 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,27 +83,27 @@ public class FileListPanel extends JPanel {
         rightContentPanel.setLayout(new GridLayout(6, 1, 0, Constants.DEFAULT_Y_BORDER));
 
         JButton addFileButton = new JButton("Add File");
-        addFileButton.addMouseListener(new AddFileButtonMouseAdapter());
+        addFileButton.addActionListener(new AddFileButtonActionListener());
         rightContentPanel.add(addFileButton);
 
         JButton addDirectoryButton = new JButton("Add Directory");
-        addDirectoryButton.addMouseListener(new AddDirectoryButtonMouseAdapter());
+        addDirectoryButton.addActionListener(new AddDirectoryButtonActionListener());
         rightContentPanel.add(addDirectoryButton);
 
         JButton removeSelectedButton = new JButton("Remove Selected");
-        removeSelectedButton.addMouseListener(new RemoveSelectedButtonMouseAdapter());
+        removeSelectedButton.addActionListener(new RemoveSelectedButtonActionListener());
         rightContentPanel.add(removeSelectedButton);
 
         JButton clearButton = new JButton("Clear All");
-        clearButton.addMouseListener(new ClearButtonMouseAdapter());
+        clearButton.addActionListener(new ClearButtonActionListener());
         rightContentPanel.add(clearButton);
 
         JButton selectAllButton = new JButton("Select All");
-        selectAllButton.addMouseListener(new SelectAllButtonMouseAdapter());
+        selectAllButton.addActionListener(new SelectAllButtonActionListener());
         rightContentPanel.add(selectAllButton);
 
         JButton inverseSelectedButton = new JButton("Inverse Selected");
-        inverseSelectedButton.addMouseListener(new InverseSelectedButtonMouseAdapter());
+        inverseSelectedButton.addActionListener(new InverseSelectedButtonActionListener());
         rightContentPanel.add(inverseSelectedButton);
 
         for (Component component : rightContentPanel.getComponents()) {
@@ -139,10 +139,9 @@ public class FileListPanel extends JPanel {
         }
     }
 
-    private final class AddFileButtonMouseAdapter extends MouseAdapter {
+    private final class AddFileButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jfc.setDialogTitle("Select A File");
@@ -154,10 +153,9 @@ public class FileListPanel extends JPanel {
         }
     }
 
-    private final class AddDirectoryButtonMouseAdapter extends MouseAdapter {
+    private final class AddDirectoryButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             jfc.setDialogTitle("Select A Directory");
@@ -170,10 +168,9 @@ public class FileListPanel extends JPanel {
         }
     }
 
-    private final class RemoveSelectedButtonMouseAdapter extends MouseAdapter {
+    private final class RemoveSelectedButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             List<File> files = fileList.getSelectedValuesList();
             for (File file : files) {
                 fileListModel.removeElement(file);
@@ -181,18 +178,16 @@ public class FileListPanel extends JPanel {
         }
     }
 
-    private final class ClearButtonMouseAdapter extends MouseAdapter {
+    private final class ClearButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             fileListModel.removeAllElements();
         }
     }
 
-    private final class SelectAllButtonMouseAdapter extends MouseAdapter {
+    private final class SelectAllButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             int[] selectedIndices = new int[fileListModel.getSize()];
             for (int i = 0; i < selectedIndices.length; i++) {
                 selectedIndices[i] = i;
@@ -202,10 +197,9 @@ public class FileListPanel extends JPanel {
         }
     }
 
-    private final class InverseSelectedButtonMouseAdapter extends MouseAdapter {
+    private final class InverseSelectedButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             int[] newIndices = new int[fileListModel.getSize() - fileList.getSelectedIndices().length];
             for (int i = 0, j = 0; i < fileListModel.getSize(); ++i) {
                 if (!fileList.isSelectedIndex(i)) {

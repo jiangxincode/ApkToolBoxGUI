@@ -11,9 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -132,15 +130,14 @@ public class EncodeConvertPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         convertButton = new JButton("Convert");
-        convertButton.addMouseListener(new ConvertButtonMouseAdapter());
+        convertButton.addActionListener(new ConvertButtonActionListener());
 
         operationPanel.add(convertButton);
     }
 
-    private class ConvertButtonMouseAdapter extends MouseAdapter {
+    private class ConvertButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             conf.setProperty("encodeconvert.suffix", suffixTextField.getText());
             conf.setProperty("encodeconvert.to", toComboBox.getSelectedItem().toString());
 

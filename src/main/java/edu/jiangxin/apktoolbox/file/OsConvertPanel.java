@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class OsConvertPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
         convertButton = new JButton("Convert");
-        convertButton.addMouseListener(new ConvertButtonMouseAdapter());
+        convertButton.addActionListener(new ConvertButtonActionListener());
 
         operationPanel.add(convertButton);
     }
@@ -107,10 +107,9 @@ public class OsConvertPanel extends EasyPanel {
         srcPanel = new FileListPanel();
     }
 
-    private final class ConvertButtonMouseAdapter extends MouseAdapter {
+    private final class ConvertButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             conf.setProperty("osconvert.suffix", suffixTextField.getText());
             List<File> fileList = new ArrayList<>();
             for (File file : srcPanel.getFileList()) {

@@ -7,10 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LookAndFeelPanel extends EasyPanel {
 
@@ -81,16 +79,15 @@ public class LookAndFeelPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
         ApplyButton = new JButton("Apply");
-        ApplyButton.addMouseListener(new ApplyButtonMouseAdapter());
+        ApplyButton.addActionListener(new ApplyButtonActionListener());
 
         operationPanel.add(ApplyButton);
     }
 
-    private final class ApplyButtonMouseAdapter extends MouseAdapter {
+    private final class ApplyButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-            super.mousePressed(mouseEvent);
-            String name = (String)typeComboBox.getSelectedItem();
+        public void actionPerformed(ActionEvent actionEvent) {
+            String name = (String) typeComboBox.getSelectedItem();
             String className = getLookAndFeelClassNameFromName(name);
             if (className == null) {
                 logger.warn("className is null");

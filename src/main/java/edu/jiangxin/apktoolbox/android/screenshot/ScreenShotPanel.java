@@ -12,8 +12,8 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -81,10 +81,10 @@ public class ScreenShotPanel extends EasyPanel {
         copyCheckBox.setSelected(false);
 
         screenshotButton = new JButton("Sceenshot");
-        screenshotButton.addMouseListener(new ScreenshotButtonMouseAdapter());
+        screenshotButton.addActionListener(new ScreenshotButtonActionListener());
 
         getExistButton = new JButton("Get Exist");
-        getExistButton.addMouseListener(new GetExistButtonMouseAdapter());
+        getExistButton.addActionListener(new GetExistButtonActionListener());
 
         screenshotPanel.add(openCheckBox);
         screenshotPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -117,7 +117,7 @@ public class ScreenShotPanel extends EasyPanel {
         directoryTextField.setTransferHandler(new DirectoryTextFieldTransferHandler());
 
         directoryButton = new JButton("Save Directory");
-        directoryButton.addMouseListener(new DirectoryButtonMouseAdapter());
+        directoryButton.addActionListener(new DirectoryButtonActionListener());
 
         directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
         directoryPanel.add(directoryTextField);
@@ -125,10 +125,9 @@ public class ScreenShotPanel extends EasyPanel {
         directoryPanel.add(directoryButton);
     }
 
-    private final class DirectoryButtonMouseAdapter extends MouseAdapter {
+    private final class DirectoryButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser(directoryTextField.getText());
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             jfc.setDialogTitle("select a directory");
@@ -147,18 +146,16 @@ public class ScreenShotPanel extends EasyPanel {
         }
     }
 
-    private final class GetExistButtonMouseAdapter extends MouseAdapter {
+    private final class GetExistButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             System.out.println("Get Exist");
         }
     }
 
-    private final class ScreenshotButtonMouseAdapter extends MouseAdapter {
+    private final class ScreenshotButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             String title = Utils.getFrameTitle(ScreenShotPanel.this);
             Utils.setFrameTitle(ScreenShotPanel.this, title + "    [Processing]");
             String dirName = fileNameTextField.getText();

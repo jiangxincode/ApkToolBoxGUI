@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.reverse.apktool;
 
-import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonMouseAdapter;
+import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonActionListener;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -8,8 +8,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -77,7 +77,7 @@ public class ApktoolDecodePanel extends EasyPanel {
         srcTextField.setText(conf.getString("apktool.decode.src.file"));
 
         srcButton = new JButton(bundle.getString("choose.file.button"));
-        srcButton.addMouseListener(new SrcButtonMouseAdapter());
+        srcButton.addActionListener(new SrcButtonActionListener());
 
         srcPanel.add(srcTextField);
         srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -91,7 +91,7 @@ public class ApktoolDecodePanel extends EasyPanel {
         targetTextField.setText(conf.getString("apktool.decode.target.dir"));
 
         targetButton = new JButton(bundle.getString("save.dir.button"));
-        targetButton.addMouseListener(new DirectorySelectButtonMouseAdapter("Save To", targetTextField));
+        targetButton.addActionListener(new DirectorySelectButtonActionListener("Save To", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -114,15 +114,14 @@ public class ApktoolDecodePanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         decodeButton = new JButton("Decode");
-        decodeButton.addMouseListener(new DecodeButtonMouseAdapter());
+        decodeButton.addActionListener(new DecodeButtonActionListener());
 
         operationPanel.add(decodeButton);
     }
 
-    private final class SrcButtonMouseAdapter extends MouseAdapter {
+    private final class SrcButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jfc.setDialogTitle("select a file");
@@ -139,10 +138,9 @@ public class ApktoolDecodePanel extends EasyPanel {
         }
     }
 
-    private final class DecodeButtonMouseAdapter extends MouseAdapter {
+    private final class DecodeButtonActionListener implements ActionListener {
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void actionPerformed(ActionEvent e) {
             File srcFile = new File(srcTextField.getText());
             if (!srcFile.exists() || !srcFile.isFile()) {
                 logger.error("srcFile is invalid");
