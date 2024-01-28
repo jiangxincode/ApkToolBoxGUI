@@ -83,23 +83,23 @@ src/main/java/edu/jiangxin/apktoolbox/file/zhconvert/ZHConverterUtils.java:99: e
   101.           }
 
 #9
-src/main/java/edu/jiangxin/apktoolbox/help/LookAndFeelPanel.java:106: error: Null Dereference
-  object returned by `LookAndFeelPanel$ApplyButtonMouseAdapter.this$0.getFrame()` could be null and is dereferenced at line 106.
-  104.               }
-  105.               SwingUtilities.updateComponentTreeUI(getFrame());
-  106. >             getFrame().refreshSizeAndLocation();
-  107.           }
-  108.       }
+src/main/java/edu/jiangxin/apktoolbox/help/LookAndFeelPanel.java:103: error: Null Dereference
+  object returned by `LookAndFeelPanel$ApplyButtonActionListener.this$0.getFrame()` could be null and is dereferenced at line 103.
+  101.               }
+  102.               SwingUtilities.updateComponentTreeUI(getFrame());
+  103. >             getFrame().refreshSizeAndLocation();
+  104.           }
+  105.       }
 
 #10
-src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:207: error: Resource Leak
-  resource of type `java.util.zip.ZipFile` acquired by call to `ZipFile(...)` at line 175 is not released after line 207.
-**Note**: potential exception at line 197
-  205.                       logger.info("exitValue: [" + exitValue + "]");
-  206.                   }
-  207. >             } catch (IOException e1) {
-  208.                   logger.error("axmlprinter fail", e1);
-  209.               }
+src/main/java/edu/jiangxin/apktoolbox/reverse/AxmlPrinterPanel.java:205: error: Resource Leak
+  resource of type `java.util.zip.ZipFile` acquired by call to `ZipFile(...)` at line 173 is not released after line 205.
+**Note**: potential exception at line 195
+  203.                       logger.info("exitValue: [" + exitValue + "]");
+  204.                   }
+  205. >             } catch (IOException e1) {
+  206.                   logger.error("axmlprinter fail", e1);
+  207.               }
 
 #11
 src/main/java/edu/jiangxin/apktoolbox/file/checksum/panel/FileChecksumPanel.java:297: error: Resource Leak
