@@ -26,30 +26,13 @@ jobs:
       - name: Install And Run Infer
         run: |
           # ref: https://sobaigu.com/shell-get-lastest-version-from-github.html
-          VERSION=$(wget -qO- -t1 -T2 "https://api.github.com/repos/facebook/infer/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
-          wget "https://github.com/facebook/infer/releases/download/v${VERSION}/infer-linux64-v${VERSION}.tar.xz"
+          VERSION=$(wget -qO- -t1 -T2 "https://api.github.com/repos/jiangxincode/infer/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
+          wget "https://github.com/jiangxincode/infer/releases/download/v${VERSION}/infer-linux64-v${VERSION}.tar.xz"
           tar xJf "infer-linux64-v${VERSION}.tar.xz"
           rm -rf "infer-linux64-v${VERSION}.tar.xz"
           ./infer-linux64-v${VERSION}/bin/infer --version
-          ./infer-linux64-v${VERSION}/bin/infer -- mvn -DskipTests=true clean package
+          ./infer-linux64-v${VERSION}/bin/infer --sarif -- mvn -DskipTests=true clean package
           ls -al ./infer-out/
-      - name: Convert Facebook Infer output json format to Sarif format and Push to github infer-out branch
-        run: |
-          VERSION=$(wget -qO- -t1 -T2 "https://api.github.com/repos/jiangxincode/SarifConverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
-          wget "https://github.com/jiangxincode/SarifConverter/releases/download/v${VERSION}/SarifConverter-${VERSION}.jar"
-          java -jar ./SarifConverter-${VERSION}.jar --input "./infer-out/report.json" --output "./infer-out/report.sarif" --type infer2sarif
-          git config --global user.name "jiangxincode"
-          git config --global user.email "jiangxinnju@163.com"
-          git clone https://github.com/jiangxincode/ApkToolBoxGUI.git -b infer-out infer-out-git
-          cp ./infer-out/report.txt ./infer-out-git/
-          cp ./infer-out/report.json ./infer-out-git/
-          cp ./infer-out/report.sarif ./infer-out-git/
-          cd ./infer-out-git
-          echo `date` > current.date
-          git add --all
-          git commit -m "update infer-out"
-          git push -f https://jiangxincode:${{secrets.GITHUB_TOKEN}}@github.com/jiangxincode/ApkToolBoxGUI.git infer-out:infer-out
-          cd ..
       - name: Upload SARIF output to GitHub Security Center
         uses: github/codeql-action/upload-sarif@v3
         with:
