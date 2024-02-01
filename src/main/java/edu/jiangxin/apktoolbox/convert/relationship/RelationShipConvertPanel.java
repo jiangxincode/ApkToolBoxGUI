@@ -7,28 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
-/*
- * 介绍：关于“小”这个功能，在称呼存在年龄大小不同时，按钮会改变颜色，默认为比你大，点击后选择比你小。
- * 退格功能，就是返回上一步功能还没做，也不想做了。有兴趣自己看着加。
- * 当你能够确定关系输入过程中不存在年龄比较问题时，可以连续输入，不需要点“的”按钮。
- * 例如直接按“兄”->“姐”->“=”就可以得到答案 【姐姐】
- * 在这个函数initData()里面修改你的数据文件的位置。
- * 数据文件为一行一条数据（注意使用utf-8编码）。
- * 格式如下：[]{(父-)(母-)(兄-)(弟-)(姐-)(妹-)(夫-)(妻-)(儿-)(女-)}
- * 存在年龄比较时<称谓1><称谓2>，比你大的称谓在前面。
- */
 public class RelationShipConvertPanel extends EasyPanel {
-    static Hashtable<String, String> dataHashtable = new Hashtable<>();
-    static String now = "你";
-    static JTextField inputTextField;
-    static JTextField outputTextField;
-    static JButton olderButton;
-    static boolean isOlder = true;
+    private String now = "你";
+    private JTextField inputTextField;
+    private JTextField outputTextField;
+
+    private Stack<String> stack = new Stack<>();
 
     public RelationShipConvertPanel() {
         super();
@@ -97,11 +85,11 @@ public class RelationShipConvertPanel extends EasyPanel {
         gbc.gridx = 2;
         add(husbandButton, gbc);
 
-        olderButton = new MyButton("小");
-        olderButton.addActionListener(btnListener);
+        JButton obligateButton = new MyButton(" ");
+        obligateButton.setEnabled(false);
 
         gbc.gridx = 3;
-        add(olderButton, gbc);
+        add(obligateButton, gbc);
 
         JButton sisterButton = new MyButton("姐");
         sisterButton.addActionListener(btnListener);
@@ -147,24 +135,6 @@ public class RelationShipConvertPanel extends EasyPanel {
         gbc.gridx = 2;
         gbc.gridwidth = 2;
         add(resultButton, gbc);
-
-        initData();
-    }
-
-    private void initData() {
-        try (BufferedReader bufferedReader = new BufferedReader(new StringReader(Constants.data))) {
-            String tempString;
-            while ((tempString = bufferedReader.readLine()) != null && tempString.length() > 3) {
-                String key = StringUtils.substringBetween(tempString, "[", "]");
-                String value = StringUtils.substringBetween(tempString, "{", "}");
-                if (key != null && value != null) {
-                    dataHashtable.put(key, value);
-                }
-            }
-            logger.info("load data finished. count: " + dataHashtable.size());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "数据载入失败!");
-        }
     }
 
     class MyTextField extends JTextField {
@@ -188,71 +158,216 @@ public class RelationShipConvertPanel extends EasyPanel {
         public void actionPerformed(ActionEvent e) {
             String which = ((JButton) e.getSource()).getText();
             switch (which) {
-                case "AC":
+                case "AC" -> {
                     now = "你";
-                    isOlder = true;
                     inputTextField.setText("");
                     outputTextField.setText("");
-                    break;
-                case "=":
-                    if (now.charAt(0) == '<') {
-                        String[] oldChooseString = StringUtils.substringsBetween(now, "<", ">");
-                        now = isOlder ? oldChooseString[0] : oldChooseString[1];
-                        inputTextField.setText(inputTextField.getText() + (isOlder ? "(比你年长)" : "(比你年轻)"));
+                }
+                case "=" -> outputTextField.setText(now);
+                case "←" -> {
+                    String inputText = inputTextField.getText();
+                    String removedText = null;
+                    if (inputText != null && inputText.length() >= 1) {
+                        inputTextField.setText(inputText.substring(0, inputText.length() - 1));
+                        removedText = inputText.substring(inputText.length() - 1);
                     }
-                    isOlder = true;
-                    outputTextField.setText(now);
-                    //now="你";
-                    break;
-                case "小":
-                    isOlder = false;
-                    break;
-                case "←":
-
-                    break;
-                case "的":
-                    String temp = "";
-                    if (now.charAt(0) == '<') {
-                        String[] oldChooseString = StringUtils.substringsBetween(now, "<", ">");
-                        now = isOlder ? oldChooseString[0] : oldChooseString[1];
-                        temp = isOlder ? "(比你年长)" : "(比你年轻)";
+                    if (!stack.isEmpty() && isRelationString(removedText)) {
+                        now = stack.pop();
+                        outputTextField.setText(now);
                     }
-                    inputTextField.setText(inputTextField.getText() + temp + which);
-                    isOlder = true;
-                    break;
-                default: //按下关系按钮时
+                }
+                case "的" -> inputTextField.setText(inputTextField.getText() + which);
+                default -> {
                     inputTextField.setText(inputTextField.getText() + which);
-                    now = getNext(which).substring(2);
-                    if (now.charAt(0) == '<') {
+                    stack.push(now);
+                    String result = getRelation(now, which);
+                    if (isPossibleRelation(result)) {
+                        int userChoose = JOptionPane.showConfirmDialog(null, "是否比你大？", "提示", JOptionPane.YES_NO_OPTION);
+                        boolean isOlder = userChoose == JOptionPane.YES_OPTION;
+                        result = getExactRelation(result, isOlder);
                     }
-                    isOlder = true;
-                    break;
+                    if (result != null) {
+                        now = result;
+                        outputTextField.setText(now);
+                    } else {
+                        outputTextField.setText("超出计算范围");
+                    }
+                }
             }
         }
+    }
 
-        String getNext(String what) {
-            String relationsString = dataHashtable.get(now);
-            String[] relation;
-            if (relationsString != null) {
-                relation = StringUtils.substringsBetween(relationsString, "(", ")");
-            } else {
-                outputTextField.setText("超出计算范围");
-                return now;
-            }
-            return switch (what) {
-                case "父" -> relation[0];
-                case "母" -> relation[1];
-                case "兄" -> relation[2];
-                case "弟" -> relation[3];
-                case "姐" -> relation[4];
-                case "妹" -> relation[5];
-                case "夫" -> relation[6];
-                case "妻" -> relation[7];
-                case "儿" -> relation[8];
-                case "女" -> relation[9];
-                default -> now;
-            };
+    private static boolean isRelationString(String relationString) {
+        return relationString != null && "父母兄弟姐妹夫妻儿女".contains(relationString);
+    }
 
+    private static String getRelation(String now, String what) {
+        Map<String, String> relationsMap = dataMap.get(now);
+        if (relationsMap == null) {
+            return null;
         }
+        return relationsMap.get(what);
+    }
+
+    private static boolean isPossibleRelation(String possibleRelation) {
+        return possibleRelation != null && possibleRelation.charAt(0) == '<';
+    }
+
+    private static String getExactRelation(String possibleRelation, boolean isOlder) {
+        String[] tmp = StringUtils.substringsBetween(possibleRelation, "<", ">");
+        if (tmp != null && tmp.length == 2) {
+            return isOlder ? tmp[0] : tmp[1];
+        } else {
+            return null;
+        }
+    }
+
+    private static final Map<String, Map<String, String>> dataMap = new HashMap<>();
+
+    static {
+        dataMap.put("不存在", Map.of(
+                "父", "不存在",
+                "母", "不存在",
+                "兄", "不存在",
+                "弟", "不存在",
+                "姐", "不存在",
+                "妹", "不存在",
+                "夫", "不存在",
+                "妻", "不存在",
+                "儿", "不存在",
+                "女", "不存在"
+        ));
+        dataMap.put("你", Map.of(
+                "父", "爸爸",
+                "母", "妈妈",
+                "兄", "哥哥",
+                "弟", "弟弟",
+                "姐", "姐姐",
+                "妹", "妹妹",
+                "夫", "老公",
+                "妻", "老婆",
+                "儿", "儿子",
+                "女", "女儿"
+        ));
+        dataMap.put("爸爸", Map.of(
+                "父", "爷爷",
+                "母", "奶奶",
+                "兄", "伯伯",
+                "弟", "叔叔",
+                "姐", "姑姑",
+                "妹", "姑姑",
+                "夫", "不存在",
+                "妻", "妈妈",
+                "儿", "<哥哥><弟弟>",
+                "女", "<姐姐><妹妹>"
+        ));
+        dataMap.put("哥哥", Map.of(
+                "父", "爸爸",
+                "母", "妈妈",
+                "兄", "哥哥",
+                "弟", "<哥哥><弟弟>",
+                "姐", "姐姐",
+                "妹", "<姐姐><妹妹>",
+                "夫", "不存在",
+                "妻", "嫂子",
+                "儿", "侄子",
+                "女", "侄女"
+        ));
+        dataMap.put("弟弟", Map.of(
+                "父", "爸爸",
+                "母", "妈妈",
+                "兄", "哥哥",
+                "弟", "弟弟",
+                "姐", "<姐姐><妹妹>",
+                "妹", "妹妹",
+                "夫", "不存在",
+                "妻", "弟媳",
+                "儿", "侄子",
+                "女", "侄女"
+        ));
+        dataMap.put("姐姐", Map.of(
+                "父", "爸爸",
+                "母", "妈妈",
+                "兄", "哥哥",
+                "弟", "<哥哥><弟弟>",
+                "姐", "姐姐",
+                "妹", "<姐姐><妹妹>",
+                "夫", "姐夫",
+                "妻", "不存在",
+                "儿", "外甥",
+                "女", "外甥女"
+        ));
+        dataMap.put("妹妹", Map.of(
+                "父", "爸爸",
+                "母", "妈妈",
+                "兄", "<哥哥><弟弟>",
+                "弟", "弟弟",
+                "姐", "<姐姐><妹妹>",
+                "妹", "妹妹",
+                "夫", "妹夫",
+                "妻", "不存在",
+                "儿", "外甥",
+                "女", "外甥女"
+        ));
+        dataMap.put("老婆", Map.of(
+                "父", "岳父",
+                "母", "岳母",
+                "兄", "大舅",
+                "弟", "小舅",
+                "姐", "大姨",
+                "妹", "小姨",
+                "夫", "你",
+                "妻", "不存在",
+                "儿", "儿子",
+                "女", "女儿"
+        ));
+        dataMap.put("儿子", Map.of(
+                "父", "你",
+                "母", "老婆",
+                "兄", "儿子",
+                "弟", "儿子",
+                "姐", "女儿",
+                "妹", "女儿",
+                "夫", "不存在",
+                "妻", "儿媳",
+                "儿", "孙子",
+                "女", "孙女"
+        ));
+        dataMap.put("女儿", Map.of(
+                "父", "你",
+                "母", "老婆",
+                "兄", "儿子",
+                "弟", "儿子",
+                "姐", "女儿",
+                "妹", "女儿",
+                "夫", "女婿",
+                "妻", "不存在",
+                "儿", "外孙",
+                "女", "外孙女"
+        ));
+        dataMap.put("岳父", Map.of(
+                "父", "爷爷",
+                "母", "奶奶",
+                "兄", "伯伯",
+                "弟", "叔叔",
+                "姐", "姑姑",
+                "妹", "姑姑",
+                "夫", "不存在",
+                "妻", "岳母",
+                "儿", "<哥哥><弟弟>",
+                "女", "<姐姐><妹妹>"
+        ));
+        dataMap.put("岳母", Map.of(
+                "父", "姥爷",
+                "母", "姥姥",
+                "兄", "舅舅",
+                "弟", "舅舅",
+                "姐", "大姨",
+                "妹", "小姨",
+                "夫", "岳父",
+                "妻", "不存在",
+                "儿", "<哥哥><弟弟>",
+                "女", "<姐姐><妹妹>"
+        ));
     }
 }
