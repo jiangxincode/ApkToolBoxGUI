@@ -12,11 +12,32 @@ import java.util.Map;
 import java.util.Stack;
 
 public class RelationShipConvertPanel extends EasyPanel {
+    private static final Map<String, Map<String, String>> dataMap = new HashMap<>();
+
     private String now = "你";
     private JTextField inputTextField;
     private JTextField outputTextField;
 
     private Stack<String> stack = new Stack<>();
+
+    static {
+        dataMap.put("不存在", Map.of("父", "不存在", "母", "不存在", "兄", "不存在", "弟", "不存在", "姐", "不存在", "妹", "不存在", "夫", "不存在", "妻", "不存在", "儿", "不存在", "女", "不存在"));
+        dataMap.put("你", Map.of("父", "爸爸", "母", "妈妈", "兄", "哥哥", "弟", "弟弟", "姐", "姐姐", "妹", "妹妹", "夫", "老公", "妻", "老婆", "儿", "儿子", "女", "女儿"));
+        dataMap.put("爸爸", Map.of("父", "爷爷", "母", "奶奶", "兄", "伯伯", "弟", "叔叔", "姐", "姑姑", "妹", "姑姑", "夫", "不存在", "妻", "妈妈", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+        dataMap.put("妈妈", Map.of("父", "姥爷", "母", "姥姥", "兄", "舅舅", "弟", "舅舅", "姐", "大姨", "妹", "小姨", "夫", "爸爸", "妻", "不存在", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+        dataMap.put("哥哥", Map.of("父", "爸爸", "母", "妈妈", "兄", "哥哥", "弟", "<哥哥><弟弟>", "姐", "姐姐", "妹", "<姐姐><妹妹>", "夫", "不存在", "妻", "嫂子", "儿", "侄子", "女", "侄女"));
+        dataMap.put("弟弟", Map.of("父", "爸爸", "母", "妈妈", "兄", "<哥哥><弟弟>", "弟", "弟弟", "姐", "<姐姐><妹妹>", "妹", "妹妹", "夫", "不存在", "妻", "弟媳", "儿", "侄子", "女", "侄女"));
+        dataMap.put("姐姐", Map.of("父", "爸爸", "母", "妈妈", "兄", "哥哥", "弟", "<哥哥><弟弟>", "姐", "姐姐", "妹", "<姐姐><妹妹>", "夫", "姐夫", "妻", "不存在", "儿", "外甥", "女", "外甥女"));
+        dataMap.put("妹妹", Map.of("父", "爸爸", "母", "妈妈", "兄", "<哥哥><弟弟>", "弟", "弟弟", "姐", "<姐姐><妹妹>", "妹", "妹妹", "夫", "妹夫", "妻", "不存在", "儿", "外甥", "女", "外甥女"));
+        dataMap.put("老婆", Map.of("父", "岳父", "母", "岳母", "兄", "大舅", "弟", "小舅", "姐", "大姨", "妹", "小姨", "夫", "你", "妻", "不存在", "儿", "儿子", "女", "女儿"));
+        dataMap.put("儿子", Map.of("父", "你", "母", "老婆", "兄", "儿子", "弟", "儿子", "姐", "女儿", "妹", "女儿", "夫", "不存在", "妻", "儿媳", "儿", "孙子", "女", "孙女"));
+        dataMap.put("女儿", Map.of("父", "你", "母", "老婆", "兄", "儿子", "弟", "儿子", "姐", "女儿", "妹", "女儿", "夫", "女婿", "妻", "不存在", "儿", "外孙", "女", "外孙女"));
+        dataMap.put("伯伯", Map.of("父", "爷爷", "母", "奶奶", "兄", "伯伯", "弟", "<伯伯><叔叔>", "姐", "姑姑", "妹", "姑姑", "夫", "不存在", "妻", "婶婶", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+        dataMap.put("叔叔", Map.of("父", "爷爷", "母", "奶奶", "兄", "<伯伯><叔叔>", "弟", "叔叔", "姐", "姑姑", "妹", "姑姑", "夫", "不存在", "妻", "婶婶", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+        dataMap.put("姑姑", Map.of("父", "爷爷", "母", "奶奶", "兄", "<伯伯><叔叔>", "弟", "<伯伯><叔叔>", "姐", "姑姑", "妹", "姑姑", "夫", "姑父", "妻", "不存在", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+        dataMap.put("岳父", Map.of("父", "爷爷", "母", "奶奶", "兄", "伯伯", "弟", "叔叔", "姐", "姑姑", "妹", "姑姑", "夫", "不存在", "妻", "岳母", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+        dataMap.put("岳母", Map.of("父", "姥爷", "母", "姥姥", "兄", "舅舅", "弟", "舅舅", "姐", "大姨", "妹", "小姨", "夫", "岳父", "妻", "不存在", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
+    }
 
     public RelationShipConvertPanel() {
         super();
@@ -182,9 +203,7 @@ public class RelationShipConvertPanel extends EasyPanel {
                     stack.push(now);
                     String result = getRelation(now, which);
                     if (isPossibleRelation(result)) {
-                        int userChoose = JOptionPane.showConfirmDialog(null, "是否比你大？", "提示", JOptionPane.YES_NO_OPTION);
-                        boolean isOlder = userChoose == JOptionPane.YES_OPTION;
-                        result = getExactRelation(result, isOlder);
+                        result = getExactRelation(result);
                     }
                     if (result != null) {
                         now = result;
@@ -213,161 +232,21 @@ public class RelationShipConvertPanel extends EasyPanel {
         return possibleRelation != null && possibleRelation.charAt(0) == '<';
     }
 
-    private static String getExactRelation(String possibleRelation, boolean isOlder) {
+    private static String getExactRelation(String possibleRelation) {
         String[] tmp = StringUtils.substringsBetween(possibleRelation, "<", ">");
         if (tmp != null && tmp.length == 2) {
+            String message = "是否比";
+            if ("伯伯".equals(tmp[0])) {
+                message += "爸爸";
+            } else if ("姐姐".equals(tmp[0]) || "哥哥".equals(tmp[0])) {
+                message += "你";
+            }
+            message += "大？";
+            int userChoose = JOptionPane.showConfirmDialog(null, message, "提示", JOptionPane.YES_NO_OPTION);
+            boolean isOlder = userChoose == JOptionPane.YES_OPTION;
             return isOlder ? tmp[0] : tmp[1];
         } else {
             return null;
         }
-    }
-
-    private static final Map<String, Map<String, String>> dataMap = new HashMap<>();
-
-    static {
-        dataMap.put("不存在", Map.of(
-                "父", "不存在",
-                "母", "不存在",
-                "兄", "不存在",
-                "弟", "不存在",
-                "姐", "不存在",
-                "妹", "不存在",
-                "夫", "不存在",
-                "妻", "不存在",
-                "儿", "不存在",
-                "女", "不存在"
-        ));
-        dataMap.put("你", Map.of(
-                "父", "爸爸",
-                "母", "妈妈",
-                "兄", "哥哥",
-                "弟", "弟弟",
-                "姐", "姐姐",
-                "妹", "妹妹",
-                "夫", "老公",
-                "妻", "老婆",
-                "儿", "儿子",
-                "女", "女儿"
-        ));
-        dataMap.put("爸爸", Map.of(
-                "父", "爷爷",
-                "母", "奶奶",
-                "兄", "伯伯",
-                "弟", "叔叔",
-                "姐", "姑姑",
-                "妹", "姑姑",
-                "夫", "不存在",
-                "妻", "妈妈",
-                "儿", "<哥哥><弟弟>",
-                "女", "<姐姐><妹妹>"
-        ));
-        dataMap.put("哥哥", Map.of(
-                "父", "爸爸",
-                "母", "妈妈",
-                "兄", "哥哥",
-                "弟", "<哥哥><弟弟>",
-                "姐", "姐姐",
-                "妹", "<姐姐><妹妹>",
-                "夫", "不存在",
-                "妻", "嫂子",
-                "儿", "侄子",
-                "女", "侄女"
-        ));
-        dataMap.put("弟弟", Map.of(
-                "父", "爸爸",
-                "母", "妈妈",
-                "兄", "哥哥",
-                "弟", "弟弟",
-                "姐", "<姐姐><妹妹>",
-                "妹", "妹妹",
-                "夫", "不存在",
-                "妻", "弟媳",
-                "儿", "侄子",
-                "女", "侄女"
-        ));
-        dataMap.put("姐姐", Map.of(
-                "父", "爸爸",
-                "母", "妈妈",
-                "兄", "哥哥",
-                "弟", "<哥哥><弟弟>",
-                "姐", "姐姐",
-                "妹", "<姐姐><妹妹>",
-                "夫", "姐夫",
-                "妻", "不存在",
-                "儿", "外甥",
-                "女", "外甥女"
-        ));
-        dataMap.put("妹妹", Map.of(
-                "父", "爸爸",
-                "母", "妈妈",
-                "兄", "<哥哥><弟弟>",
-                "弟", "弟弟",
-                "姐", "<姐姐><妹妹>",
-                "妹", "妹妹",
-                "夫", "妹夫",
-                "妻", "不存在",
-                "儿", "外甥",
-                "女", "外甥女"
-        ));
-        dataMap.put("老婆", Map.of(
-                "父", "岳父",
-                "母", "岳母",
-                "兄", "大舅",
-                "弟", "小舅",
-                "姐", "大姨",
-                "妹", "小姨",
-                "夫", "你",
-                "妻", "不存在",
-                "儿", "儿子",
-                "女", "女儿"
-        ));
-        dataMap.put("儿子", Map.of(
-                "父", "你",
-                "母", "老婆",
-                "兄", "儿子",
-                "弟", "儿子",
-                "姐", "女儿",
-                "妹", "女儿",
-                "夫", "不存在",
-                "妻", "儿媳",
-                "儿", "孙子",
-                "女", "孙女"
-        ));
-        dataMap.put("女儿", Map.of(
-                "父", "你",
-                "母", "老婆",
-                "兄", "儿子",
-                "弟", "儿子",
-                "姐", "女儿",
-                "妹", "女儿",
-                "夫", "女婿",
-                "妻", "不存在",
-                "儿", "外孙",
-                "女", "外孙女"
-        ));
-        dataMap.put("岳父", Map.of(
-                "父", "爷爷",
-                "母", "奶奶",
-                "兄", "伯伯",
-                "弟", "叔叔",
-                "姐", "姑姑",
-                "妹", "姑姑",
-                "夫", "不存在",
-                "妻", "岳母",
-                "儿", "<哥哥><弟弟>",
-                "女", "<姐姐><妹妹>"
-        ));
-        dataMap.put("岳母", Map.of(
-                "父", "姥爷",
-                "母", "姥姥",
-                "兄", "舅舅",
-                "弟", "舅舅",
-                "姐", "大姨",
-                "妹", "小姨",
-                "夫", "岳父",
-                "妻", "不存在",
-                "儿", "<哥哥><弟弟>",
-                "女", "<姐姐><妹妹>"
-        ));
     }
 }
