@@ -7,26 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.UnsupportedEncodingException;
 
-//http://www.jsons.cn/unicode
-//http://tool.chinaz.com/tools/unicode.aspx
 public class Zh2UnicodeConvertPanel extends EasyPanel {
+    private JPanel textPanel;
     private JPanel zhPanel;
 
-    private JLabel zhLabel;
-
-    private JTextField zhTextField;
+    private JTextArea zhTextArea;
 
     private JPanel unicodePanel;
 
-    private JLabel unicodeLabel;
-
-    private JTextField unicodeTextField;
+    private JTextArea unicodeTextArea;
 
     private JPanel operationPanel;
-
-    private JButton zh2UnicodeConvertBtn;
-
-    private JButton unicode2ZhConvertBtn;
 
     public Zh2UnicodeConvertPanel() throws HeadlessException {
         super();
@@ -37,62 +28,72 @@ public class Zh2UnicodeConvertPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
-        createZhPanel();
-        add(zhPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createTextPanel();
+        add(textPanel);
 
-        createUnicodePanel();
-        add(unicodePanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createOperationPanel();
         add(operationPanel);
     }
 
+    private void createTextPanel() {
+        textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
+
+        createZhPanel();
+        textPanel.add(zhPanel);
+
+        textPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+
+        createUnicodePanel();
+        textPanel.add(unicodePanel);
+    }
+
     private void createZhPanel() {
         zhPanel = new JPanel();
-        zhPanel.setLayout(new BoxLayout(zhPanel, BoxLayout.X_AXIS));
+        zhPanel.setLayout(new BorderLayout());
+        zhPanel.setBorder(BorderFactory.createTitledBorder("中文"));
 
-        zhLabel = new JLabel("中文: ");
+        zhTextArea = new JTextArea();
+        zhTextArea.setToolTipText("输入中文");
+        zhTextArea.setEditable(true);
 
-        zhTextField = new JTextField();
-        zhTextField.setToolTipText("输入中文");
-        zhTextField.setEditable(true);
+        JScrollPane zhScrollPane = new JScrollPane(zhTextArea);
+        zhScrollPane.setPreferredSize(new Dimension(200, 500));
 
-        zhPanel.add(zhLabel);
-        zhPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        zhPanel.add(zhTextField);
+        zhPanel.add(zhScrollPane);
     }
 
     private void createUnicodePanel() {
         unicodePanel = new JPanel();
-        unicodePanel.setLayout(new BoxLayout(unicodePanel, BoxLayout.X_AXIS));
+        unicodePanel.setLayout(new BorderLayout());
+        unicodePanel.setBorder(BorderFactory.createTitledBorder("Unicode"));
 
-        unicodeLabel = new JLabel("Unicode: ");
+        unicodeTextArea = new JTextArea();
+        unicodeTextArea.setToolTipText("Enter Unicode Character");
+        unicodeTextArea.setEditable(true);
 
-        unicodeTextField = new JTextField();
-        unicodeTextField.setToolTipText("Enter Unicode Character");
-        unicodeTextField.setEditable(true);
+        JScrollPane unicodeScrollPane = new JScrollPane(unicodeTextArea);
+        unicodeScrollPane.setPreferredSize(new Dimension(200, 500));
 
-        unicodePanel.add(unicodeLabel);
-        unicodePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        unicodePanel.add(unicodeTextField);
+        unicodePanel.add(unicodeScrollPane);
     }
 
     private void createOperationPanel() {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        zh2UnicodeConvertBtn = new JButton("中文->Unicode");
+        JButton zh2UnicodeConvertBtn = new JButton("中文->Unicode");
         zh2UnicodeConvertBtn.addActionListener(e -> {
-            String value = zhTextField.getText();
-            unicodeTextField.setText(string2Unicode(value));
+            String value = zhTextArea.getText();
+            unicodeTextArea.setText(string2Unicode(value));
         });
 
-        unicode2ZhConvertBtn = new JButton("Unicode->中文");
+        JButton unicode2ZhConvertBtn = new JButton("Unicode->中文");
         unicode2ZhConvertBtn.addActionListener(e -> {
-            String value = unicodeTextField.getText();
-            zhTextField.setText(unicode2String(value));
+            String value = unicodeTextArea.getText();
+            zhTextArea.setText(unicode2String(value));
         });
 
         operationPanel.add(zh2UnicodeConvertBtn);
@@ -101,7 +102,7 @@ public class Zh2UnicodeConvertPanel extends EasyPanel {
     }
 
     private String string2Unicode(String str) {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         byte[] bytes;
         try {
             bytes = str.getBytes("unicode");
@@ -110,31 +111,27 @@ public class Zh2UnicodeConvertPanel extends EasyPanel {
             return null;
         }
         for (int i = 2; i < bytes.length - 1; i += 2) {
-            stringBuffer.append("\\u");
+            sb.append("\\u");
             String firstByte = Integer.toHexString(bytes[i] & 0xff);
-            for (int j = firstByte.length(); j < 2; j++) {
-                stringBuffer.append("0");
-            }
-            stringBuffer.append(firstByte);
+            sb.append("0".repeat(2 - firstByte.length()));
+            sb.append(firstByte);
             String secondByte = Integer.toHexString(bytes[i + 1] & 0xff);
-            for (int j = secondByte.length(); j < 2; j++) {
-                stringBuffer.append("0");
-            }
-            stringBuffer.append(secondByte);
+            sb.append("0".repeat(2 - secondByte.length()));
+            sb.append(secondByte);
         }
-        return stringBuffer.toString().toLowerCase();
+        return sb.toString().toLowerCase();
     }
 
     private String unicode2String(String unicodeStr) {
-        StringBuffer stringBuffer = new StringBuffer();
-        String characterArray[] = unicodeStr.toLowerCase().split("\\\\u");
-        for (int i = 0; i < characterArray.length; i++) {
-            if (characterArray[i].equals("")) {
+        StringBuilder sb = new StringBuilder();
+        String[] characterArray = unicodeStr.toLowerCase().split("\\\\u");
+        for (String s : characterArray) {
+            if (s.equals("")) {
                 continue;
             }
-            char character = (char) Integer.parseInt(characterArray[i].trim(), 16);
-            stringBuffer.append(character);
+            char character = (char) Integer.parseInt(s.trim(), 16);
+            sb.append(character);
         }
-        return stringBuffer.toString();
+        return sb.toString();
     }
 }
