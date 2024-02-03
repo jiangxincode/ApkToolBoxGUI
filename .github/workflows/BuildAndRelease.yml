@@ -73,7 +73,7 @@ jobs:
             2. Add a new tag according with the version in pom.xml and push the tag to github.
             3. Check whether there are failed github actions and whether the gh-page is updated successfully.
             4. Fill in the changelog below.
-            5. Download the release zips and test that the binaries works.Z
+            5. Download the release zips and test that the binaries works.
             --- PUBLISH GITHUB RELEASE HERE ---
             --- DELETE EVERYTHING ABOVE THIS LINE ---
 
