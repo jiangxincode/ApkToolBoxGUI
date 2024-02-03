@@ -6,7 +6,6 @@
 ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml/badge.svg)](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml)
 [![Project Reports](https://img.shields.io/badge/ApkToolBoxGUI-Reports-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/project-reports.html)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/dab038ef9ed04bf1b73bd0031422b814)](https://app.codacy.com/gh/jiangxincode/ApkToolBoxGUI/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Infer Check](https://img.shields.io/badge/Facebook-InferCheck-green)](https://github.com/jiangxincode/ApkToolBoxGUI/blob/infer-out/report.txt)
 [![CodeQL Check](https://img.shields.io/badge/Github-CodeQL-yellow)](https://github.com/jiangxincode/ApkToolBoxGUI/security/code-scanning)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jiangxincode_ApkToolBoxGUI&metric=alert_status)](https://sonarcloud.io/dashboard?id=jiangxincode_ApkToolBoxGUI)
 [![CodeFactor](https://www.codefactor.io/repository/github/jiangxincode/apktoolboxgui/badge)](https://www.codefactor.io/repository/github/jiangxincode/apktoolboxgui)
