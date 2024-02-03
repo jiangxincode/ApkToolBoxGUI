@@ -64,7 +64,7 @@ jobs:
         with:
           files: |
             target/ApkToolBoxGUI-*-with*-JRE-*.zip
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ github.refname }}
           draft: true
           prerelease: false
           body: |
