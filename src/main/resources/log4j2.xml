@@ -2,7 +2,7 @@
 <Configuration status="INFO">
     <Appenders>
         <File name="File"
-              fileName="apktoolboxgui.log"
+              fileName="${sys:user.home}/.apktoolboxgui/apktoolboxgui.log"
               append="true">
             <PatternLayout
                     pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>

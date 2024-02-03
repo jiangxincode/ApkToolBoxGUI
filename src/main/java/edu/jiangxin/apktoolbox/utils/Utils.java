@@ -15,10 +15,6 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
 
 /**
  * @author jiangxin
@@ -28,15 +24,45 @@ import java.util.Date;
 public class Utils {
     private static final Logger logger = LogManager.getLogger(Utils.class.getSimpleName());
 
+    private static String userConfigDirPath;
+
     private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
+
+    public static boolean checkAndInitEnvironment() {
+        boolean ret = initUserConfigDir();
+        if (!ret) {
+            return false;
+        }
+        SystemInfoUtils.logSystemInfo();
+        return true;
+    }
+
+    private static boolean initUserConfigDir() {
+        String userHomePath = System.getProperty("user.home");
+        if (StringUtils.isEmpty(userHomePath)) {
+            logger.error("user.home is empty");
+            userConfigDirPath = ".apktoolboxgui";
+        } else {
+            userConfigDirPath = userHomePath + File.separator + ".apktoolboxgui";
+        }
+        File userConfigDirFile = new File(userConfigDirPath);
+        if (!userConfigDirFile.exists()) {
+            boolean ret = userConfigDirFile.mkdir();
+            if (!ret) {
+                logger.error("mkdir fail");
+                return false;
+            }
+        }
+        return true;
+    }
 
     public static Configuration getConfiguration() {
         if (builder == null) {
-            File confiFile = new File("apktoolboxgui.properties");
-            if (!confiFile.exists()) {
+            File configFile = new File(userConfigDirPath, "apktoolboxgui.properties");
+            if (!configFile.exists()) {
                 try {
                     logger.info("confiFile does not exist");
-                    boolean ret = confiFile.createNewFile();
+                    boolean ret = configFile.createNewFile();
                     if (!ret) {
                         logger.error("createNewFile fail");
                     }
@@ -47,7 +73,7 @@ public class Utils {
             logger.info("builder is null, create it");
             Parameters params = new Parameters();
             builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-                    .configure(params.properties().setFileName("apktoolboxgui.properties"));
+                    .configure(params.properties().setFile(configFile));
         }
         Configuration conf = null;
         try {
@@ -134,7 +160,7 @@ public class Utils {
             int exitValue = exec.execute(commandLine);
             logger.info("exitValue: [" + exitValue + "]");
         } catch (IOException ioe) {
-            logger.error("exec fail", ioe.getMessage());
+            logger.error("exec fail. ", ioe);
         }
     }
 
@@ -160,43 +186,8 @@ public class Utils {
             };
             exec.execute(commandLine, erh);
         } catch (IOException ioe) {
-            logger.error("exec fail", ioe.getMessage());
+            logger.error("exec fail. ", ioe);
         }
-    }
-
-    public static <T> boolean isEleTypeOf(Collection<T> coll, Class<?> obj) {
-        if(coll == null || coll.size() == 0) {
-            return true;
-        }
-
-        for(T ele : coll) {
-            if(!ele.getClass().equals(obj)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static String division(int num1, int num2) {
-        String rate = "0.00";
-        String format = "0.00";
-        if (num2 != 0 && num1 != 0) {
-            DecimalFormat dec = new DecimalFormat(format);
-            rate = dec.format((double) num1 / num2 * 100);
-            while (true) {
-                if (rate.equals(format)) {
-                    format = format + "0";
-                    DecimalFormat dec1 = new DecimalFormat(format);
-                    rate = dec1.format((double) num1 / num2 * 100);
-                } else {
-                    break;
-                }
-            }
-        } else if (num1 != 0 && num2 == 0) {
-            rate = "100";
-        }
-
-        return rate;
     }
 
     public static int getFileLineCount(File file) {
