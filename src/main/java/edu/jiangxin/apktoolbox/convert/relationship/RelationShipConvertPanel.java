@@ -15,10 +15,11 @@ public class RelationShipConvertPanel extends EasyPanel {
     private static final Map<String, Map<String, String>> dataMap = new HashMap<>();
 
     private String now = "你";
-    private JTextField inputTextField;
-    private JTextField outputTextField;
 
-    private Stack<String> stack = new Stack<>();
+    private final JTextField inputTextField;
+    private final JTextField outputTextField;
+
+    private final Stack<String> stack = new Stack<>();
 
     static {
         dataMap.put("不存在", Map.of("父", "不存在", "母", "不存在", "兄", "不存在", "弟", "不存在", "姐", "不存在", "妹", "不存在", "夫", "不存在", "妻", "不存在", "儿", "不存在", "女", "不存在"));
@@ -158,7 +159,7 @@ public class RelationShipConvertPanel extends EasyPanel {
         add(resultButton, gbc);
     }
 
-    class MyTextField extends JTextField {
+    static class MyTextField extends JTextField {
         public MyTextField() {
             super();
             Font font = new Font("宋体", Font.BOLD, 15);
@@ -167,7 +168,7 @@ public class RelationShipConvertPanel extends EasyPanel {
         }
     }
 
-    class MyButton extends JButton {
+    static class MyButton extends JButton {
         public MyButton(String text) {
             super(text);
             Font font = new Font("宋体", Font.BOLD, 30);

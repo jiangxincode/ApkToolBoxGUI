@@ -114,7 +114,7 @@ public class EncoderConvert {
         while (it.hasNext()) {
             File tempFile = it.next();
             String desFileString = desDirFile.getAbsolutePath() + File.separator + tempFile.getName();
-            String srcFileString = tempFile.getAbsolutePath().toString();
+            String srcFileString = tempFile.getAbsolutePath();
             System.out.println(srcFileString);
             System.out.println(desFileString);
             encodeFile(srcFileString, srcEncoder, desFileString, desEncoder);

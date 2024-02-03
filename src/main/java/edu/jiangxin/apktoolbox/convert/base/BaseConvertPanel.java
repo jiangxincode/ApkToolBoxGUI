@@ -214,19 +214,19 @@ public class BaseConvertPanel extends EasyPanel {
 
     private boolean isValidText(int radix, String text) {
         switch (radix) {
-            case 2: {
+            case 2 -> {
                 return isBinStr(text);
             }
-            case 8: {
+            case 8 -> {
                 return isOctStr(text);
             }
-            case 10: {
+            case 10 -> {
                 return isDecStr(text);
             }
-            case 16: {
+            case 16 -> {
                 return isHexStr(text);
             }
-            default: {
+            default -> {
                 return false;
             }
         }
@@ -262,19 +262,19 @@ public class BaseConvertPanel extends EasyPanel {
         @Override
         public String toString() {
             switch (radix) {
-                case 2: {
+                case 2 -> {
                     return BINARY;
                 }
-                case 8: {
+                case 8 -> {
                     return OCTAL;
                 }
-                case 10: {
+                case 10 -> {
                     return DECIMAL;
                 }
-                case 16: {
+                case 16 -> {
                     return HEX;
                 }
-                default: {
+                default -> {
                     return String.valueOf(radix);
                 }
             }

@@ -265,7 +265,7 @@ public class OsPatternConvert {
             File srcFileFile = it.next();
             // 得到源文件绝对地址
             String srcFileString = srcFileFile.getAbsolutePath();
-            String temp = srcFileFile.getAbsolutePath().substring(srcDirFile.getAbsolutePath().toString().length());
+            String temp = srcFileFile.getAbsolutePath().substring(srcDirFile.getAbsolutePath().length());
             // 得到目标文件绝对地址
             String desFileString = desDirFile.getAbsolutePath() + temp;
             osFileConvert(srcFileString, desFileString, pattern);
