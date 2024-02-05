@@ -2,12 +2,11 @@ package edu.jiangxin.apktoolbox.help;
 
 import java.awt.Component;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -31,7 +30,7 @@ import edu.jiangxin.apktoolbox.Version;
  * @author 2018-09-30
  *
  */
-public class CheckUpdateActionListener implements ActionListener {
+public class CheckUpdateActionListener extends ChangeMenuListener {
     private static final int SOCKET_TIMEOUT_TIME = 4000;
     
     private static final int CONNECT_TIMEOUT_TIME = 4000;
@@ -49,41 +48,13 @@ public class CheckUpdateActionListener implements ActionListener {
         parent = component;
     }
 
-    private void processException(Exception ex) {
-        logger.error("checking for updates failed: ", ex);
-        Toolkit.getDefaultToolkit().beep();
-        JOptionPane.showMessageDialog(parent, "checking for updates failed", "ERROR", JOptionPane.ERROR_MESSAGE);
-        releaseResource();
-    }
-
-    private void processResult(String latestVersion) {
-        logger.info("checking for updates successed");
-        Toolkit.getDefaultToolkit().beep();
-        JOptionPane.showMessageDialog(parent,
-                "Latest version: " + latestVersion + "\nLocal version: " + Version.VERSION, "Update",
-                JOptionPane.INFORMATION_MESSAGE);
-        releaseResource();
-    }
-
-    private void releaseResource() {
-        if (closeableHttpResponse != null) {
-            try {
-                closeableHttpResponse.close();
-            } catch (IOException e) {
-                logger.error("closeableHttpResponse close failed", e);
-            }
-        }
-        if (closeableHttpClient != null) {
-            try {
-                closeableHttpClient.close();
-            } catch (IOException e) {
-                logger.error("closeableHttpClient close failed", e);
-            }
-        }
+    @Override
+    public boolean onPreChangeMenu() {
+        return true;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void onChangeMenu() {
         String responseString = null;
 
         closeableHttpClient = HttpClients.createDefault();
@@ -134,6 +105,39 @@ public class CheckUpdateActionListener implements ActionListener {
             return;
         }
         processResult(latestVersion);
+    }
+
+    private void processException(Exception ex) {
+        logger.error("checking for updates failed: ", ex);
+        Toolkit.getDefaultToolkit().beep();
+        JOptionPane.showMessageDialog(parent, "checking for updates failed", "ERROR", JOptionPane.ERROR_MESSAGE);
+        releaseResource();
+    }
+
+    private void processResult(String latestVersion) {
+        logger.info("checking for updates successed");
+        Toolkit.getDefaultToolkit().beep();
+        JOptionPane.showMessageDialog(parent,
+                "Latest version: " + latestVersion + "\nLocal version: " + Version.VERSION, "Update",
+                JOptionPane.INFORMATION_MESSAGE);
+        releaseResource();
+    }
+
+    private void releaseResource() {
+        if (closeableHttpResponse != null) {
+            try {
+                closeableHttpResponse.close();
+            } catch (IOException e) {
+                logger.error("closeableHttpResponse close failed", e);
+            }
+        }
+        if (closeableHttpClient != null) {
+            try {
+                closeableHttpClient.close();
+            } catch (IOException e) {
+                logger.error("closeableHttpClient close failed", e);
+            }
+        }
     }
 
 }

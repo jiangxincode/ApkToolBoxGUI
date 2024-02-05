@@ -1,12 +1,13 @@
 package edu.jiangxin.apktoolbox.utils;
 
+import net.lingala.zip4j.ZipFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 
 public class FileUtils {
 
@@ -69,6 +70,37 @@ public class FileUtils {
         } catch (IOException e) {
             LOGGER.error("getCanonicalPathQuiet failed: IOException");
             return null;
+        }
+    }
+
+    public static boolean downloadFileToDir(URL url, File downloadDir) {
+        LOGGER.info("Download from {} to {}", url, downloadDir);
+        String urlStr = url.toString();
+        String fileName = urlStr.substring(urlStr.lastIndexOf("/") + 1);
+        File downloadFile = new File(downloadDir, fileName);
+        try (InputStream is = url.openStream();
+             OutputStream os = new FileOutputStream(downloadFile)) {
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = is.read(b)) != -1) {
+                os.write(b, 0, length);
+            }
+            return true;
+        } catch (IOException e) {
+            LOGGER.error("downloadFileToDir failed: IOException");
+            return false;
+        }
+    }
+
+    public static boolean unzipFile(File pluginFile) {
+        LOGGER.info("Unzip file: {}", pluginFile);
+        String parentDir = pluginFile.getParent();
+        try (ZipFile zipFile = new ZipFile(pluginFile)) {
+            zipFile.extractAll(parentDir);
+            return true;
+        } catch (IOException e) {
+            LOGGER.error("unzipFile failed: IOException");
+            return false;
         }
     }
 }

@@ -1,0 +1,336 @@
+package edu.jiangxin.apktoolbox.reverse;
+
+import edu.jiangxin.apktoolbox.swing.extend.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.extend.SelectDirectoryActionListener;
+import edu.jiangxin.apktoolbox.swing.extend.SelectFileActionListener;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+public class ApktoolPanel extends PluginPanel {
+    public ApktoolPanel() throws HeadlessException {
+        super();
+    }
+
+    @Override
+    public void onChangingMenu() {
+        initUI();
+    }
+
+    @Override
+    public String getPluginFilename() {
+        return "apktool_2.9.2.jar";
+    }
+
+    private void initUI() {
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
+
+        JTabbedPane categoryTabbedPane = new JTabbedPane();
+        add(categoryTabbedPane);
+
+        JPanel decodeCategoryPanel = new ApktoolDecodePanel();
+        JPanel rebuildCategoryPanel = new ApktoolRebuildPanel();
+
+        categoryTabbedPane.addTab("Decode", null, decodeCategoryPanel, "Decode the APK file");
+        categoryTabbedPane.setSelectedIndex(0);
+        categoryTabbedPane.addTab("Rebuild", null, rebuildCategoryPanel, "Rebuild the APK file");
+    }
+
+    abstract class ApktoolPanelBase extends JPanel {
+        protected JPanel srcPanel;
+
+        protected JPanel targetPanel;
+
+        protected JPanel optionPanel;
+
+        protected JPanel operationPanel;
+
+        protected ApktoolPanelBase() throws HeadlessException {
+            super();
+            initUI();
+        }
+
+        private void initUI() {
+            BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+            setLayout(boxLayout);
+
+            createSrcPanel();
+            add(srcPanel);
+            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+            createTargetPanel();
+            add(targetPanel);
+            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+            createOptionPanel();
+            add(optionPanel);
+            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+            createOperationPanel();
+            add(operationPanel);
+        }
+
+        protected void createSrcPanel() {
+            srcPanel = new JPanel();
+            srcPanel.setLayout(new BoxLayout(srcPanel, BoxLayout.X_AXIS));
+        }
+
+        protected void createTargetPanel() {
+            targetPanel = new JPanel();
+            targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+        }
+
+        protected void createOptionPanel() {
+            optionPanel = new JPanel();
+            optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
+        }
+
+        protected void createOperationPanel() {
+            operationPanel = new JPanel();
+            operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        }
+    }
+
+    class ApktoolDecodePanel extends ApktoolPanelBase {
+        private JTextField srcTextField;
+
+        private JTextField targetTextField;
+
+        private JCheckBox resourceIgnoreCheckBox;
+
+        private JCheckBox overrideCheckBox;
+
+        public ApktoolDecodePanel() throws HeadlessException {
+            super();
+        }
+
+        @Override
+        public void createSrcPanel() {
+            super.createSrcPanel();
+
+            srcTextField = new JTextField();
+            srcTextField.setText(conf.getString("apktool.decode.src.file"));
+
+            JButton srcButton = new JButton(bundle.getString("choose.file.button"));
+            srcButton.addActionListener(new SelectFileActionListener("select a file", srcTextField));
+
+            srcPanel.add(srcTextField);
+            srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+            srcPanel.add(srcButton);
+        }
+
+        @Override
+        public void createTargetPanel() {
+            super.createTargetPanel();
+
+            targetTextField = new JTextField();
+            targetTextField.setText(conf.getString("apktool.decode.target.dir"));
+
+            JButton targetButton = new JButton(bundle.getString("save.dir.button"));
+            targetButton.addActionListener(new SelectDirectoryActionListener("Save To", targetTextField));
+
+            targetPanel.add(targetTextField);
+            targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+            targetPanel.add(targetButton);
+        }
+
+        @Override
+        public void createOptionPanel() {
+            super.createOptionPanel();
+
+            resourceIgnoreCheckBox = new JCheckBox("Ignore res");
+            resourceIgnoreCheckBox.setSelected(false);
+            optionPanel.add(resourceIgnoreCheckBox);
+
+            overrideCheckBox = new JCheckBox("Override");
+            overrideCheckBox.setSelected(true);
+            optionPanel.add(overrideCheckBox);
+        }
+
+        @Override
+        public void createOperationPanel() {
+            super.createOperationPanel();
+
+            JButton decodeButton = new JButton("Decode");
+            decodeButton.addActionListener(new ApktoolDecodePanel.DecodeButtonActionListener());
+
+            operationPanel.add(decodeButton);
+        }
+
+        private final class DecodeButtonActionListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                File srcFile = new File(srcTextField.getText());
+                if (!srcFile.exists() || !srcFile.isFile()) {
+                    logger.error("srcFile is invalid");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(ApktoolDecodePanel.this, "Source file is invalid", Constants.MESSAGE_DIALOG_TITLE,
+                            JOptionPane.ERROR_MESSAGE);
+                    srcTextField.requestFocus();
+                    return;
+                }
+                String srcPath = FileUtils.getCanonicalPathQuiet(srcFile);
+                if (srcPath == null) {
+                    return;
+                }
+                conf.setProperty("apktool.decode.src.file", srcPath);
+                File targetFile = new File(targetTextField.getText());
+                if (!targetFile.exists() || !targetFile.isDirectory()) {
+                    logger.error("targetFile is invalid");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(ApktoolDecodePanel.this, "Target directory is invalid", Constants.MESSAGE_DIALOG_TITLE,
+                            JOptionPane.ERROR_MESSAGE);
+                    targetTextField.requestFocus();
+                    return;
+                }
+                String targetPath = FileUtils.getCanonicalPathQuiet(targetFile);
+                if (targetPath == null) {
+                    return;
+                }
+                conf.setProperty("apktool.decode.target.dir", targetPath);
+                String srcBaseName = FilenameUtils.getBaseName(srcPath);
+                StringBuilder sb = new StringBuilder();
+                sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(" d ")
+                        .append(srcPath).append(" -o ").append(targetPath).append(File.separator).append(srcBaseName);
+                if (resourceIgnoreCheckBox.isSelected()) {
+                    sb.append(" -r");
+                }
+                if (overrideCheckBox.isSelected()) {
+                    sb.append(" -f");
+                }
+                Utils.blockedExecutor(sb.toString());
+            }
+        }
+    }
+
+    class ApktoolRebuildPanel extends ApktoolPanelBase {
+        private JTextField srcTextField;
+
+        private JTextField targetTextField;
+
+        private JCheckBox signAPK;
+
+        public ApktoolRebuildPanel() throws HeadlessException {
+            super();
+        }
+
+        @Override
+        public void createSrcPanel() {
+            super.createSrcPanel();
+
+            srcTextField = new JTextField();
+            srcTextField.setText(conf.getString("apktool.rebuild.src.dir"));
+
+            JButton srcButton = new JButton(bundle.getString("choose.dir.button"));
+            srcButton.addActionListener(new SelectDirectoryActionListener("Select Directory", srcTextField));
+
+            srcPanel.add(srcTextField);
+            srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+            srcPanel.add(srcButton);
+        }
+
+        @Override
+        public void createTargetPanel() {
+            super.createTargetPanel();
+
+            targetTextField = new JTextField();
+            targetTextField.setText(conf.getString("apktool.rebuild.target.file"));
+
+            JButton targetButton = new JButton(bundle.getString("save.file.button"));
+            targetButton.addActionListener(new SelectFileActionListener("save to", targetTextField, new ApktoolRebuildPanel.ApkFileFilter()));
+
+            targetPanel.add(targetTextField);
+            targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+            targetPanel.add(targetButton);
+        }
+
+        @Override
+        public void createOptionPanel() {
+            super.createOptionPanel();
+
+            signAPK = new JCheckBox("sign APK");
+            signAPK.setSelected(false);
+            optionPanel.add(signAPK);
+        }
+
+        @Override
+        public void createOperationPanel() {
+            super.createOperationPanel();
+
+            JButton rebuildButton = new JButton("Rebuild");
+            rebuildButton.addActionListener(new ApktoolRebuildPanel.RebuildButtonActionListener());
+            operationPanel.add(rebuildButton);
+        }
+
+        private final class RebuildButtonActionListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                File srcFile = new File(srcTextField.getText());
+                if (!srcFile.exists() || !srcFile.isDirectory()) {
+                    logger.error("srcFile is invalid");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(ApktoolRebuildPanel.this, "Source directory is invalid", Constants.MESSAGE_DIALOG_TITLE,
+                            JOptionPane.ERROR_MESSAGE);
+                    srcTextField.requestFocus();
+                    return;
+                }
+                String srcPath = FileUtils.getCanonicalPathQuiet(srcFile);
+                if (srcPath == null) {
+                    return;
+                }
+                conf.setProperty("apktool.rebuild.src.dir", srcPath);
+                File targetFile = new File(targetTextField.getText());
+                File targetParentFile = targetFile.getParentFile();
+                if (!targetParentFile.exists() || !targetParentFile.isDirectory()) {
+                    logger.error("targetFile is invalid");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(ApktoolRebuildPanel.this, "Target file is invalid", Constants.MESSAGE_DIALOG_TITLE,
+                            JOptionPane.ERROR_MESSAGE);
+                    targetTextField.requestFocus();
+                    return;
+                }
+                String targetPath = FileUtils.getCanonicalPathQuiet(targetFile);
+                if (targetPath == null) {
+                    return;
+                }
+                conf.setProperty("apktool.rebuild.target.file", targetPath);
+                StringBuilder sb = new StringBuilder();
+                sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(" b ")
+                        .append(srcPath).append(" -o ").append(targetPath);
+                Utils.blockedExecutor(sb.toString());
+                if (signAPK.isSelected()) {
+                    sb = new StringBuilder();
+                    sb.append(ApktoolPanel.this.getPluginStartupCmd())
+                            .append(" -keystore ").append(Utils.getToolsPath()).append(File.separator)
+                            .append("debug.keystore").append(" -alias androiddebugkey -pswd android ")
+                            .append(targetPath);
+                    Utils.blockedExecutor(sb.toString());
+                }
+            }
+        }
+
+        private final class ApkFileFilter extends FileFilter {
+
+            @Override
+            public boolean accept(File f) {
+                String nameString = f.getName();
+                return nameString.toLowerCase().endsWith(".apk");
+            }
+
+            @Override
+            public String getDescription() {
+                return "*.apk";
+            }
+        }
+    }
+}
+

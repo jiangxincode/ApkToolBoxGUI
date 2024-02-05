@@ -5,6 +5,7 @@ import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.exec.*;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author jiangxin
@@ -22,14 +25,21 @@ import java.io.*;
  *
  */
 public class Utils {
+    private static final String DOWNLOAD_VERSION = "v1.0.4";
     private static final Logger logger = LogManager.getLogger(Utils.class.getSimpleName());
 
-    private static String userConfigDirPath;
+    private static String userConfigPath;
+
+    private static String userPluginDirPath;
 
     private static FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
 
+    public static String getPluginDirPath() {
+        return userPluginDirPath;
+    }
+
     public static boolean checkAndInitEnvironment() {
-        boolean ret = initUserConfigDir();
+        boolean ret = initUserDir();
         if (!ret) {
             return false;
         }
@@ -37,19 +47,45 @@ public class Utils {
         return true;
     }
 
-    private static boolean initUserConfigDir() {
+    private static boolean initUserDir() {
         String userHomePath = System.getProperty("user.home");
+        String userDirPath;
         if (StringUtils.isEmpty(userHomePath)) {
             logger.error("user.home is empty");
-            userConfigDirPath = ".apktoolboxgui";
+            userDirPath = ".apktoolboxgui";
         } else {
-            userConfigDirPath = userHomePath + File.separator + ".apktoolboxgui";
+            userDirPath = userHomePath + File.separator + ".apktoolboxgui";
         }
-        File userConfigDirFile = new File(userConfigDirPath);
-        if (!userConfigDirFile.exists()) {
-            boolean ret = userConfigDirFile.mkdir();
+        File userDirFile = new File(userDirPath);
+        if (!userDirFile.exists()) {
+            logger.info("userDirFile does not exist");
+            boolean ret = userDirFile.mkdir();
             if (!ret) {
-                logger.error("mkdir fail");
+                logger.error("mkdir failed: {}", userDirPath);
+                return false;
+            }
+        }
+        userConfigPath = userDirPath + File.separator + "apktoolboxgui.properties";
+        File userConfigFile = new File(userConfigPath);
+        if (!userConfigFile.exists()) {
+            try {
+                logger.info("userConfigFile does not exist");
+                boolean ret = userConfigFile.createNewFile();
+                if (!ret) {
+                    logger.error("createNewFile fail: {}", userConfigPath);
+                    return false;
+                }
+            } catch (IOException e) {
+                logger.error("createNewFile fail", e);
+            }
+        }
+        userPluginDirPath = userDirPath + File.separator + "plugins";
+        File userPluginDirFile = new File(userPluginDirPath);
+        if (!userPluginDirFile.exists()) {
+            logger.info("userPluginDirFile does not exist");
+            boolean ret = userPluginDirFile.mkdir();
+            if (!ret) {
+                logger.error("mkdir failed: {}", userPluginDirPath);
                 return false;
             }
         }
@@ -58,22 +94,12 @@ public class Utils {
 
     public static Configuration getConfiguration() {
         if (builder == null) {
-            File configFile = new File(userConfigDirPath, "apktoolboxgui.properties");
-            if (!configFile.exists()) {
-                try {
-                    logger.info("confiFile does not exist");
-                    boolean ret = configFile.createNewFile();
-                    if (!ret) {
-                        logger.error("createNewFile fail");
-                    }
-                } catch (IOException e) {
-                    logger.error("createNewFile fail", e);
-                }
-            }
             logger.info("builder is null, create it");
+            File configFile = new File(userConfigPath);
             Parameters params = new Parameters();
+            PropertiesBuilderParameters parameters = params.properties().setFile(configFile);
             builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-                    .configure(params.properties().setFile(configFile));
+                    .configure(parameters);
         }
         Configuration conf = null;
         try {
@@ -200,5 +226,38 @@ public class Utils {
             logger.error("getFileLineCount IOException");
             return 0;
         }
+    }
+
+    public static boolean checkAndDownloadPlugin(String pluginFilename, boolean isPluginNeedUnzip) {
+        File pluginFile = new File(Utils.userPluginDirPath, pluginFilename);
+        if (!pluginFile.exists()) {
+            int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
+            if (userChoose != JOptionPane.YES_OPTION) {
+                logger.warn("userChoose: {}", userChoose);
+                return false;
+            }
+            String downloadUrlStr = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/" + DOWNLOAD_VERSION + "/" + pluginFilename;
+            URL url;
+            try {
+                url = new URL(downloadUrlStr);
+            } catch (MalformedURLException e) {
+                logger.error("MalformedURLException: {}", e.getMessage());
+                return false;
+            }
+            File pluginDir = new File(Utils.userPluginDirPath);
+            boolean ret = FileUtils.downloadFileToDir(url, pluginDir);
+            if (!ret) {
+                JOptionPane.showMessageDialog(null, "下载失败，请检查网络", "错误", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (isPluginNeedUnzip) {
+                ret = FileUtils.unzipFile(pluginFile);
+                if (!ret) {
+                    JOptionPane.showMessageDialog(null, "解压失败", "错误", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

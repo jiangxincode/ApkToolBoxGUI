@@ -1,14 +1,13 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonActionListener;
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.SelectDirectoryActionListener;
+import edu.jiangxin.apktoolbox.swing.extend.PluginPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 
 import javax.swing.*;
@@ -25,7 +24,7 @@ import java.util.zip.ZipFile;
  * @author 2019-04-12
  *
  */
-public class AxmlPrinterPanel extends EasyPanel {
+public class AxmlPrinterPanel extends PluginPanel {
     private static final long serialVersionUID = 1L;
 
     private JPanel srcPanel;
@@ -46,22 +45,19 @@ public class AxmlPrinterPanel extends EasyPanel {
 
     public AxmlPrinterPanel() throws HeadlessException {
         super();
+    }
+
+    @Override
+    public void onChangingMenu() {
         initUI();
     }
 
-    private void initUI() {
-        String toolPath = conf.getString(Constants.AXMLPRINTER_PATH_KEY);
-        File toolFile = null;
-        if (!StringUtils.isEmpty(toolPath)) {
-            toolFile = new File(toolPath);
-        }
-        if (StringUtils.isEmpty(toolPath) || toolFile == null || !toolFile.exists() || !toolFile.isFile()) {
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, "Need Configuration", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    @Override
+    public String getPluginFilename() {
+        return "AXMLPrinter3.jar";
+    }
 
+    private void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -93,7 +89,7 @@ public class AxmlPrinterPanel extends EasyPanel {
         targetTextField.setText(conf.getString("axmlprinter.target.dir"));
 
         targetButton = new JButton("Save Dir");
-        targetButton.addActionListener(new DirectorySelectButtonActionListener("Save To", targetTextField));
+        targetButton.addActionListener(new SelectDirectoryActionListener("Save To", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -186,9 +182,7 @@ public class AxmlPrinterPanel extends EasyPanel {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                        .append(conf.getString(Constants.AXMLPRINTER_PATH_KEY)).append("\"")
-                        .append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
+                sb.append(getPluginStartupCmd()).append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
                 String cmd = sb.toString();
                 logger.info(cmd);
                 File outputFile = new File(targetFile, "AndroidManifest.xml");

@@ -31,6 +31,14 @@ public class EasyPanel extends JPanel {
         logger.info("Panel start: " + this.getClass().getSimpleName());
     }
 
+    public boolean onPreChangeMenu() {
+        return true;
+    }
+
+    public void onChangingMenu() {
+        // do nothing
+    }
+
     protected EasyFrame getFrame() {
         //Java/Swing: Obtain Window/JFrame from inside a JPanel:
         // https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel

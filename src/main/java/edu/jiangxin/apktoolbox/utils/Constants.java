@@ -23,18 +23,6 @@ public class Constants {
 
     public static final int DEFAULT_SCROLL_PANEL_HEIGHT = 400;
 
-    public static final String APKTOOL_PATH_KEY = "apktool.path";
-
-    public static final String APKSIGNER_PATH_KEY = "apksigner.path";
-
-    public static final String JD_GUI_PATH_KEY = "jd-gui.path";
-
-    public static final String LUYTEN_PATH_KEY = "luyten.path";
-
-    public static final String JADX_PATH_KEY = "jadx.path";
-
-    public static final String AXMLPRINTER_PATH_KEY = "axmlprinter.path";
-
     public static final String RAR_PATH_KEY = "rar.path";
 
     public static final String WIN_RAR_PATH_KEY = "winrar.path";
@@ -44,5 +32,7 @@ public class Constants {
     public static final String zhSimple2zhTw = "简转繁";
 
     public static final String zhTw2zhSimple = "繁转简";
+
+    public static final String MESSAGE_DIALOG_TITLE = "ERROR";
 
 }

@@ -1,34 +1,24 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
+import edu.jiangxin.apktoolbox.swing.extend.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.extend.SelectFileActionListener;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
-import org.apache.commons.lang3.StringUtils;
-
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.Utils;
 
 /**
  * @author jiangxin
  * @author 2019-04-12
  *
  */
-public class ApkSignerPanel extends EasyPanel {
+public class ApkSignerPanel extends PluginPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,56 +26,39 @@ public class ApkSignerPanel extends EasyPanel {
 
     private JTextField apkPathTextField;
 
-    private JButton apkPathButton;
-
     private JPanel keyStorePathPanel;
 
     private JTextField keyStorePathTextField;
-
-    private JButton keyStorePathButton;
 
     private JPanel keyStorePasswordPanel;
 
     private JPasswordField keyStorePasswordField;
 
-    private JLabel keyStorePasswordLable;
-
     private JPanel aliasPanel;
 
     private JTextField aliasTextField;
-
-    private JLabel aliasLable;
 
     private JPanel aliasPasswordPanel;
 
     private JPasswordField aliasPasswordField;
 
-    private JLabel aliasPasswordLable;
-
     private JPanel operationPanel;
-
-    private JButton recoverButton;
-
-    private JButton apkSignButton;
 
     public ApkSignerPanel() throws HeadlessException {
         super();
+    }
+
+    @Override
+    public void onChangingMenu() {
         initUI();
     }
 
-    private void initUI() {
-        String toolPath = conf.getString(Constants.APKSIGNER_PATH_KEY);
-        File toolFile = null;
-        if (!StringUtils.isEmpty(toolPath)) {
-            toolFile = new File(toolPath);
-        }
-        if (StringUtils.isEmpty(toolPath) || toolFile == null || !toolFile.exists() || !toolFile.isFile()) {
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, "Need Configuration", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    @Override
+    public String getPluginFilename() {
+        return "apksigner.jar";
+    }
 
+    private void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -121,11 +94,11 @@ public class ApkSignerPanel extends EasyPanel {
     private void createOptionPanel() {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        
-        recoverButton = new JButton("recover");
+
+        JButton recoverButton = new JButton("recover");
         recoverButton.addActionListener(new RecoverButtonActionListener());
 
-        apkSignButton = new JButton("apksigner");
+        JButton apkSignButton = new JButton("apksigner");
         apkSignButton.addActionListener(new ApkSignButtonActionListener());
 
         operationPanel.add(recoverButton);
@@ -139,8 +112,8 @@ public class ApkSignerPanel extends EasyPanel {
         
         aliasPasswordField = new JPasswordField();
         aliasPasswordField.setText(conf.getString("apksigner.alias.password"));
-        
-        aliasPasswordLable = new JLabel("Alias Password");
+
+        JLabel aliasPasswordLable = new JLabel("Alias Password");
 
         aliasPasswordPanel.add(aliasPasswordField);
         aliasPasswordPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -153,8 +126,8 @@ public class ApkSignerPanel extends EasyPanel {
         
         aliasTextField = new JTextField();
         aliasTextField.setText(conf.getString("apksigner.alias"));
-        
-        aliasLable = new JLabel("Alias");
+
+        JLabel aliasLable = new JLabel("Alias");
 
         aliasPanel.add(aliasTextField);
         aliasPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -167,8 +140,8 @@ public class ApkSignerPanel extends EasyPanel {
         
         keyStorePasswordField = new JPasswordField();
         keyStorePasswordField.setText(conf.getString("apksigner.keystore.password"));
-        
-        keyStorePasswordLable = new JLabel("KeyStore Password");
+
+        JLabel keyStorePasswordLable = new JLabel("KeyStore Password");
 
         keyStorePasswordPanel.add(keyStorePasswordField);
         keyStorePasswordPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -182,8 +155,8 @@ public class ApkSignerPanel extends EasyPanel {
         keyStorePathTextField = new JTextField();
         keyStorePathTextField.setText(conf.getString("apksigner.keystore.path"));
 
-        keyStorePathButton = new JButton("Select KeyStore");
-        keyStorePathButton.addActionListener(new KeyStorePathButtonActionListener());
+        JButton keyStorePathButton = new JButton("Select KeyStore");
+        keyStorePathButton.addActionListener(new SelectFileActionListener("select a keystore file", keyStorePathTextField));
 
         keyStorePathPanel.add(keyStorePathTextField);
         keyStorePathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -197,50 +170,12 @@ public class ApkSignerPanel extends EasyPanel {
         apkPathTextField = new JTextField();
         apkPathTextField.setText(conf.getString("apksigner.apk.path"));
 
-        apkPathButton = new JButton("Select APK");
-        apkPathButton.addActionListener(new ApkPathButtonActionListener());
+        JButton apkPathButton = new JButton("Select APK");
+        apkPathButton.addActionListener(new SelectFileActionListener("select a APK file", apkPathTextField));
 
         apkPathPanel.add(apkPathTextField);
         apkPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         apkPathPanel.add(apkPathButton);
-    }
-
-    private final class ApkPathButtonActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            jfc.setDialogTitle("select a APK file");
-            int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    apkPathTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
-
-    private final class KeyStorePathButtonActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            jfc.setDialogTitle("select a keystore file");
-            int ret = jfc.showDialog(new JLabel(), null);
-            switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    keyStorePathTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-            }
-
-        }
     }
     
     private final class RecoverButtonActionListener implements ActionListener {
@@ -254,9 +189,7 @@ public class ApkSignerPanel extends EasyPanel {
     }
 
     private final class ApkSignButtonActionListener implements ActionListener {
-        private File apkFile;
         private String apkPath;
-        private File keystoreFile;
         private String keystorePath;
         private String keystorePassword;
         private String alias;
@@ -264,21 +197,21 @@ public class ApkSignerPanel extends EasyPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            apkFile = new File(apkPathTextField.getText());
+            File apkFile = new File(apkPathTextField.getText());
             if (!apkFile.exists()) {
                 logger.error("srcFile is invalid");
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "apk file is invalid", "ERROR",
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "apk file is invalid", Constants.MESSAGE_DIALOG_TITLE,
                         JOptionPane.ERROR_MESSAGE);
                 apkPathTextField.requestFocus();
                 return;
             }
 
-            keystoreFile = new File(keyStorePathTextField.getText());
+            File keystoreFile = new File(keyStorePathTextField.getText());
             if (!keystoreFile.exists()) {
                 logger.error("keystoreFile is invalid");
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystore file is invalid", "ERROR",
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystore file is invalid", Constants.MESSAGE_DIALOG_TITLE,
                         JOptionPane.ERROR_MESSAGE);
                 keyStorePathTextField.requestFocus();
                 return;
@@ -299,7 +232,7 @@ public class ApkSignerPanel extends EasyPanel {
             if (StringUtils.isEmpty(keystorePassword)) {
                 logger.error("keystorePassword is invalid");
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystorePassword is invalid", "ERROR",
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystorePassword is invalid", Constants.MESSAGE_DIALOG_TITLE,
                         JOptionPane.ERROR_MESSAGE);
                 keyStorePasswordField.requestFocus();
                 return;
@@ -310,7 +243,7 @@ public class ApkSignerPanel extends EasyPanel {
             if (StringUtils.isEmpty(alias)) {
                 logger.error("alias is invalid");
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alias is invalid", "ERROR",
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alias is invalid", Constants.MESSAGE_DIALOG_TITLE,
                         JOptionPane.ERROR_MESSAGE);
                 aliasTextField.requestFocus();
                 return;
@@ -321,7 +254,7 @@ public class ApkSignerPanel extends EasyPanel {
             if (StringUtils.isEmpty(alisaPassword)) {
                 logger.error("alisaPassword is invalid");
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alisaPassword is invalid", "ERROR",
+                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alisaPassword is invalid", Constants.MESSAGE_DIALOG_TITLE,
                         JOptionPane.ERROR_MESSAGE);
                 aliasPasswordField.requestFocus();
                 return;
@@ -333,8 +266,7 @@ public class ApkSignerPanel extends EasyPanel {
 
         private String getCmd() {
             StringBuilder sb = new StringBuilder();
-            sb.append("java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\"").append(" \"")
-                    .append(conf.getString(Constants.APKSIGNER_PATH_KEY)).append("\"")
+            sb.append(getPluginStartupCmd())
                     .append(" -keystore ").append(keystorePath).append(" -pswd ").append(keystorePassword)
                     .append(" -alias ").append(alias).append(" -aliaspswd ").append(alisaPassword).append(" ")
                     .append(apkPath);

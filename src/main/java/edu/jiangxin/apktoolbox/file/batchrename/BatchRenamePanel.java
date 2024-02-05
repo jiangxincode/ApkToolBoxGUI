@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.file.batchrename;
 
-import edu.jiangxin.apktoolbox.swing.extend.DirectorySelectButtonActionListener;
+import edu.jiangxin.apktoolbox.swing.extend.SelectDirectoryActionListener;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;
@@ -130,7 +130,7 @@ public class BatchRenamePanel extends EasyPanel {
         JLabel label = new JLabel("源文件所在目录：");
         sourceTextField = new JTextField();
         JButton button = new JButton("选择");
-        button.addActionListener(new DirectorySelectButtonActionListener("Select a directory", sourceTextField));
+        button.addActionListener(new SelectDirectoryActionListener("Select a directory", sourceTextField));
         thirdLevelPanel1.add(label);
         thirdLevelPanel1.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         thirdLevelPanel1.add(sourceTextField);

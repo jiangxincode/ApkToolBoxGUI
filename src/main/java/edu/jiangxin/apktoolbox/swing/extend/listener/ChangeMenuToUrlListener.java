@@ -1,8 +1,6 @@
-package edu.jiangxin.apktoolbox.help;
+package edu.jiangxin.apktoolbox.swing.extend.listener;
 
 import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,19 +13,24 @@ import org.apache.logging.log4j.Logger;
  * @author 2019-03-31
  *
  */
-public class OpenWebsiteListener implements ActionListener {
+public class ChangeMenuToUrlListener extends ChangeMenuListener {
 
-    private static final Logger logger = LogManager.getLogger(OpenWebsiteListener.class.getSimpleName());
+    private static final Logger logger = LogManager.getLogger(ChangeMenuToUrlListener.class.getSimpleName());
 
     private String url;
 
-    public OpenWebsiteListener(String url) {
+    public ChangeMenuToUrlListener(String url) {
         super();
         this.url = url;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public boolean onPreChangeMenu() {
+        return true;
+    }
+
+    @Override
+    public void onChangeMenu() {
         URI uri;
         try {
             uri = new URI(url);
