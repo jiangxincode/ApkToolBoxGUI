@@ -1,10 +1,9 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import edu.jiangxin.apktoolbox.swing.extend.PluginPanel;
-import edu.jiangxin.apktoolbox.swing.extend.SelectDirectoryActionListener;
-import edu.jiangxin.apktoolbox.swing.extend.SelectFileActionListener;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectFileListener;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import edu.jiangxin.apktoolbox.utils.FileUtils;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -21,16 +20,12 @@ public class ApktoolPanel extends PluginPanel {
     }
 
     @Override
-    public void onChangingMenu() {
-        initUI();
-    }
-
-    @Override
     public String getPluginFilename() {
         return "apktool_2.9.2.jar";
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -121,7 +116,7 @@ public class ApktoolPanel extends PluginPanel {
             srcTextField.setText(conf.getString("apktool.decode.src.file"));
 
             JButton srcButton = new JButton(bundle.getString("choose.file.button"));
-            srcButton.addActionListener(new SelectFileActionListener("select a file", srcTextField));
+            srcButton.addActionListener(new SelectFileListener("select a file", srcTextField));
 
             srcPanel.add(srcTextField);
             srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -136,7 +131,7 @@ public class ApktoolPanel extends PluginPanel {
             targetTextField.setText(conf.getString("apktool.decode.target.dir"));
 
             JButton targetButton = new JButton(bundle.getString("save.dir.button"));
-            targetButton.addActionListener(new SelectDirectoryActionListener("Save To", targetTextField));
+            targetButton.addActionListener(new SelectDirectoryListener("Save To", targetTextField));
 
             targetPanel.add(targetTextField);
             targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -169,34 +164,16 @@ public class ApktoolPanel extends PluginPanel {
         private final class DecodeButtonActionListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File srcFile = new File(srcTextField.getText());
-                if (!srcFile.exists() || !srcFile.isFile()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApktoolDecodePanel.this, "Source file is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                            JOptionPane.ERROR_MESSAGE);
-                    srcTextField.requestFocus();
-                    return;
-                }
-                String srcPath = FileUtils.getCanonicalPathQuiet(srcFile);
+                String srcPath = checkAndGetFileContent(srcTextField, "apktool.decode.src.file", "Source file is invalid");
                 if (srcPath == null) {
                     return;
                 }
-                conf.setProperty("apktool.decode.src.file", srcPath);
-                File targetFile = new File(targetTextField.getText());
-                if (!targetFile.exists() || !targetFile.isDirectory()) {
-                    logger.error("targetFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApktoolDecodePanel.this, "Target directory is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                            JOptionPane.ERROR_MESSAGE);
-                    targetTextField.requestFocus();
-                    return;
-                }
-                String targetPath = FileUtils.getCanonicalPathQuiet(targetFile);
+
+                String targetPath = checkAndGetDirContent(targetTextField, "apktool.decode.target.dir", "Target directory is invalid");
                 if (targetPath == null) {
                     return;
                 }
-                conf.setProperty("apktool.decode.target.dir", targetPath);
+
                 String srcBaseName = FilenameUtils.getBaseName(srcPath);
                 StringBuilder sb = new StringBuilder();
                 sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(" d ")
@@ -231,7 +208,7 @@ public class ApktoolPanel extends PluginPanel {
             srcTextField.setText(conf.getString("apktool.rebuild.src.dir"));
 
             JButton srcButton = new JButton(bundle.getString("choose.dir.button"));
-            srcButton.addActionListener(new SelectDirectoryActionListener("Select Directory", srcTextField));
+            srcButton.addActionListener(new SelectDirectoryListener("Select Directory", srcTextField));
 
             srcPanel.add(srcTextField);
             srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -246,7 +223,7 @@ public class ApktoolPanel extends PluginPanel {
             targetTextField.setText(conf.getString("apktool.rebuild.target.file"));
 
             JButton targetButton = new JButton(bundle.getString("save.file.button"));
-            targetButton.addActionListener(new SelectFileActionListener("save to", targetTextField, new ApktoolRebuildPanel.ApkFileFilter()));
+            targetButton.addActionListener(new SelectFileListener("save to", targetTextField, new ApktoolRebuildPanel.ApkFileFilter()));
 
             targetPanel.add(targetTextField);
             targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -274,35 +251,16 @@ public class ApktoolPanel extends PluginPanel {
         private final class RebuildButtonActionListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File srcFile = new File(srcTextField.getText());
-                if (!srcFile.exists() || !srcFile.isDirectory()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApktoolRebuildPanel.this, "Source directory is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                            JOptionPane.ERROR_MESSAGE);
-                    srcTextField.requestFocus();
-                    return;
-                }
-                String srcPath = FileUtils.getCanonicalPathQuiet(srcFile);
+                String srcPath = checkAndGetDirContent(srcTextField, "apktool.rebuild.src.dir", "Source directory is invalid");
                 if (srcPath == null) {
                     return;
                 }
-                conf.setProperty("apktool.rebuild.src.dir", srcPath);
-                File targetFile = new File(targetTextField.getText());
-                File targetParentFile = targetFile.getParentFile();
-                if (!targetParentFile.exists() || !targetParentFile.isDirectory()) {
-                    logger.error("targetFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(ApktoolRebuildPanel.this, "Target file is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                            JOptionPane.ERROR_MESSAGE);
-                    targetTextField.requestFocus();
-                    return;
-                }
-                String targetPath = FileUtils.getCanonicalPathQuiet(targetFile);
+
+                String targetPath = checkAndGetNewFileContent(targetTextField, "apktool.rebuild.target.file", "Target file is invalid");
                 if (targetPath == null) {
                     return;
                 }
-                conf.setProperty("apktool.rebuild.target.file", targetPath);
+
                 StringBuilder sb = new StringBuilder();
                 sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(" b ")
                         .append(srcPath).append(" -o ").append(targetPath);

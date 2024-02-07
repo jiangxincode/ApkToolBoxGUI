@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import edu.jiangxin.apktoolbox.swing.extend.PluginPanel;
-import edu.jiangxin.apktoolbox.swing.extend.SelectFileActionListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectFileListener;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author jiangxin
@@ -22,35 +20,18 @@ public class ApkSignerPanel extends PluginPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private JPanel apkPathPanel;
-
     private JTextField apkPathTextField;
-
-    private JPanel keyStorePathPanel;
 
     private JTextField keyStorePathTextField;
 
-    private JPanel keyStorePasswordPanel;
-
     private JPasswordField keyStorePasswordField;
-
-    private JPanel aliasPanel;
 
     private JTextField aliasTextField;
 
-    private JPanel aliasPasswordPanel;
-
     private JPasswordField aliasPasswordField;
-
-    private JPanel operationPanel;
 
     public ApkSignerPanel() throws HeadlessException {
         super();
-    }
-
-    @Override
-    public void onChangingMenu() {
-        initUI();
     }
 
     @Override
@@ -58,42 +39,33 @@ public class ApkSignerPanel extends PluginPanel {
         return "apksigner.jar";
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
         createApkPathPanel();
-        add(apkPathPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createKeyStorePathPanel();
-        add(keyStorePathPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createKeyStorePasswordPanel();
-        add(keyStorePasswordPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createAliasPanel();
-        add(aliasPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createAliasPasswordPanel();
-        add(aliasPasswordPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createOptionPanel();
-        add(operationPanel);
     }
 
     private void createOptionPanel() {
-        operationPanel = new JPanel();
+        JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        add(operationPanel);
 
         JButton recoverButton = new JButton("recover");
         recoverButton.addActionListener(new RecoverButtonActionListener());
@@ -107,8 +79,9 @@ public class ApkSignerPanel extends PluginPanel {
     }
 
     private void createAliasPasswordPanel() {
-        aliasPasswordPanel = new JPanel();
+        JPanel aliasPasswordPanel = new JPanel();
         aliasPasswordPanel.setLayout(new BoxLayout(aliasPasswordPanel, BoxLayout.X_AXIS));
+        add(aliasPasswordPanel);
         
         aliasPasswordField = new JPasswordField();
         aliasPasswordField.setText(conf.getString("apksigner.alias.password"));
@@ -121,8 +94,9 @@ public class ApkSignerPanel extends PluginPanel {
     }
 
     private void createAliasPanel() {
-        aliasPanel = new JPanel();
+        JPanel aliasPanel = new JPanel();
         aliasPanel.setLayout(new BoxLayout(aliasPanel, BoxLayout.X_AXIS));
+        add(aliasPanel);
         
         aliasTextField = new JTextField();
         aliasTextField.setText(conf.getString("apksigner.alias"));
@@ -135,8 +109,9 @@ public class ApkSignerPanel extends PluginPanel {
     }
 
     private void createKeyStorePasswordPanel() {
-        keyStorePasswordPanel = new JPanel();
+        JPanel keyStorePasswordPanel = new JPanel();
         keyStorePasswordPanel.setLayout(new BoxLayout(keyStorePasswordPanel, BoxLayout.X_AXIS));
+        add(keyStorePasswordPanel);
         
         keyStorePasswordField = new JPasswordField();
         keyStorePasswordField.setText(conf.getString("apksigner.keystore.password"));
@@ -149,14 +124,15 @@ public class ApkSignerPanel extends PluginPanel {
     }
 
     private void createKeyStorePathPanel() {
-        keyStorePathPanel = new JPanel();
+        JPanel keyStorePathPanel = new JPanel();
         keyStorePathPanel.setLayout(new BoxLayout(keyStorePathPanel, BoxLayout.X_AXIS));
+        add(keyStorePathPanel);
         
         keyStorePathTextField = new JTextField();
         keyStorePathTextField.setText(conf.getString("apksigner.keystore.path"));
 
         JButton keyStorePathButton = new JButton("Select KeyStore");
-        keyStorePathButton.addActionListener(new SelectFileActionListener("select a keystore file", keyStorePathTextField));
+        keyStorePathButton.addActionListener(new SelectFileListener("select a keystore file", keyStorePathTextField));
 
         keyStorePathPanel.add(keyStorePathTextField);
         keyStorePathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -164,14 +140,15 @@ public class ApkSignerPanel extends PluginPanel {
     }
 
     private void createApkPathPanel() {
-        apkPathPanel = new JPanel();
+        JPanel apkPathPanel = new JPanel();
         apkPathPanel.setLayout(new BoxLayout(apkPathPanel, BoxLayout.X_AXIS));
+        add(apkPathPanel);
 
         apkPathTextField = new JTextField();
         apkPathTextField.setText(conf.getString("apksigner.apk.path"));
 
         JButton apkPathButton = new JButton("Select APK");
-        apkPathButton.addActionListener(new SelectFileActionListener("select a APK file", apkPathTextField));
+        apkPathButton.addActionListener(new SelectFileListener("select a APK file", apkPathTextField));
 
         apkPathPanel.add(apkPathTextField);
         apkPathPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -189,88 +166,41 @@ public class ApkSignerPanel extends PluginPanel {
     }
 
     private final class ApkSignButtonActionListener implements ActionListener {
-        private String apkPath;
-        private String keystorePath;
-        private String keystorePassword;
-        private String alias;
-        private String alisaPassword;
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            File apkFile = new File(apkPathTextField.getText());
-            if (!apkFile.exists()) {
-                logger.error("srcFile is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "apk file is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                        JOptionPane.ERROR_MESSAGE);
-                apkPathTextField.requestFocus();
+            String apkPath = checkAndGetFileContent(apkPathTextField, "apksigner.apk.path", "apk file is invalid");
+            if (StringUtils.isEmpty(apkPath)) {
                 return;
             }
 
-            File keystoreFile = new File(keyStorePathTextField.getText());
-            if (!keystoreFile.exists()) {
-                logger.error("keystoreFile is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystore file is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                        JOptionPane.ERROR_MESSAGE);
-                keyStorePathTextField.requestFocus();
+            String keystorePath = checkAndGetFileContent(keyStorePathTextField, "apksigner.keystore.path", "keystore file is invalid");
+            if (StringUtils.isEmpty(keystorePath)) {
                 return;
             }
-            
-            try {
-                apkPath = apkFile.getCanonicalPath();
-                keystorePath = keystoreFile.getCanonicalPath();
-            } catch (IOException e2) {
-                logger.error("getCanonicalPath fail");
-                return;
-            }
-            
-            conf.setProperty("apksigner.apk.path", apkPath);
-            conf.setProperty("apksigner.keystore.path", keystorePath);
 
-            keystorePassword = keyStorePasswordField.getText();
+            String keystorePassword = checkAndGetStringContent(keyStorePasswordField, "apksigner.keystore.password", "keystorePassword is invalid");
             if (StringUtils.isEmpty(keystorePassword)) {
-                logger.error("keystorePassword is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "keystorePassword is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                        JOptionPane.ERROR_MESSAGE);
-                keyStorePasswordField.requestFocus();
                 return;
             }
-            conf.setProperty("apksigner.keystore.password", keystorePassword);
 
-            alias = aliasTextField.getText();
+            String alias = checkAndGetStringContent(aliasTextField, "apksigner.alias", "alias is invalid");
             if (StringUtils.isEmpty(alias)) {
-                logger.error("alias is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alias is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                        JOptionPane.ERROR_MESSAGE);
-                aliasTextField.requestFocus();
                 return;
             }
-            conf.setProperty("apksigner.alias", alias);
 
-            alisaPassword = aliasPasswordField.getText();
-            if (StringUtils.isEmpty(alisaPassword)) {
-                logger.error("alisaPassword is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(ApkSignerPanel.this, "alisaPassword is invalid", Constants.MESSAGE_DIALOG_TITLE,
-                        JOptionPane.ERROR_MESSAGE);
-                aliasPasswordField.requestFocus();
+            String aliasPassword = checkAndGetStringContent(aliasPasswordField, "apksigner.alias.password", "aliasPassword is invalid");
+            if (StringUtils.isEmpty(aliasPassword)) {
                 return;
             }
-            conf.setProperty("apksigner.alias.password", alisaPassword);
 
-            Utils.blockedExecutor(getCmd());
-        }
-
-        private String getCmd() {
             StringBuilder sb = new StringBuilder();
             sb.append(getPluginStartupCmd())
                     .append(" -keystore ").append(keystorePath).append(" -pswd ").append(keystorePassword)
-                    .append(" -alias ").append(alias).append(" -aliaspswd ").append(alisaPassword).append(" ")
+                    .append(" -alias ").append(alias).append(" -aliaspswd ").append(aliasPassword).append(" ")
                     .append(apkPath);
-            return sb.toString();
+
+            Utils.blockedExecutor(sb.toString());
         }
     }
 }

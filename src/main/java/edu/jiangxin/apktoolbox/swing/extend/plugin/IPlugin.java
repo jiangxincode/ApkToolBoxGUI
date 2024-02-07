@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.swing.extend.download;
+package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
 import edu.jiangxin.apktoolbox.utils.Utils;
 

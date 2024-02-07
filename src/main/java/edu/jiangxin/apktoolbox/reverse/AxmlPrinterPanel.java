@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.reverse;
 
-import edu.jiangxin.apktoolbox.swing.extend.SelectDirectoryActionListener;
-import edu.jiangxin.apktoolbox.swing.extend.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.ProcessLogOutputStream;
 import org.apache.commons.exec.CommandLine;
@@ -27,29 +27,12 @@ import java.util.zip.ZipFile;
 public class AxmlPrinterPanel extends PluginPanel {
     private static final long serialVersionUID = 1L;
 
-    private JPanel srcPanel;
-
     private JTextField srcTextField;
-
-    private JButton srcButton;
-
-    private JPanel targetPanel;
 
     private JTextField targetTextField;
 
-    private JButton targetButton;
-
-    private JPanel operationPanel;
-
-    private JButton getFileButton;
-
     public AxmlPrinterPanel() throws HeadlessException {
         super();
-    }
-
-    @Override
-    public void onChangingMenu() {
-        initUI();
     }
 
     @Override
@@ -57,39 +40,41 @@ public class AxmlPrinterPanel extends PluginPanel {
         return "AXMLPrinter3.jar";
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
         createSrcPanel();
-        add(srcPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createTargetPanel();
-        add(targetPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createOperationPanel();
-        add(operationPanel);
     }
 
     private void createOperationPanel() {
-        operationPanel = new JPanel();
+        JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        getFileButton = new JButton("Get File");
+        add(operationPanel);
+
+        JButton getFileButton = new JButton("Get File");
         getFileButton.addActionListener(new GetFileButtonActionListener());
 
         operationPanel.add(getFileButton);
     }
 
     private void createTargetPanel() {
-        targetPanel = new JPanel();
+        JPanel targetPanel = new JPanel();
         targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+        add(targetPanel);
+
         targetTextField = new JTextField();
         targetTextField.setText(conf.getString("axmlprinter.target.dir"));
 
-        targetButton = new JButton("Save Dir");
-        targetButton.addActionListener(new SelectDirectoryActionListener("Save To", targetTextField));
+        JButton targetButton = new JButton("Save Dir");
+        targetButton.addActionListener(new SelectDirectoryListener("Save To", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -97,12 +82,14 @@ public class AxmlPrinterPanel extends PluginPanel {
     }
 
     private void createSrcPanel() {
-        srcPanel = new JPanel();
+        JPanel srcPanel = new JPanel();
         srcPanel.setLayout(new BoxLayout(srcPanel, BoxLayout.X_AXIS));
+        add(srcPanel);
+
         srcTextField = new JTextField();
         srcTextField.setText(conf.getString("axmlprinter.src.file"));
 
-        srcButton = new JButton("Source File");
+        JButton srcButton = new JButton("Source File");
         srcButton.addActionListener(new SrcButtonActionListener());
 
         srcPanel.add(srcTextField);
@@ -132,41 +119,17 @@ public class AxmlPrinterPanel extends PluginPanel {
     private final class GetFileButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            File srcFile = new File(srcTextField.getText());
-            if (!srcFile.exists() || !srcFile.isFile()) {
-                logger.error("srcFile is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(AxmlPrinterPanel.this, "Source file is invalid", "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
-                srcTextField.requestFocus();
+            String srcPath = checkAndGetFileContent(srcTextField, "axmlprinter.src.file", "Source file is invalid");
+            if (srcPath == null) {
                 return;
             }
-            String srcPath;
-            try {
-                srcPath = srcFile.getCanonicalPath();
-            } catch (IOException e2) {
-                logger.error("getCanonicalPath fail");
+
+            String targetPath = checkAndGetDirContent(targetTextField, "axmlprinter.target.dir", "Target dir is invalid");
+            if (targetPath == null) {
                 return;
             }
-            conf.setProperty("axmlprinter.src.file", srcPath);
-            File targetFile = new File(targetTextField.getText());
-            if (!targetFile.exists() || !targetFile.isDirectory()) {
-                logger.error("targetFile is invalid");
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(AxmlPrinterPanel.this, "Target dir is invalid", "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
-                targetTextField.requestFocus();
-                return;
-            }
-            String targetPath;
-            try {
-                targetPath = targetFile.getCanonicalPath();
-            } catch (IOException e2) {
-                logger.error("getCanonicalPath fail");
-                return;
-            }
-            conf.setProperty("axmlprinter.target.dir", targetPath);
-            try (ZipFile zip = new ZipFile(srcFile)) {
+
+            try (ZipFile zip = new ZipFile(srcPath)) {
                 Enumeration<?> entries = zip.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -185,7 +148,7 @@ public class AxmlPrinterPanel extends PluginPanel {
                 sb.append(getPluginStartupCmd()).append(" ").append(new File(targetPath, "AndroidManifest.xml.orig").getCanonicalPath());
                 String cmd = sb.toString();
                 logger.info(cmd);
-                File outputFile = new File(targetFile, "AndroidManifest.xml");
+                File outputFile = new File(new File(targetPath), "AndroidManifest.xml");
                 try (FileOutputStream outStream = new FileOutputStream(outputFile);
                      ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
                 ) {

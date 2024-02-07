@@ -1,15 +1,16 @@
 package edu.jiangxin.apktoolbox.swing.extend;
 
-import java.awt.*;
-import java.util.ResourceBundle;
-
-import javax.swing.*;
-
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
+import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.jiangxin.apktoolbox.utils.Utils;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.util.ResourceBundle;
 
 /**
  * @author jiangxin
@@ -47,5 +48,71 @@ public class EasyPanel extends JPanel {
             return (EasyFrame) window;
         }
         return null;
+    }
+
+    protected String checkAndGetFileContent(JTextField textField, String key, String msg) {
+        File file = new File(textField.getText());
+        if (!file.exists() || !file.isFile()) {
+            logger.error(msg);
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, msg, Constants.MESSAGE_DIALOG_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
+            textField.requestFocus();
+            return null;
+        }
+        String path = FileUtils.getCanonicalPathQuiet(file);
+        if (path != null) {
+            conf.setProperty(key, path);
+        }
+        return path;
+    }
+
+    protected String checkAndGetNewFileContent(JTextField textField, String key, String msg) {
+        File file = new File(textField.getText());
+        File parentFile = file.getParentFile();
+        if (!parentFile.exists() || !parentFile.isDirectory()) {
+            logger.error(msg);
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, msg, Constants.MESSAGE_DIALOG_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
+            textField.requestFocus();
+            return null;
+        }
+        String path = FileUtils.getCanonicalPathQuiet(file);
+        if (path != null) {
+            conf.setProperty(key, path);
+        }
+        return path;
+    }
+
+    protected String checkAndGetDirContent(JTextField textField, String key, String msg) {
+        File file = new File(textField.getText());
+        if (!file.exists() || !file.isDirectory()) {
+            logger.error(msg);
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, msg, Constants.MESSAGE_DIALOG_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
+            textField.requestFocus();
+            return null;
+        }
+        String path = FileUtils.getCanonicalPathQuiet(file);
+        if (path != null) {
+            conf.setProperty(key, path);
+        }
+        return path;
+    }
+
+    protected String checkAndGetStringContent(JTextField textField, String key, String msg) {
+        String content = textField.getText();
+        if (content == null || content.isEmpty()) {
+            logger.error(msg);
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, msg, Constants.MESSAGE_DIALOG_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
+            textField.requestFocus();
+            return null;
+        }
+        conf.setProperty(key, content);
+        return content;
     }
 }
