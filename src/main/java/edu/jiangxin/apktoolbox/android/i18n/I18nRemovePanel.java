@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.android.i18n;
 
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,12 +14,11 @@ import java.util.regex.Pattern;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,25 +33,13 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 public class I18nRemovePanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    List<I18nInfo> infos = new ArrayList<I18nInfo>();
+    List<I18nFindLongestPanel.I18nInfo> infos = new ArrayList<>();
 
     private static final String CHARSET = "UTF-8";
 
-    private JPanel sourcePanel;
-
     private JTextField srcTextField;
 
-    private JButton srcButton;
-
-    private JPanel itemPanel;
-
     private JTextField itemTextField;
-
-    private JLabel itemLabel;
-
-    private JPanel operationPanel;
-
-    private JButton removeButton;
 
     public I18nRemovePanel() throws HeadlessException {
         super();
@@ -62,57 +48,33 @@ public class I18nRemovePanel extends EasyPanel {
         setLayout(boxLayout);
 
         createSourcePanel();
-        add(sourcePanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createItemPanel();
-        add(itemPanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createOperationPanel();
-        add(operationPanel);
     }
 
     private void createOperationPanel() {
-        operationPanel = new JPanel();
+        JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        
-        removeButton = new JButton(bundle.getString("android.i18n.remove.title"));
+        add(operationPanel);
+
+        JButton removeButton = new JButton(bundle.getString("android.i18n.remove.title"));
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 infos.clear();
-                File srcFile = new File(srcTextField.getText());
-                if (!srcFile.exists() || !srcFile.isDirectory()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nRemovePanel.this, "Source directory is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    srcTextField.requestFocus();
-                    return;
-                }
-                String srcPath;
-                try {
-                    srcPath = srcFile.getCanonicalPath();
-                } catch (IOException e2) {
-                    logger.error("getCanonicalPath fail");
-                    return;
-                }
-                conf.setProperty("android.i18n.remove.src.dir", srcPath);
 
-                String item = itemTextField.getText();
+                String srcPath = checkAndGetDirContent(srcTextField, "android.i18n.remove.src.dir", "Source directory is invalid");
+                if (StringUtils.isEmpty(srcPath)) {
+                    return;
+                }
+
+                String item = checkAndGetStringContent(itemTextField, "android.i18n.remove.items", "Items is empty");
                 if (StringUtils.isEmpty(item)) {
-                    logger.error("item is empty");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nRemovePanel.this, "item is empty", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    itemTextField.requestFocus();
                     return;
                 }
 
-                conf.setProperty("android.i18n.remove.items", item);
                 remove(srcPath, itemTextField.getText());
             }
         });
@@ -121,13 +83,14 @@ public class I18nRemovePanel extends EasyPanel {
     }
 
     private void createItemPanel() {
-        itemPanel = new JPanel();
+        JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+        add(itemPanel);
         
         itemTextField = new JTextField();
         itemTextField.setText(conf.getString("android.i18n.remove.items"));
 
-        itemLabel = new JLabel("Items");
+        JLabel itemLabel = new JLabel("Items");
 
         itemPanel.add(itemTextField);
         itemPanel.add(Box.createHorizontalGlue());
@@ -135,31 +98,15 @@ public class I18nRemovePanel extends EasyPanel {
     }
 
     private void createSourcePanel() {
-        sourcePanel = new JPanel();
+        JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
+        add(sourcePanel);
         
         srcTextField = new JTextField();
         srcTextField.setText(conf.getString("android.i18n.remove.src.dir"));
 
-        srcButton = new JButton("Source Directory");
-        srcButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jfc.setDialogTitle("select a directory");
-                int ret = jfc.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    srcTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-                }
-
-            }
-        });
+        JButton srcButton = new JButton("Source Directory");
+        srcButton.addActionListener(new SelectDirectoryListener("select a directory", srcTextField));
 
         sourcePanel.add(srcTextField);
         sourcePanel.add(Box.createHorizontalGlue());

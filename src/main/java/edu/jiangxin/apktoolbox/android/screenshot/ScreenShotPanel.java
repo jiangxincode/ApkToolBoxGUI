@@ -25,27 +25,13 @@ import java.io.IOException;
 public class ScreenShotPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    private JPanel directoryPanel;
-
     private JTextField directoryTextField;
 
-    private JButton directoryButton;
-
-    private JPanel fileNamePanel;
-
     private JTextField fileNameTextField;
-
-    private JButton fileNameButton;
-
-    private JPanel screenshotPanel;
 
     private JCheckBox openCheckBox;
 
     private JCheckBox copyCheckBox;
-
-    private JButton screenshotButton;
-
-    private JButton getExistButton;
 
     public ScreenShotPanel() throws HeadlessException {
         super();
@@ -57,22 +43,16 @@ public class ScreenShotPanel extends EasyPanel {
         setLayout(boxLayout);
 
         createDirectoryPanel();
-        add(directoryPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createFileNamePanel();
-        add(fileNamePanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createScreenshotPanel();
-        add(screenshotPanel);
     }
 
     private void createScreenshotPanel() {
-        screenshotPanel = new JPanel();
+        JPanel screenshotPanel = new JPanel();
         screenshotPanel.setLayout(new BoxLayout(screenshotPanel, BoxLayout.X_AXIS));
+        add(screenshotPanel);
 
         openCheckBox = new JCheckBox("Open Dir");
         openCheckBox.setSelected(false);
@@ -80,10 +60,10 @@ public class ScreenShotPanel extends EasyPanel {
         copyCheckBox = new JCheckBox("Copy Pic");
         copyCheckBox.setSelected(false);
 
-        screenshotButton = new JButton("Sceenshot");
+        JButton screenshotButton = new JButton("Sceenshot");
         screenshotButton.addActionListener(new ScreenshotButtonActionListener());
 
-        getExistButton = new JButton("Get Exist");
+        JButton getExistButton = new JButton("Get Exist");
         getExistButton.addActionListener(new GetExistButtonActionListener());
 
         screenshotPanel.add(openCheckBox);
@@ -96,30 +76,32 @@ public class ScreenShotPanel extends EasyPanel {
     }
 
     private void createFileNamePanel() {
-        fileNamePanel = new JPanel();
+        JPanel fileNamePanel = new JPanel();
+        fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
+        add(fileNamePanel);
 
         fileNameTextField = new JTextField();
         fileNameTextField.setToolTipText("timestamp default(for example: 20180101122345.png)");
 
-        fileNameButton = new JButton("File name");
+        JButton fileNameButton = new JButton("File name");
 
-        fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
         fileNamePanel.add(fileNameTextField);
         fileNamePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         fileNamePanel.add(fileNameButton);
     }
 
     private void createDirectoryPanel() {
-        directoryPanel = new JPanel();
+        JPanel directoryPanel = new JPanel();
+        directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
+        add(directoryPanel);
 
         directoryTextField = new JTextField();
         directoryTextField.setText(conf.getString("screenshot.save.dir", System.getenv("USERPROFILE")));
         directoryTextField.setTransferHandler(new DirectoryTextFieldTransferHandler());
 
-        directoryButton = new JButton("Save Directory");
+        JButton directoryButton = new JButton("Save Directory");
         directoryButton.addActionListener(new DirectoryButtonActionListener());
 
-        directoryPanel.setLayout(new BoxLayout(directoryPanel, BoxLayout.X_AXIS));
         directoryPanel.add(directoryTextField);
         directoryPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         directoryPanel.add(directoryButton);

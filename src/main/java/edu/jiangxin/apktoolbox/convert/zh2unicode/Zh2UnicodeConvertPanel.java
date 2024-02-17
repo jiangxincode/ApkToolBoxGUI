@@ -8,7 +8,6 @@ import java.awt.*;
 import java.io.UnsupportedEncodingException;
 
 public class Zh2UnicodeConvertPanel extends EasyPanel {
-    private JPanel textPanel;
     private JPanel zhPanel;
 
     private JTextArea zhTextArea;
@@ -16,8 +15,6 @@ public class Zh2UnicodeConvertPanel extends EasyPanel {
     private JPanel unicodePanel;
 
     private JTextArea unicodeTextArea;
-
-    private JPanel operationPanel;
 
     public Zh2UnicodeConvertPanel() throws HeadlessException {
         super();
@@ -29,17 +26,14 @@ public class Zh2UnicodeConvertPanel extends EasyPanel {
         setLayout(boxLayout);
 
         createTextPanel();
-        add(textPanel);
-
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createOperationPanel();
-        add(operationPanel);
     }
 
     private void createTextPanel() {
-        textPanel = new JPanel();
+        JPanel textPanel = new JPanel();
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
+        add(textPanel);
 
         createZhPanel();
         textPanel.add(zhPanel);
@@ -81,8 +75,9 @@ public class Zh2UnicodeConvertPanel extends EasyPanel {
     }
 
     private void createOperationPanel() {
-        operationPanel = new JPanel();
+        JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
+        add(operationPanel);
 
         JButton zh2UnicodeConvertBtn = new JButton("中文->Unicode");
         zh2UnicodeConvertBtn.addActionListener(e -> {

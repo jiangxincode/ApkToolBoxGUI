@@ -15,18 +15,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,27 +56,11 @@ public class I18nAddPanel extends EasyPanel {
 
     private static Map<String, String> replace = new HashedMap<String, String>();
 
-    private JPanel sourcePanel;
-
     private JTextField srcTextField;
-
-    private JButton srcButton;
-
-    private JPanel targetPanel;
 
     private JTextField targetTextField;
 
-    private JButton targetButton;
-
-    private JPanel itemPanel;
-
     private JTextField itemTextField;
-
-    private JLabel itemLabel;
-
-    private JPanel operationPanel;
-
-    private JButton addButton;
 
     static {
         replace.put("&quot;", "jiangxin001");
@@ -88,87 +73,47 @@ public class I18nAddPanel extends EasyPanel {
         setLayout(boxLayout);
 
         createSourcePanel();
-        add(sourcePanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createTargetPanel();
-        add(targetPanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createItemPanel();
-        add(itemPanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createOperationPanel();
-        add(operationPanel);
     }
 
     private void createOperationPanel() {
-        operationPanel = new JPanel();
+        JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        
-        addButton = new JButton(bundle.getString("android.i18n.add.title"));
+        add(operationPanel);
+
+        JButton addButton = new JButton(bundle.getString("android.i18n.add.title"));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File srcFile = new File(srcTextField.getText());
-                if (!srcFile.exists() || !srcFile.isDirectory()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nAddPanel.this, "Source directory is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    srcTextField.requestFocus();
+                String srcPath = checkAndGetDirContent(srcTextField, "android.i18n.add.src.dir", "Source directory is invalid");
+                if (srcPath == null) {
                     return;
                 }
-                String srcPath;
-                try {
-                    srcPath = srcFile.getCanonicalPath();
-                } catch (IOException e2) {
-                    logger.error("getCanonicalPath fail");
-                    return;
-                }
-                conf.setProperty("android.i18n.add.src.dir", srcPath);
 
-                List<String> targetPaths = new ArrayList<>();
-                String[] tmps = targetTextField.getText().split(";");
-                for (String tmp : tmps) {
-                    File targetFile = new File(tmp);
-                    if (!targetFile.exists() || !targetFile.isDirectory()) {
-                        logger.error("targetFile is invalid");
+                String targetPath = checkAndGetDirContent(targetTextField, "android.i18n.add.target.dir", "Target directory is invalid");
+                if (targetPath == null) {
+                    return;
+                }
+
+                String itemStr = checkAndGetStringContent(itemTextField, "android.i18n.add.items", "Items is empty");
+                if (itemStr == null) {
+                    return;
+                }
+
+                List<String> items = new ArrayList<>(Arrays.asList(itemStr.split(";")));
+
+                for (String item : items) {
+                    int ret = innerProcessor(srcPath, targetPath, item);
+                    if (ret != 0) {
                         Toolkit.getDefaultToolkit().beep();
-                        JOptionPane.showMessageDialog(I18nAddPanel.this, "Target directory is invalid", "ERROR",
+                        JOptionPane.showMessageDialog(I18nAddPanel.this, "Failed, please see the log", "ERROR",
                                 JOptionPane.ERROR_MESSAGE);
-                        targetTextField.requestFocus();
                         return;
-                    }
-                    try {
-                        targetPaths.add(targetFile.getCanonicalPath());
-                    } catch (IOException e1) {
-                        logger.error("getCanonicalPath fail");
-                        return;
-                    }
-                }
-                conf.setProperty("android.i18n.add.target.dir", targetTextField.getText());
-
-                List<String> items = new ArrayList<>();
-                tmps = itemTextField.getText().split(";");
-                for (String tmp : tmps) {
-                    items.add(tmp);
-                }
-                conf.setProperty("android.i18n.add.items", itemTextField.getText());
-
-                for (String targetPath : targetPaths) {
-                    for (String item : items) {
-                        int ret = innerProcessor(srcPath, targetPath, item);
-                        if (ret != 0) {
-                            Toolkit.getDefaultToolkit().beep();
-                            JOptionPane.showMessageDialog(I18nAddPanel.this, "Failed, please see the log", "ERROR",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
                     }
                 }
             }
@@ -178,13 +123,14 @@ public class I18nAddPanel extends EasyPanel {
     }
 
     private void createItemPanel() {
-        itemPanel = new JPanel();
+        JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+        add(itemPanel);
         
         itemTextField = new JTextField();
         itemTextField.setText(conf.getString("android.i18n.add.items"));
 
-        itemLabel = new JLabel("Items");
+        JLabel itemLabel = new JLabel("Items");
 
         itemPanel.add(itemTextField);
         itemPanel.add(Box.createHorizontalGlue());
@@ -192,32 +138,15 @@ public class I18nAddPanel extends EasyPanel {
     }
 
     private void createTargetPanel() {
-        targetPanel = new JPanel();
+        JPanel targetPanel = new JPanel();
         targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+        add(targetPanel);
         
         targetTextField = new JTextField();
         targetTextField.setText(conf.getString("android.i18n.add.target.dir"));
 
-        targetButton = new JButton("Save Directory");
-        targetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jfc.setDialogTitle("save to");
-                int ret = jfc.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    targetTextField.setText(file.getAbsolutePath());
-                    break;
-
-                default:
-                    break;
-                }
-
-            }
-        });
+        JButton targetButton = new JButton("Save Directory");
+        targetButton.addActionListener(new SelectDirectoryListener("save to", targetTextField));
 
         targetPanel.add(targetTextField);
         targetPanel.add(Box.createHorizontalGlue());
@@ -225,31 +154,15 @@ public class I18nAddPanel extends EasyPanel {
     }
 
     private void createSourcePanel() {
-        sourcePanel = new JPanel();
+        JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
+        add(sourcePanel);
         
         srcTextField = new JTextField();
         srcTextField.setText(conf.getString("android.i18n.add.src.dir"));
 
-        srcButton = new JButton("Source Directory");
-        srcButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser jFileChooser = new JFileChooser();
-                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jFileChooser.setDialogTitle("select a directory");
-                int ret = jFileChooser.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jFileChooser.getSelectedFile();
-                    srcTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-                }
-
-            }
-        });
+        JButton srcButton = new JButton("Source Directory");
+        srcButton.addActionListener(new SelectDirectoryListener("select a directory", srcTextField));
 
         sourcePanel.add(srcTextField);
         sourcePanel.add(Box.createHorizontalGlue());

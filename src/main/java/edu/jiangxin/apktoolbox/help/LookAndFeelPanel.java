@@ -14,13 +14,9 @@ public class LookAndFeelPanel extends EasyPanel {
 
     private JPanel optionPanel;
 
-    private JLabel typeLabel;
-
     private JComboBox<String> typeComboBox;
 
     private JPanel operationPanel;
-
-    private JButton ApplyButton;
 
     static {
         // Avoid install duplicated Look And Feel, we install them in static block
@@ -52,7 +48,7 @@ public class LookAndFeelPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 
-        typeLabel = new JLabel("Type:");
+        JLabel typeLabel = new JLabel("Type:");
         typeComboBox = new JComboBox<>();
 
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
@@ -78,10 +74,10 @@ public class LookAndFeelPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        ApplyButton = new JButton("Apply");
-        ApplyButton.addActionListener(new ApplyButtonActionListener());
+        JButton applyButton = new JButton("Apply");
+        applyButton.addActionListener(new ApplyButtonActionListener());
 
-        operationPanel.add(ApplyButton);
+        operationPanel.add(applyButton);
     }
 
     private final class ApplyButtonActionListener implements ActionListener {

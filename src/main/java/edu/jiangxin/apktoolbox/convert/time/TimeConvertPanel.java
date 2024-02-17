@@ -19,41 +19,19 @@ import static java.util.Calendar.*;
 
 public class TimeConvertPanel extends EasyPanel {
 
-    private JPanel convertPanel;
-
-    private JLabel timestampLabel;
-
     private JSpinner timestamp2Spinner;
 
     private JComboBox<Object> timestampComboBox;
 
-    private JLabel timeLabel;
-
     private JTextField timeTextField;
 
-    private JPanel convertButtonsPanel;
-
-    private JButton timestamp2TimeButton;
-
-    private JButton time2TimestampButton;
-
-    private JPanel currentPanel;
-
-    private JLabel currentTimestampLabel;
-
     private JTextField currentTimestampTextField;
-
-    private JLabel currentTimeTitleLabel;
 
     private JTextField currentTimeTextField;
 
     private JButton pauseButton;
 
     private boolean isPaused;
-
-    private JPanel commentPanel;
-
-    private JPanel timezonePanel;
 
     private JFormattedTextField inTimeTextField;
     private JComboBox inTimezoneComboBox;
@@ -82,28 +60,24 @@ public class TimeConvertPanel extends EasyPanel {
         setLayout(boxLayout);
 
         createConvertPanel();
-        add(convertPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
         createConvertButtonsPanel();
-        add(convertButtonsPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));
 
         createCurrentPanel();
-        add(currentPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));
 
         createCommentPanel();
-        add(commentPanel);
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));
 
         createTimezonePanel();
-        add(timezonePanel);
     }
 
     private void createConvertPanel() {
-        convertPanel = new JPanel();
+        JPanel convertPanel = new JPanel();
         convertPanel.setLayout(new BoxLayout(convertPanel, BoxLayout.X_AXIS));
+        add(convertPanel);
 
         JPanel timestampPanel = new JPanel();
         timestampPanel.setLayout(new BoxLayout(timestampPanel, BoxLayout.X_AXIS));
@@ -115,7 +89,7 @@ public class TimeConvertPanel extends EasyPanel {
         convertPanel.add(Box.createHorizontalStrut(40));
         convertPanel.add(timePanel);
 
-        timestampLabel = new JLabel("TimeStamp: ");
+        JLabel timestampLabel = new JLabel("TimeStamp: ");
 
         timestamp2Spinner = new JSpinner();
         timestamp2Spinner.setPreferredSize(new Dimension(150, 25));
@@ -131,7 +105,7 @@ public class TimeConvertPanel extends EasyPanel {
         timestampPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         timestampPanel.add(timestampComboBox);
 
-        timeLabel = new JLabel("Time: ");
+        JLabel timeLabel = new JLabel("Time: ");
 
         timeTextField = new JTextField(20);
 
@@ -141,18 +115,19 @@ public class TimeConvertPanel extends EasyPanel {
     }
 
     private void createConvertButtonsPanel() {
-        convertButtonsPanel = new JPanel();
+        JPanel convertButtonsPanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(convertButtonsPanel, BoxLayout.X_AXIS);
         convertButtonsPanel.setLayout(boxLayout);
+        add(convertButtonsPanel);
 
-        timestamp2TimeButton = new JButton();
+        JButton timestamp2TimeButton = new JButton();
         timestamp2TimeButton.setText("Timestamp->Time");
         timestamp2TimeButton.addActionListener(new Timestamp2TimeButtonActionListener());
         convertButtonsPanel.add(timestamp2TimeButton);
 
         convertButtonsPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        time2TimestampButton = new JButton();
+        JButton time2TimestampButton = new JButton();
         time2TimestampButton.setText("Time->Timestamp");
         time2TimestampButton.addActionListener(new Time2TimestampButtonActionListener());
         convertButtonsPanel.add(time2TimestampButton);
@@ -161,11 +136,12 @@ public class TimeConvertPanel extends EasyPanel {
     }
 
     private void createCurrentPanel() {
-        currentPanel = new JPanel();
+        JPanel currentPanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(currentPanel, BoxLayout.X_AXIS);
         currentPanel.setLayout(boxLayout);
+        add(currentPanel);
 
-        currentTimestampLabel = new JLabel("Current timestamp: ");
+        JLabel currentTimestampLabel = new JLabel("Current timestamp: ");
         currentPanel.add(currentTimestampLabel);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -173,7 +149,7 @@ public class TimeConvertPanel extends EasyPanel {
         currentPanel.add(currentTimestampTextField);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        currentTimeTitleLabel = new JLabel("Current time: ");
+        JLabel currentTimeTitleLabel = new JLabel("Current time: ");
         currentPanel.add(currentTimeTitleLabel);
         currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -211,9 +187,10 @@ public class TimeConvertPanel extends EasyPanel {
     }
 
     private void createCommentPanel() {
-        commentPanel = new JPanel();
+        JPanel commentPanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(commentPanel, BoxLayout.X_AXIS);
         commentPanel.setLayout(boxLayout);
+        add(commentPanel);
 
         JTextArea textArea1 = new JTextArea("1s = 1000ms");
         textArea1.setEditable(false);
@@ -238,9 +215,10 @@ public class TimeConvertPanel extends EasyPanel {
     }
 
     private void createTimezonePanel() {
-        timezonePanel = new JPanel();
+        JPanel timezonePanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(timezonePanel, BoxLayout.X_AXIS);
         timezonePanel.setLayout(boxLayout);
+        add(timezonePanel);
 
         JLabel label1 = new JLabel("From Time: ");
         label1.setLabelFor(inTimeTextField);

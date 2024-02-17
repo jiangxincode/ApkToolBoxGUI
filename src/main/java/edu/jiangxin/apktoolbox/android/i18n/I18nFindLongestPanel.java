@@ -15,12 +15,12 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
@@ -41,21 +41,9 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     List<I18nInfo> infos = new ArrayList<I18nInfo>();
 
-    private JPanel sourcePanel;
-
     private JTextField srcTextField;
 
-    private JButton srcButton;
-
-    private JPanel itemPanel;
-
     private JTextField itemTextField;
-
-    private JLabel itemLabel;
-
-    private JPanel operationPanel;
-
-    private JButton findButton;
 
     public I18nFindLongestPanel() throws HeadlessException {
         super();
@@ -63,57 +51,33 @@ public class I18nFindLongestPanel extends EasyPanel {
         setLayout(boxLayout);
 
         createSourcePanel();
-        add(sourcePanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createItemPanel();
-        add(itemPanel);
-        
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
         createOperationPanel();
-        add(operationPanel);
     }
 
     private void createOperationPanel() {
-        operationPanel = new JPanel();
+        JPanel operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        
-        findButton = new JButton(bundle.getString("android.i18n.longest.find"));
+        add(operationPanel);
+
+        JButton findButton = new JButton(bundle.getString("android.i18n.longest.find"));
         findButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 infos.clear();
-                File srcFile = new File(srcTextField.getText());
-                if (!srcFile.exists() || !srcFile.isDirectory()) {
-                    logger.error("srcFile is invalid");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "Source directory is invalid", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    srcTextField.requestFocus();
-                    return;
-                }
-                String srcPath;
-                try {
-                    srcPath = srcFile.getCanonicalPath();
-                } catch (IOException e2) {
-                    logger.error("getCanonicalPath fail");
-                    return;
-                }
-                conf.setProperty("android.i18n.longest.src.dir", srcPath);
 
-                String item = itemTextField.getText();
+                String srcPath = checkAndGetDirContent(srcTextField, "android.i18n.longest.src.dir", "Source directory is invalid");
+                if (StringUtils.isEmpty(srcPath)) {
+                    return;
+                }
+
+                String item = checkAndGetStringContent(itemTextField, "android.i18n.longest.items", "Item is empty");
                 if (StringUtils.isEmpty(item)) {
-                    logger.error("item is empty");
-                    Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nFindLongestPanel.this, "item is empty", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    itemTextField.requestFocus();
                     return;
                 }
 
-                conf.setProperty("android.i18n.longest.items", item);
                 sort(srcPath, itemTextField.getText());
                 if (CollectionUtils.isEmpty(infos)) {
                     Toolkit.getDefaultToolkit().beep();
@@ -137,13 +101,14 @@ public class I18nFindLongestPanel extends EasyPanel {
     }
 
     private void createItemPanel() {
-        itemPanel = new JPanel();
+        JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+        add(itemPanel);
         
         itemTextField = new JTextField();
         itemTextField.setText(conf.getString("android.i18n.longest.items"));
 
-        itemLabel = new JLabel("Items");
+        JLabel itemLabel = new JLabel("Items");
 
         itemPanel.add(itemTextField);
         itemPanel.add(Box.createHorizontalGlue());
@@ -151,31 +116,15 @@ public class I18nFindLongestPanel extends EasyPanel {
     }
 
     private void createSourcePanel() {
-        sourcePanel = new JPanel();
+        JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.X_AXIS));
+        add(sourcePanel);
         
         srcTextField = new JTextField();
         srcTextField.setText(conf.getString("android.i18n.longest.src.dir"));
 
-        srcButton = new JButton("Source Directory");
-        srcButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jfc.setDialogTitle("select a directory");
-                int ret = jfc.showDialog(new JLabel(), null);
-                switch (ret) {
-                case JFileChooser.APPROVE_OPTION:
-                    File file = jfc.getSelectedFile();
-                    srcTextField.setText(file.getAbsolutePath());
-                    break;
-                default:
-                    break;
-                }
-
-            }
-        });
+        JButton srcButton = new JButton("Source Directory");
+        srcButton.addActionListener(new SelectDirectoryListener("select a directory", srcTextField));
 
         sourcePanel.add(srcTextField);
         sourcePanel.add(Box.createHorizontalGlue());
@@ -242,21 +191,21 @@ public class I18nFindLongestPanel extends EasyPanel {
 
         logger.info(infos);
     }
-}
 
-class I18nInfo {
-    String path;
-    String text;
-    int length;
+    class I18nInfo {
+        String path;
+        String text;
+        int length;
 
-    public I18nInfo(String path, String text, int length) {
-        this.path = path;
-        this.text = text;
-        this.length = length;
-    }
+        public I18nInfo(String path, String text, int length) {
+            this.path = path;
+            this.text = text;
+            this.length = length;
+        }
 
-    @Override
-    public String toString() {
-        return "I18NInfo [path=" + path + ", text=" + text + ", length=" + length + "]";
+        @Override
+        public String toString() {
+            return "I18NInfo [path=" + path + ", text=" + text + ", length=" + length + "]";
+        }
     }
 }

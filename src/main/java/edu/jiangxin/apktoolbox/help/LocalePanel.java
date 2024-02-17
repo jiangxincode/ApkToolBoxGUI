@@ -13,15 +13,11 @@ import java.util.Locale;
 public class LocalePanel extends EasyPanel {
     private JPanel optionPanel;
 
-    private JLabel typeLabel;
-
     private JComboBox<String> typeComboBox;
 
     private JPanel operationPanel;
 
-    private JButton ApplyButton;
-
-    private static String[] supportedLanguages = {Locale.CHINESE.getLanguage(), Locale.ENGLISH.getLanguage()};
+    private static final String[] SUPPORTED_LANGUAGES = {Locale.CHINESE.getLanguage(), Locale.ENGLISH.getLanguage()};
 
     public LocalePanel() throws HeadlessException {
         super();
@@ -45,7 +41,7 @@ public class LocalePanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 
-        typeLabel = new JLabel("Locale:");
+        JLabel typeLabel = new JLabel("Locale:");
         typeComboBox = new JComboBox<>();
 
         String currentLocaleLanguage = conf.getString("locale.language");
@@ -54,7 +50,7 @@ public class LocalePanel extends EasyPanel {
             conf.setProperty("locale.language", currentLocaleLanguage);
         }
 
-        for (String language : supportedLanguages) {
+        for (String language : SUPPORTED_LANGUAGES) {
             typeComboBox.addItem(language);
             if (StringUtils.equals(currentLocaleLanguage, language)) {
                 typeComboBox.setSelectedItem(language);
@@ -70,10 +66,10 @@ public class LocalePanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        ApplyButton = new JButton("Apply");
-        ApplyButton.addActionListener(new ApplyButtonActionListener());
+        JButton applyButton = new JButton("Apply");
+        applyButton.addActionListener(new ApplyButtonActionListener());
 
-        operationPanel.add(ApplyButton);
+        operationPanel.add(applyButton);
     }
 
     private final class ApplyButtonActionListener implements ActionListener {

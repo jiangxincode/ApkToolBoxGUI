@@ -46,7 +46,8 @@ public class BinaryOfficeChecker extends FileChecker {
 
         boolean result = false;
         Biff8EncryptionKey.setCurrentUserPassword(password);
-        try (POIFSFileSystem pfs = new POIFSFileSystem(new FileInputStream(file))) {
+        try (FileInputStream fis = new FileInputStream(file);
+             POIFSFileSystem pfs = new POIFSFileSystem(fis)) {
             String extension = FilenameUtils.getExtension(file.getName());
             if ("xls".equals(extension)) {
                 try (POIDocument poiDocument = new HSSFWorkbook(pfs)) {
