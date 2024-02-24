@@ -1,5 +1,7 @@
 package edu.jiangxin.apktoolbox.utils;
 
+import edu.jiangxin.apktoolbox.swing.extend.download.DownloadCallable;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IFinishCallBack;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -18,6 +20,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.*;
 
 /**
  * @author jiangxin
@@ -228,36 +231,58 @@ public class Utils {
         }
     }
 
-    public static boolean checkAndDownloadPlugin(String pluginFilename, boolean isPluginNeedUnzip) {
-        File pluginFile = new File(Utils.userPluginDirPath, pluginFilename);
-        if (!pluginFile.exists()) {
-            int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
-            if (userChoose != JOptionPane.YES_OPTION) {
-                logger.warn("userChoose: {}", userChoose);
-                return false;
-            }
-            String downloadUrlStr = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/" + DOWNLOAD_VERSION + "/" + pluginFilename;
-            URL url;
-            try {
-                url = new URL(downloadUrlStr);
-            } catch (MalformedURLException e) {
-                logger.error("MalformedURLException: {}", e.getMessage());
-                return false;
-            }
-            File pluginDir = new File(Utils.userPluginDirPath);
-            boolean ret = FileUtils.downloadFileToDir(url, pluginDir);
-            if (!ret) {
-                JOptionPane.showMessageDialog(null, "下载失败，请检查网络", "错误", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            if (isPluginNeedUnzip) {
-                ret = FileUtils.unzipFile(pluginFile);
-                if (!ret) {
-                    JOptionPane.showMessageDialog(null, "解压失败", "错误", JOptionPane.ERROR_MESSAGE);
-                    return false;
+    public static void checkAndDownloadPlugin(String pluginFilename, boolean isPluginNeedUnzip, IFinishCallBack callBack) {
+
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                File pluginFile = new File(Utils.userPluginDirPath, pluginFilename);
+                if (!pluginFile.exists()) {
+                    int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
+                    if (userChoose != JOptionPane.YES_OPTION) {
+                        logger.warn("userChoose: {}", userChoose);
+                        return null;
+                    }
+                    String downloadUrlStr = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/" + DOWNLOAD_VERSION + "/" + pluginFilename;
+                    URL url;
+                    try {
+                        url = new URL(downloadUrlStr);
+                    } catch (MalformedURLException e) {
+                        logger.error("MalformedURLException: {}", e.getMessage());
+                        return null;
+                    }
+                    File pluginDir = new File(Utils.userPluginDirPath);
+
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                    Future<Boolean> future = executorService.submit(new DownloadCallable(url, pluginDir));
+                    try {
+                        boolean ret = future.get();
+                        if (!ret) {
+                            JOptionPane.showMessageDialog(null, "下载失败，请检查网络", "错误", JOptionPane.ERROR_MESSAGE);
+                            return null;
+                        }
+                    } catch (InterruptedException e) {
+                        logger.error("InterruptedException: {}", e.getMessage());
+                        return null;
+                    } catch (ExecutionException e) {
+                        logger.error("ExecutionException: {}", e.getMessage());
+                        return null;
+                    }
+
+                    if (isPluginNeedUnzip) {
+                        ret = FileUtils.unzipFile(pluginFile);
+                        if (!ret) {
+                            JOptionPane.showMessageDialog(null, "解压失败", "错误", JOptionPane.ERROR_MESSAGE);
+                            return null;
+                        }
+                    }
                 }
+                callBack.onFinish();
+                return null;
             }
-        }
-        return true;
+        };
+        worker.execute();
+
     }
 }

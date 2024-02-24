@@ -25,8 +25,8 @@ public class ChangeMenuToUrlListener extends ChangeMenuListener {
     }
 
     @Override
-    public boolean onPreChangeMenu() {
-        return true;
+    public void onPreChangeMenu(IFinishCallBack callBack) {
+        callBack.onFinish();
     }
 
     @Override

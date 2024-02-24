@@ -1,14 +1,15 @@
 package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IFinishCallBack;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 import java.io.File;
 
 public abstract class PluginPanel extends EasyPanel implements IPlugin {
     @Override
-    public boolean onPreChangeMenu() {
-        return onCheckAndDownloadPlugin();
+    public void onPreChangeMenu(IFinishCallBack callBack) {
+        onCheckAndDownloadPlugin(callBack);
     }
 
     @Override

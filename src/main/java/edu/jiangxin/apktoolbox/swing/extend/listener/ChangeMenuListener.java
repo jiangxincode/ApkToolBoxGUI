@@ -7,12 +7,10 @@ public abstract class ChangeMenuListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (onPreChangeMenu()) {
-            onChangeMenu();
-        }
+        onPreChangeMenu(this::onChangeMenu);
     }
 
-    public abstract boolean onPreChangeMenu();
+    public abstract void onPreChangeMenu(IFinishCallBack callBack);
 
     public abstract void onChangeMenu();
 }

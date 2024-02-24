@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IFinishCallBack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -49,8 +50,8 @@ public class CheckUpdateActionListener extends ChangeMenuListener {
     }
 
     @Override
-    public boolean onPreChangeMenu() {
-        return true;
+    public void onPreChangeMenu(IFinishCallBack callBack) {
+        callBack.onFinish();
     }
 
     @Override

@@ -73,25 +73,6 @@ public class FileUtils {
         }
     }
 
-    public static boolean downloadFileToDir(URL url, File downloadDir) {
-        LOGGER.info("Download from {} to {}", url, downloadDir);
-        String urlStr = url.toString();
-        String fileName = urlStr.substring(urlStr.lastIndexOf("/") + 1);
-        File downloadFile = new File(downloadDir, fileName);
-        try (InputStream is = url.openStream();
-             OutputStream os = new FileOutputStream(downloadFile)) {
-            byte[] b = new byte[2048];
-            int length;
-            while ((length = is.read(b)) != -1) {
-                os.write(b, 0, length);
-            }
-            return true;
-        } catch (IOException e) {
-            LOGGER.error("downloadFileToDir failed: IOException");
-            return false;
-        }
-    }
-
     public static boolean unzipFile(File pluginFile) {
         LOGGER.info("Unzip file: {}", pluginFile);
         String parentDir = pluginFile.getParent();

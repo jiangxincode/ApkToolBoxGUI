@@ -6,9 +6,10 @@ import edu.jiangxin.apktoolbox.utils.Utils;
 import java.io.File;
 
 public abstract class ChangeMenuToPluginListener extends ChangeMenuListener implements IPlugin {
+
     @Override
-    public boolean onPreChangeMenu() {
-        return onCheckAndDownloadPlugin();
+    public void onPreChangeMenu(IFinishCallBack callBack) {
+        onCheckAndDownloadPlugin(callBack);
     }
 
     @Override

@@ -29,6 +29,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuToUrlListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IFinishCallBack;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -339,10 +340,9 @@ public class MainFrame extends EasyFrame {
             this.title = title;
         }
 
-        @Override
-        public boolean onPreChangeMenu() {
+        public void onPreChangeMenu(IFinishCallBack callBack) {
             panel = createEasyPanel();
-            return panel.onPreChangeMenu();
+            panel.onPreChangeMenu(callBack);
         }
 
         @Override
