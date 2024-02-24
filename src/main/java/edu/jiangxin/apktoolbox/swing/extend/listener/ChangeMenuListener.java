@@ -3,14 +3,22 @@ package edu.jiangxin.apktoolbox.swing.extend.listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public abstract class ChangeMenuListener implements ActionListener {
+public interface ChangeMenuListener extends ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        onPreChangeMenu(this::onChangeMenu);
+    default void actionPerformed(ActionEvent e) {
+        if (isNeedPreChangeMenu()) {
+            onPreChangeMenu(this::onChangeMenu);
+        } else {
+            onChangeMenu();
+        }
     }
 
-    public abstract void onPreChangeMenu(IFinishCallBack callBack);
+    default boolean isNeedPreChangeMenu() {
+        return false;
+    }
 
-    public abstract void onChangeMenu();
+    default void onPreChangeMenu(IPreChangeMenuCallBack callBack) {}
+
+    void onChangeMenu();
 }

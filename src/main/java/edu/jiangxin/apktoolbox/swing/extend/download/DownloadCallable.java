@@ -12,10 +12,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class DownloadCallable implements Callable<Boolean> {
+public class DownloadCallable implements Callable<Integer> {
     private static final Logger LOGGER = LogManager.getLogger(DownloadCallable.class.getSimpleName());
     private final URL url;
     private final File downloadDir;
+
+    private int progress = 0;
+
+    private boolean isCancelled = false;
+
+    public static final int DOWNLOAD_SUCCESS = 0;
+
+    public static final int DOWNLOAD_FAILED = -1;
+
+    public static final int DOWNLOAD_CANCELLED = 1;
 
     public DownloadCallable(URL url, File downloadDir) {
         this.url = url;
@@ -23,13 +33,7 @@ public class DownloadCallable implements Callable<Boolean> {
     }
 
     @Override
-    public Boolean call() throws Exception {
-        DownloadProcessDialog downloadProcessDialog = new DownloadProcessDialog();
-        downloadProcessDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        //https://stackoverflow.com/questions/54496606/swing-worker-cant-update-gui-components-in-modal-jdialog
-        downloadProcessDialog.setModalityType(Dialog.ModalityType.MODELESS);
-        downloadProcessDialog.setVisible(true);
-        downloadProcessDialog.setLocationRelativeTo(null);
+    public Integer call() throws Exception {
 
         HttpURLConnection conn;
         try {
@@ -40,7 +44,7 @@ public class DownloadCallable implements Callable<Boolean> {
             conn.connect();
         } catch (IOException e) {
             LOGGER.error("download failed: {}", e.getMessage());
-            return false;
+            return DOWNLOAD_FAILED;
         }
 
         Map<String, List<String>> map = conn.getHeaderFields();
@@ -55,24 +59,27 @@ public class DownloadCallable implements Callable<Boolean> {
             byte[] b = new byte[2048];
             int length;
             int count = 0;
-            int step = 0;
-            while ((length = is.read(b)) != -1) {
+            while ((length = is.read(b)) != -1 && !isCancelled) {
                 os.write(b, 0, length);
                 count += length;
-                int progress = count * 100 / downloadLength;
-                if (progress - step > 1) {
-                    SwingUtilities.invokeLater(() -> {
-                        downloadProcessDialog.progressBar.setValue(progress);
-                        downloadProcessDialog.progressLabel.setText(progress + "%");
-                    });
-                    step = progress;
-                }
+                progress = count * 100 / downloadLength;
             }
-            SwingUtilities.invokeLater(downloadProcessDialog::dispose);
-            return true;
+            if (isCancelled) {
+                LOGGER.info("download cancelled");
+                return DOWNLOAD_CANCELLED;
+            }
+            return DOWNLOAD_SUCCESS;
         } catch (IOException e) {
             LOGGER.error("download failed: {}", e.getMessage());
-            return false;
+            return DOWNLOAD_FAILED;
         }
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void cancel() {
+        isCancelled = true;
     }
 }

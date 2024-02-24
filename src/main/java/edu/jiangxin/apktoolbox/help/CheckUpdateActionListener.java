@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
-import edu.jiangxin.apktoolbox.swing.extend.listener.IFinishCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -31,7 +31,7 @@ import edu.jiangxin.apktoolbox.Version;
  * @author 2018-09-30
  *
  */
-public class CheckUpdateActionListener extends ChangeMenuListener {
+public class CheckUpdateActionListener implements ChangeMenuListener {
     private static final int SOCKET_TIMEOUT_TIME = 4000;
     
     private static final int CONNECT_TIMEOUT_TIME = 4000;
@@ -47,11 +47,6 @@ public class CheckUpdateActionListener extends ChangeMenuListener {
     public CheckUpdateActionListener(Component component) {
         super();
         parent = component;
-    }
-
-    @Override
-    public void onPreChangeMenu(IFinishCallBack callBack) {
-        callBack.onFinish();
     }
 
     @Override

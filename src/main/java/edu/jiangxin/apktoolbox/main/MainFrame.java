@@ -29,7 +29,8 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuToUrlListener;
-import edu.jiangxin.apktoolbox.swing.extend.listener.IFinishCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -327,7 +328,7 @@ public class MainFrame extends EasyFrame {
         reverseMenu.add(aXMLPrinter);
     }
 
-    class ChangeMenuToPanelListener extends ChangeMenuListener {
+    class ChangeMenuToPanelListener implements ChangeMenuListener {
 
         Class<? extends EasyPanel> easyPanelClass;
 
@@ -340,9 +341,12 @@ public class MainFrame extends EasyFrame {
             this.title = title;
         }
 
-        public void onPreChangeMenu(IFinishCallBack callBack) {
+        public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
             panel = createEasyPanel();
-            panel.onPreChangeMenu(callBack);
+            if (panel.isNeedPreChangeMenu()) {
+                PluginPanel pluginPanel = (PluginPanel) panel;
+                pluginPanel.preparePlugin(callBack::onPreChangeMenuFinished);
+            }
         }
 
         @Override
