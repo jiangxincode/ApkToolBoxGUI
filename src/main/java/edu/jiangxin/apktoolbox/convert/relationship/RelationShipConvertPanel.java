@@ -16,8 +16,8 @@ public class RelationShipConvertPanel extends EasyPanel {
 
     private String now = "你";
 
-    private final JTextField inputTextField;
-    private final JTextField outputTextField;
+    private JTextField inputTextField;
+    private JTextField outputTextField;
 
     private final Stack<String> stack = new Stack<>();
 
@@ -42,6 +42,10 @@ public class RelationShipConvertPanel extends EasyPanel {
 
     public RelationShipConvertPanel() {
         super();
+    }
+
+    @Override
+    public void initUI() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 

@@ -26,15 +26,20 @@ public class BaseConvertPanel extends EasyPanel {
 
     private static final String HEX = "Hex";
 
-    private final DocumentListener documentListener;
+    private DocumentListener documentListener;
 
-    private final DocumentFilter documentFilter;
+    private DocumentFilter documentFilter;
 
     private boolean isChangedByUser;
 
     private final List<BaseUiObject> baseUiObjects = new ArrayList<>();
 
     public BaseConvertPanel() {
+        super();
+    }
+
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

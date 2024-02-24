@@ -69,6 +69,10 @@ public class I18nAddPanel extends EasyPanel {
     
     public I18nAddPanel() throws HeadlessException {
         super();
+    }
+
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

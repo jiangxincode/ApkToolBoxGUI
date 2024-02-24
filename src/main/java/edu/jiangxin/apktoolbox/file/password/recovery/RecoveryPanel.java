@@ -64,7 +64,6 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     public RecoveryPanel() {
         super();
         initBase();
-        initUI();
     }
 
     private void initBase() {
@@ -72,7 +71,8 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         numberFormat.setMinimumFractionDigits(3);
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

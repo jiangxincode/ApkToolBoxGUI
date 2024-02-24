@@ -85,10 +85,10 @@ public class ColorPickerPanel extends EasyPanel {
 
     public ColorPickerPanel() {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         setLayout(null);
 
         initFirstColumn();

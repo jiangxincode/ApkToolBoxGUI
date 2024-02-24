@@ -28,6 +28,10 @@ public class AboutPanel extends EasyPanel {
 
     public AboutPanel() {
         super();
+    }
+
+    @Override
+    public void initUI() {
         setBorder(new EmptyBorder(10, 10, 10, 10));
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);

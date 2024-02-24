@@ -28,10 +28,10 @@ public class LookAndFeelPanel extends EasyPanel {
 
     public LookAndFeelPanel() throws HeadlessException {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

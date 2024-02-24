@@ -58,15 +58,14 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JTable colorTable;
 
-    private boolean isChangedByUser;
+    private boolean isChangedByUser = true;
 
     public ColorConvertPanel() throws HeadlessException {
         super();
-        initUI();
-        isChangedByUser = true;
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createColorBoxPanel();
 

@@ -1,6 +1,5 @@
 package edu.jiangxin.apktoolbox.swing.extend;
 
-import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -37,7 +36,7 @@ public class EasyPanel extends JPanel {
         return false;
     }
 
-    public void onChangingMenu() {
+    public void initUI() {
     }
 
     protected EasyFrame getFrame() {

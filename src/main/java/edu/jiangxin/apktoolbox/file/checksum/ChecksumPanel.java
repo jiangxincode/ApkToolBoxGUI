@@ -11,10 +11,10 @@ public class ChecksumPanel extends EasyPanel {
 
     public ChecksumPanel() {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

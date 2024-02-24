@@ -43,7 +43,10 @@ public class I18nRemovePanel extends EasyPanel {
 
     public I18nRemovePanel() throws HeadlessException {
         super();
+    }
 
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

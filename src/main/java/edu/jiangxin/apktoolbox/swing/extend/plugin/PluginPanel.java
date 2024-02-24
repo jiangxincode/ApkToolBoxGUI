@@ -12,15 +12,6 @@ public abstract class PluginPanel extends EasyPanel implements IPlugin {
         return true;
     }
 
-    public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
-        preparePlugin(callBack::onPreChangeMenuFinished);
-    }
-
-    @Override
-    public void onChangingMenu() {
-        initUI();
-    }
-
     @Override
     public void preparePlugin(IPreparePluginCallback callBack) {
         PluginUtils.preparePlugin(getPluginFilename(), isPluginNeedUnzip(), callBack);
@@ -36,6 +27,4 @@ public abstract class PluginPanel extends EasyPanel implements IPlugin {
         String jarPath = Utils.getPluginDirPath() + File.separator + getPluginFilename();
         return "java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\" \"" + jarPath + "\"";
     }
-
-    public abstract void initUI();
 }

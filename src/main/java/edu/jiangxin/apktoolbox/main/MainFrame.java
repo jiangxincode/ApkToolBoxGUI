@@ -100,7 +100,10 @@ public class MainFrame extends EasyFrame {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMenuBar();
-        contentPane = new AboutPanel();
+        contentPane = new JPanel();
+        EasyPanel initPanel = new AboutPanel();
+        initPanel.initUI();
+        contentPane.add(initPanel);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         setContentPane(contentPane);
@@ -339,12 +342,16 @@ public class MainFrame extends EasyFrame {
         public ChangeMenuToPanelListener(Class<? extends EasyPanel> easyPanelClass, String title) {
             this.easyPanelClass = easyPanelClass;
             this.title = title;
+            panel = createEasyPanel();
+        }
+
+        @Override
+        public boolean isNeedPreChangeMenu() {
+            return panel.isNeedPreChangeMenu();
         }
 
         public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
-            panel = createEasyPanel();
-            if (panel.isNeedPreChangeMenu()) {
-                PluginPanel pluginPanel = (PluginPanel) panel;
+            if (panel instanceof PluginPanel pluginPanel) {
                 pluginPanel.preparePlugin(callBack::onPreChangeMenuFinished);
             }
         }
@@ -353,7 +360,7 @@ public class MainFrame extends EasyFrame {
         public void onChangeMenu() {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
-            panel.onChangingMenu();
+            panel.initUI();
             panel.setBorder(BorderFactory.createTitledBorder(title));
             contentPane.add(panel);
             logger.info("Panel changed: " + panel.getClass().getSimpleName());

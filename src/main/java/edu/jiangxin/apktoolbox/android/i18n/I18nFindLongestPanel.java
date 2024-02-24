@@ -47,6 +47,10 @@ public class I18nFindLongestPanel extends EasyPanel {
 
     public I18nFindLongestPanel() throws HeadlessException {
         super();
+    }
+
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
