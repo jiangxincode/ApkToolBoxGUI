@@ -354,6 +354,7 @@ public class MainFrame extends EasyFrame {
             return panel.isNeedPreChangeMenu();
         }
 
+        @Override
         public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
             if (panel instanceof PluginPanel pluginPanel) {
                 pluginPanel.preparePlugin(

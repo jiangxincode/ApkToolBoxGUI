@@ -48,7 +48,10 @@ public class ChangeMenuPreparePluginCallBack implements IPreparePluginCallback {
             onPrepareFinished();
             return;
         }
-        assert result == CHECK_NOT_EXIST;
+        if (result != CHECK_NOT_EXIST) {
+            logger.error("unknown result: {}", result);
+            return;
+        }
         int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
         if (userChoose != JOptionPane.YES_OPTION) {
             logger.warn("userChoose: {}", userChoose);

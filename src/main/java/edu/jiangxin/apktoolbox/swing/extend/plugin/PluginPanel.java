@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 import java.io.File;

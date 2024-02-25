@@ -10,8 +10,8 @@ public class DownloadProcessDialog extends JDialog {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    public JProgressBar progressBar = new JProgressBar();
-    public JLabel progressLabel = new JLabel("");
+    public final JProgressBar progressBar = new JProgressBar();
+    public final JLabel progressLabel = new JLabel("");
 
     public DownloadProcessDialog(String title) {
         setTitle(title);

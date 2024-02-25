@@ -3,7 +3,6 @@ package edu.jiangxin.apktoolbox.swing.extend.listener;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginCallBack;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPlugin;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;
-import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginUtils;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 import java.io.File;

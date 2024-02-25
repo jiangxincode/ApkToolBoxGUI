@@ -21,6 +21,10 @@ public class PluginUtils {
 
     private static final String DOWNLOAD_VERSION = "v1.0.4";
 
+    private PluginUtils() {
+        //do nothing
+    }
+
     public static void checkPlugin(String pluginFilename, IPreparePluginCallback callBack) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
         if (pluginFile.exists()) {

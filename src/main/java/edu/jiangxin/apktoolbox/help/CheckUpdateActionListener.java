@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
-import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
