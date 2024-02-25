@@ -7,13 +7,13 @@ import java.io.File;
 
 public abstract class PluginPanel extends EasyPanel implements IPlugin {
     @Override
-    public boolean onPreChangeMenu() {
-        return onCheckAndDownloadPlugin();
+    public boolean isNeedPreChangeMenu() {
+        return true;
     }
 
     @Override
-    public void onChangingMenu() {
-        initUI();
+    public void preparePlugin(IPreparePluginCallback callBack) {
+        callBack.onPrepareStarted();
     }
 
     @Override
@@ -26,6 +26,4 @@ public abstract class PluginPanel extends EasyPanel implements IPlugin {
         String jarPath = Utils.getPluginDirPath() + File.separator + getPluginFilename();
         return "java -jar \"-Duser.language=en\" \"-Dfile.encoding=UTF8\" \"" + jarPath + "\"";
     }
-
-    public abstract void initUI();
 }

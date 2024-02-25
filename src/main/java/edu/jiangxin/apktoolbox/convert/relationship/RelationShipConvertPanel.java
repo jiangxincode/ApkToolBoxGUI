@@ -16,8 +16,8 @@ public class RelationShipConvertPanel extends EasyPanel {
 
     private String now = "你";
 
-    private final JTextField inputTextField;
-    private final JTextField outputTextField;
+    private JTextField inputTextField;
+    private JTextField outputTextField;
 
     private final Stack<String> stack = new Stack<>();
 
@@ -40,8 +40,8 @@ public class RelationShipConvertPanel extends EasyPanel {
         dataMap.put("岳母", Map.of("父", "姥爷", "母", "姥姥", "兄", "舅舅", "弟", "舅舅", "姐", "大姨", "妹", "小姨", "夫", "岳父", "妻", "不存在", "儿", "<哥哥><弟弟>", "女", "<姐姐><妹妹>"));
     }
 
-    public RelationShipConvertPanel() {
-        super();
+    @Override
+    public void initUI() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 

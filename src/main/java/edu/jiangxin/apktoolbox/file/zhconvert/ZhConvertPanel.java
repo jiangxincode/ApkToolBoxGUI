@@ -55,10 +55,10 @@ public class ZhConvertPanel extends EasyPanel {
 
     public ZhConvertPanel() throws HeadlessException {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         // JSplitPanel只能用BorderLayout，JFrame默认是BorderLayout，JPanel默认是BoxLayout
         BorderLayout boxLayout = new BorderLayout();
         setLayout(boxLayout);

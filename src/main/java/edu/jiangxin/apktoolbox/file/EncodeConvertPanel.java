@@ -56,10 +56,10 @@ public class EncodeConvertPanel extends EasyPanel {
 
     public EncodeConvertPanel() throws HeadlessException {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         createSrcPanel();

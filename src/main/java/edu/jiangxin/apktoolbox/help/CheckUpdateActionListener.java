@@ -30,7 +30,7 @@ import edu.jiangxin.apktoolbox.Version;
  * @author 2018-09-30
  *
  */
-public class CheckUpdateActionListener extends ChangeMenuListener {
+public class CheckUpdateActionListener implements ChangeMenuListener {
     private static final int SOCKET_TIMEOUT_TIME = 4000;
     
     private static final int CONNECT_TIMEOUT_TIME = 4000;
@@ -46,11 +46,6 @@ public class CheckUpdateActionListener extends ChangeMenuListener {
     public CheckUpdateActionListener(Component component) {
         super();
         parent = component;
-    }
-
-    @Override
-    public boolean onPreChangeMenu() {
-        return true;
     }
 
     @Override

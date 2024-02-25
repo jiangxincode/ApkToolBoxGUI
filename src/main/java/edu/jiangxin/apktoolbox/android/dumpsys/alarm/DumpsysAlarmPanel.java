@@ -74,10 +74,10 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     public DumpsysAlarmPanel() throws HeadlessException {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

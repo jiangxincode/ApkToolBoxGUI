@@ -178,25 +178,16 @@ public class MonkeyPanel extends EasyPanel {
     int flag = 0;
     String[] monkeyCmd = null;
 
-    public MonkeyPanel() {
-        super();
-
+    @Override
+    public void initUI() {
         setPreferredSize(new Dimension(Constants.DEFAULT_PANEL_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
-
         setLayout(null);
-
         initDevicesAndProgram();
-
         initRestrainCondition();
-
         initTimeSetting();
-
         initLogSetting();
-
         initOperation();
-
         registListener();
-
     }
 
     private void initDevicesAndProgram() {

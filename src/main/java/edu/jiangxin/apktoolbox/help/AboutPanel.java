@@ -26,8 +26,8 @@ public class AboutPanel extends EasyPanel {
 
     private static final long serialVersionUID = 1L;
 
-    public AboutPanel() {
-        super();
+    @Override
+    public void initUI() {
         setBorder(new EmptyBorder(10, 10, 10, 10));
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);

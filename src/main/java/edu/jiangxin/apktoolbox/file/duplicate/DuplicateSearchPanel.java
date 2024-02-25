@@ -57,12 +57,8 @@ public class DuplicateSearchPanel extends EasyPanel {
 
     final private Map<String, List<File>> duplicateFileGroupMap = new HashMap<>();
 
-    public DuplicateSearchPanel() {
-        super();
-        initUI();
-    }
-
-    private void initUI() {
+    @Override
+    public void initUI() {
         tabbedPane = new JTabbedPane();
         add(tabbedPane);
 

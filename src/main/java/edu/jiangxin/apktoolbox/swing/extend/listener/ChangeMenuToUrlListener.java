@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
  * @author 2019-03-31
  *
  */
-public class ChangeMenuToUrlListener extends ChangeMenuListener {
+public class ChangeMenuToUrlListener implements ChangeMenuListener {
 
     private static final Logger logger = LogManager.getLogger(ChangeMenuToUrlListener.class.getSimpleName());
 
@@ -22,11 +22,6 @@ public class ChangeMenuToUrlListener extends ChangeMenuListener {
     public ChangeMenuToUrlListener(String url) {
         super();
         this.url = url;
-    }
-
-    @Override
-    public boolean onPreChangeMenu() {
-        return true;
     }
 
     @Override

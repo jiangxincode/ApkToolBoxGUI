@@ -29,6 +29,9 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
 import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuToUrlListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -98,9 +101,15 @@ public class MainFrame extends EasyFrame {
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMenuBar();
-        contentPane = new AboutPanel();
+        contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        contentPane.add(Box.createVerticalGlue());
+        EasyPanel initPanel = new AboutPanel();
+        initPanel.init();
+        initPanel.setBorder(BorderFactory.createTitledBorder(bundle.getString("help.about.title")));
+        contentPane.add(initPanel);
+        contentPane.add(Box.createVerticalGlue());
         setContentPane(contentPane);
         refreshSizeAndLocation();
     }
@@ -326,7 +335,7 @@ public class MainFrame extends EasyFrame {
         reverseMenu.add(aXMLPrinter);
     }
 
-    class ChangeMenuToPanelListener extends ChangeMenuListener {
+    class ChangeMenuToPanelListener implements ChangeMenuListener {
 
         Class<? extends EasyPanel> easyPanelClass;
 
@@ -337,19 +346,28 @@ public class MainFrame extends EasyFrame {
         public ChangeMenuToPanelListener(Class<? extends EasyPanel> easyPanelClass, String title) {
             this.easyPanelClass = easyPanelClass;
             this.title = title;
+            panel = createEasyPanel();
         }
 
         @Override
-        public boolean onPreChangeMenu() {
-            panel = createEasyPanel();
-            return panel.onPreChangeMenu();
+        public boolean isNeedPreChangeMenu() {
+            return panel.isNeedPreChangeMenu();
+        }
+
+        @Override
+        public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
+            if (panel instanceof PluginPanel pluginPanel) {
+                pluginPanel.preparePlugin(
+                        new ChangeMenuPreparePluginController(
+                                pluginPanel.getPluginFilename(), pluginPanel.isPluginNeedUnzip(), callBack));
+            }
         }
 
         @Override
         public void onChangeMenu() {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
-            panel.onChangingMenu();
+            panel.init();
             panel.setBorder(BorderFactory.createTitledBorder(title));
             contentPane.add(panel);
             logger.info("Panel changed: " + panel.getClass().getSimpleName());

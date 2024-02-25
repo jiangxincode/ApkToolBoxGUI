@@ -19,10 +19,10 @@ public class ConfigPanel extends EasyPanel {
 
     public ConfigPanel() throws HeadlessException {
         super();
-        initUI();
     }
 
-    private void initUI() {
+    @Override
+    public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 

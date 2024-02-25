@@ -16,8 +16,6 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * @author jiangxin
@@ -25,7 +23,6 @@ import java.net.URL;
  *
  */
 public class Utils {
-    private static final String DOWNLOAD_VERSION = "v1.0.4";
     private static final Logger logger = LogManager.getLogger(Utils.class.getSimpleName());
 
     private static String userConfigPath;
@@ -226,38 +223,5 @@ public class Utils {
             logger.error("getFileLineCount IOException");
             return 0;
         }
-    }
-
-    public static boolean checkAndDownloadPlugin(String pluginFilename, boolean isPluginNeedUnzip) {
-        File pluginFile = new File(Utils.userPluginDirPath, pluginFilename);
-        if (!pluginFile.exists()) {
-            int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
-            if (userChoose != JOptionPane.YES_OPTION) {
-                logger.warn("userChoose: {}", userChoose);
-                return false;
-            }
-            String downloadUrlStr = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/" + DOWNLOAD_VERSION + "/" + pluginFilename;
-            URL url;
-            try {
-                url = new URL(downloadUrlStr);
-            } catch (MalformedURLException e) {
-                logger.error("MalformedURLException: {}", e.getMessage());
-                return false;
-            }
-            File pluginDir = new File(Utils.userPluginDirPath);
-            boolean ret = FileUtils.downloadFileToDir(url, pluginDir);
-            if (!ret) {
-                JOptionPane.showMessageDialog(null, "下载失败，请检查网络", "错误", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            if (isPluginNeedUnzip) {
-                ret = FileUtils.unzipFile(pluginFile);
-                if (!ret) {
-                    JOptionPane.showMessageDialog(null, "解压失败", "错误", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
