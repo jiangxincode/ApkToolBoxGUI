@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -30,9 +32,9 @@ public class UnzipRunnable implements Runnable {
         this.pluginFile = pluginFile;
         this.callback = callback;
         progressBarDialog = new ProgressBarDialog("Unzipping...");
-        progressBarDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+        progressBarDialog.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosing(WindowEvent windowEvent) {
                 cancel();
             }
         });
@@ -67,18 +69,16 @@ public class UnzipRunnable implements Runnable {
                     break;
                 }
                 progress = zipFile.getProgressMonitor().getPercentDone();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    LOGGER.error("sleep failed: {}", e.getMessage());
-                    callback.onUnzipFinished(ChangeMenuPreparePluginController.RESULT_UNZIP_FAILED);
-                    return;
-                }
+                Thread.sleep(100);
             }
         } catch (IOException e) {
             LOGGER.error("unzipFile failed: IOException");
             callback.onUnzipFinished(ChangeMenuPreparePluginController.RESULT_UNZIP_FAILED);
             return;
+        } catch (InterruptedException e) {
+            LOGGER.error("unzipFile failed: InterruptedException");
+            callback.onUnzipFinished(ChangeMenuPreparePluginController.RESULT_UNZIP_FAILED);
+            Thread.currentThread().interrupt();
         }
 
         if (isCancelled) {
