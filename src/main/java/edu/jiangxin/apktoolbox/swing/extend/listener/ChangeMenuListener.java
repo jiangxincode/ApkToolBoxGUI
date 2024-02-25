@@ -18,7 +18,9 @@ public interface ChangeMenuListener extends ActionListener {
         return false;
     }
 
-    default void onPreChangeMenu(IPreChangeMenuCallBack callBack) {}
+    default void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
+        // do nothing
+    }
 
     void onChangeMenu();
 }

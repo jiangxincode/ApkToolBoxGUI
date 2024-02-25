@@ -83,10 +83,6 @@ public class ColorPickerPanel extends EasyPanel {
 
     private boolean isLocked = false;
 
-    public ColorPickerPanel() {
-        super();
-    }
-
     @Override
     public void initUI() {
         setLayout(null);

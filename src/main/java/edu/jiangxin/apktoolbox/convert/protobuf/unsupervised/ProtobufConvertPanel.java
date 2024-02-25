@@ -18,10 +18,6 @@ public class ProtobufConvertPanel extends EasyPanel {
     private JTextArea inputTextArea;
     private RSyntaxTextArea outputTextArea;
 
-    public ProtobufConvertPanel() {
-        super();
-    }
-
     @Override
     public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);

@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.swing.extend.download;
+package edu.jiangxin.apktoolbox.swing.extend.plugin.download;
 
 import edu.jiangxin.apktoolbox.utils.Constants;
 

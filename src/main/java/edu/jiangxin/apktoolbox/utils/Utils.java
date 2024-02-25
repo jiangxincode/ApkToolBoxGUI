@@ -1,8 +1,5 @@
 package edu.jiangxin.apktoolbox.utils;
 
-import edu.jiangxin.apktoolbox.swing.extend.download.DownloadCallable;
-import edu.jiangxin.apktoolbox.swing.extend.download.DownloadProcessDialog;
-import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -19,9 +16,6 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.*;
 
 /**
  * @author jiangxin

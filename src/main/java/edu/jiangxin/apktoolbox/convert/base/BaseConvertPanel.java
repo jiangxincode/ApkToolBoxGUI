@@ -34,10 +34,6 @@ public class BaseConvertPanel extends EasyPanel {
 
     private final List<BaseUiObject> baseUiObjects = new ArrayList<>();
 
-    public BaseConvertPanel() {
-        super();
-    }
-
     @Override
     public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);

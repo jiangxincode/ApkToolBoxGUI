@@ -1,6 +1,13 @@
 package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
-@FunctionalInterface
 public interface IPreparePluginCallback {
-    void onPreparePluginFinished();
+    void onPrepareStarted();
+
+    void onCheckFinished(int result);
+
+    void onDownloadFinished(int result);
+
+    void onUnzipFinished(int result);
+
+    void onPrepareFinished();
 }

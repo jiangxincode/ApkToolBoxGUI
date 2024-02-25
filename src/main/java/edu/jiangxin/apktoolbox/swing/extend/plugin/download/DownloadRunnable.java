@@ -1,40 +1,43 @@
-package edu.jiangxin.apktoolbox.swing.extend.download;
+package edu.jiangxin.apktoolbox.swing.extend.plugin.download;
 
+import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public class DownloadCallable implements Callable<Integer> {
-    private static final Logger LOGGER = LogManager.getLogger(DownloadCallable.class.getSimpleName());
+public class DownloadRunnable implements Runnable {
+    private static final Logger LOGGER = LogManager.getLogger(DownloadRunnable.class.getSimpleName());
     private final URL url;
     private final File downloadDir;
+    private final IPreparePluginCallback callback;
 
     private int progress = 0;
 
     private boolean isCancelled = false;
 
-    public static final int DOWNLOAD_SUCCESS = 0;
-
-    public static final int DOWNLOAD_FAILED = -1;
-
-    public static final int DOWNLOAD_CANCELLED = 1;
-
-    public DownloadCallable(URL url, File downloadDir) {
+    public DownloadRunnable(URL url, File downloadDir, IPreparePluginCallback callback) {
         this.url = url;
         this.downloadDir = downloadDir;
+        this.callback = callback;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void cancel() {
+        isCancelled = true;
     }
 
     @Override
-    public Integer call() throws Exception {
-
+    public void run() {
         HttpURLConnection conn;
         try {
             conn = (HttpURLConnection) url.openConnection();
@@ -44,7 +47,8 @@ public class DownloadCallable implements Callable<Integer> {
             conn.connect();
         } catch (IOException e) {
             LOGGER.error("download failed: {}", e.getMessage());
-            return DOWNLOAD_FAILED;
+            callback.onDownloadFinished(ChangeMenuPreparePluginCallBack.DOWNLOAD_FAILED);
+            return;
         }
 
         Map<String, List<String>> map = conn.getHeaderFields();
@@ -64,22 +68,17 @@ public class DownloadCallable implements Callable<Integer> {
                 count += length;
                 progress = count * 100 / downloadLength;
             }
-            if (isCancelled) {
-                LOGGER.info("download cancelled");
-                return DOWNLOAD_CANCELLED;
-            }
-            return DOWNLOAD_SUCCESS;
         } catch (IOException e) {
             LOGGER.error("download failed: {}", e.getMessage());
-            return DOWNLOAD_FAILED;
+            callback.onDownloadFinished(ChangeMenuPreparePluginCallBack.DOWNLOAD_FAILED);
+            return;
         }
-    }
-
-    public int getProgress() {
-        return progress;
-    }
-
-    public void cancel() {
-        isCancelled = true;
+        if (isCancelled) {
+            LOGGER.info("download cancelled");
+            FileUtils.deleteQuietly(downloadFile);
+            callback.onDownloadFinished(ChangeMenuPreparePluginCallBack.DOWNLOAD_CANCELLED);
+            return;
+        }
+        callback.onDownloadFinished(ChangeMenuPreparePluginCallBack.DOWNLOAD_SUCCESS);
     }
 }

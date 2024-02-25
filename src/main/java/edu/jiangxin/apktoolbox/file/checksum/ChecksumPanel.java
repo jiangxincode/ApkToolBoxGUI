@@ -9,10 +9,6 @@ import javax.swing.*;
 public class ChecksumPanel extends EasyPanel {
     private static final long serialVersionUID = 63924900336217723L;
 
-    public ChecksumPanel() {
-        super();
-    }
-
     @Override
     public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);

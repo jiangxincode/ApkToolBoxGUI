@@ -46,6 +46,7 @@ public class EasyPanel extends JPanel {
     }
 
     public void initUI() {
+        // do nothing
     }
 
     protected EasyFrame getFrame() {

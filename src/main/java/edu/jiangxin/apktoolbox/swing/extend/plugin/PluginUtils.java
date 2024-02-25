@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
-import edu.jiangxin.apktoolbox.swing.extend.download.DownloadCallable;
-import edu.jiangxin.apktoolbox.swing.extend.download.DownloadProcessDialog;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.download.DownloadProcessDialog;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.download.DownloadRunnable;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -9,31 +9,29 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class PluginUtils {
     private static final Logger logger = LogManager.getLogger(PluginUtils.class.getSimpleName());
 
+    private static final String URL_PREFIX = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/";
+
     private static final String DOWNLOAD_VERSION = "v1.0.4";
 
-    public static void preparePlugin(String pluginFilename, boolean isPluginNeedUnzip, IPreparePluginCallback callBack) {
+    public static void checkPlugin(String pluginFilename, IPreparePluginCallback callBack) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
         if (pluginFile.exists()) {
-            callBack.onPreparePluginFinished();
-            return;
+            callBack.onCheckFinished(ChangeMenuPreparePluginCallBack.CHECK_EXIST);
+        } else {
+            callBack.onCheckFinished(ChangeMenuPreparePluginCallBack.CHECK_NOT_EXIST);
         }
-        int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
-        if (userChoose != JOptionPane.YES_OPTION) {
-            logger.warn("userChoose: {}", userChoose);
-            return;
-        }
-        String downloadUrlStr = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/" + DOWNLOAD_VERSION + "/" + pluginFilename;
+    }
+
+    public static void downloadPlugin(String pluginFilename, IPreparePluginCallback callBack) {
+        String downloadUrlStr = URL_PREFIX + DOWNLOAD_VERSION + "/" + pluginFilename;
         URL url;
         try {
             url = new URL(downloadUrlStr);
@@ -45,27 +43,13 @@ public class PluginUtils {
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-        DownloadCallable downloadCallable = new DownloadCallable(url, pluginDir);
+        DownloadRunnable downloadRunnable = new DownloadRunnable(url, pluginDir, callBack);
 
         DownloadProcessDialog downloadProcessDialog = new DownloadProcessDialog("Downloading...");
-        downloadProcessDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         downloadProcessDialog.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                //立即终止线程池中的线程
-                downloadCallable.cancel();
-                try {
-                    executorService.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS);
-                } catch (InterruptedException e) {
-                    logger.info("awaitTermination failed: {}", e.getMessage());
-                    return;
-                }
-                try {
-                    org.apache.commons.io.FileUtils.delete(pluginFile);
-                } catch (IOException e) {
-                    logger.info("delete file failed: {}", e.getMessage());
-                    return;
-                }
+                downloadRunnable.cancel();
             }
         });
 
@@ -75,46 +59,24 @@ public class PluginUtils {
             if (downloadProcessDialog.progressBar.getValue() == 100) {
                 ((Timer) e.getSource()).stop();
             } else {
-                downloadProcessDialog.progressBar.setValue(downloadCallable.getProgress());
-                downloadProcessDialog.progressLabel.setText(downloadCallable.getProgress() + "%");
+                downloadProcessDialog.progressBar.setValue(downloadRunnable.getProgress());
+                downloadProcessDialog.progressLabel.setText(downloadRunnable.getProgress() + "%");
             }
         });
         timer.start();
 
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                Future<Integer> future = executorService.submit(downloadCallable);
-                try {
-                    int ret = future.get();
-                    if (ret == DownloadCallable.DOWNLOAD_CANCELLED) {
-                        JOptionPane.showMessageDialog(null, "下载取消", "提示", JOptionPane.INFORMATION_MESSAGE);
-                        return null;
-                    } else if (ret == DownloadCallable.DOWNLOAD_FAILED) {
-                        JOptionPane.showMessageDialog(null, "下载失败，请检查网络", "错误", JOptionPane.ERROR_MESSAGE);
-                        return null;
-                    }
-                } catch (InterruptedException e) {
-                    logger.error("InterruptedException: {}", e.getMessage());
-                    return null;
-                } catch (ExecutionException e) {
-                    logger.error("ExecutionException: {}", e.getMessage());
-                    return null;
-                }
-
-                if (isPluginNeedUnzip) {
-                    boolean ret = FileUtils.unzipFile(pluginFile);
-                    if (!ret) {
-                        JOptionPane.showMessageDialog(null, "解压失败", "错误", JOptionPane.ERROR_MESSAGE);
-                        return null;
-                    }
-                }
-                callBack.onPreparePluginFinished();
-                return null;
-            }
-        };
-        worker.execute();
+        executorService.submit(downloadRunnable);
         downloadProcessDialog.setVisible(true);
     }
 
+
+    public static void unzipPlugin(String pluginFilename, ChangeMenuPreparePluginCallBack changeMenuPreparePluginCallBack) {
+        File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
+        boolean ret = FileUtils.unzipFile(pluginFile);
+        if (ret) {
+            changeMenuPreparePluginCallBack.onUnzipFinished(ChangeMenuPreparePluginCallBack.UNZIP_SUCCESS);
+        } else {
+            changeMenuPreparePluginCallBack.onUnzipFinished(ChangeMenuPreparePluginCallBack.UNZIP_FAILED);
+        }
+    }
 }

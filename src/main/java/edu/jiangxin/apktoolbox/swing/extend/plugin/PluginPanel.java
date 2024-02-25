@@ -14,7 +14,7 @@ public abstract class PluginPanel extends EasyPanel implements IPlugin {
 
     @Override
     public void preparePlugin(IPreparePluginCallback callBack) {
-        PluginUtils.preparePlugin(getPluginFilename(), isPluginNeedUnzip(), callBack);
+        callBack.onPrepareStarted();
     }
 
     @Override
