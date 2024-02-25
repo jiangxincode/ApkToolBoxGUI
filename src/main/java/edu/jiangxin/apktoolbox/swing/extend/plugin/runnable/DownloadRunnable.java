@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.swing.extend.plugin.download;
+package edu.jiangxin.apktoolbox.swing.extend.plugin.runnable;
 
 import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;

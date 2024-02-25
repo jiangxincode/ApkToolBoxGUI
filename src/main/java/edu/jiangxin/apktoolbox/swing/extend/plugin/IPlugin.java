@@ -9,6 +9,4 @@ public interface IPlugin {
     boolean isPluginNeedUnzip();
 
     String getPluginStartupCmd();
-
-
 }

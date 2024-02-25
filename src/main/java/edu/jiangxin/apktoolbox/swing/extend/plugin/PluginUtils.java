@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
-import edu.jiangxin.apktoolbox.swing.extend.plugin.download.DownloadRunnable;
-import edu.jiangxin.apktoolbox.swing.extend.plugin.download.UnzipRunnable;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.runnable.DownloadRunnable;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.runnable.UnzipRunnable;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
