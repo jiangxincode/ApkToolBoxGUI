@@ -1,13 +1,11 @@
 package edu.jiangxin.apktoolbox.swing.extend.plugin;
 
-import edu.jiangxin.apktoolbox.swing.extend.plugin.download.DownloadProcessDialog;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.download.DownloadRunnable;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,9 +26,9 @@ public class PluginUtils {
     public static void checkPlugin(String pluginFilename, IPreparePluginCallback callBack) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
         if (pluginFile.exists()) {
-            callBack.onCheckFinished(ChangeMenuPreparePluginCallBack.CHECK_EXIST);
+            callBack.onCheckFinished(ChangeMenuPreparePluginController.RESULT_CHECK_EXIST);
         } else {
-            callBack.onCheckFinished(ChangeMenuPreparePluginCallBack.CHECK_NOT_EXIST);
+            callBack.onCheckFinished(ChangeMenuPreparePluginController.RESULT_CHECK_NOT_EXIST);
         }
     }
 
@@ -46,41 +44,18 @@ public class PluginUtils {
         File pluginDir = new File(Utils.getPluginDirPath());
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-
         DownloadRunnable downloadRunnable = new DownloadRunnable(url, pluginDir, callBack);
-
-        DownloadProcessDialog downloadProcessDialog = new DownloadProcessDialog("Downloading...");
-        downloadProcessDialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                downloadRunnable.cancel();
-            }
-        });
-
-        //How to Use Swing Timers:
-        //https://docs.oracle.com/javase/tutorial/uiswing/misc/timer.html
-        Timer timer = new Timer(1000, e -> {
-            if (downloadProcessDialog.progressBar.getValue() == 100) {
-                ((Timer) e.getSource()).stop();
-            } else {
-                downloadProcessDialog.progressBar.setValue(downloadRunnable.getProgress());
-                downloadProcessDialog.progressLabel.setText(downloadRunnable.getProgress() + "%");
-            }
-        });
-        timer.start();
-
         executorService.submit(downloadRunnable);
-        downloadProcessDialog.setVisible(true);
     }
 
 
-    public static void unzipPlugin(String pluginFilename, ChangeMenuPreparePluginCallBack changeMenuPreparePluginCallBack) {
+    public static void unzipPlugin(String pluginFilename, IPreparePluginCallback callback) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
         boolean ret = FileUtils.unzipFile(pluginFile);
         if (ret) {
-            changeMenuPreparePluginCallBack.onUnzipFinished(ChangeMenuPreparePluginCallBack.UNZIP_SUCCESS);
+            callback.onUnzipFinished(ChangeMenuPreparePluginController.RESULT_UNZIP_SUCCESS);
         } else {
-            changeMenuPreparePluginCallBack.onUnzipFinished(ChangeMenuPreparePluginCallBack.UNZIP_FAILED);
+            callback.onUnzipFinished(ChangeMenuPreparePluginController.RESULT_UNZIP_FAILED);
         }
     }
 }

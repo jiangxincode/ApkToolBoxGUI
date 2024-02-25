@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.swing.extend.listener;
 
-import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPlugin;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;
 import edu.jiangxin.apktoolbox.utils.Utils;
@@ -16,7 +16,7 @@ public abstract class ChangeMenuToPluginListener implements IPlugin, ChangeMenuL
 
     @Override
     public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
-        preparePlugin(new ChangeMenuPreparePluginCallBack(getPluginFilename(), isPluginNeedUnzip(), callBack));
+        preparePlugin(new ChangeMenuPreparePluginController(getPluginFilename(), isPluginNeedUnzip(), callBack));
     }
 
     @Override
