@@ -2,7 +2,6 @@ package edu.jiangxin.apktoolbox.swing.extend.plugin.download;
 
 import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;
-import edu.jiangxin.apktoolbox.swing.extend.plugin.ProgressBarDialog;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.progress.ProgressMonitor;
 import org.apache.commons.io.FileUtils;
@@ -10,49 +9,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
-public class UnzipRunnable implements Runnable {
+public class UnzipRunnable extends AbstractRunnable {
     private static final Logger LOGGER = LogManager.getLogger(UnzipRunnable.class.getSimpleName());
     private final File pluginFile;
-    private final IPreparePluginCallback callback;
-
-    private final ProgressBarDialog progressBarDialog;
-
-    private int progress = 0;
-
-    private boolean isCancelled = false;
-
-    private boolean isFinished = false;
 
     public UnzipRunnable(File pluginFile, IPreparePluginCallback callback) {
+        super("Unzipping...", callback);
         this.pluginFile = pluginFile;
-        this.callback = callback;
-        progressBarDialog = new ProgressBarDialog("Unzipping...");
-        progressBarDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent windowEvent) {
-                cancel();
-            }
-        });
-
-        //How to Use Swing Timers: https://docs.oracle.com/javase/tutorial/uiswing/misc/timer.html
-        Timer timer = new Timer(1000, e -> {
-            if (isFinished || isCancelled) {
-                ((Timer) e.getSource()).stop();
-                progressBarDialog.dispose();
-            } else {
-                progressBarDialog.setValue(progress);
-            }
-        });
-        timer.start();
-    }
-
-    public void cancel() {
-        isCancelled = true;
     }
 
     @Override

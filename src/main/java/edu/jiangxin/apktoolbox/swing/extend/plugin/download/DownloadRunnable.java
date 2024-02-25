@@ -2,7 +2,6 @@ package edu.jiangxin.apktoolbox.swing.extend.plugin.download;
 
 import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.IPreparePluginCallback;
-import edu.jiangxin.apktoolbox.swing.extend.plugin.ProgressBarDialog;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,46 +13,15 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-public class DownloadRunnable implements Runnable {
+public class DownloadRunnable extends AbstractRunnable {
     private static final Logger LOGGER = LogManager.getLogger(DownloadRunnable.class.getSimpleName());
     private final URL url;
     private final File downloadDir;
-    private final IPreparePluginCallback callback;
-
-    private final ProgressBarDialog progressBarDialog;
-
-    private int progress = 0;
-
-    private boolean isCancelled = false;
-
-    private boolean isFinished = false;
 
     public DownloadRunnable(URL url, File downloadDir, IPreparePluginCallback callback) {
+        super("Downloading...", callback);
         this.url = url;
         this.downloadDir = downloadDir;
-        this.callback = callback;
-        progressBarDialog = new ProgressBarDialog("Downloading...");
-        progressBarDialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                cancel();
-            }
-        });
-
-        //How to Use Swing Timers: https://docs.oracle.com/javase/tutorial/uiswing/misc/timer.html
-        Timer timer = new Timer(1000, e -> {
-            if (isFinished || isCancelled) {
-                ((Timer) e.getSource()).stop();
-                progressBarDialog.dispose();
-            } else {
-                progressBarDialog.setValue(progress);
-            }
-        });
-        timer.start();
-    }
-
-    public void cancel() {
-        isCancelled = true;
     }
 
     @Override
