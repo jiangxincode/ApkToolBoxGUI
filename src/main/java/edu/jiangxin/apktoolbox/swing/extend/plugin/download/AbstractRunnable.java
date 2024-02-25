@@ -12,7 +12,7 @@ public abstract class AbstractRunnable implements Runnable {
     protected boolean isCancelled = false;
     protected boolean isFinished = false;
 
-    public AbstractRunnable(String dialogTitle, IPreparePluginCallback callback) {
+    protected AbstractRunnable(String dialogTitle, IPreparePluginCallback callback) {
         this.callback = callback;
         this.progressBarDialog = new ProgressBarDialog(dialogTitle);
         progressBarDialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -33,7 +33,7 @@ public abstract class AbstractRunnable implements Runnable {
         timer.start();
     }
 
-    public void cancel() {
+    protected void cancel() {
         isCancelled = true;
     }
 }
