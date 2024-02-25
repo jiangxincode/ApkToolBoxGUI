@@ -17,9 +17,11 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
     private final boolean isPluginNeedUnzip;
     private final IPreChangeMenuCallBack callBack;
 
-    public static final int RESULT_CHECK_EXIST = 0;
+    public static final int RESULT_CHECK_SUCCESS = 0;
 
-    public static final int RESULT_CHECK_NOT_EXIST = 1;
+    public static final int RESULT_CHECK_ZIP_EXIST = 1;
+
+    public static final int RESULT_CHECK_ZIP_NOT_EXIST = 2;
 
     public static final int RESULT_DOWNLOAD_SUCCESS = 0;
 
@@ -30,6 +32,8 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
     public static final int RESULT_UNZIP_SUCCESS = 0;
 
     public static final int RESULT_UNZIP_FAILED = -1;
+
+    public static final int RESULT_UNZIP_CANCELLED = 1;
 
     public ChangeMenuPreparePluginController(String pluginFilename, boolean isPluginNeedUnzip, IPreChangeMenuCallBack callBack) {
         this.pluginFilename = pluginFilename;
@@ -44,20 +48,17 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
 
     @Override
     public void onCheckFinished(int result) {
-        if (result == RESULT_CHECK_EXIST) {
-            onPrepareFinished();
-            return;
+        switch (result) {
+            case RESULT_CHECK_SUCCESS -> onPrepareFinished();
+            case RESULT_CHECK_ZIP_EXIST -> PluginUtils.unzipPlugin(pluginFilename, this);
+            case RESULT_CHECK_ZIP_NOT_EXIST -> {
+                int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
+                if (userChoose == JOptionPane.YES_OPTION) {
+                    PluginUtils.downloadPlugin(pluginFilename, this);
+                }
+            }
+            default -> logger.info("onCheckFinished: {}", result);
         }
-        if (result != RESULT_CHECK_NOT_EXIST) {
-            logger.info("onCheckFinished: {}", result);
-            return;
-        }
-        int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
-        if (userChoose != JOptionPane.YES_OPTION) {
-            logger.warn("userChoose: {}", userChoose);
-            return;
-        }
-        PluginUtils.downloadPlugin(pluginFilename, this);
     }
 
     @Override
@@ -87,6 +88,7 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
         switch (result) {
             case RESULT_UNZIP_SUCCESS -> onPrepareFinished();
             case RESULT_UNZIP_FAILED -> JOptionPane.showMessageDialog(null, "解压失败", "错误", JOptionPane.ERROR_MESSAGE);
+            case RESULT_UNZIP_CANCELLED -> JOptionPane.showMessageDialog(null, "解压取消", "提示", JOptionPane.INFORMATION_MESSAGE);
             default -> logger.info("onUnzipFinished: {}", result);
         }
     }

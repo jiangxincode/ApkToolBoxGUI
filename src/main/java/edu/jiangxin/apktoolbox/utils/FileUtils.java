@@ -71,18 +71,6 @@ public class FileUtils {
             return null;
         }
     }
-
-    public static boolean unzipFile(File pluginFile) {
-        LOGGER.info("Unzip file: {}", pluginFile);
-        String parentDir = pluginFile.getParent();
-        try (ZipFile zipFile = new ZipFile(pluginFile)) {
-            zipFile.extractAll(parentDir);
-            return true;
-        } catch (IOException e) {
-            LOGGER.error("unzipFile failed: IOException");
-            return false;
-        }
-    }
 }
 
 
