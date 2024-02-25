@@ -101,11 +101,14 @@ public class MainFrame extends EasyFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMenuBar();
         contentPane = new JPanel();
-        EasyPanel initPanel = new AboutPanel();
-        initPanel.initUI();
-        contentPane.add(initPanel);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        contentPane.add(Box.createVerticalGlue());
+        EasyPanel initPanel = new AboutPanel();
+        initPanel.init();
+        initPanel.setBorder(BorderFactory.createTitledBorder(bundle.getString("help.about.title")));
+        contentPane.add(initPanel);
+        contentPane.add(Box.createVerticalGlue());
         setContentPane(contentPane);
         refreshSizeAndLocation();
     }
@@ -360,7 +363,7 @@ public class MainFrame extends EasyFrame {
         public void onChangeMenu() {
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
-            panel.initUI();
+            panel.init();
             panel.setBorder(BorderFactory.createTitledBorder(title));
             contentPane.add(panel);
             logger.info("Panel changed: " + panel.getClass().getSimpleName());

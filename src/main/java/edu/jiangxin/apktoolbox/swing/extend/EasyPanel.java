@@ -23,6 +23,8 @@ public class EasyPanel extends JPanel {
     protected Logger logger;
     protected Configuration conf;
     protected ResourceBundle bundle;
+
+    protected boolean isInited = false;
     
     public EasyPanel() throws HeadlessException {
         super();
@@ -34,6 +36,13 @@ public class EasyPanel extends JPanel {
 
     public boolean isNeedPreChangeMenu() {
         return false;
+    }
+
+    public void init() {
+        if (!isInited) {
+            initUI();
+            isInited = true;
+        }
     }
 
     public void initUI() {
