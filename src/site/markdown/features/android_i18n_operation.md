@@ -1,12 +1,4 @@
-## Android Develop
-
-### SnapShot(Android Develop)
-
-### Dumpsys Alarm Info(Android Develop)
-
-* adb shell dumpsys alarm
-
-### Monkey Test(Android Develop)
+## Android Internationalization Operations
 
 ### Copy internationalization items(Android Develop)
 

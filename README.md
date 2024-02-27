@@ -24,7 +24,7 @@ It's a collection of common tools, encoding convert, timestamp convert, color pi
 
 [![Project Documentation](https://img.shields.io/badge/ApkToolBoxGUI-Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
-* [Android Develop](./src/site/markdown/features/android_develop.md)
+* [Android Develop](./src/site/markdown/features/android_i18n_operation.md)
 * [Batch Rename](./src/site/markdown/features/batch_rename.md)
 * [Check Summary](./src/site/markdown/features/batch_rename.md)
 * [Color Picker](./src/site/markdown/features/color_picker.md)

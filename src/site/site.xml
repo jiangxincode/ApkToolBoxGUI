@@ -54,7 +54,10 @@
             <item name="Relationship" href="features/calculate_relationship.html"/>
             <item name="Decode Protobuf" href="features/decode_protobuf.html"/>
             <item name="Reverse Engineer" href="features/reverse_engineer.html"/>
-            <item name="Android Develop" href="features/android_develop.html"/>
+            <item name="Android Dumpsys Alarm Info" href="features/android_dumpsys_alarm.html"/>
+            <item name="Android Internationalization Operations" href="features/android_i18n_operation.html"/>
+            <item name="Android Monkey Test" href="features/android_monkey_test.html"/>
+            <item name="Android Android Take SnapShot" href="features/android_take_screenshot.html"/>
         </menu>
         <menu name="Contribute">
             <item name="How To Contribute" href="contribute/how_to_contribute.html"/>
