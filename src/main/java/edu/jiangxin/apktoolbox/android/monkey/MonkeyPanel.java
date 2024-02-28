@@ -8,16 +8,11 @@ import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jiangxin
@@ -26,6 +21,7 @@ import java.util.List;
  */
 public class MonkeyPanel extends EasyPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     
     private static final String LOG_NAME = "java_monkey_log";
@@ -34,24 +30,14 @@ public class MonkeyPanel extends EasyPanel {
     private static final String MINUTE = "分";
     private static final String SECOND = "秒";
 
+    private static final String CMD = "cmd.exe";
+
     private static final String CMD_PS_A = "adb -s ";
     private static final String CMD_PS_B = " shell ps";
     private static final String CMD_KILL_A = "adb -s ";
     private static final String CMD_KILL_B = " shell kill ";
 
     private static final String MONKEY = "com.android.commands.monkey";
-
-    private static final String IGNORE_CRASHES = " --ignore-crashes";
-    private static final String IGNORE_TIMEOUTS = " --ignore-timeouts";
-    private static final String MONITOR_NATIVE_CRASHES = " --monitor-native-crashes";
-    private static final String IGNORE_SECURITY_EXCEPTIONS = " --ignore-security-exceptions";
-    private static final String KILL_PROCESS_AFTER_ERROR = " --kill-process-after-error";
-    private static final String WAIT_DBG = " --wait-dbg";
-    private static final String HPROF = " --hprof";
-
-    private static final String LEVEL_0 = " -v ";
-    private static final String LEVEL_1 = " -v -v ";
-    private static final String LEVEL_2 = " -v -v -v ";
 
     private static final String TRANSACTIONCOUNT = "9999";
 
@@ -78,24 +64,15 @@ public class MonkeyPanel extends EasyPanel {
     Thread threadTimeType = null;
     Process monkeyProcess = null;
 
-    JLabel labelDevices = new JLabel("设备列表");
-    JComboBox<String> comboBoxDevices = new JComboBox<String>();
+    JComboBox<String> comboBoxDevices = new JComboBox<>();
     JButton refreshButton = new JButton("刷新");
 
-    JFileChooser fileChooser = new JFileChooser();
     JButton logPathButton = new JButton("选择路径");
-    JButton excuteButton = new JButton("运行命令");
+    JButton executeButton = new JButton("运行命令");
 
     JButton resetButton = new JButton("重置页面");
     JButton interruptButton = new JButton("终止运行");
-    JButton exitButton = new JButton("退出运行");
 
-    JLabel labelProgram = new JLabel("应用程序");
-    JLabel labelSpace = new JLabel("事件间隔");
-    JLabel labelMillisecond = new JLabel("毫秒");
-    JLabel labelTime = new JLabel("运行时长");
-    JLabel labelLogLevel = new JLabel("日志级别");
-    JLabel labelRestrain = new JLabel("约束条件");
     JLabel labelHour = new JLabel();
     JLabel labelMinute = new JLabel();
     JLabel labelSecond = new JLabel();
@@ -103,8 +80,8 @@ public class MonkeyPanel extends EasyPanel {
     JTextField textTime = new JTextField(30);
     JTextField textLogPath = new JTextField(90);
 
-    JComboBox<String> comboBoxProgram = new JComboBox<String>();
-    JComboBox<String> comboBoxTime = new JComboBox<String>();
+    JComboBox<String> comboBoxProgram = new JComboBox<>();
+    JComboBox<String> comboBoxTime = new JComboBox<>();
 
     /**
      * --dbg-no-events：初始化启动的activity，但是不产生任何事件
@@ -163,268 +140,336 @@ public class MonkeyPanel extends EasyPanel {
      */
     JRadioButton radioButton2 = new JRadioButton("非常详细", true);
 
-    String dbgNoEvents = "";
-    String hprof = "";
-    String ignoreCrashes = "";
-    String ignoreTimeouts = "";
-    String monitorNativeCrashes = "";
-    String ignoreSecurityExceptions = "";
-    String killProcessAfterError = "";
-    String waitDbg = "";
-
-    String logLevel = "";
     ArrayList<String> list;
-    ArrayList<String> arrayList = new ArrayList<String>();
     int flag = 0;
     String[] monkeyCmd = null;
 
     @Override
     public void initUI() {
         setPreferredSize(new Dimension(Constants.DEFAULT_PANEL_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
-        setLayout(null);
-        initDevicesAndProgram();
-        initRestrainCondition();
-        initTimeSetting();
-        initLogSetting();
-        initOperation();
-        registListener();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        JPanel devicesPanel = new JPanel();
+        devicesPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initDevices(devicesPanel);
+        add(devicesPanel);
+
+        JPanel programPanel = new JPanel();
+        programPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initProgram(programPanel);
+        add(programPanel);
+
+        JPanel restrainConditionPanel = new JPanel();
+        restrainConditionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initRestrainCondition(restrainConditionPanel);
+        add(restrainConditionPanel);
+
+        JPanel eventIntervalPanel = new JPanel();
+        eventIntervalPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initEventInterval(eventIntervalPanel);
+        add(eventIntervalPanel);
+
+        JPanel runTimePanel = new JPanel();
+        runTimePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initRunTime(runTimePanel);
+        add(runTimePanel);
+
+        JPanel logLevelPanel = new JPanel();
+        logLevelPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initLogLevel(logLevelPanel);
+        add(logLevelPanel);
+
+        JPanel logPathPanel = new JPanel();
+        logPathPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initLogPath(logPathPanel);
+        add(logPathPanel);
+
+        JPanel operationPanel = new JPanel();
+        operationPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        initOperation(operationPanel);
+        add(operationPanel);
     }
 
-    private void initDevicesAndProgram() {
-        labelDevices.setBounds(30, 25, 60, 20);
-        comboBoxDevices.setBounds(90, 25, 240, 20);
-        refreshButton.setBounds(340, 25, 60, 20);
+    private void initDevices(JPanel panel) {
+        JLabel labelDevices = new JLabel("设备列表");
+        labelDevices.setPreferredSize(new Dimension(60, 25));
+        comboBoxDevices.setPreferredSize(new Dimension(240, 25));
+        refreshButton.setPreferredSize(new Dimension(60, 25));
 
-        labelProgram.setBounds(30, 55, 60, 20);
-        comboBoxProgram.setBounds(90, 55, 240, 20);
+        panel.add(labelDevices);
+        panel.add(comboBoxDevices);
+        panel.add(refreshButton);
+
+        refreshButton.addActionListener(e -> {
+            comboBoxDevices.removeAllItems();
+            List<String> devices = getDevices();
+            for (String device : devices) {
+                comboBoxDevices.addItem(device);
+            }
+        });
+    }
+
+    private void initProgram(JPanel panel) {
+        JLabel labelProgram = new JLabel("应用程序");
+        labelProgram.setPreferredSize(new Dimension(60, 25));
+        comboBoxProgram.setPreferredSize(new Dimension(240, 25));
         comboBoxProgram.setEditable(true);
         comboBoxProgram.setSelectedItem("com.shinow.*");
 
-        add(labelDevices);
-        add(comboBoxDevices);
-        add(refreshButton);
+        panel.add(labelProgram);
+        panel.add(comboBoxProgram);
 
-        add(labelProgram);
-        add(comboBoxProgram);
-
-        refreshButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                comboBoxDevices.removeAllItems();
-                List<String> devices = getDevices();
-                for (String device : devices) {
-                    comboBoxDevices.addItem(device);
-                }
-            }
-        });
-
-        comboBoxDevices.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                comboBoxProgram.removeAllItems();
-                comboBoxProgram.setSelectedItem("com.shinow.*");
-                List<String> programs = getApplication(comboBoxDevices.getSelectedItem().toString());
-                for (String program : programs) {
-                    comboBoxProgram.addItem(program);
-                }
-
+        comboBoxDevices.addActionListener(e -> {
+            comboBoxProgram.removeAllItems();
+            comboBoxProgram.setSelectedItem("com.shinow.*");
+            List<String> programs = getApplication(comboBoxDevices.getSelectedItem().toString());
+            for (String program : programs) {
+                comboBoxProgram.addItem(program);
             }
 
         });
-
     }
 
-    private void initRestrainCondition() {
-        labelRestrain.setBounds(30, 85, 56, 20);
-        checkBoxCrashes.setBounds(86, 85, 100, 20);
-        checkBoxTimeouts.setBounds(186, 85, 100, 20);
-        checkBoxExceptions.setBounds(286, 85, 110, 20);
-        checkBoxNativeCrashes.setBounds(400, 85, 180, 20);
-        checkBoxKill.setBounds(86, 115, 180, 20);
-        checkBoxWaitDbg.setBounds(286, 115, 280, 20);
-        checkBoxHprof.setBounds(86, 145, 280, 20);
+    private void initRestrainCondition(JPanel panel) {
+        JLabel labelRestrain = new JLabel("约束条件");
+        labelRestrain.setPreferredSize(new Dimension(60, 25));
+        checkBoxCrashes.setPreferredSize(new Dimension(100, 25));
+        checkBoxTimeouts.setPreferredSize(new Dimension(100, 25));
+        checkBoxExceptions.setPreferredSize(new Dimension(110, 25));
+        checkBoxNativeCrashes.setPreferredSize(new Dimension(180, 25));
+        checkBoxKill.setPreferredSize(new Dimension(180, 25));
+        checkBoxWaitDbg.setPreferredSize(new Dimension(280, 25));
+        checkBoxHprof.setPreferredSize(new Dimension(280, 25));
 
-        add(labelRestrain);
-        add(checkBoxCrashes);
-        add(checkBoxTimeouts);
-        add(checkBoxExceptions);
-        add(checkBoxNativeCrashes);
-        add(checkBoxKill);
-        add(checkBoxWaitDbg);
-        add(checkBoxHprof);
-
-        checkBoxCrashes.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    ignoreCrashes = IGNORE_CRASHES;
-                } else {
-                    ignoreCrashes = "";
-                }
-            }
-        });
-
-        checkBoxTimeouts.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    ignoreTimeouts = IGNORE_TIMEOUTS;
-                } else {
-                    ignoreTimeouts = "";
-                }
-            }
-        });
-
-        checkBoxExceptions.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    ignoreSecurityExceptions = IGNORE_SECURITY_EXCEPTIONS;
-                } else {
-                    ignoreSecurityExceptions = "";
-                }
-            }
-        });
-
-        checkBoxNativeCrashes.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    monitorNativeCrashes = MONITOR_NATIVE_CRASHES;
-                } else {
-                    monitorNativeCrashes = "";
-                }
-            }
-        });
-
+        panel.add(labelRestrain);
+        panel.add(checkBoxCrashes);
+        panel.add(checkBoxTimeouts);
+        panel.add(checkBoxExceptions);
+        panel.add(checkBoxNativeCrashes);
+        panel.add(checkBoxKill);
+        panel.add(checkBoxWaitDbg);
+        panel.add(checkBoxHprof);
     }
 
-    private void initTimeSetting() {
-        labelSpace.setBounds(30, 175, 60, 20);
-        textMillisecond.setBounds(90, 175, 150, 20);
+    private void initEventInterval(JPanel panel) {
+        JLabel labelSpace = new JLabel("事件间隔");
+        labelSpace.setPreferredSize(new Dimension(60, 25));
+        textMillisecond.setPreferredSize(new Dimension(150, 25));
         textMillisecond.setDocument(new NumberPlainDocument(7));
         textMillisecond.setText("500");
-        labelMillisecond.setBounds(245, 175, 40, 20);
+        JLabel labelMillisecond = new JLabel("毫秒");
+        labelMillisecond.setPreferredSize(new Dimension(40, 25));
 
-        labelTime.setBounds(30, 205, 60, 20);
-        textTime.setBounds(90, 205, 150, 20);
+        panel.add(labelSpace);
+        panel.add(textMillisecond);
+        panel.add(labelMillisecond);
+    }
+
+    private void initRunTime(JPanel panel) {
+        JLabel labelTime = new JLabel("运行时长");
+        labelTime.setPreferredSize(new Dimension(60, 25));
+        textTime.setPreferredSize(new Dimension(150, 25));
         textTime.setDocument(new NumberPlainDocument(7));
         textTime.setText("1");
-        comboBoxTime.setBounds(245, 205, 50, 20);
+        comboBoxTime.setPreferredSize(new Dimension(60, 25));
         comboBoxTime.addItem(HOUR);
         comboBoxTime.addItem(MINUTE);
         comboBoxTime.addItem(SECOND);
 
-        labelHour.setBounds(405, 205, 50, 20);
-        labelMinute.setBounds(475, 205, 50, 20);
-        labelSecond.setBounds(545, 205, 50, 20);
+        labelHour.setPreferredSize(new Dimension(50, 25));
+        labelMinute.setPreferredSize(new Dimension(50, 25));
+        labelSecond.setPreferredSize(new Dimension(50, 25));
 
-        add(labelSpace);
-        add(textMillisecond);
-        add(labelMillisecond);
+        panel.add(labelTime);
+        panel.add(textTime);
+        panel.add(comboBoxTime);
 
-        add(labelTime);
-        add(textTime);
-        add(comboBoxTime);
-
-        add(labelHour);
-        add(labelMinute);
-        add(labelSecond);
-
+        panel.add(labelHour);
+        panel.add(labelMinute);
+        panel.add(labelSecond);
     }
 
-    private void initLogSetting() {
-        labelLogLevel.setBounds(30, 235, 60, 20);
+    private void initLogLevel(JPanel panel) {
+        JLabel labelLogLevel = new JLabel("日志级别");
+        labelLogLevel.setPreferredSize(new Dimension(60, 25));
 
         group.add(radioButton0);
         group.add(radioButton1);
         group.add(radioButton2);
 
-        radioButton0.setBounds(86, 235, 80, 20);
-        radioButton1.setBounds(186, 235, 80, 20);
-        radioButton2.setBounds(286, 235, 80, 20);
+        radioButton0.setPreferredSize(new Dimension(80, 25));
+        radioButton1.setPreferredSize(new Dimension(80, 25));
+        radioButton2.setPreferredSize(new Dimension(80, 25));
 
-        logPathButton.setBounds(30, 265, 100, 20);
-        textLogPath.setBounds(140, 265, 320, 20);
+        panel.add(labelLogLevel);
+        panel.add(radioButton0);
+        panel.add(radioButton1);
+        panel.add(radioButton2);
+    }
+
+    private void initLogPath(JPanel panel) {
+        logPathButton.setPreferredSize(new Dimension(100, 25));
+        textLogPath.setColumns(60);
         textLogPath.setEditable(false);
         textLogPath.setText("D:");
 
-        add(labelLogLevel);
-        add(radioButton0);
-        add(radioButton1);
-        add(radioButton2);
+        panel.add(logPathButton);
+        panel.add(textLogPath);
 
-        add(logPathButton);
-        add(textLogPath);
-
-        logPathButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource() == logPathButton) {
-                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                    int intRetVal = fileChooser.showOpenDialog(new Label());
-                    if (intRetVal == JFileChooser.APPROVE_OPTION) {
-                        textLogPath.setText(fileChooser.getSelectedFile().getPath());
-                    }
+        logPathButton.addActionListener(e -> {
+            if (e.getSource() == logPathButton) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int intRetVal = fileChooser.showOpenDialog(new Label());
+                if (intRetVal == JFileChooser.APPROVE_OPTION) {
+                    textLogPath.setText(fileChooser.getSelectedFile().getPath());
                 }
             }
         });
-
     }
 
-    private void initOperation() {
-        excuteButton.setBounds(30, 305, 100, 20);
-        resetButton.setBounds(140, 305, 100, 20);
-        interruptButton.setBounds(250, 305, 100, 20);
-        exitButton.setBounds(360, 305, 100, 20);
+    private void initOperation(JPanel panel) {
+        executeButton.setPreferredSize(new Dimension(100, 25));
+        resetButton.setPreferredSize(new Dimension(100, 25));
+        interruptButton.setPreferredSize(new Dimension(100, 25));
 
-        add(excuteButton);
-        add(resetButton);
-        add(interruptButton);
-        add(exitButton);
+        panel.add(executeButton);
+        panel.add(resetButton);
+        panel.add(interruptButton);
 
         interruptButton.setEnabled(false);
 
-        excuteButton.addActionListener(new ExcuteButtonActionListener());
+        executeButton.addActionListener(e -> execute());
 
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 重置约束条件
-                checkBoxCrashes.setSelected(true);
-                checkBoxTimeouts.setSelected(true);
-                checkBoxExceptions.setSelected(true);
-                checkBoxNativeCrashes.setSelected(true);
-                // 重置日志级别
-                radioButton0.setSelected(false);
-                radioButton1.setSelected(false);
-                radioButton2.setSelected(true);
-                // 重置事件间隔
-                textMillisecond.setText("500");
-                // 重置运行时长
-                textTime.setText("1");
-            }
-        });
+        resetButton.addActionListener(e -> reset());
 
-        interruptButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 杀掉Monkey执行进程
-                interruptThread();
-                excuteButton.setEnabled(true);
-                resetButton.setEnabled(true);
-                interruptButton.setEnabled(false);
-                exitButton.setEnabled(true);
-            }
-        });
+        interruptButton.addActionListener(e -> interrupt());
 
     }
 
-    /**
-     * 运行
-     */
-    private void registListener() {
+    private void execute() {
+        String combinedOptionCmd = getCombinedOptionCmd();
 
+        boolean isOk = checkCondition();
+        if (!isOk) {
+            return;
+        }
+
+        String logLevel = queryLogLevelString();
+        String logFile = textLogPath.getText() + "\\" + LOG_NAME + DateUtils.getCurrentDateString() + ".txt";
+
+        monkeyCmd = new String[] { CMD, "/C",
+                "adb -s " + comboBoxDevices.getSelectedItem() + " shell monkey -p "
+                        + comboBoxProgram.getSelectedItem() + combinedOptionCmd + " --throttle "
+                        + textMillisecond.getText() + "" + logLevel + "" + TRANSACTIONCOUNT + " > " + logFile };
+
+        logger.info("Monkey: {}", monkeyCmd[2]);
+
+        flag = 0;
+
+        try {
+            monkeyProcess = Runtime.getRuntime().exec(monkeyCmd);
+        } catch (Exception ex) {
+            logger.error("Exception", ex);
+        }
+
+        executeButton.setEnabled(false);
+        resetButton.setEnabled(false);
+        interruptButton.setEnabled(true);
+
+        // 倒计时文本
+        labelHour.setVisible(true);
+        labelMinute.setVisible(true);
+        labelSecond.setVisible(true);
+
+        // 获取时间类型
+        String timeType = (String) comboBoxTime.getSelectedItem();
+        long time = Long.parseLong(textTime.getText());
+        if (Objects.equals(timeType, HOUR)) {
+            time *= 3600;
+        } else if (Objects.equals(timeType, MINUTE)) {
+            time *= 60;
+        }
+        threadTimeType = new Thread(new CountdownRunnable(time));
+        threadTimeType.start();
+    }
+
+    private void reset() {
+        // 重置约束条件
+        checkBoxCrashes.setSelected(true);
+        checkBoxTimeouts.setSelected(true);
+        checkBoxExceptions.setSelected(true);
+        checkBoxNativeCrashes.setSelected(true);
+        // 重置日志级别
+        radioButton0.setSelected(false);
+        radioButton1.setSelected(false);
+        radioButton2.setSelected(true);
+        // 重置事件间隔
+        textMillisecond.setText("500");
+        // 重置运行时长
+        textTime.setText("1");
+    }
+
+    private void interrupt() {
+        // 杀掉Monkey执行进程
+        interruptThread();
+        executeButton.setEnabled(true);
+        resetButton.setEnabled(true);
+        interruptButton.setEnabled(false);
+    }
+
+    private String getCombinedOptionCmd() {
+        String ignoreCrashes = checkBoxCrashes.isSelected() ? " --ignore-crashes" : "";
+        String ignoreTimeouts = checkBoxTimeouts.isSelected() ? " --ignore-timeouts" : "";
+        String monitorNativeCrashes = checkBoxNativeCrashes.isSelected() ? " --monitor-native-crashes" : "";
+        String ignoreSecurityExceptions = checkBoxExceptions.isSelected() ? " --ignore-security-exceptions" : "";
+        String hprof = checkBoxHprof.isSelected() ? " --hprof" : "";
+        String killProcessAfterError = checkBoxKill.isSelected() ? " --kill-process-after-error" : "";
+        String waitDbg = checkBoxWaitDbg.isSelected() ? " --wait-dbg" : "";
+        String dbgNoEvents = checkBoxDbgNoEvents.isSelected() ? "--dbg-no-events" : "";
+        return ignoreCrashes + ignoreTimeouts + ignoreSecurityExceptions + monitorNativeCrashes + hprof
+                + killProcessAfterError + waitDbg + dbgNoEvents;
+    }
+
+    private boolean checkCondition() {
+        // 判断设备列表和应用程序是否为空
+        if (comboBoxDevices.getItemCount() == 0) {
+            new MyDialog(MSG4).setVisible(true);
+            refreshButton.requestFocus();
+            return false;
+        }
+        if (comboBoxProgram.getItemCount() == 0) {
+            new MyDialog(MSG5).setVisible(true);
+            return false;
+        }
+        // 判断事件间隔和运行时长是否为空
+        if (textMillisecond.getText().length() == 0) {
+            new MyDialog(MSG2).setVisible(true);
+            textMillisecond.requestFocus();
+            return false;
+        }
+        if (textTime.getText().length() == 0) {
+            new MyDialog(MSG2).setVisible(true);
+            textTime.requestFocus();
+            return false;
+        }
+        if (textLogPath.getText().length() == 0) {
+            new MyDialog(MSG6).setVisible(true);
+            logPathButton.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private String queryLogLevelString() {
+        if (radioButton0.isSelected()) {
+            return " -v ";
+        } else if (radioButton1.isSelected()) {
+            return " -v -v ";
+        } else if (radioButton2.isSelected()) {
+            return " -v -v -v ";
+        }
+        return "";
     }
 
     /**
@@ -434,7 +479,7 @@ public class MonkeyPanel extends EasyPanel {
 
         logger.info("中断Monkey命令--开始");
 
-        String[] cmd1 = new String[] { "cmd.exe", "/c", CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
+        String[] cmd1 = new String[] { CMD, "/c", CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
         executeCommand(cmd1, MONKEY);
 
         List<String> listPid = list;
@@ -442,9 +487,9 @@ public class MonkeyPanel extends EasyPanel {
 
         String[] cmd2 = null;
         String pid = "";
-        for (int i = 0; i < listPid.size(); i++) {
-            pid = listPid.get(i);
-            cmd2 = new String[] { "cmd.exe", "/c", CMD_KILL_A + comboBoxDevices.getSelectedItem() + CMD_KILL_B + pid };
+        for (String s : listPid) {
+            pid = s;
+            cmd2 = new String[]{CMD, "/c", CMD_KILL_A + comboBoxDevices.getSelectedItem() + CMD_KILL_B + pid};
             executeCommand(cmd2, MONKEY);
         }
 
@@ -473,7 +518,7 @@ public class MonkeyPanel extends EasyPanel {
             logger.error("process is null");
             return devices;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("device") && !line.contains("List of")) {
@@ -482,8 +527,6 @@ public class MonkeyPanel extends EasyPanel {
                     devices.add(line);
                 }
             }
-        } catch (UnsupportedEncodingException e) {
-            logger.error("read failed: " + e.getMessage());
         } catch (IOException e) {
             logger.error("read failed: " + e.getMessage());
         } finally {
@@ -508,7 +551,7 @@ public class MonkeyPanel extends EasyPanel {
             logger.error("process is null");
             return apps;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("package:")) {
@@ -516,8 +559,6 @@ public class MonkeyPanel extends EasyPanel {
                     apps.add(line.replace("package:", ""));
                 }
             }
-        } catch (UnsupportedEncodingException e) {
-            logger.error("read failed: " + e.getMessage());
         } catch (IOException e) {
             logger.error("read failed: " + e.getMessage());
         } finally {
@@ -542,10 +583,10 @@ public class MonkeyPanel extends EasyPanel {
             logger.error("process is null");
             return;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.indexOf(keyValue) >= 0) {
+                if (line.contains(keyValue)) {
                     line = line.replace(" ", ":");
                     System.out.println("[" + keyValue + "][" + line + "]");
                     String[] str = line.split(":");
@@ -559,8 +600,6 @@ public class MonkeyPanel extends EasyPanel {
                     }
                 }
             }
-        } catch (UnsupportedEncodingException e) {
-            logger.error("read failed: " + e.getMessage());
         } catch (IOException e) {
             logger.error("read failed: " + e.getMessage());
         } finally {
@@ -585,7 +624,7 @@ public class MonkeyPanel extends EasyPanel {
         @Override
         public void run() {
             // 自定义倒计时时间
-            long time = 1 * times;
+            long time = times;
             long hour = 0;
             long minute = 0;
             long seconds = 0;
@@ -593,9 +632,9 @@ public class MonkeyPanel extends EasyPanel {
             if (time >= 0) {
                 for (int i = 0; i <= time; i++) {
                     // 监控Monkey命令
-                    moniterMonkey(time, MONKEY);
+                    monitorMonkey(time, MONKEY);
                     // 监控Monkey命令操作的App
-                    moniterApp(time, comboBoxProgram.getSelectedItem().toString());
+                    monitorApp(time, comboBoxProgram.getSelectedItem().toString());
                     // 判断标识，是否中断操作
                     System.out.println("flag==1?Interrupt:Continue:" + flag);
                     if (flag == 1) {
@@ -609,17 +648,17 @@ public class MonkeyPanel extends EasyPanel {
                     labelSecond.setText(seconds + SECOND);
                     try {
                         Thread.sleep(1000);
-                    } catch (Exception e) {
-                        logger.error("Exception", e);
+                    } catch (InterruptedException e) {
+                        logger.error("InterruptedException {}", e.getMessage());
+                        Thread.currentThread().interrupt();
                     }
                     // 正常结束
                     if (time == 0) {
                         Thread.currentThread().interrupt();
                         interruptThread();
-                        excuteButton.setEnabled(true);
+                        executeButton.setEnabled(true);
                         resetButton.setEnabled(true);
                         interruptButton.setEnabled(false);
-                        exitButton.setEnabled(true);
                     }
                     i--;
                     time--;
@@ -627,10 +666,9 @@ public class MonkeyPanel extends EasyPanel {
                 if (flag == 1) {
                     Thread.currentThread().interrupt();
                     threadTimeType.interrupt();
-                    excuteButton.setEnabled(true);
+                    executeButton.setEnabled(true);
                     resetButton.setEnabled(true);
                     interruptButton.setEnabled(false);
-                    exitButton.setEnabled(true);
                 }
             }
         }
@@ -641,11 +679,11 @@ public class MonkeyPanel extends EasyPanel {
          * @param time     当前剩余执行时间
          * @param keyValue Monkey命令的进程名称
          */
-        private void moniterMonkey(long time, String keyValue) {
+        private void monitorMonkey(long time, String keyValue) {
             if ((time - 1) % 120 == 0) {
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---开始");
                 logger.info("每60秒监听一次，此时time的值：" + (time - 1));
-                String[] cmd = new String[] { "cmd.exe", "/c",
+                String[] cmd = new String[] { CMD, "/c",
                         CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
                 executeCommand(cmd, keyValue);
@@ -662,7 +700,7 @@ public class MonkeyPanel extends EasyPanel {
                             + "java_monkey_log" + getDate + ".txt";
                     logger.info("Monkey命令已经停止，再次执行");
                     logger.info("monkeyCmd[2];" + monkeyCmd[2]);
-                    String[] monkeyCommand = new String[] { "cmd.exe", "/c", monkeyCmd[2] };
+                    String[] monkeyCommand = new String[] { CMD, "/c", monkeyCmd[2] };
                     logger.info("执行");
                     // 再次执行
                     try {
@@ -681,11 +719,11 @@ public class MonkeyPanel extends EasyPanel {
          * @param time     当前剩余执行时间
          * @param keyValue App的进程名称
          */
-        private void moniterApp(long time, String keyValue) {
+        private void monitorApp(long time, String keyValue) {
             if ((time - 1) % 120 == 0) {
                 logger.info("监控[" + keyValue + "]线程是否执行完毕---开始");
                 logger.info("每60秒监听一次，此时time的值：" + (time - 1));
-                String[] cmd = new String[] { "cmd.exe", "/c",
+                String[] cmd = new String[] { CMD, "/c",
                         CMD_PS_A + comboBoxDevices.getSelectedItem() + CMD_PS_B };
                 logger.info("当前命令：" + cmd[2]);
                 executeCommand(cmd, keyValue);
@@ -702,141 +740,31 @@ public class MonkeyPanel extends EasyPanel {
         }
     }
 
-    /**
-     * 执行提示Dialog
-     * 
-     * @author Administrator
-     * 
-     */
-    class Dialog2 extends JDialog {
+    static class MyDialog extends JDialog {
 
+        @Serial
         private static final long serialVersionUID = 1L;
 
-        JDialog dialog2 = new JDialog(this, "JDialog窗体", true);
-
-        Dialog2(String msg3) {
-
-            dialog2.setSize(320, 180);
-
-            Container container = dialog2.getContentPane();
-
+        MyDialog(String msg3) {
+            super((Frame)null, "提示", true);
+            setSize(320, 180);
+            Container container = getContentPane();
             container.setLayout(null);
-
             JLabel jl = new JLabel(msg3);
-
             jl.setBounds(70, 1, 200, 100);
-
             JButton jbb = new JButton("确    定");
-
             jbb.setBounds(97, 80, 100, 25);
-
             container.add(jl);
-
             container.add(jbb);
 
             // 设置位置
             int w = (Toolkit.getDefaultToolkit().getScreenSize().width - 320) / 2;
             int h = (Toolkit.getDefaultToolkit().getScreenSize().height - 180) / 2;
 
-            dialog2.setLocation(w, h);
+            setLocation(w, h);
 
-            jbb.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    dialog2.dispose();
-
-                }
-
-            });
-            dialog2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        }
-    }
-
-    class ExcuteButtonActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            ignoreCrashes = checkBoxCrashes.isSelected() ? IGNORE_CRASHES : "";
-            ignoreTimeouts = checkBoxTimeouts.isSelected() ? IGNORE_TIMEOUTS : "";
-            monitorNativeCrashes = checkBoxNativeCrashes.isSelected() ? MONITOR_NATIVE_CRASHES : "";
-            ignoreSecurityExceptions = checkBoxExceptions.isSelected() ? IGNORE_SECURITY_EXCEPTIONS : "";
-            hprof = checkBoxHprof.isSelected() ? HPROF : "";
-            killProcessAfterError = checkBoxKill.isSelected() ? KILL_PROCESS_AFTER_ERROR : "";
-            waitDbg = checkBoxWaitDbg.isSelected() ? WAIT_DBG : "";
-
-            // 判断设备列表和应用程序是否为空
-            if (comboBoxDevices.getItemCount() == 0) {
-                new Dialog2(MSG4).dialog2.setVisible(true);
-                refreshButton.requestFocus();
-                return;
-            }
-            if (comboBoxProgram.getItemCount() == 0) {
-                new Dialog2(MSG5).dialog2.setVisible(true);
-                return;
-            }
-            // 判断事件间隔和运行时长是否为空
-            if (textMillisecond.getText().length() == 0) {
-                new Dialog2(MSG2).dialog2.setVisible(true);
-                textMillisecond.requestFocus();
-                return;
-            }
-            if (textTime.getText().length() == 0) {
-                new Dialog2(MSG2).dialog2.setVisible(true);
-                textTime.requestFocus();
-                return;
-            }
-            if (textLogPath.getText().length() == 0) {
-                new Dialog2(MSG6).dialog2.setVisible(true);
-                logPathButton.requestFocus();
-                return;
-            }
-
-            // 获取日志级别
-            if (radioButton0.isSelected()) {
-                logLevel = LEVEL_0;
-            } else if (radioButton1.isSelected()) {
-                logLevel = LEVEL_1;
-            } else if (radioButton2.isSelected()) {
-                logLevel = LEVEL_2;
-            }
-            String logFile = textLogPath.getText() + "\\" + LOG_NAME + DateUtils.getCurrentDateString() + ".txt";
-
-            monkeyCmd = new String[] { "cmd.exe", "/C",
-                    "adb -s " + comboBoxDevices.getSelectedItem() + " shell monkey -p "
-                            + comboBoxProgram.getSelectedItem() + "" + ignoreCrashes + "" + ignoreTimeouts + ""
-                            + ignoreSecurityExceptions + "" + monitorNativeCrashes + " --throttle "
-                            + textMillisecond.getText() + "" + logLevel + "" + TRANSACTIONCOUNT + " > " + logFile };
-
-            logger.info("Monkey:" + monkeyCmd[2]);
-
-            flag = 0;
-
-            try {
-                monkeyProcess = Runtime.getRuntime().exec(monkeyCmd);
-            } catch (Exception e) {
-                logger.error("Exception", e);
-            }
-
-            excuteButton.setEnabled(false);
-            resetButton.setEnabled(false);
-            interruptButton.setEnabled(true);
-            exitButton.setEnabled(false);
-
-            // 倒计时文本
-            labelHour.setVisible(true);
-            labelMinute.setVisible(true);
-            labelSecond.setVisible(true);
-
-            // 获取时间类型
-            String timeType = (String) comboBoxTime.getSelectedItem();
-            long time = Long.parseLong(textTime.getText());
-            if (timeType.equals(HOUR)) {
-                time *= 3600;
-            } else if (timeType.equals(MINUTE)) {
-                time *= 60;
-            }
-            threadTimeType = new Thread(new CountdownRunnable(time));
-            threadTimeType.start();
+            jbb.addActionListener(e -> dispose());
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         }
     }
 }
