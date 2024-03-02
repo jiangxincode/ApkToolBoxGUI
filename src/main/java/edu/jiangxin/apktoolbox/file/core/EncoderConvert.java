@@ -55,7 +55,7 @@ public class EncoderConvert {
             }
         }
 
-        // TODO see http://akini.mbnet.fi/java/unicodereader/
+        // see http://akini.mbnet.fi/java/unicodereader/
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
                 BufferedWriter writer = new BufferedWriter(

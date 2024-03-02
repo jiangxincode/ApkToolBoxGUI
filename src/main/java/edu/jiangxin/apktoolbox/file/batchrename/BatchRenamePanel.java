@@ -46,9 +46,20 @@ public class BatchRenamePanel extends EasyPanel {
     private JRadioButton ruleRadioButton4;
     private JRadioButton ruleRadioButton5;
     private JRadioButton ruleRadioButton6;
+    private JTextField textField21;
+    private JSpinner spinner21;
+    private JCheckBox checkBox31;
+    private JCheckBox checkBox32;
+    private JCheckBox checkBox33;
+    private JTextField textField31;
+    private JTextField textField32;
+    private JSpinner spinner31;
+    private JSpinner spinner32;
     private JSpinner spinner41;
     private JComboBox<String> comboBoxStringType;
     private JTextField textField43;
+    private JSpinner spinner51;
+    private JSpinner spinner52;
     private JTextField textField61;
     private JTextField textField62;
     private JTextField currentTextField;
@@ -192,9 +203,9 @@ public class BatchRenamePanel extends EasyPanel {
             buttonGroup.add(ruleRadioButton2);
 
             JLabel label21 = new JLabel("String");
-            JTextField textField21 = new JTextField("");
+            textField21 = new JTextField("");
             JLabel label22 = new JLabel("Int");
-            JSpinner spinner21 = new JSpinner();
+            spinner21 = new JSpinner();
             spinner21.setValue(4);
             thirdLevelPanel2.add(label21);
             thirdLevelPanel2.add(textField21);
@@ -207,18 +218,18 @@ public class BatchRenamePanel extends EasyPanel {
             thirdLevelPanel3.add(ruleRadioButton3);
             buttonGroup.add(ruleRadioButton3);
 
-            JCheckBox checkBox31 = new JCheckBox("编号先按原文件名排序");
-            JCheckBox checkBox32 = new JCheckBox("按末尾数字排序");
-            JCheckBox checkBox33 = new JCheckBox("用目录名为前缀");
+            checkBox31 = new JCheckBox("编号先按原文件名排序");
+            checkBox32 = new JCheckBox("按末尾数字排序");
+            checkBox33 = new JCheckBox("用目录名为前缀");
             JLabel label31 = new JLabel("分隔字符");
-            JTextField textField31 = new JTextField("_");
+            textField31 = new JTextField("_");
             JLabel label32 = new JLabel("前缀");
-            JTextField textField32 = new JTextField("File");
+            textField32 = new JTextField("File");
             JLabel label33 = new JLabel("起始号码");
-            JSpinner spinner31 = new JSpinner();
+            spinner31 = new JSpinner();
             spinner31.setValue(1);
             JLabel label34 = new JLabel("号码位数");
-            JSpinner spinner32 = new JSpinner();
+            spinner32 = new JSpinner();
             spinner32.setValue(3);
             thirdLevelPanel3.add(checkBox31);
             thirdLevelPanel3.add(checkBox32);
@@ -268,10 +279,10 @@ public class BatchRenamePanel extends EasyPanel {
             buttonGroup.add(ruleRadioButton5);
 
             JLabel label51 = new JLabel("Int:1");
-            JSpinner spinner51 = new JSpinner();
+            spinner51 = new JSpinner();
             spinner51.setValue(1);
             JLabel label52 = new JLabel("Int:2");
-            JSpinner spinner52 = new JSpinner();
+            spinner52 = new JSpinner();
             spinner52.setValue(1);
             thirdLevelPanel5.add(label51);
             thirdLevelPanel5.add(spinner51);
@@ -361,29 +372,17 @@ public class BatchRenamePanel extends EasyPanel {
         String currentDir = FilenameUtils.getPath(sourceFile);
         String targetFileName = "";
         if (ruleRadioButton1.isSelected()) {
+            logger.info("unimplemented");
         } else if (ruleRadioButton2.isSelected()) {
-
+            targetFileName = getNewFileNameWhen2Selected(sourceFileName);
         } else if (ruleRadioButton3.isSelected()) {
-
+            targetFileName = getNewFileNameWhen3Selected();
         } else if (ruleRadioButton4.isSelected()) {
-            int index = (Integer) spinner41.getValue();
-
-            String insertString = "";
-            switch ((String) comboBoxStringType.getSelectedItem()) {
-                case STRING_TYPE_PARENT_PATH:
-                    break;
-                case STRING_TYPE_PARENT_NAME:
-                    String parentFile = FilenameUtils.normalizeNoEndSeparator(file.getParentFile().getAbsolutePath());
-                    insertString = FilenameUtils.getName(parentFile);
-                    break;
-                case STRING_TYPE_SPECIALISE_STRING:
-                    insertString = textField43.getText();
-                    break;
-            }
-            targetFileName = StringUtils.substring(sourceFileName, 0, index) + insertString + StringUtils.substring(sourceFileName, index);
+            targetFileName = getNewFileNameWhen4Selected(file);
         } else if (ruleRadioButton5.isSelected()) {
+            targetFileName = getNewFileNameWhen5Selected(sourceFileName);
         } else if (ruleRadioButton6.isSelected()) {
-            targetFileName = StringUtils.replace(sourceFileName, textField61.getText(), textField62.getText());
+            targetFileName = getNewFileNameWhen6Selected(sourceFileName);
         } else {
             logger.error("ruleRadioButton select status error");
             return;
@@ -399,5 +398,58 @@ public class BatchRenamePanel extends EasyPanel {
         } catch (IOException e) {
             logger.error("copy file failed: IOException. current: " + sourceFile);
         }
+    }
+
+    private String getNewFileNameWhen2Selected(String oldFileName) {
+        String prefix = textField21.getText();
+        String sourceFileNameWithoutSuffix = FilenameUtils.getBaseName(oldFileName);
+        String serialNumberStr = StringUtils.substringAfter(sourceFileNameWithoutSuffix, prefix);
+        int serialNumber = Integer.parseInt(serialNumberStr);
+        int digit = (Integer) spinner21.getValue();
+        String format = "%0" + digit + "d";
+        return oldFileName.replaceAll(serialNumberStr, String.format(format, serialNumber));
+    }
+
+    private String getNewFileNameWhen3Selected() {
+        String separator = textField31.getText();
+        String prefix = textField32.getText();
+        int start = (Integer) spinner31.getValue();
+        int digit = (Integer) spinner32.getValue();
+        boolean isCheckBox31Selected = checkBox31.isSelected();
+        boolean isCheckBox32Selected = checkBox32.isSelected();
+        boolean isCheckBox33Selected = checkBox33.isSelected();
+        logger.info("unimplemented: separator: {}, prefix: {}, start: {}, digit: {}", separator, prefix, start, digit);
+        logger.info("unimplemented: isCheckBox31Selected: {}, isCheckBox32Selected: {}, isCheckBox33Selected: {}",
+                isCheckBox31Selected, isCheckBox32Selected, isCheckBox33Selected);
+        return "";
+    }
+
+    private String getNewFileNameWhen4Selected(File file) {
+        String sourceFile = FilenameUtils.normalizeNoEndSeparator(file.getAbsolutePath());
+        String sourceFileName = FilenameUtils.getName(sourceFile);
+        int index = (Integer) spinner41.getValue();
+        String insertString = "";
+        switch ((String) comboBoxStringType.getSelectedItem()) {
+            case STRING_TYPE_PARENT_PATH:
+                break;
+            case STRING_TYPE_PARENT_NAME:
+                String parentFile = FilenameUtils.normalizeNoEndSeparator(file.getParentFile().getAbsolutePath());
+                insertString = FilenameUtils.getName(parentFile);
+                break;
+            case STRING_TYPE_SPECIALISE_STRING:
+                insertString = textField43.getText();
+                break;
+        }
+        return StringUtils.substring(sourceFileName, 0, index) + insertString + StringUtils.substring(sourceFileName, index);
+    }
+
+    private String getNewFileNameWhen5Selected(String oldFileName) {
+        int start = (Integer) spinner51.getValue();
+        int length = (Integer) spinner52.getValue();
+        return StringUtils.substring(oldFileName, 0, start - 1) + StringUtils.substring(oldFileName, start + length - 1);
+    }
+
+    private String getNewFileNameWhen6Selected(String oldFileName) {
+        return StringUtils.replace(oldFileName, textField61.getText(), textField62.getText());
     }
 }

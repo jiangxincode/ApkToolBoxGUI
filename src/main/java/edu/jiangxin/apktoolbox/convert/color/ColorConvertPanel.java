@@ -533,6 +533,7 @@ public class ColorConvertPanel extends EasyPanel {
                 color = ColorUtils.hex2Color(hex);
                 syncToOthersFormat("HEX");
             } catch (NumberFormatException e) {
+                logger.error("Invalid hex value: {}", hex);
             }
             isChangedByUser = true;
         }

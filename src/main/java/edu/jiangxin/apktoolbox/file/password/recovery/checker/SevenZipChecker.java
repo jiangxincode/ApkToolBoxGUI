@@ -40,7 +40,7 @@ public final class SevenZipChecker extends FileChecker {
         }
         boolean result = false;
 
-        try (SevenZFile sevenZFile = new SevenZFile(file, password.toCharArray())) {
+        try (SevenZFile sevenZFile = SevenZFile.builder().setFile(file).setPassword(password.toCharArray()).get()) {
             SevenZArchiveEntry entry = sevenZFile.getNextEntry();
             while (entry != null) {
                 try (BufferedInputStream bis = new BufferedInputStream(sevenZFile.getInputStream(entry))) {

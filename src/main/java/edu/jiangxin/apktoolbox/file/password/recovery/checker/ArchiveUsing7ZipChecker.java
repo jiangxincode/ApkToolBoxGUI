@@ -65,6 +65,7 @@ public final class ArchiveUsing7ZipChecker extends FileChecker {
             int exitValue = exec.execute(commandLine);
             result = (exitValue == 0);
         } catch (IOException e) {
+            logger.error("checkPassword IOException");
         }
         return result;
     }

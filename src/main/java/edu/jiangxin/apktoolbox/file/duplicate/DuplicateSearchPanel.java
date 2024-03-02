@@ -231,71 +231,87 @@ public class DuplicateSearchPanel extends EasyPanel {
         public void actionPerformed(ActionEvent actionEvent) {
             Object source = actionEvent.getSource();
             if (source.equals(openDirMenuItem)) {
-                int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
-                File parent = new File(parentPath);
-                if (parent.isDirectory()) {
-                    try {
-                        Desktop.getDesktop().open(parent);
-                    } catch (IOException e) {
-                        logger.error("open parent failed: " + parent.getPath());
-                    }
-                }
+                onOpenDir();
             } else if (source.equals(deleteFileMenuItem)) {
-                int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
-                String name = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_NAME).getModelIndex()).toString();
-                File selectedFile = new File(parentPath, name);
-                String key = getComparedKey(selectedFile);
-                List<File> files = duplicateFileGroupMap.get(key);
-                for (File file : files) {
-                    if (!selectedFile.equals(file)) {
-                        continue;
-                    }
-                    files.remove(file);
-                    boolean isSuccessful = file.delete();
-                    logger.info("delete file: " + file.getAbsolutePath() + ", result: " + isSuccessful);
-                    break;
-                }
-                resultTableModel.setRowCount(0);
-                showResult();
+                onDeleteFile();
             } else if (source.equals(deleteFilesInSameDirMenuItem)) {
-                int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
-                for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
-                    List<File> duplicateFileGroup = entry.getValue();
-                    for (File duplicateFile : duplicateFileGroup) {
-                        String parentPathTmp = duplicateFile.getParent();
-                        if (Objects.equals(parentPath, parentPathTmp)) {
-                            duplicateFileGroup.remove(duplicateFile);
-                            boolean isSuccessful = duplicateFile.delete();
-                            logger.info("delete file: " + duplicateFile.getAbsolutePath() + ", result: " + isSuccessful);
-                            break;
-                        }
-                    }
-                }
-                resultTableModel.setRowCount(0);
-                showResult();
+                onDeleteFilesInSameDir();
             } else if (source.equals(deleteFilesInSameDirRecursiveMenuItem)) {
-                int rowIndex = resultTable.getSelectedRow();
-                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
-                for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
-                    List<File> duplicateFileGroup = entry.getValue();
-                    for (File duplicateFile : duplicateFileGroup) {
-                        String parentPathTmp = duplicateFile.getParent();
-                        if (Objects.equals(parentPath, parentPathTmp) || FilenameUtils.directoryContains(parentPath, parentPathTmp)) {
-                            duplicateFileGroup.remove(duplicateFile);
-                            boolean isSuccessful = duplicateFile.delete();
-                            logger.info("delete file: " + duplicateFile.getAbsolutePath() + ", result: " + isSuccessful);
-                            break;
-                        }
-                    }
-                }
-                resultTableModel.setRowCount(0);
-                showResult();
+                onDeleteFilesInSameDirRecursive();
             } else {
                 logger.error("invalid source");
             }
+        }
+
+        private void onOpenDir() {
+            int rowIndex = resultTable.getSelectedRow();
+            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
+            File parent = new File(parentPath);
+            if (parent.isDirectory()) {
+                try {
+                    Desktop.getDesktop().open(parent);
+                } catch (IOException e) {
+                    logger.error("open parent failed: " + parent.getPath());
+                }
+            }
+        }
+
+        private void onDeleteFile() {
+            int rowIndex = resultTable.getSelectedRow();
+            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
+            String name = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_NAME).getModelIndex()).toString();
+            File selectedFile = new File(parentPath, name);
+            String key = getComparedKey(selectedFile);
+            List<File> files = duplicateFileGroupMap.get(key);
+            for (File file : files) {
+                if (!selectedFile.equals(file)) {
+                    continue;
+                }
+                files.remove(file);
+                boolean isSuccessful = file.delete();
+                logger.info("delete file: " + file.getAbsolutePath() + ", result: " + isSuccessful);
+                break;
+            }
+            resultTableModel.setRowCount(0);
+            showResult();
+        }
+
+        private void onDeleteFilesInSameDir() {
+            int rowIndex = resultTable.getSelectedRow();
+            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
+            for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
+                List<File> duplicateFileGroup = entry.getValue();
+                for (File duplicateFile : duplicateFileGroup) {
+                    String parentPathTmp = duplicateFile.getParent();
+                    if (Objects.equals(parentPath, parentPathTmp)) {
+                        duplicateFileGroup.remove(duplicateFile);
+                        boolean isSuccessful = duplicateFile.delete();
+                        logger.info("delete file: " + duplicateFile.getAbsolutePath() + ", result: " + isSuccessful);
+                        break;
+                    }
+                }
+            }
+            resultTableModel.setRowCount(0);
+            showResult();
+        }
+
+        private void onDeleteFilesInSameDirRecursive() {
+            int rowIndex = resultTable.getSelectedRow();
+            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
+            for (Map.Entry<String, List<File>> entry : duplicateFileGroupMap.entrySet()) {
+                List<File> duplicateFileGroup = entry.getValue();
+                for (File duplicateFile : duplicateFileGroup) {
+                    String parentPathTmp = duplicateFile.getParent();
+                    if (Objects.equals(parentPath, parentPathTmp) || FilenameUtils.directoryContains(parentPath, parentPathTmp)) {
+                        duplicateFileGroup.remove(duplicateFile);
+                        boolean isSuccessful = duplicateFile.delete();
+                        logger.info("delete file: " + duplicateFile.getAbsolutePath() + ", result: " + isSuccessful);
+                        break;
+                    }
+                }
+            }
+            resultTableModel.setRowCount(0);
+            showResult();
         }
     }
 

@@ -64,6 +64,7 @@ public final class RarUsingRarChecker extends FileChecker {
             int exitValue = exec.execute(commandLine);
             result = (exitValue == 0);
         } catch (IOException e) {
+            logger.error("checkPassword IOException");
         }
         return result;
     }
