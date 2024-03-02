@@ -26,31 +26,19 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private JPanel operationPanel;
 
-    private JButton loadFromDeviceButton;
-
-    private JButton loadFromFileButton;
-
     private JPanel lastDateTimePanel;
-
-    private JLabel lastDateTimeLabel;
 
     private JTextField lastDateTimeField;
 
     private JPanel systemUptime1Panel;
 
-    private JLabel systemUptime1Label;
-
     private JTextField systemUptime1Field;
 
     private JPanel systemUptime2Panel;
 
-    private JLabel systemUptime2Label;
-
     private JTextField systemUptime2Field;
 
     private JPanel packagePanel;
-
-    private JLabel packageLabel;
 
     private JTextField packageField;
 
@@ -61,10 +49,6 @@ public class DumpsysAlarmPanel extends EasyPanel {
     private JPanel rawSourceTabPanel;
 
     private JEditorPane editorPane;
-
-    private MyTreeTable myTreeTable;
-
-    private AlarmTreeTableDataNode root;
 
     private List<AlarmTreeTableDataNode> children;
 
@@ -109,10 +93,10 @@ public class DumpsysAlarmPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        loadFromDeviceButton = new JButton("Load From Device");
+        JButton loadFromDeviceButton = new JButton("Load From Device");
         loadFromDeviceButton.addActionListener(new LoadFromDeviceButtonActionListener());
 
-        loadFromFileButton = new JButton("Load From File");
+        JButton loadFromFileButton = new JButton("Load From File");
         loadFromFileButton.addActionListener(new LoadFromFileButtonActionListener());
 
         operationPanel.add(loadFromDeviceButton);
@@ -125,7 +109,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
         lastDateTimePanel = new JPanel();
         lastDateTimePanel.setLayout(new BoxLayout(lastDateTimePanel, BoxLayout.X_AXIS));
 
-        lastDateTimeLabel = new JLabel("Last DateTime");
+        JLabel lastDateTimeLabel = new JLabel("Last DateTime");
 
         lastDateTimeField = new JTextField();
 
@@ -138,7 +122,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
         systemUptime1Panel = new JPanel();
         systemUptime1Panel.setLayout(new BoxLayout(systemUptime1Panel, BoxLayout.X_AXIS));
 
-        systemUptime1Label = new JLabel("System Uptime(ms)");
+        JLabel systemUptime1Label = new JLabel("System Uptime(ms)");
 
         systemUptime1Field = new JTextField();
 
@@ -151,7 +135,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
         systemUptime2Panel = new JPanel();
         systemUptime2Panel.setLayout(new BoxLayout(systemUptime2Panel, BoxLayout.X_AXIS));
 
-        systemUptime2Label = new JLabel("System Uptime");
+        JLabel systemUptime2Label = new JLabel("System Uptime");
 
         systemUptime2Field = new JTextField();
 
@@ -164,7 +148,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
         packagePanel = new JPanel();
         packagePanel.setLayout(new BoxLayout(packagePanel, BoxLayout.X_AXIS));
 
-        packageLabel = new JLabel("Package");
+        JLabel packageLabel = new JLabel("Package");
 
         packageField = new JTextField();
 
@@ -187,9 +171,9 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
     private void createTable() {
         children = new ArrayList<>();
-        root = new AlarmTreeTableDataNode("Root", "", "", "", "", children);
+        AlarmTreeTableDataNode root = new AlarmTreeTableDataNode("Root", "", "", "", "", children);
         MyAbstractTreeTableModel treeTableModel = new AlarmTreeTableDataModel(root);
-        myTreeTable = new MyTreeTable(treeTableModel);
+        MyTreeTable myTreeTable = new MyTreeTable(treeTableModel);
         JScrollPane scrollPane = new JScrollPane(myTreeTable);
         scrollPane.setPreferredSize(new Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));
         tabularFormTabPanel.add(scrollPane);

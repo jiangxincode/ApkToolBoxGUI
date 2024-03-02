@@ -46,20 +46,9 @@ public class BatchRenamePanel extends EasyPanel {
     private JRadioButton ruleRadioButton4;
     private JRadioButton ruleRadioButton5;
     private JRadioButton ruleRadioButton6;
-    private JTextField textField21;
-    private JSpinner spinner21;
-    private JCheckBox checkBox31;
-    private JCheckBox checkBox32;
-    private JCheckBox checkBox33;
-    private JTextField textField31;
-    private JTextField textField32;
-    private JSpinner spinner31;
-    private JSpinner spinner32;
     private JSpinner spinner41;
     private JComboBox<String> comboBoxStringType;
     private JTextField textField43;
-    private JSpinner spinner51;
-    private JSpinner spinner52;
     private JTextField textField61;
     private JTextField textField62;
     private JTextField currentTextField;
@@ -203,9 +192,9 @@ public class BatchRenamePanel extends EasyPanel {
             buttonGroup.add(ruleRadioButton2);
 
             JLabel label21 = new JLabel("String");
-            textField21 = new JTextField("");
+            JTextField textField21 = new JTextField("");
             JLabel label22 = new JLabel("Int");
-            spinner21 = new JSpinner();
+            JSpinner spinner21 = new JSpinner();
             spinner21.setValue(4);
             thirdLevelPanel2.add(label21);
             thirdLevelPanel2.add(textField21);
@@ -218,18 +207,18 @@ public class BatchRenamePanel extends EasyPanel {
             thirdLevelPanel3.add(ruleRadioButton3);
             buttonGroup.add(ruleRadioButton3);
 
-            checkBox31 = new JCheckBox("编号先按原文件名排序");
-            checkBox32 = new JCheckBox("按末尾数字排序");
-            checkBox33 = new JCheckBox("用目录名为前缀");
+            JCheckBox checkBox31 = new JCheckBox("编号先按原文件名排序");
+            JCheckBox checkBox32 = new JCheckBox("按末尾数字排序");
+            JCheckBox checkBox33 = new JCheckBox("用目录名为前缀");
             JLabel label31 = new JLabel("分隔字符");
-            textField31 = new JTextField("_");
+            JTextField textField31 = new JTextField("_");
             JLabel label32 = new JLabel("前缀");
-            textField32 = new JTextField("File");
+            JTextField textField32 = new JTextField("File");
             JLabel label33 = new JLabel("起始号码");
-            spinner31 = new JSpinner();
+            JSpinner spinner31 = new JSpinner();
             spinner31.setValue(1);
             JLabel label34 = new JLabel("号码位数");
-            spinner32 = new JSpinner();
+            JSpinner spinner32 = new JSpinner();
             spinner32.setValue(3);
             thirdLevelPanel3.add(checkBox31);
             thirdLevelPanel3.add(checkBox32);
@@ -279,10 +268,10 @@ public class BatchRenamePanel extends EasyPanel {
             buttonGroup.add(ruleRadioButton5);
 
             JLabel label51 = new JLabel("Int:1");
-            spinner51 = new JSpinner();
+            JSpinner spinner51 = new JSpinner();
             spinner51.setValue(1);
             JLabel label52 = new JLabel("Int:2");
-            spinner52 = new JSpinner();
+            JSpinner spinner52 = new JSpinner();
             spinner52.setValue(1);
             thirdLevelPanel5.add(label51);
             thirdLevelPanel5.add(spinner51);

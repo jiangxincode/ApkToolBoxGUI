@@ -6,14 +6,12 @@ import javax.swing.JTable;
 
 public class MyTreeTable extends JTable {
 
-    private MyTreeTableCellRenderer tree;
-
 
     public MyTreeTable(MyAbstractTreeTableModel treeTableModel) {
         super();
 
         // JTree erstellen.
-        tree = new MyTreeTableCellRenderer(this, treeTableModel);
+        MyTreeTableCellRenderer tree = new MyTreeTableCellRenderer(this, treeTableModel);
 
         // Modell setzen.
         super.setModel(new MyTreeTableModelAdapter(treeTableModel, tree));

@@ -28,31 +28,21 @@ import java.util.TreeSet;
 public class EncodeConvertPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    private static final int CONTENT_WIDTH = 500;
-
     private FileListPanel srcPanel;
 
     private JPanel optionPanel;
-
-    private JLabel suffixLabel;
 
     private JTextField suffixTextField;
 
     private JCheckBox autoDetectCheckBox;
 
-    private JLabel fromLabel;
-
     private AutoCompleteComboBox<String> fromComboBox;
 
     private JCheckBox recursiveCheckBox;
 
-    private JLabel toLabel;
-
     private AutoCompleteComboBox<String> toComboBox;
 
     private JPanel operationPanel;
-
-    private JButton convertButton;
 
     public EncodeConvertPanel() throws HeadlessException {
         super();
@@ -82,7 +72,7 @@ public class EncodeConvertPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 
-        suffixLabel = new JLabel("Suffix:");
+        JLabel suffixLabel = new JLabel("Suffix:");
         optionPanel.add(suffixLabel);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -97,7 +87,7 @@ public class EncodeConvertPanel extends EasyPanel {
         optionPanel.add(recursiveCheckBox);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        fromLabel = new JLabel("From:");
+        JLabel fromLabel = new JLabel("From:");
         optionPanel.add(fromLabel);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -112,7 +102,7 @@ public class EncodeConvertPanel extends EasyPanel {
         optionPanel.add(autoDetectCheckBox);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        toLabel = new JLabel("To:");
+        JLabel toLabel = new JLabel("To:");
         optionPanel.add(toLabel);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
@@ -129,7 +119,7 @@ public class EncodeConvertPanel extends EasyPanel {
     private void createOperationPanel() {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
-        convertButton = new JButton("Convert");
+        JButton convertButton = new JButton("Convert");
         convertButton.addActionListener(new ConvertButtonActionListener());
 
         operationPanel.add(convertButton);

@@ -70,7 +70,6 @@ public class ColorPickerPanel extends EasyPanel {
     private LinkedList<Color> colorQueue = new LinkedList<>();
 
     private JTextField colorCopyTextField;
-    private JButton colorCopyButton;
 
     // 边框
     private final Rectangle2D colorRect = new Rectangle2D.Double();
@@ -156,7 +155,7 @@ public class ColorPickerPanel extends EasyPanel {
         colorCopyTextField.setBounds(LEFT_PADDING + DEFAULT_WIDTH + Constants.DEFAULT_X_BORDER, TOP_PADDING + DEFAULT_HEIGHT_BIG + Constants.DEFAULT_Y_BORDER, DEFAULT_WIDTH, DEFAULT_HEIGHT_SMALL);
         add(colorCopyTextField);
 
-        colorCopyButton = new JButton("Copy");
+        JButton colorCopyButton = new JButton("Copy");
         colorCopyButton.addActionListener(event -> {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             Transferable trans = new StringSelection(getColorText(currentColor));

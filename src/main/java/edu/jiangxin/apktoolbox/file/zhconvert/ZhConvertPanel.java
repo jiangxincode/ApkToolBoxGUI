@@ -23,31 +23,17 @@ public class ZhConvertPanel extends EasyPanel {
 
     private FileListPanel fileListPanel;
 
-    private JPanel optionPanel;
-
-    private JLabel suffixLabel;
-
     private JTextField suffixTextField;
 
     private JCheckBox recursiveCheckBox;
 
     private JComboBox comboBox;
 
-    private JButton convertBtn;
-
-    private JFileChooser fileChooser;
-
     private JTextField keyText;
 
     private JTextField valueText;
 
     private JTextArea textArea;
-
-    private JButton saveBtn;
-
-    private JPanel centerLeftTopPanel;
-
-    private JScrollPane centerLeftBottomPanel;
 
     private JList transformList;
 
@@ -80,11 +66,11 @@ public class ZhConvertPanel extends EasyPanel {
         northPanel.add(fileListPanel);
         northPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 
-        optionPanel = new JPanel();
+        JPanel optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
         northPanel.add(optionPanel);
 
-        suffixLabel = new JLabel("Suffix:");
+        JLabel suffixLabel = new JLabel("Suffix:");
         suffixTextField = new JTextField();
         suffixTextField.setToolTipText("an array of extensions, ex. {\"java\",\"xml\"}. If this parameter is empty, all files are returned.");
         suffixTextField.setText(conf.getString("osconvert.suffix"));
@@ -103,16 +89,16 @@ public class ZhConvertPanel extends EasyPanel {
         comboBox.addItem(Constants.zhTw2zhSimple);
         optionPanel.add(comboBox);
 
-        convertBtn = new JButton("确认转换");
+        JButton convertBtn = new JButton("确认转换");
         convertBtn.addActionListener(new ConvertBtnActionListener());
         northPanel.add(convertBtn);
 
-        fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
     }
 
     private void createCenterPanel() {
-        centerLeftTopPanel = new JPanel();
+        JPanel centerLeftTopPanel = new JPanel();
         centerLeftTopPanel.setLayout(new BoxLayout(centerLeftTopPanel, BoxLayout.Y_AXIS));
 
         JPanel keyValuePanel = new JPanel();
@@ -125,11 +111,11 @@ public class ZhConvertPanel extends EasyPanel {
         valueText = new JTextField(10);
         keyValuePanel.add(valueText);
 
-        saveBtn = new JButton("添加词组定义");
+        JButton saveBtn = new JButton("添加词组定义");
         saveBtn.addActionListener(new SaveBtnActionListener());
         centerLeftTopPanel.add(saveBtn);
 
-        centerLeftBottomPanel = new JScrollPane();
+        JScrollPane centerLeftBottomPanel = new JScrollPane();
         textArea = new JTextArea();
         textArea.setMargin(new Insets(10, 10, 10, 10));
         //自动换行

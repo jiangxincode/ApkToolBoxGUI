@@ -13,7 +13,6 @@ public class DictionaryMultiThreadProxy {
     private static final Logger logger = LogManager.getLogger(DictionaryMultiThreadProxy.class.getSimpleName());
 
     private BigFileReader bigFileReader;
-    private LineHandler lineHandler;
 
     private String password;
 
@@ -37,7 +36,7 @@ public class DictionaryMultiThreadProxy {
                 lock.notifyAll();
             }
         };
-        lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, callback);
+        LineHandler lineHandler = new LineHandler(checker, new AtomicBoolean(false), synchronizer, callback);
         String charsetName = EncoderDetector.judgeFile(file.getAbsolutePath());
         BigFileReader.Builder builder = new BigFileReader.Builder(file.getAbsolutePath(), lineHandler);
         bigFileReader = builder

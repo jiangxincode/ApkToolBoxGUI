@@ -29,19 +29,13 @@ public class OsConvertPanel extends EasyPanel {
 
     private JPanel optionPanel;
 
-    private JLabel suffixLabel;
-
     private JTextField suffixTextField;
 
     private JCheckBox recursiveCheckBox;
 
-    private JLabel typeLabel;
-
     private JComboBox<String> typeComboBox;
 
     private JPanel operationPanel;
-
-    private JButton convertButton;
 
     public OsConvertPanel() throws HeadlessException {
         super();
@@ -68,7 +62,7 @@ public class OsConvertPanel extends EasyPanel {
         operationPanel = new JPanel();
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
 
-        convertButton = new JButton("Convert");
+        JButton convertButton = new JButton("Convert");
         convertButton.addActionListener(new ConvertButtonActionListener());
 
         operationPanel.add(convertButton);
@@ -78,7 +72,7 @@ public class OsConvertPanel extends EasyPanel {
         optionPanel = new JPanel();
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));
 
-        suffixLabel = new JLabel("Suffix:");
+        JLabel suffixLabel = new JLabel("Suffix:");
         suffixTextField = new JTextField();
         suffixTextField.setToolTipText("an array of extensions, ex. {\"java\",\"xml\"}. If this parameter is empty, all files are returned.");
         suffixTextField.setText(conf.getString("osconvert.suffix"));
@@ -92,7 +86,7 @@ public class OsConvertPanel extends EasyPanel {
         optionPanel.add(recursiveCheckBox);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        typeLabel = new JLabel("Type:");
+        JLabel typeLabel = new JLabel("Type:");
         typeComboBox = new JComboBox<>();
         typeComboBox.addItem("Convert to UNIX(LF Only)");
         typeComboBox.addItem("Convert to Macintosh(CR Only)");

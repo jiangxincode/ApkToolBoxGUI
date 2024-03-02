@@ -22,7 +22,6 @@ import java.util.List;
 public class FilePanel extends JPanel {
     private static final Logger LOGGER = LogManager.getLogger(FilePanel.class.getSimpleName());
     private JTextField fileTextField;
-    private JButton chooseButton;
 
     private String buttonText;
 
@@ -82,7 +81,7 @@ public class FilePanel extends JPanel {
         fileTextField.setMaximumSize(new Dimension(1200, 30));
         fileTextField.setTransferHandler(new FileTransferHandler());
 
-        chooseButton = new JButton(buttonText);
+        JButton chooseButton = new JButton(buttonText);
         chooseButton.addActionListener(new OpenDictionaryFileActionListener());
 
         add(fileTextField);
