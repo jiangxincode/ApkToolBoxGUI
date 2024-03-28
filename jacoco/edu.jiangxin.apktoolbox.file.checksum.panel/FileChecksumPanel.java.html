@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileChecksumPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.checksum.panel</a> &gt; <span class="el_source">FileChecksumPanel.java</span></div><h1>FileChecksumPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.checksum.panel;
+
+import edu.jiangxin.apktoolbox.file.checksum.CalculateType;
+import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
+import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class FileChecksumPanel extends EasyChildTabbedPanel {
+    private static final long serialVersionUID = 63924900336217723L;
+
+    private FilePanel filePanel;
+
+    private JPanel optionPanel;
+
+    private JTextField sizeTextField;
+    private JTextField lastModifiedTimeTextField;
+    private JCheckBox md5CheckBox;
+    private JTextField md5TextField;
+    private JCheckBox sha1CheckBox;
+    private JTextField sha1TextField;
+    private JCheckBox sha256CheckBox;
+    private JTextField sha256TextField;
+    private JCheckBox sha384CheckBox;
+    private JTextField sha384TextField;
+    private JCheckBox sha512CheckBox;
+    private JTextField sha512TextField;
+    private JCheckBox crc32CheckBox;
+    private JTextField crc32TextField;
+
+    private JPanel operationPanel;
+    private JProgressBar progressBar;
+
+    public FileChecksumPanel(boolean isSelected) {
+<span class="nc" id="L42">        super(isSelected);</span>
+<span class="nc" id="L43">    }</span>
+
+    @Override
+    public void createUI() {
+<span class="nc" id="L47">        JPanel panel = new JPanel();</span>
+
+<span class="nc" id="L49">        setViewportView(panel);</span>
+
+<span class="nc" id="L51">        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L52">        panel.setLayout(boxLayout);</span>
+
+<span class="nc" id="L54">        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L55">        createFileNamePanel();</span>
+<span class="nc" id="L56">        panel.add(filePanel);</span>
+
+<span class="nc" id="L58">        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L59">        createOptionPanel();</span>
+<span class="nc" id="L60">        panel.add(optionPanel);</span>
+
+<span class="nc" id="L62">        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L63">        createOperationPanel();</span>
+<span class="nc" id="L64">        panel.add(operationPanel);</span>
+<span class="nc" id="L65">    }</span>
+
+    private void createFileNamePanel() {
+<span class="nc" id="L68">        filePanel = new FilePanel(&quot;Choose File&quot;);</span>
+<span class="nc" id="L69">        filePanel.setFileReadyCallback(file -&gt; {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            if (file == null) {</span>
+<span class="nc" id="L71">                logger.error(&quot;file is null&quot;);</span>
+<span class="nc" id="L72">                return;</span>
+            }
+<span class="nc" id="L74">            calculate(file);</span>
+<span class="nc" id="L75">        });</span>
+<span class="nc" id="L76">    }</span>
+
+    private void createOptionPanel() {
+<span class="nc" id="L79">        optionPanel = new JPanel();</span>
+<span class="nc" id="L80">        BoxLayout boxLayout = new BoxLayout(optionPanel, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L81">        optionPanel.setLayout(boxLayout);</span>
+
+<span class="nc" id="L83">        JPanel sizeOptionPanel = new JPanel();</span>
+<span class="nc" id="L84">        JPanel lastModifiedTimeOptionPanel = new JPanel();</span>
+<span class="nc" id="L85">        JPanel md5OptionPanel = new JPanel();</span>
+<span class="nc" id="L86">        JPanel sha1OptionPanel = new JPanel();</span>
+<span class="nc" id="L87">        JPanel sha256OptionPanel = new JPanel();</span>
+<span class="nc" id="L88">        JPanel sha384OptionPanel = new JPanel();</span>
+<span class="nc" id="L89">        JPanel sha512OptionPanel = new JPanel();</span>
+<span class="nc" id="L90">        JPanel crc32OptionPanel = new JPanel();</span>
+
+<span class="nc" id="L92">        optionPanel.add(sizeOptionPanel);</span>
+<span class="nc" id="L93">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L94">        optionPanel.add(lastModifiedTimeOptionPanel);</span>
+<span class="nc" id="L95">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L96">        optionPanel.add(md5OptionPanel);</span>
+<span class="nc" id="L97">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L98">        optionPanel.add(sha1OptionPanel);</span>
+<span class="nc" id="L99">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L100">        optionPanel.add(sha256OptionPanel);</span>
+<span class="nc" id="L101">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L102">        optionPanel.add(sha384OptionPanel);</span>
+<span class="nc" id="L103">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L104">        optionPanel.add(sha512OptionPanel);</span>
+<span class="nc" id="L105">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L106">        optionPanel.add(crc32OptionPanel);</span>
+
+<span class="nc" id="L108">        sizeOptionPanel.setLayout(new BoxLayout(sizeOptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L109">        JLabel fileSizeLabel = new JLabel(&quot;Size:&quot;);</span>
+<span class="nc" id="L110">        sizeTextField = new JTextField();</span>
+<span class="nc" id="L111">        sizeOptionPanel.add(fileSizeLabel);</span>
+<span class="nc" id="L112">        sizeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L113">        sizeOptionPanel.add(sizeTextField);</span>
+
+<span class="nc" id="L115">        lastModifiedTimeOptionPanel.setLayout(new BoxLayout(lastModifiedTimeOptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L116">        JLabel fileLastModifiedTimeLabel = new JLabel(&quot;Last Modified Time:&quot;);</span>
+<span class="nc" id="L117">        lastModifiedTimeTextField = new JTextField();</span>
+<span class="nc" id="L118">        lastModifiedTimeOptionPanel.add(fileLastModifiedTimeLabel);</span>
+<span class="nc" id="L119">        lastModifiedTimeOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L120">        lastModifiedTimeOptionPanel.add(lastModifiedTimeTextField);</span>
+
+<span class="nc" id="L122">        md5OptionPanel.setLayout(new BoxLayout(md5OptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L123">        md5CheckBox = new JCheckBox(&quot;MD5 checksum:&quot;);</span>
+<span class="nc" id="L124">        md5CheckBox.setSelected(true);</span>
+<span class="nc" id="L125">        md5TextField = new JTextField();</span>
+<span class="nc" id="L126">        md5OptionPanel.add(md5CheckBox);</span>
+<span class="nc" id="L127">        md5OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L128">        md5OptionPanel.add(md5TextField);</span>
+
+<span class="nc" id="L130">        sha1OptionPanel.setLayout(new BoxLayout(sha1OptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L131">        sha1CheckBox = new JCheckBox(&quot;SHA1 checksum:&quot;);</span>
+<span class="nc" id="L132">        sha1TextField = new JTextField();</span>
+<span class="nc" id="L133">        sha1OptionPanel.add(sha1CheckBox);</span>
+<span class="nc" id="L134">        sha1OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L135">        sha1OptionPanel.add(sha1TextField);</span>
+
+<span class="nc" id="L137">        sha256OptionPanel.setLayout(new BoxLayout(sha256OptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L138">        sha256CheckBox = new JCheckBox(&quot;SHA256 checksum:&quot;);</span>
+<span class="nc" id="L139">        sha256TextField = new JTextField();</span>
+<span class="nc" id="L140">        sha256OptionPanel.add(sha256CheckBox);</span>
+<span class="nc" id="L141">        sha256OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L142">        sha256OptionPanel.add(sha256TextField);</span>
+
+<span class="nc" id="L144">        sha384OptionPanel.setLayout(new BoxLayout(sha384OptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L145">        sha384CheckBox = new JCheckBox(&quot;SHA384 checksum:&quot;);</span>
+<span class="nc" id="L146">        sha384TextField = new JTextField();</span>
+<span class="nc" id="L147">        sha384OptionPanel.add(sha384CheckBox);</span>
+<span class="nc" id="L148">        sha384OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L149">        sha384OptionPanel.add(sha384TextField);</span>
+
+<span class="nc" id="L151">        sha512OptionPanel.setLayout(new BoxLayout(sha512OptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L152">        sha512CheckBox = new JCheckBox(&quot;SHA512 checksum:&quot;);</span>
+<span class="nc" id="L153">        sha512TextField = new JTextField();</span>
+<span class="nc" id="L154">        sha512OptionPanel.add(sha512CheckBox);</span>
+<span class="nc" id="L155">        sha512OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L156">        sha512OptionPanel.add(sha512TextField);</span>
+
+<span class="nc" id="L158">        crc32OptionPanel.setLayout(new BoxLayout(crc32OptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L159">        crc32CheckBox = new JCheckBox(&quot;CRC32 checksum:&quot;);</span>
+<span class="nc" id="L160">        crc32CheckBox.setSelected(true);</span>
+<span class="nc" id="L161">        crc32TextField = new JTextField();</span>
+<span class="nc" id="L162">        crc32OptionPanel.add(crc32CheckBox);</span>
+<span class="nc" id="L163">        crc32OptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L164">        crc32OptionPanel.add(crc32TextField);</span>
+<span class="nc" id="L165">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L168">        operationPanel = new JPanel();</span>
+
+<span class="nc" id="L170">        JButton compareButton = new JButton(&quot;Compare&quot;);</span>
+<span class="nc" id="L171">        compareButton.setFocusPainted(false);</span>
+<span class="nc" id="L172">        compareButton.addActionListener(arg0 -&gt; {</span>
+<span class="nc" id="L173">            File file = filePanel.getFile();</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">            if (file == null) {</span>
+<span class="nc" id="L175">                logger.error(&quot;file is null&quot;);</span>
+<span class="nc" id="L176">                return;</span>
+            }
+<span class="nc" id="L178">            calculate(file);</span>
+<span class="nc" id="L179">        });</span>
+
+<span class="nc" id="L181">        progressBar = new JProgressBar();</span>
+<span class="nc" id="L182">        progressBar.setStringPainted(true);</span>
+<span class="nc" id="L183">        progressBar.setMaximum(100);</span>
+
+
+<span class="nc" id="L186">        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L187">        operationPanel.add(compareButton);</span>
+<span class="nc" id="L188">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L189">        operationPanel.add(progressBar);</span>
+
+<span class="nc" id="L191">    }</span>
+
+    private void calculate(File file) {
+<span class="nc" id="L194">        progressBar.setValue(0);</span>
+<span class="nc" id="L195">        new Thread(()-&gt;{</span>
+<span class="nc" id="L196">            sizeTextField.setText(edu.jiangxin.apktoolbox.utils.FileUtils.sizeOfInHumanFormat(file));</span>
+<span class="nc" id="L197">            progressBar.setValue(progressBar.getValue() + 5);</span>
+<span class="nc" id="L198">        }).start();</span>
+
+<span class="nc" id="L200">        new Thread(()-&gt;{</span>
+            try {
+<span class="nc" id="L202">                lastModifiedTimeTextField.setText(String.valueOf(FileUtils.lastModified(file)));</span>
+<span class="nc" id="L203">            } catch (IOException e) {</span>
+<span class="nc" id="L204">                lastModifiedTimeTextField.setText(&quot;Unknown&quot;);</span>
+<span class="nc" id="L205">            }</span>
+<span class="nc" id="L206">            progressBar.setValue(progressBar.getValue() + 5);</span>
+<span class="nc" id="L207">        }).start();</span>
+
+<span class="nc" id="L209">        new Thread(()-&gt;{</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (md5CheckBox.isSelected()) {</span>
+<span class="nc" id="L211">                md5TextField.setText(calculate(CalculateType.Md5, file));</span>
+            } else {
+<span class="nc" id="L213">                md5TextField.setText(&quot;&quot;);</span>
+            }
+<span class="nc" id="L215">            progressBar.setValue(progressBar.getValue() + 15);</span>
+<span class="nc" id="L216">        }).start();</span>
+
+<span class="nc" id="L218">        new Thread(()-&gt;{</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (sha1CheckBox.isSelected()) {</span>
+<span class="nc" id="L220">                sha1TextField.setText(calculate(CalculateType.Sha1, file));</span>
+            } else {
+<span class="nc" id="L222">                sha1TextField.setText(&quot;&quot;);</span>
+            }
+<span class="nc" id="L224">            progressBar.setValue(progressBar.getValue() + 15);</span>
+<span class="nc" id="L225">        }).start();</span>
+
+<span class="nc" id="L227">        new Thread(()-&gt;{</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            if (sha256CheckBox.isSelected()) {</span>
+<span class="nc" id="L229">                sha256TextField.setText(calculate(CalculateType.Sha256, file));</span>
+            } else {
+<span class="nc" id="L231">                sha256TextField.setText(&quot;&quot;);</span>
+            }
+<span class="nc" id="L233">            progressBar.setValue(progressBar.getValue() + 15);</span>
+<span class="nc" id="L234">        }).start();</span>
+
+<span class="nc" id="L236">        new Thread(()-&gt;{</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">            if (sha384CheckBox.isSelected()) {</span>
+<span class="nc" id="L238">                sha384TextField.setText(calculate(CalculateType.Sha384, file));</span>
+            } else {
+<span class="nc" id="L240">                sha384TextField.setText(&quot;&quot;);</span>
+            }
+<span class="nc" id="L242">            progressBar.setValue(progressBar.getValue() + 15);</span>
+<span class="nc" id="L243">        }).start();</span>
+
+<span class="nc" id="L245">        new Thread(()-&gt;{</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">            if (sha512CheckBox.isSelected()) {</span>
+<span class="nc" id="L247">                sha512TextField.setText(calculate(CalculateType.Sha512, file));</span>
+            } else {
+<span class="nc" id="L249">                sha512TextField.setText(&quot;&quot;);</span>
+            }
+<span class="nc" id="L251">            progressBar.setValue(progressBar.getValue() + 15);</span>
+<span class="nc" id="L252">        }).start();</span>
+
+<span class="nc" id="L254">        new Thread(()-&gt;{</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            if (crc32CheckBox.isSelected()) {</span>
+<span class="nc" id="L256">                crc32TextField.setText(calculate(CalculateType.Crc32, file));</span>
+            } else {
+<span class="nc" id="L258">                crc32TextField.setText(&quot;&quot;);</span>
+            }
+<span class="nc" id="L260">            progressBar.setValue(progressBar.getValue() + 15);</span>
+<span class="nc" id="L261">        }).start();</span>
+<span class="nc" id="L262">    }</span>
+
+    private String calculate(final CalculateType selectedHash, final File file) {
+<span class="nc" id="L265">        String result = &quot;&quot;;</span>
+<span class="nc" id="L266">        try (FileInputStream fis = new FileInputStream(file)) {</span>
+<span class="nc bnc" id="L267" title="All 7 branches missed.">            switch (selectedHash) {</span>
+                case Md5: {
+<span class="nc" id="L269">                    result = DigestUtils.md5Hex(fis);</span>
+<span class="nc" id="L270">                    break;</span>
+                }
+                case Sha1: {
+<span class="nc" id="L273">                    result = DigestUtils.sha1Hex(fis);</span>
+<span class="nc" id="L274">                    break;</span>
+                }
+                case Sha256: {
+<span class="nc" id="L277">                    result = DigestUtils.sha256Hex(fis);</span>
+<span class="nc" id="L278">                    break;</span>
+                }
+                case Sha384: {
+<span class="nc" id="L281">                    result = DigestUtils.sha384Hex(fis);</span>
+<span class="nc" id="L282">                    break;</span>
+                }
+                case Sha512: {
+<span class="nc" id="L285">                    result = DigestUtils.sha512Hex(fis);</span>
+<span class="nc" id="L286">                    break;</span>
+                }
+                case Crc32: {
+<span class="nc" id="L289">                    result = Long.toHexString(FileUtils.checksumCRC32(file));</span>
+<span class="nc" id="L290">                    break;</span>
+                }
+                default: {
+<span class="nc" id="L293">                    result = &quot;Not support&quot;;</span>
+                    break;
+                }
+            }
+<span class="nc" id="L297">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L298">            logger.error(&quot;calculate, FileNotFoundException&quot;);</span>
+<span class="nc" id="L299">        } catch (IOException e) {</span>
+<span class="nc" id="L300">            logger.error(&quot;calculate, IOException&quot;);</span>
+<span class="nc" id="L301">        }</span>
+<span class="nc" id="L302">        return result;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

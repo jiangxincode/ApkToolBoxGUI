@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LineHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread</a> &gt; <span class="el_source">LineHandler.java</span></div><h1>LineHandler.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
+
+import edu.jiangxin.apktoolbox.file.password.recovery.State;
+import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class LineHandler {
+
+<span class="nc" id="L13">    private static final Logger logger = LogManager.getLogger(LineHandler.class.getSimpleName());</span>
+
+    private AtomicBoolean success;
+
+    private Synchronizer synchronizer;
+    private FileChecker fileChecker;
+
+    private CompleteCallback completeCallback;
+
+<span class="nc" id="L22">    public LineHandler(FileChecker fileChecker, AtomicBoolean success, Synchronizer synchronizer, CompleteCallback completeCallback) {</span>
+<span class="nc" id="L23">        this.fileChecker = fileChecker;</span>
+<span class="nc" id="L24">        this.success = success;</span>
+<span class="nc" id="L25">        this.synchronizer = synchronizer;</span>
+<span class="nc" id="L26">        this.completeCallback = completeCallback;</span>
+<span class="nc" id="L27">    }</span>
+
+    public AtomicBoolean getSuccess() {
+<span class="nc" id="L30">        return this.success;</span>
+    }
+
+    public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
+<span class="nc bnc" id="L34" title="All 4 branches missed.">        if (success.compareAndSet(true, true) || synchronizer.getCurrentState() != State.WORKING) {</span>
+<span class="nc" id="L35">            return;</span>
+        }
+<span class="nc" id="L37">        synchronizer.setCurrentPassword(line);</span>
+<span class="nc" id="L38">        synchronizer.setProgressBarValue(Math.toIntExact(currentLineCount));</span>
+
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (fileChecker.checkPassword(line)) {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">            if (success.compareAndSet(false, true)) {</span>
+<span class="nc" id="L42">                logger.info(&quot;find password: &quot; + line);</span>
+<span class="nc" id="L43">                completeCallback.onComplete(line);</span>
+            }
+        } else {
+<span class="nc bnc" id="L46" title="All 4 branches missed.">            if (!success.compareAndSet(true, true) &amp;&amp; synchronizer.getCurrentState() == State.WORKING) {</span>
+<span class="nc" id="L47">                logger.info(&quot;try password[&quot; + line + &quot;] failed&quot;);</span>
+            }
+        }
+<span class="nc" id="L50">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

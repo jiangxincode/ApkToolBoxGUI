@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevenZipChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.password.recovery.checker</a> &gt; <span class="el_source">SevenZipChecker.java</span></div><h1>SevenZipChecker.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.password.recovery.checker;
+
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+
+public final class SevenZipChecker extends FileChecker {
+    private static final boolean DEBUG = false;
+
+    public SevenZipChecker() {
+<span class="nc" id="L13">        super();</span>
+<span class="nc" id="L14">    }</span>
+
+    @Override
+    public String[] getFileExtensions() {
+<span class="nc" id="L18">        return new String[]{&quot;7z&quot;};</span>
+    }
+
+    @Override
+    public String getFileDescription() {
+<span class="nc" id="L23">        return &quot;*.7z&quot;;</span>
+    }
+
+    @Override
+    public String getDescription() {
+<span class="nc" id="L28">        return &quot;7Zip Checker&quot;;</span>
+    }
+
+    @Override
+    public boolean prepareChecker() {
+<span class="nc" id="L33">        return true;</span>
+    }
+
+    @Override
+    public boolean checkPassword(String password) {
+        if (DEBUG) {
+            logger.info(&quot;checkPassword: &quot; + password);
+        }
+<span class="nc" id="L41">        boolean result = false;</span>
+
+<span class="nc" id="L43">        try (SevenZFile sevenZFile = SevenZFile.builder().setFile(file).setPassword(password.toCharArray()).get()) {</span>
+<span class="nc" id="L44">            SevenZArchiveEntry entry = sevenZFile.getNextEntry();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            while (entry != null) {</span>
+<span class="nc" id="L46">                try (BufferedInputStream bis = new BufferedInputStream(sevenZFile.getInputStream(entry))) {</span>
+<span class="nc" id="L47">                    byte[] buffer = new byte[1024];</span>
+<span class="nc" id="L48">                    int size = bis.read(buffer);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                    while (size != -1) {</span>
+<span class="nc" id="L50">                        size = bis.read(buffer);</span>
+                    }
+                }
+<span class="nc" id="L53">                entry = sevenZFile.getNextEntry();</span>
+            }
+<span class="nc" id="L55">            result = true;</span>
+<span class="nc" id="L56">        } catch (IOException e) {</span>
+            if (DEBUG) {
+                logger.error(&quot;IOException: &quot;, e);
+            }
+<span class="nc" id="L60">        } catch (Exception e) {</span>
+            if (DEBUG) {
+                logger.error(&quot;Exception: &quot;, e);
+            }
+<span class="nc" id="L64">        }</span>
+<span class="nc" id="L65">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

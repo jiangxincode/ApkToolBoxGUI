@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecoveryPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.password.recovery</a> &gt; <span class="el_source">RecoveryPanel.java</span></div><h1>RecoveryPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.password.recovery;
+
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.DictionaryMultiThreadProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread.DictionarySingleThreadProxy;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.text.NumberFormat;
+
+public final class RecoveryPanel extends EasyPanel implements Synchronizer {
+    private JPanel optionPanel;
+
+    private FilePanel recoveryFilePanel;
+
+    private JTabbedPane categoryTabbedPane;
+
+    private JPanel bruteForceCategoryPanel;
+
+    private JPanel dictionaryCategoryPanel;
+
+    private FilePanel dictionaryFilePanel;
+
+<span class="nc" id="L34">    private Category currentCategory = Category.UNKNOWN;</span>
+
+    private JPanel operationPanel;
+
+    private JCheckBox numberCheckBox;
+    private JCheckBox lowercaseLetterCheckBox;
+    private JCheckBox uppercaseLetterCheckBox;
+
+    private JSpinner minSpinner;
+    private JSpinner maxSpinner;
+
+    private JSpinner threadNumSpinner;
+
+    private JProgressBar progressBar;
+
+    private JComboBox&lt;FileChecker&gt; checkerTypeComboBox;
+
+    private FileChecker currentFileChecker;
+
+    private JButton startButton;
+    private JButton stopButton;
+
+    private JLabel currentStateLabel;
+
+    private JLabel currentPasswordLabel;
+
+    private NumberFormat numberFormat;
+
+<span class="nc" id="L62">    private State currentState = State.IDLE;</span>
+
+    public RecoveryPanel() {
+<span class="nc" id="L65">        super();</span>
+<span class="nc" id="L66">        initBase();</span>
+<span class="nc" id="L67">    }</span>
+
+    private void initBase() {
+<span class="nc" id="L70">        numberFormat = NumberFormat.getPercentInstance();</span>
+<span class="nc" id="L71">        numberFormat.setMinimumFractionDigits(3);</span>
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L76">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L77">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L79">        createOptionPanel();</span>
+<span class="nc" id="L80">        add(optionPanel);</span>
+<span class="nc" id="L81">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L83">        createOperationPanel();</span>
+<span class="nc" id="L84">        add(operationPanel);</span>
+<span class="nc" id="L85">    }</span>
+
+    private void createOptionPanel() {
+<span class="nc" id="L88">        optionPanel = new JPanel();</span>
+<span class="nc" id="L89">        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L91">        checkerTypeComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L92">        checkerTypeComboBox.addItem(new ArchiveUsing7ZipChecker());</span>
+<span class="nc" id="L93">        checkerTypeComboBox.addItem(new ArchiveUsingWinRarChecker());</span>
+<span class="nc" id="L94">        checkerTypeComboBox.addItem(new RarUsingRarChecker());</span>
+<span class="nc" id="L95">        checkerTypeComboBox.addItem(new ZipChecker());</span>
+<span class="nc" id="L96">        checkerTypeComboBox.addItem(new RarChecker());</span>
+<span class="nc" id="L97">        checkerTypeComboBox.addItem(new SevenZipChecker());</span>
+<span class="nc" id="L98">        checkerTypeComboBox.addItem(new PdfChecker());</span>
+<span class="nc" id="L99">        checkerTypeComboBox.addItem(new XmlBasedOfficeChecker());</span>
+<span class="nc" id="L100">        checkerTypeComboBox.addItem(new BinaryOfficeChecker());</span>
+<span class="nc" id="L101">        checkerTypeComboBox.setSelectedIndex(0);</span>
+<span class="nc" id="L102">        checkerTypeComboBox.addItemListener(e -&gt; {</span>
+<span class="nc" id="L103">            FileChecker fileChecker = (FileChecker) e.getItem();</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (fileChecker == null) {</span>
+<span class="nc" id="L105">                logger.error(&quot;fileChecker is null&quot;);</span>
+<span class="nc" id="L106">                return;</span>
+            }
+<span class="nc" id="L108">            recoveryFilePanel.setDescriptionAndFileExtensions(</span>
+<span class="nc" id="L109">                    fileChecker.getDescription(), fileChecker.getFileExtensions());</span>
+<span class="nc" id="L110">        });</span>
+
+<span class="nc" id="L112">        FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (fileChecker == null) {</span>
+<span class="nc" id="L114">            logger.error(&quot;fileChecker is null&quot;);</span>
+<span class="nc" id="L115">            return;</span>
+        }
+
+<span class="nc" id="L118">        recoveryFilePanel = new FilePanel(&quot;Choose Recovery File&quot;);</span>
+<span class="nc" id="L119">        recoveryFilePanel.setDescriptionAndFileExtensions(fileChecker.getDescription(), fileChecker.getFileExtensions());</span>
+
+<span class="nc" id="L121">        categoryTabbedPane = new JTabbedPane();</span>
+
+<span class="nc" id="L123">        createBruteForcePanel();</span>
+<span class="nc" id="L124">        categoryTabbedPane.addTab(&quot;Brute Force&quot;, null, bruteForceCategoryPanel, &quot;Brute Force&quot;);</span>
+<span class="nc" id="L125">        categoryTabbedPane.setSelectedIndex(0);</span>
+
+<span class="nc" id="L127">        createDictionaryPanel();</span>
+<span class="nc" id="L128">        categoryTabbedPane.addTab(&quot;Dictionary&quot;, null, dictionaryCategoryPanel, &quot;Dictionary&quot;);</span>
+
+<span class="nc" id="L130">        progressBar = new JProgressBar();</span>
+<span class="nc" id="L131">        progressBar.setStringPainted(true);</span>
+<span class="nc" id="L132">        String text = numberFormat.format(0);</span>
+<span class="nc" id="L133">        progressBar.setString(text);</span>
+
+<span class="nc" id="L135">        optionPanel.add(checkerTypeComboBox);</span>
+<span class="nc" id="L136">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L137">        optionPanel.add(recoveryFilePanel);</span>
+<span class="nc" id="L138">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L139">        optionPanel.add(categoryTabbedPane);</span>
+<span class="nc" id="L140">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L141">        optionPanel.add(progressBar);</span>
+<span class="nc" id="L142">    }</span>
+
+    private void createBruteForcePanel() {
+<span class="nc" id="L145">        bruteForceCategoryPanel = new JPanel();</span>
+
+<span class="nc" id="L147">        JPanel topLevelPanel = new JPanel();</span>
+<span class="nc" id="L148">        topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L149">        bruteForceCategoryPanel.add(topLevelPanel);</span>
+
+<span class="nc" id="L151">        JPanel charsetPanel = new JPanel();</span>
+<span class="nc" id="L152">        charsetPanel.setLayout(new BoxLayout(charsetPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L154">        JPanel passwordLengthPanel = new JPanel();</span>
+<span class="nc" id="L155">        passwordLengthPanel.setLayout(new BoxLayout(passwordLengthPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L157">        topLevelPanel.add(charsetPanel);</span>
+<span class="nc" id="L158">        topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L159">        topLevelPanel.add(passwordLengthPanel);</span>
+
+<span class="nc" id="L161">        numberCheckBox = new JCheckBox(&quot;Number&quot;);</span>
+<span class="nc" id="L162">        numberCheckBox.setSelected(true);</span>
+<span class="nc" id="L163">        lowercaseLetterCheckBox = new JCheckBox(&quot;Lowercase Letter&quot;);</span>
+<span class="nc" id="L164">        uppercaseLetterCheckBox = new JCheckBox(&quot;Uppercase Letter&quot;);</span>
+
+<span class="nc" id="L166">        charsetPanel.add(numberCheckBox);</span>
+<span class="nc" id="L167">        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L168">        charsetPanel.add(lowercaseLetterCheckBox);</span>
+<span class="nc" id="L169">        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L170">        charsetPanel.add(uppercaseLetterCheckBox);</span>
+
+<span class="nc" id="L172">        JLabel minLabel = new JLabel(&quot;Minimum Length: &quot;);</span>
+<span class="nc" id="L173">        JLabel maxLabel = new JLabel(&quot;Maximum Length: &quot;);</span>
+
+<span class="nc" id="L175">        minSpinner = new JSpinner();</span>
+<span class="nc" id="L176">        minSpinner.setModel(new SpinnerNumberModel(1, 1, 9, 1));</span>
+<span class="nc" id="L177">        minSpinner.setToolTipText(&quot;Minimum Length&quot;);</span>
+
+<span class="nc" id="L179">        maxSpinner = new JSpinner();</span>
+<span class="nc" id="L180">        maxSpinner.setModel(new SpinnerNumberModel(6, 1, 9, 1));</span>
+<span class="nc" id="L181">        maxSpinner.setToolTipText(&quot;Maximum Length&quot;);</span>
+
+<span class="nc" id="L183">        passwordLengthPanel.add(minLabel);</span>
+<span class="nc" id="L184">        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L185">        passwordLengthPanel.add(minSpinner);</span>
+<span class="nc" id="L186">        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L187">        passwordLengthPanel.add(maxLabel);</span>
+<span class="nc" id="L188">        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L189">        passwordLengthPanel.add(maxSpinner);</span>
+<span class="nc" id="L190">    }</span>
+
+    private void createDictionaryPanel() {
+<span class="nc" id="L193">        dictionaryCategoryPanel = new JPanel();</span>
+
+<span class="nc" id="L195">        JPanel topLevelPanel = new JPanel();</span>
+<span class="nc" id="L196">        topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L197">        dictionaryCategoryPanel.add(topLevelPanel);</span>
+
+<span class="nc" id="L199">        dictionaryFilePanel = new FilePanel(&quot;Choose Dictionary File&quot;);</span>
+<span class="nc" id="L200">        dictionaryFilePanel.setDescriptionAndFileExtensions(&quot;*.dic;*.txt&quot;, new String[]{&quot;dic&quot;, &quot;txt&quot;});</span>
+
+<span class="nc" id="L202">        JPanel threadNumPanel = new JPanel();</span>
+<span class="nc" id="L203">        threadNumPanel.setLayout(new BoxLayout(threadNumPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L205">        topLevelPanel.add(dictionaryFilePanel);</span>
+<span class="nc" id="L206">        topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L207">        topLevelPanel.add(threadNumPanel);</span>
+
+<span class="nc" id="L209">        JLabel threadNumLabel = new JLabel(&quot;Thread Number: &quot;);</span>
+
+<span class="nc" id="L211">        threadNumSpinner = new JSpinner();</span>
+<span class="nc" id="L212">        threadNumSpinner.setModel(new SpinnerNumberModel(1, 1, 1000, 1));</span>
+<span class="nc" id="L213">        threadNumSpinner.setToolTipText(&quot;Thread Number&quot;);</span>
+
+<span class="nc" id="L215">        threadNumPanel.add(threadNumLabel);</span>
+<span class="nc" id="L216">        threadNumPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L217">        threadNumPanel.add(threadNumSpinner);</span>
+<span class="nc" id="L218">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L221">        operationPanel = new JPanel();</span>
+<span class="nc" id="L222">        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L224">        startButton = new JButton(&quot;Start&quot;);</span>
+<span class="nc" id="L225">        stopButton = new JButton(&quot;Stop&quot;);</span>
+<span class="nc" id="L226">        currentStateLabel = new JLabel();</span>
+<span class="nc" id="L227">        currentPasswordLabel = new JLabel();</span>
+<span class="nc" id="L228">        currentPasswordLabel.setText(&quot;&quot;);</span>
+
+<span class="nc" id="L230">        operationPanel.add(startButton);</span>
+<span class="nc" id="L231">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L232">        operationPanel.add(stopButton);</span>
+<span class="nc" id="L233">        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L234">        operationPanel.add(currentStateLabel);</span>
+<span class="nc" id="L235">        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L236">        operationPanel.add(currentPasswordLabel);</span>
+<span class="nc" id="L237">        operationPanel.add(Box.createHorizontalGlue());</span>
+
+<span class="nc" id="L239">        startButton.addActionListener(e -&gt; new Thread(this::onStart).start());</span>
+
+<span class="nc" id="L241">        stopButton.addActionListener(e -&gt; new Thread(this::onStop).start());</span>
+
+<span class="nc" id="L243">        setCurrentState(State.IDLE);</span>
+<span class="nc" id="L244">    }</span>
+
+    private void onStart() {
+<span class="nc" id="L247">        FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (fileChecker == null) {</span>
+<span class="nc" id="L249">            JOptionPane.showMessageDialog(this, &quot;fileChecker is null&quot;);</span>
+<span class="nc" id="L250">            return;</span>
+        }
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        if (!fileChecker.prepareChecker()) {</span>
+<span class="nc" id="L253">            JOptionPane.showMessageDialog(this, &quot;onStart failed: Checker condition does not been prepared!&quot;);</span>
+<span class="nc" id="L254">            return;</span>
+        }
+
+<span class="nc" id="L257">        File selectedFile = recoveryFilePanel.getFile();</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        if (!selectedFile.isFile()) {</span>
+<span class="nc" id="L259">            JOptionPane.showMessageDialog(this, &quot;file is null&quot;);</span>
+<span class="nc" id="L260">            return;</span>
+        }
+
+<span class="nc" id="L263">        String extension = FilenameUtils.getExtension(recoveryFilePanel.getFile().getName());</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        if (!ArrayUtils.contains(fileChecker.getFileExtensions(), StringUtils.toRootLowerCase(extension))) {</span>
+<span class="nc" id="L265">            JOptionPane.showMessageDialog(this, &quot;invalid file&quot;);</span>
+<span class="nc" id="L266">            return;</span>
+        }
+
+<span class="nc" id="L269">        fileChecker.attachFile(selectedFile);</span>
+<span class="nc" id="L270">        currentFileChecker = fileChecker;</span>
+
+<span class="nc" id="L272">        Component selectedPanel = categoryTabbedPane.getSelectedComponent();</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (selectedPanel.equals(bruteForceCategoryPanel)) {</span>
+<span class="nc" id="L274">            currentCategory = Category.BRUTE_FORCE;</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        } else if (selectedPanel.equals(dictionaryCategoryPanel)) {</span>
+<span class="nc" id="L276">            int threadNum = (Integer) threadNumSpinner.getValue();</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">            if (threadNum == 1) {</span>
+<span class="nc" id="L278">                currentCategory = Category.DICTIONARY_SINGLE_THREAD;</span>
+            } else {
+<span class="nc" id="L280">                currentCategory = Category.DICTIONARY_MULTI_THREAD;</span>
+            }
+<span class="nc" id="L282">        } else {</span>
+<span class="nc" id="L283">            currentCategory = Category.UNKNOWN;</span>
+        }
+<span class="nc" id="L285">        logger.info(&quot;onStart: &quot; + currentCategory);</span>
+<span class="nc bnc" id="L286" title="All 4 branches missed.">        switch (currentCategory) {</span>
+            case BRUTE_FORCE:
+<span class="nc" id="L288">                onStartByBruteForceCategory();</span>
+<span class="nc" id="L289">                break;</span>
+            case DICTIONARY_SINGLE_THREAD:
+<span class="nc" id="L291">                onStartByDictionarySingleThreadCategory();</span>
+<span class="nc" id="L292">                break;</span>
+            case DICTIONARY_MULTI_THREAD:
+<span class="nc" id="L294">                onStartByDictionaryMultiThreadCategory();</span>
+<span class="nc" id="L295">                break;</span>
+            default:
+<span class="nc" id="L297">                JOptionPane.showMessageDialog(this, &quot;onStart failed: Invalid category!&quot;);</span>
+                break;
+        }
+<span class="nc" id="L300">    }</span>
+
+    private void onStop() {
+<span class="nc" id="L303">        logger.info(&quot;onStop: &quot; + currentCategory);</span>
+<span class="nc bnc" id="L304" title="All 4 branches missed.">        switch (currentCategory) {</span>
+            case BRUTE_FORCE:
+<span class="nc" id="L306">                onStopByBruteForceCategory();</span>
+<span class="nc" id="L307">                break;</span>
+            case DICTIONARY_SINGLE_THREAD:
+<span class="nc" id="L309">                onStopByDictionarySingleThreadCategory();</span>
+<span class="nc" id="L310">                break;</span>
+            case DICTIONARY_MULTI_THREAD:
+<span class="nc" id="L312">                onStopByDictionaryMultiThreadCategory();</span>
+<span class="nc" id="L313">                break;</span>
+            default:
+<span class="nc" id="L315">                JOptionPane.showMessageDialog(this, &quot;onStop failed: Invalid category!&quot;);</span>
+                break;
+        }
+<span class="nc" id="L318">    }</span>
+
+    private void onStartByBruteForceCategory() {
+<span class="nc" id="L321">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (numberCheckBox.isSelected()) {</span>
+<span class="nc" id="L323">            sb.append(&quot;0123456789&quot;);</span>
+        }
+<span class="nc bnc" id="L325" title="All 2 branches missed.">        if (lowercaseLetterCheckBox.isSelected()) {</span>
+<span class="nc" id="L326">            sb.append(&quot;abcdefghijklmnopqrstuvwxyz&quot;);</span>
+        }
+<span class="nc bnc" id="L328" title="All 2 branches missed.">        if (uppercaseLetterCheckBox.isSelected()) {</span>
+<span class="nc" id="L329">            sb.append(&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;);</span>
+        }
+<span class="nc bnc" id="L331" title="All 2 branches missed.">        if (sb.length() &lt;= 0) {</span>
+<span class="nc" id="L332">            JOptionPane.showMessageDialog(this, &quot;Character set is empty!&quot;);</span>
+<span class="nc" id="L333">            return;</span>
+        }
+<span class="nc" id="L335">        final String charset = sb.toString();</span>
+
+<span class="nc" id="L337">        int minLength = (Integer) minSpinner.getValue();</span>
+<span class="nc" id="L338">        int maxLength = (Integer) maxSpinner.getValue();</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (minLength &gt; maxLength) {</span>
+<span class="nc" id="L340">            JOptionPane.showMessageDialog(this, &quot;Minimum length is bigger than maximum length!&quot;);</span>
+<span class="nc" id="L341">            return;</span>
+        }
+
+<span class="nc" id="L344">        setCurrentState(State.WORKING);</span>
+<span class="nc" id="L345">        String password = null;</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">        for (int length = minLength; length &lt;= maxLength; length++) {</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">            if (currentState != State.WORKING) {</span>
+<span class="nc" id="L348">                logger.info(&quot;Break because of state: &quot; + currentState);</span>
+<span class="nc" id="L349">                break;</span>
+            }
+<span class="nc" id="L351">            setProgressMaxValue((int) Math.pow(charset.length(), length));</span>
+<span class="nc" id="L352">            setProgressBarValue(0);</span>
+<span class="nc" id="L353">            long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L354">            int numThreads = getThreadCount(charset.length(), length, currentFileChecker.getMaxThreadNum());</span>
+<span class="nc" id="L355">            logger.info(&quot;[&quot; + currentFileChecker + &quot;]Current attempt length: &quot; + length + &quot;, thread number: &quot; + numThreads);</span>
+<span class="nc" id="L356">            BruteForceProxy proxy = BruteForceProxy.getInstance();</span>
+<span class="nc" id="L357">            password = proxy.startAndGet(numThreads, length, currentFileChecker, charset, this);</span>
+<span class="nc" id="L358">            long endTime = System.currentTimeMillis();</span>
+<span class="nc" id="L359">            logger.info(&quot;Current attempt length: &quot; + length + &quot;, Cost time: &quot; + (endTime - startTime) + &quot;ms&quot;);</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">            if (password != null) {</span>
+<span class="nc" id="L361">                break;</span>
+            }
+        }
+<span class="nc" id="L364">        showResultWithDialog(password);</span>
+<span class="nc" id="L365">        onStopByBruteForceCategory();</span>
+<span class="nc" id="L366">    }</span>
+
+    private void onStartByDictionarySingleThreadCategory() {
+<span class="nc" id="L369">        File dictionaryFile = dictionaryFilePanel.getFile();</span>
+<span class="nc bnc" id="L370" title="All 2 branches missed.">        if (!dictionaryFile.isFile()) {</span>
+<span class="nc" id="L371">            JOptionPane.showMessageDialog(this, &quot;Invalid dictionary file&quot;);</span>
+<span class="nc" id="L372">            return;</span>
+        }
+<span class="nc" id="L374">        String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());</span>
+<span class="nc" id="L375">        logger.info(&quot;dictionary file: &quot; + dictionaryFile.getAbsolutePath() + &quot;, charset: &quot; + charsetName);</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">        if (charsetName == null) {</span>
+<span class="nc" id="L377">            JOptionPane.showMessageDialog(this, &quot;Invalid charsetName&quot;);</span>
+<span class="nc" id="L378">            return;</span>
+        }
+<span class="nc" id="L380">        setCurrentState(State.WORKING);</span>
+<span class="nc" id="L381">        setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));</span>
+<span class="nc" id="L382">        setProgressBarValue(0);</span>
+<span class="nc" id="L383">        DictionarySingleThreadProxy proxy = DictionarySingleThreadProxy.getInstance();</span>
+<span class="nc" id="L384">        String password = proxy.startAndGet(dictionaryFile, currentFileChecker, charsetName, this);</span>
+<span class="nc" id="L385">        showResultWithDialog(password);</span>
+<span class="nc" id="L386">        onStopByDictionarySingleThreadCategory();</span>
+<span class="nc" id="L387">    }</span>
+
+    private void onStartByDictionaryMultiThreadCategory() {
+<span class="nc" id="L390">        File dictionaryFile = dictionaryFilePanel.getFile();</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">        if (!dictionaryFile.isFile()) {</span>
+<span class="nc" id="L392">            JOptionPane.showMessageDialog(this, &quot;Invalid dictionary file&quot;);</span>
+<span class="nc" id="L393">            return;</span>
+        }
+<span class="nc" id="L395">        int threadNum = (Integer) threadNumSpinner.getValue();</span>
+<span class="nc" id="L396">        int fileLineCount = Utils.getFileLineCount(dictionaryFile);</span>
+<span class="nc" id="L397">        logger.info(&quot;File line count: &quot; + fileLineCount);</span>
+
+<span class="nc" id="L399">        setCurrentState(State.WORKING);</span>
+<span class="nc" id="L400">        setProgressMaxValue(fileLineCount);</span>
+<span class="nc" id="L401">        setProgressBarValue(0);</span>
+
+<span class="nc" id="L403">        DictionaryMultiThreadProxy proxy = DictionaryMultiThreadProxy.getInstance();</span>
+<span class="nc" id="L404">        String password = proxy.startAndGet(threadNum, dictionaryFile, currentFileChecker, this);</span>
+<span class="nc" id="L405">        showResultWithDialog(password);</span>
+<span class="nc" id="L406">        onStopByDictionaryMultiThreadCategory();</span>
+<span class="nc" id="L407">    }</span>
+
+    private void onStopByBruteForceCategory() {
+<span class="nc bnc" id="L410" title="All 2 branches missed.">        if (getCurrentState() != State.WORKING) {</span>
+<span class="nc" id="L411">            return;</span>
+        }
+<span class="nc" id="L413">        setCurrentState(State.STOPPING);</span>
+<span class="nc" id="L414">        BruteForceProxy.getInstance().cancel();</span>
+<span class="nc" id="L415">        setCurrentState(State.IDLE);</span>
+<span class="nc" id="L416">    }</span>
+
+    private void onStopByDictionarySingleThreadCategory() {
+<span class="nc bnc" id="L419" title="All 2 branches missed.">        if (getCurrentState() != State.WORKING) {</span>
+<span class="nc" id="L420">            return;</span>
+        }
+<span class="nc" id="L422">        setCurrentState(State.STOPPING);</span>
+<span class="nc" id="L423">        DictionarySingleThreadProxy.getInstance().cancel();</span>
+<span class="nc" id="L424">        setCurrentState(State.IDLE);</span>
+<span class="nc" id="L425">    }</span>
+
+    private void onStopByDictionaryMultiThreadCategory() {
+<span class="nc bnc" id="L428" title="All 2 branches missed.">        if (getCurrentState() != State.WORKING) {</span>
+<span class="nc" id="L429">            return;</span>
+        }
+<span class="nc" id="L431">        setCurrentState(State.STOPPING);</span>
+<span class="nc" id="L432">        DictionaryMultiThreadProxy.getInstance().cancel();</span>
+<span class="nc" id="L433">        setCurrentState(State.IDLE);</span>
+<span class="nc" id="L434">    }</span>
+
+    private int getThreadCount(int charSetSize, int length, int maxThreadCount) {
+<span class="nc" id="L437">        int result = 1;</span>
+<span class="nc bnc" id="L438" title="All 2 branches missed.">        for (int i = 1; i &lt;= length; i++) {</span>
+<span class="nc" id="L439">            result *= charSetSize;</span>
+<span class="nc bnc" id="L440" title="All 2 branches missed.">            if (result &gt;= maxThreadCount) {</span>
+<span class="nc" id="L441">                return maxThreadCount;</span>
+            }
+        }
+<span class="nc" id="L444">        return result;</span>
+    }
+
+    private void showResultWithDialog(String password) {
+<span class="nc bnc" id="L448" title="All 2 branches missed.">        if (password == null) {</span>
+<span class="nc" id="L449">            logger.error(&quot;Can not find password&quot;);</span>
+<span class="nc" id="L450">            JOptionPane.showMessageDialog(RecoveryPanel.this, &quot;Can not find password&quot;);</span>
+        } else {
+<span class="nc" id="L452">            logger.info(&quot;Find out the password: &quot; + password);</span>
+<span class="nc" id="L453">            JOptionPane.showMessageDialog(RecoveryPanel.this, &quot;Find out the password: &quot; + password);</span>
+        }
+<span class="nc" id="L455">    }</span>
+
+    @Override
+    public void setCurrentState(State currentState) {
+<span class="nc" id="L459">        this.currentState = currentState;</span>
+<span class="nc bnc" id="L460" title="All 2 branches missed.">        if (currentStateLabel != null) {</span>
+<span class="nc" id="L461">            currentStateLabel.setText(&quot;State: &quot; + currentState.toString());</span>
+        }
+<span class="nc bnc" id="L463" title="All 2 branches missed.">        if (currentState == State.WORKING) {</span>
+<span class="nc" id="L464">            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));</span>
+<span class="nc" id="L465">            startButton.setEnabled(false);</span>
+<span class="nc" id="L466">            stopButton.setEnabled(true);</span>
+<span class="nc bnc" id="L467" title="All 2 branches missed.">        } else if (currentState == State.STOPPING) {</span>
+<span class="nc" id="L468">            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));</span>
+<span class="nc" id="L469">            startButton.setEnabled(false);</span>
+<span class="nc" id="L470">            stopButton.setEnabled(false);</span>
+<span class="nc bnc" id="L471" title="All 2 branches missed.">        } else if (currentState == State.IDLE) {</span>
+<span class="nc" id="L472">            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));</span>
+<span class="nc" id="L473">            startButton.setEnabled(true);</span>
+<span class="nc" id="L474">            stopButton.setEnabled(false);</span>
+<span class="nc" id="L475">            currentPasswordLabel.setText(&quot;&quot;);</span>
+        }
+<span class="nc" id="L477">    }</span>
+
+    @Override
+    public State getCurrentState() {
+<span class="nc" id="L481">        return currentState;</span>
+    }
+
+    @Override
+    public void setProgressMaxValue(int maxValue) {
+<span class="nc" id="L486">        progressBar.setMaximum(maxValue);</span>
+<span class="nc" id="L487">    }</span>
+
+    @Override
+    public void increaseProgressBarValue() {
+<span class="nc" id="L491">        setProgressBarValue(progressBar.getValue() + 1);</span>
+<span class="nc" id="L492">    }</span>
+
+    @Override
+    public void setProgressBarValue(int value) {
+<span class="nc" id="L496">        progressBar.setValue(value);</span>
+<span class="nc" id="L497">        String text = numberFormat.format(((double) value) / progressBar.getMaximum());</span>
+<span class="nc" id="L498">        progressBar.setString(text);</span>
+<span class="nc" id="L499">    }</span>
+
+    @Override
+    public void setCurrentPassword(String password) {
+<span class="nc" id="L503">        currentPasswordLabel.setText(&quot;Trying: &quot; + password);</span>
+<span class="nc" id="L504">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

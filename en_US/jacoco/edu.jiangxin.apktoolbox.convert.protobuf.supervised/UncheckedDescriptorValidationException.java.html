@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UncheckedDescriptorValidationException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.supervised</a> &gt; <span class="el_source">UncheckedDescriptorValidationException.java</span></div><h1>UncheckedDescriptorValidationException.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.supervised;
+
+import com.google.protobuf.Descriptors;
+
+import java.util.Objects;
+
+/**
+ * Unchecked wrapper for {@link com.google.protobuf.Descriptors.DescriptorValidationException}.
+ *
+ * @author Daniel Tischner {@literal &lt;zabuza.dev@gmail.com&gt;}
+ * @see com.google.protobuf.Descriptors.DescriptorValidationException
+ */
+@SuppressWarnings(&quot;SerializableHasSerializationMethods&quot;)
+final class UncheckedDescriptorValidationException extends RuntimeException {
+
+	private static final long serialVersionUID = -7092503313047011977L;
+
+	/**
+	 * Creates a new instance with given message and cause
+	 *
+	 * @param message The error message, can be null
+	 * @param cause   The cause of the exception, not null
+	 */
+	UncheckedDescriptorValidationException(final String message,
+			final Descriptors.DescriptorValidationException cause) {
+<span class="nc" id="L26">		super(message, Objects.requireNonNull(cause));</span>
+<span class="nc" id="L27">	}</span>
+
+	/**
+	 * Creates a new instance with default error message
+	 *
+	 * @param cause The cause of the exception, not null
+	 */
+	UncheckedDescriptorValidationException(final Descriptors.DescriptorValidationException cause) {
+<span class="nc" id="L35">		super(Objects.requireNonNull(cause));</span>
+<span class="nc" id="L36">	}</span>
+
+	@Override
+	public synchronized Descriptors.DescriptorValidationException getCause() {
+<span class="nc" id="L40">		return (Descriptors.DescriptorValidationException) super.getCause();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RelationShipConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.relationship</a> &gt; <span class="el_source">RelationShipConvertPanel.java</span></div><h1>RelationShipConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.relationship;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+<span class="nc" id="L14">public class RelationShipConvertPanel extends EasyPanel {</span>
+<span class="nc" id="L15">    private static final Map&lt;String, Map&lt;String, String&gt;&gt; dataMap = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L17">    private String now = &quot;你&quot;;</span>
+
+    private JTextField inputTextField;
+    private JTextField outputTextField;
+
+<span class="nc" id="L22">    private final Stack&lt;String&gt; stack = new Stack&lt;&gt;();</span>
+
+    static {
+<span class="nc" id="L25">        dataMap.put(&quot;不存在&quot;, Map.of(&quot;父&quot;, &quot;不存在&quot;, &quot;母&quot;, &quot;不存在&quot;, &quot;兄&quot;, &quot;不存在&quot;, &quot;弟&quot;, &quot;不存在&quot;, &quot;姐&quot;, &quot;不存在&quot;, &quot;妹&quot;, &quot;不存在&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;不存在&quot;, &quot;女&quot;, &quot;不存在&quot;));</span>
+<span class="nc" id="L26">        dataMap.put(&quot;你&quot;, Map.of(&quot;父&quot;, &quot;爸爸&quot;, &quot;母&quot;, &quot;妈妈&quot;, &quot;兄&quot;, &quot;哥哥&quot;, &quot;弟&quot;, &quot;弟弟&quot;, &quot;姐&quot;, &quot;姐姐&quot;, &quot;妹&quot;, &quot;妹妹&quot;, &quot;夫&quot;, &quot;老公&quot;, &quot;妻&quot;, &quot;老婆&quot;, &quot;儿&quot;, &quot;儿子&quot;, &quot;女&quot;, &quot;女儿&quot;));</span>
+<span class="nc" id="L27">        dataMap.put(&quot;爸爸&quot;, Map.of(&quot;父&quot;, &quot;爷爷&quot;, &quot;母&quot;, &quot;奶奶&quot;, &quot;兄&quot;, &quot;伯伯&quot;, &quot;弟&quot;, &quot;叔叔&quot;, &quot;姐&quot;, &quot;姑姑&quot;, &quot;妹&quot;, &quot;姑姑&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;妈妈&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L28">        dataMap.put(&quot;妈妈&quot;, Map.of(&quot;父&quot;, &quot;姥爷&quot;, &quot;母&quot;, &quot;姥姥&quot;, &quot;兄&quot;, &quot;舅舅&quot;, &quot;弟&quot;, &quot;舅舅&quot;, &quot;姐&quot;, &quot;大姨&quot;, &quot;妹&quot;, &quot;小姨&quot;, &quot;夫&quot;, &quot;爸爸&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L29">        dataMap.put(&quot;哥哥&quot;, Map.of(&quot;父&quot;, &quot;爸爸&quot;, &quot;母&quot;, &quot;妈妈&quot;, &quot;兄&quot;, &quot;哥哥&quot;, &quot;弟&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;姐&quot;, &quot;姐姐&quot;, &quot;妹&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;嫂子&quot;, &quot;儿&quot;, &quot;侄子&quot;, &quot;女&quot;, &quot;侄女&quot;));</span>
+<span class="nc" id="L30">        dataMap.put(&quot;弟弟&quot;, Map.of(&quot;父&quot;, &quot;爸爸&quot;, &quot;母&quot;, &quot;妈妈&quot;, &quot;兄&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;弟&quot;, &quot;弟弟&quot;, &quot;姐&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;, &quot;妹&quot;, &quot;妹妹&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;弟媳&quot;, &quot;儿&quot;, &quot;侄子&quot;, &quot;女&quot;, &quot;侄女&quot;));</span>
+<span class="nc" id="L31">        dataMap.put(&quot;姐姐&quot;, Map.of(&quot;父&quot;, &quot;爸爸&quot;, &quot;母&quot;, &quot;妈妈&quot;, &quot;兄&quot;, &quot;哥哥&quot;, &quot;弟&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;姐&quot;, &quot;姐姐&quot;, &quot;妹&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;, &quot;夫&quot;, &quot;姐夫&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;外甥&quot;, &quot;女&quot;, &quot;外甥女&quot;));</span>
+<span class="nc" id="L32">        dataMap.put(&quot;妹妹&quot;, Map.of(&quot;父&quot;, &quot;爸爸&quot;, &quot;母&quot;, &quot;妈妈&quot;, &quot;兄&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;弟&quot;, &quot;弟弟&quot;, &quot;姐&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;, &quot;妹&quot;, &quot;妹妹&quot;, &quot;夫&quot;, &quot;妹夫&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;外甥&quot;, &quot;女&quot;, &quot;外甥女&quot;));</span>
+<span class="nc" id="L33">        dataMap.put(&quot;老婆&quot;, Map.of(&quot;父&quot;, &quot;岳父&quot;, &quot;母&quot;, &quot;岳母&quot;, &quot;兄&quot;, &quot;大舅&quot;, &quot;弟&quot;, &quot;小舅&quot;, &quot;姐&quot;, &quot;大姨&quot;, &quot;妹&quot;, &quot;小姨&quot;, &quot;夫&quot;, &quot;你&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;儿子&quot;, &quot;女&quot;, &quot;女儿&quot;));</span>
+<span class="nc" id="L34">        dataMap.put(&quot;儿子&quot;, Map.of(&quot;父&quot;, &quot;你&quot;, &quot;母&quot;, &quot;老婆&quot;, &quot;兄&quot;, &quot;儿子&quot;, &quot;弟&quot;, &quot;儿子&quot;, &quot;姐&quot;, &quot;女儿&quot;, &quot;妹&quot;, &quot;女儿&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;儿媳&quot;, &quot;儿&quot;, &quot;孙子&quot;, &quot;女&quot;, &quot;孙女&quot;));</span>
+<span class="nc" id="L35">        dataMap.put(&quot;女儿&quot;, Map.of(&quot;父&quot;, &quot;你&quot;, &quot;母&quot;, &quot;老婆&quot;, &quot;兄&quot;, &quot;儿子&quot;, &quot;弟&quot;, &quot;儿子&quot;, &quot;姐&quot;, &quot;女儿&quot;, &quot;妹&quot;, &quot;女儿&quot;, &quot;夫&quot;, &quot;女婿&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;外孙&quot;, &quot;女&quot;, &quot;外孙女&quot;));</span>
+<span class="nc" id="L36">        dataMap.put(&quot;伯伯&quot;, Map.of(&quot;父&quot;, &quot;爷爷&quot;, &quot;母&quot;, &quot;奶奶&quot;, &quot;兄&quot;, &quot;伯伯&quot;, &quot;弟&quot;, &quot;&lt;伯伯&gt;&lt;叔叔&gt;&quot;, &quot;姐&quot;, &quot;姑姑&quot;, &quot;妹&quot;, &quot;姑姑&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;婶婶&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L37">        dataMap.put(&quot;叔叔&quot;, Map.of(&quot;父&quot;, &quot;爷爷&quot;, &quot;母&quot;, &quot;奶奶&quot;, &quot;兄&quot;, &quot;&lt;伯伯&gt;&lt;叔叔&gt;&quot;, &quot;弟&quot;, &quot;叔叔&quot;, &quot;姐&quot;, &quot;姑姑&quot;, &quot;妹&quot;, &quot;姑姑&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;婶婶&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L38">        dataMap.put(&quot;姑姑&quot;, Map.of(&quot;父&quot;, &quot;爷爷&quot;, &quot;母&quot;, &quot;奶奶&quot;, &quot;兄&quot;, &quot;&lt;伯伯&gt;&lt;叔叔&gt;&quot;, &quot;弟&quot;, &quot;&lt;伯伯&gt;&lt;叔叔&gt;&quot;, &quot;姐&quot;, &quot;姑姑&quot;, &quot;妹&quot;, &quot;姑姑&quot;, &quot;夫&quot;, &quot;姑父&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L39">        dataMap.put(&quot;岳父&quot;, Map.of(&quot;父&quot;, &quot;爷爷&quot;, &quot;母&quot;, &quot;奶奶&quot;, &quot;兄&quot;, &quot;伯伯&quot;, &quot;弟&quot;, &quot;叔叔&quot;, &quot;姐&quot;, &quot;姑姑&quot;, &quot;妹&quot;, &quot;姑姑&quot;, &quot;夫&quot;, &quot;不存在&quot;, &quot;妻&quot;, &quot;岳母&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L40">        dataMap.put(&quot;岳母&quot;, Map.of(&quot;父&quot;, &quot;姥爷&quot;, &quot;母&quot;, &quot;姥姥&quot;, &quot;兄&quot;, &quot;舅舅&quot;, &quot;弟&quot;, &quot;舅舅&quot;, &quot;姐&quot;, &quot;大姨&quot;, &quot;妹&quot;, &quot;小姨&quot;, &quot;夫&quot;, &quot;岳父&quot;, &quot;妻&quot;, &quot;不存在&quot;, &quot;儿&quot;, &quot;&lt;哥哥&gt;&lt;弟弟&gt;&quot;, &quot;女&quot;, &quot;&lt;姐姐&gt;&lt;妹妹&gt;&quot;));</span>
+<span class="nc" id="L41">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L45">        setLayout(new GridBagLayout());</span>
+<span class="nc" id="L46">        GridBagConstraints gbc = new GridBagConstraints();</span>
+
+<span class="nc" id="L48">        inputTextField = new MyTextField();</span>
+
+<span class="nc" id="L50">        gbc.insets = new Insets(5, 5, 5, 5);</span>
+<span class="nc" id="L51">        gbc.gridx = 0;</span>
+<span class="nc" id="L52">        gbc.gridy = 0;</span>
+<span class="nc" id="L53">        gbc.gridwidth = 4;</span>
+<span class="nc" id="L54">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L55">        add(inputTextField, gbc);</span>
+
+<span class="nc" id="L57">        outputTextField = new MyTextField();</span>
+<span class="nc" id="L58">        outputTextField.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);</span>
+
+<span class="nc" id="L60">        gbc.gridy = 1;</span>
+<span class="nc" id="L61">        add(outputTextField, gbc);</span>
+
+<span class="nc" id="L63">        ButtonListener btnListener = new ButtonListener();</span>
+
+<span class="nc" id="L65">        JButton fatherButton = new MyButton(&quot;父&quot;);</span>
+<span class="nc" id="L66">        fatherButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L68">        gbc.gridx = 0;</span>
+<span class="nc" id="L69">        gbc.gridy = 2;</span>
+<span class="nc" id="L70">        gbc.gridwidth = 1;</span>
+<span class="nc" id="L71">        add(fatherButton, gbc);</span>
+
+<span class="nc" id="L73">        JButton motherButton = new MyButton(&quot;母&quot;);</span>
+<span class="nc" id="L74">        motherButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L76">        gbc.gridx = 1;</span>
+<span class="nc" id="L77">        add(motherButton, gbc);</span>
+
+<span class="nc" id="L79">        JButton backButton = new MyButton(&quot;←&quot;);</span>
+<span class="nc" id="L80">        backButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L82">        gbc.gridx = 2;</span>
+<span class="nc" id="L83">        add(backButton, gbc);</span>
+
+<span class="nc" id="L85">        JButton acButton = new MyButton(&quot;AC&quot;);</span>
+<span class="nc" id="L86">        acButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L88">        gbc.gridx = 3;</span>
+<span class="nc" id="L89">        add(acButton, gbc);</span>
+
+<span class="nc" id="L91">        JButton brotherButton = new MyButton(&quot;兄&quot;);</span>
+<span class="nc" id="L92">        brotherButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L94">        gbc.gridx = 0;</span>
+<span class="nc" id="L95">        gbc.gridy = 3;</span>
+<span class="nc" id="L96">        add(brotherButton, gbc);</span>
+
+<span class="nc" id="L98">        JButton littleBrotherButton = new MyButton(&quot;弟&quot;);</span>
+<span class="nc" id="L99">        littleBrotherButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L101">        gbc.gridx = 1;</span>
+<span class="nc" id="L102">        add(littleBrotherButton, gbc);</span>
+
+<span class="nc" id="L104">        JButton husbandButton = new MyButton(&quot;夫&quot;);</span>
+<span class="nc" id="L105">        husbandButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L107">        gbc.gridx = 2;</span>
+<span class="nc" id="L108">        add(husbandButton, gbc);</span>
+
+<span class="nc" id="L110">        JButton obligateButton = new MyButton(&quot; &quot;);</span>
+<span class="nc" id="L111">        obligateButton.setEnabled(false);</span>
+
+<span class="nc" id="L113">        gbc.gridx = 3;</span>
+<span class="nc" id="L114">        add(obligateButton, gbc);</span>
+
+<span class="nc" id="L116">        JButton sisterButton = new MyButton(&quot;姐&quot;);</span>
+<span class="nc" id="L117">        sisterButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L119">        gbc.gridx = 0;</span>
+<span class="nc" id="L120">        gbc.gridy = 4;</span>
+<span class="nc" id="L121">        add(sisterButton, gbc);</span>
+
+<span class="nc" id="L123">        JButton littleSisterButton = new MyButton(&quot;妹&quot;);</span>
+<span class="nc" id="L124">        littleSisterButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L126">        gbc.gridx = 1;</span>
+<span class="nc" id="L127">        add(littleSisterButton, gbc);</span>
+
+<span class="nc" id="L129">        JButton wifeButton = new MyButton(&quot;妻&quot;);</span>
+<span class="nc" id="L130">        wifeButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L132">        gbc.gridx = 2;</span>
+<span class="nc" id="L133">        add(wifeButton, gbc);</span>
+
+<span class="nc" id="L135">        JButton deButton = new MyButton(&quot;的&quot;);</span>
+<span class="nc" id="L136">        deButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L138">        gbc.gridx = 3;</span>
+<span class="nc" id="L139">        add(deButton, gbc);</span>
+
+<span class="nc" id="L141">        JButton sonButton = new MyButton(&quot;儿&quot;);</span>
+<span class="nc" id="L142">        sonButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L144">        gbc.gridx = 0;</span>
+<span class="nc" id="L145">        gbc.gridy = 5;</span>
+<span class="nc" id="L146">        add(sonButton, gbc);</span>
+
+<span class="nc" id="L148">        JButton daughterbButton = new MyButton(&quot;女&quot;);</span>
+<span class="nc" id="L149">        daughterbButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L151">        gbc.gridx = 1;</span>
+<span class="nc" id="L152">        add(daughterbButton, gbc);</span>
+
+<span class="nc" id="L154">        JButton resultButton = new MyButton(&quot;=&quot;);</span>
+<span class="nc" id="L155">        resultButton.addActionListener(btnListener);</span>
+
+<span class="nc" id="L157">        gbc.gridx = 2;</span>
+<span class="nc" id="L158">        gbc.gridwidth = 2;</span>
+<span class="nc" id="L159">        add(resultButton, gbc);</span>
+<span class="nc" id="L160">    }</span>
+
+    static class MyTextField extends JTextField {
+        public MyTextField() {
+<span class="nc" id="L164">            super();</span>
+<span class="nc" id="L165">            Font font = new Font(&quot;宋体&quot;, Font.BOLD, 15);</span>
+<span class="nc" id="L166">            setFont(font);</span>
+<span class="nc" id="L167">            setEditable(false);</span>
+<span class="nc" id="L168">        }</span>
+    }
+
+    static class MyButton extends JButton {
+        public MyButton(String text) {
+<span class="nc" id="L173">            super(text);</span>
+<span class="nc" id="L174">            Font font = new Font(&quot;宋体&quot;, Font.BOLD, 30);</span>
+<span class="nc" id="L175">            setFont(font);</span>
+<span class="nc" id="L176">        }</span>
+    }
+
+<span class="nc" id="L179">    class ButtonListener implements ActionListener {</span>
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L181">            String which = ((JButton) e.getSource()).getText();</span>
+<span class="nc bnc" id="L182" title="All 5 branches missed.">            switch (which) {</span>
+                case &quot;AC&quot; -&gt; {
+<span class="nc" id="L184">                    now = &quot;你&quot;;</span>
+<span class="nc" id="L185">                    inputTextField.setText(&quot;&quot;);</span>
+<span class="nc" id="L186">                    outputTextField.setText(&quot;&quot;);</span>
+<span class="nc" id="L187">                }</span>
+<span class="nc" id="L188">                case &quot;=&quot; -&gt; outputTextField.setText(now);</span>
+                case &quot;←&quot; -&gt; {
+<span class="nc" id="L190">                    String inputText = inputTextField.getText();</span>
+<span class="nc" id="L191">                    String removedText = null;</span>
+<span class="nc bnc" id="L192" title="All 4 branches missed.">                    if (inputText != null &amp;&amp; inputText.length() &gt;= 1) {</span>
+<span class="nc" id="L193">                        inputTextField.setText(inputText.substring(0, inputText.length() - 1));</span>
+<span class="nc" id="L194">                        removedText = inputText.substring(inputText.length() - 1);</span>
+                    }
+<span class="nc bnc" id="L196" title="All 4 branches missed.">                    if (!stack.isEmpty() &amp;&amp; isRelationString(removedText)) {</span>
+<span class="nc" id="L197">                        now = stack.pop();</span>
+<span class="nc" id="L198">                        outputTextField.setText(now);</span>
+                    }
+<span class="nc" id="L200">                }</span>
+<span class="nc" id="L201">                case &quot;的&quot; -&gt; inputTextField.setText(inputTextField.getText() + which);</span>
+                default -&gt; {
+<span class="nc" id="L203">                    inputTextField.setText(inputTextField.getText() + which);</span>
+<span class="nc" id="L204">                    stack.push(now);</span>
+<span class="nc" id="L205">                    String result = getRelation(now, which);</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                    if (isPossibleRelation(result)) {</span>
+<span class="nc" id="L207">                        result = getExactRelation(result);</span>
+                    }
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                    if (result != null) {</span>
+<span class="nc" id="L210">                        now = result;</span>
+<span class="nc" id="L211">                        outputTextField.setText(now);</span>
+                    } else {
+<span class="nc" id="L213">                        outputTextField.setText(&quot;超出计算范围&quot;);</span>
+                    }
+                }
+            }
+<span class="nc" id="L217">        }</span>
+    }
+
+    private static boolean isRelationString(String relationString) {
+<span class="nc bnc" id="L221" title="All 4 branches missed.">        return relationString != null &amp;&amp; &quot;父母兄弟姐妹夫妻儿女&quot;.contains(relationString);</span>
+    }
+
+    private static String getRelation(String now, String what) {
+<span class="nc" id="L225">        Map&lt;String, String&gt; relationsMap = dataMap.get(now);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (relationsMap == null) {</span>
+<span class="nc" id="L227">            return null;</span>
+        }
+<span class="nc" id="L229">        return relationsMap.get(what);</span>
+    }
+
+    private static boolean isPossibleRelation(String possibleRelation) {
+<span class="nc bnc" id="L233" title="All 4 branches missed.">        return possibleRelation != null &amp;&amp; possibleRelation.charAt(0) == '&lt;';</span>
+    }
+
+    private static String getExactRelation(String possibleRelation) {
+<span class="nc" id="L237">        String[] tmp = StringUtils.substringsBetween(possibleRelation, &quot;&lt;&quot;, &quot;&gt;&quot;);</span>
+<span class="nc bnc" id="L238" title="All 4 branches missed.">        if (tmp != null &amp;&amp; tmp.length == 2) {</span>
+<span class="nc" id="L239">            String message = &quot;是否比&quot;;</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">            if (&quot;伯伯&quot;.equals(tmp[0])) {</span>
+<span class="nc" id="L241">                message += &quot;爸爸&quot;;</span>
+<span class="nc bnc" id="L242" title="All 4 branches missed.">            } else if (&quot;姐姐&quot;.equals(tmp[0]) || &quot;哥哥&quot;.equals(tmp[0])) {</span>
+<span class="nc" id="L243">                message += &quot;你&quot;;</span>
+            }
+<span class="nc" id="L245">            message += &quot;大？&quot;;</span>
+<span class="nc" id="L246">            int userChoose = JOptionPane.showConfirmDialog(null, message, &quot;提示&quot;, JOptionPane.YES_NO_OPTION);</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">            boolean isOlder = userChoose == JOptionPane.YES_OPTION;</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">            return isOlder ? tmp[0] : tmp[1];</span>
+        } else {
+<span class="nc" id="L250">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

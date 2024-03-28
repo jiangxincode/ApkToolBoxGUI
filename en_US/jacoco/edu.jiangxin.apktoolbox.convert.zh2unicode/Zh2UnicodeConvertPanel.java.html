@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Zh2UnicodeConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.zh2unicode</a> &gt; <span class="el_source">Zh2UnicodeConvertPanel.java</span></div><h1>Zh2UnicodeConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.zh2unicode;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.UnsupportedEncodingException;
+
+public class Zh2UnicodeConvertPanel extends EasyPanel {
+    private JPanel zhPanel;
+
+    private JTextArea zhTextArea;
+
+    private JPanel unicodePanel;
+
+    private JTextArea unicodeTextArea;
+
+    public Zh2UnicodeConvertPanel() throws HeadlessException {
+<span class="nc" id="L20">        super();</span>
+<span class="nc" id="L21">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L25">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L26">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L28">        createTextPanel();</span>
+<span class="nc" id="L29">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L30">        createOperationPanel();</span>
+<span class="nc" id="L31">    }</span>
+
+    private void createTextPanel() {
+<span class="nc" id="L34">        JPanel textPanel = new JPanel();</span>
+<span class="nc" id="L35">        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L36">        add(textPanel);</span>
+
+<span class="nc" id="L38">        createZhPanel();</span>
+<span class="nc" id="L39">        textPanel.add(zhPanel);</span>
+
+<span class="nc" id="L41">        textPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L43">        createUnicodePanel();</span>
+<span class="nc" id="L44">        textPanel.add(unicodePanel);</span>
+<span class="nc" id="L45">    }</span>
+
+    private void createZhPanel() {
+<span class="nc" id="L48">        zhPanel = new JPanel();</span>
+<span class="nc" id="L49">        zhPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L50">        zhPanel.setBorder(BorderFactory.createTitledBorder(&quot;中文&quot;));</span>
+
+<span class="nc" id="L52">        zhTextArea = new JTextArea();</span>
+<span class="nc" id="L53">        zhTextArea.setToolTipText(&quot;输入中文&quot;);</span>
+<span class="nc" id="L54">        zhTextArea.setEditable(true);</span>
+
+<span class="nc" id="L56">        JScrollPane zhScrollPane = new JScrollPane(zhTextArea);</span>
+<span class="nc" id="L57">        zhScrollPane.setPreferredSize(new Dimension(200, 500));</span>
+
+<span class="nc" id="L59">        zhPanel.add(zhScrollPane);</span>
+<span class="nc" id="L60">    }</span>
+
+    private void createUnicodePanel() {
+<span class="nc" id="L63">        unicodePanel = new JPanel();</span>
+<span class="nc" id="L64">        unicodePanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L65">        unicodePanel.setBorder(BorderFactory.createTitledBorder(&quot;Unicode&quot;));</span>
+
+<span class="nc" id="L67">        unicodeTextArea = new JTextArea();</span>
+<span class="nc" id="L68">        unicodeTextArea.setToolTipText(&quot;Enter Unicode Character&quot;);</span>
+<span class="nc" id="L69">        unicodeTextArea.setEditable(true);</span>
+
+<span class="nc" id="L71">        JScrollPane unicodeScrollPane = new JScrollPane(unicodeTextArea);</span>
+<span class="nc" id="L72">        unicodeScrollPane.setPreferredSize(new Dimension(200, 500));</span>
+
+<span class="nc" id="L74">        unicodePanel.add(unicodeScrollPane);</span>
+<span class="nc" id="L75">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L78">        JPanel operationPanel = new JPanel();</span>
+<span class="nc" id="L79">        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L80">        add(operationPanel);</span>
+
+<span class="nc" id="L82">        JButton zh2UnicodeConvertBtn = new JButton(&quot;中文-&gt;Unicode&quot;);</span>
+<span class="nc" id="L83">        zh2UnicodeConvertBtn.addActionListener(e -&gt; {</span>
+<span class="nc" id="L84">            String value = zhTextArea.getText();</span>
+<span class="nc" id="L85">            unicodeTextArea.setText(string2Unicode(value));</span>
+<span class="nc" id="L86">        });</span>
+
+<span class="nc" id="L88">        JButton unicode2ZhConvertBtn = new JButton(&quot;Unicode-&gt;中文&quot;);</span>
+<span class="nc" id="L89">        unicode2ZhConvertBtn.addActionListener(e -&gt; {</span>
+<span class="nc" id="L90">            String value = unicodeTextArea.getText();</span>
+<span class="nc" id="L91">            zhTextArea.setText(unicode2String(value));</span>
+<span class="nc" id="L92">        });</span>
+
+<span class="nc" id="L94">        operationPanel.add(zh2UnicodeConvertBtn);</span>
+<span class="nc" id="L95">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L96">        operationPanel.add(unicode2ZhConvertBtn);</span>
+<span class="nc" id="L97">    }</span>
+
+    private String string2Unicode(String str) {
+<span class="nc" id="L100">        StringBuilder sb = new StringBuilder();</span>
+        byte[] bytes;
+        try {
+<span class="nc" id="L103">            bytes = str.getBytes(&quot;unicode&quot;);</span>
+<span class="nc" id="L104">        } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L105">            logger.error(&quot;string2Unicode: UnsupportedEncodingException&quot;);</span>
+<span class="nc" id="L106">            return null;</span>
+<span class="nc" id="L107">        }</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (int i = 2; i &lt; bytes.length - 1; i += 2) {</span>
+<span class="nc" id="L109">            sb.append(&quot;\\u&quot;);</span>
+<span class="nc" id="L110">            String firstByte = Integer.toHexString(bytes[i] &amp; 0xff);</span>
+<span class="nc" id="L111">            sb.append(&quot;0&quot;.repeat(2 - firstByte.length()));</span>
+<span class="nc" id="L112">            sb.append(firstByte);</span>
+<span class="nc" id="L113">            String secondByte = Integer.toHexString(bytes[i + 1] &amp; 0xff);</span>
+<span class="nc" id="L114">            sb.append(&quot;0&quot;.repeat(2 - secondByte.length()));</span>
+<span class="nc" id="L115">            sb.append(secondByte);</span>
+        }
+<span class="nc" id="L117">        return sb.toString().toLowerCase();</span>
+    }
+
+    private String unicode2String(String unicodeStr) {
+<span class="nc" id="L121">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L122">        String[] characterArray = unicodeStr.toLowerCase().split(&quot;\\\\u&quot;);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (String s : characterArray) {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            if (s.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L125">                continue;</span>
+            }
+<span class="nc" id="L127">            char character = (char) Integer.parseInt(s.trim(), 16);</span>
+<span class="nc" id="L128">            sb.append(character);</span>
+        }
+<span class="nc" id="L130">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

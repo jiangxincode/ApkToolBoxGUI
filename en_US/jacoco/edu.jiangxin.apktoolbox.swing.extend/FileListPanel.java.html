@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileListPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.swing.extend</a> &gt; <span class="el_source">FileListPanel.java</span></div><h1>FileListPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.swing.extend;
+
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class FileListPanel extends JPanel {
+
+<span class="nc" id="L21">    private static final Logger LOGGER = LogManager.getLogger(FileListPanel.class.getSimpleName());</span>
+
+    private JPanel leftPanel;
+
+    private JPanel rightPanel;
+
+    private JList&lt;File&gt; fileList;
+
+    private DefaultListModel&lt;File&gt; fileListModel;
+
+    public FileListPanel() {
+<span class="nc" id="L32">        super();</span>
+<span class="nc" id="L33">        initUI();</span>
+<span class="nc" id="L34">    }</span>
+
+    public List&lt;File&gt; getFileList() {
+<span class="nc" id="L37">        List&lt;File&gt; fileList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L38">        Object[] objectArray = fileListModel.toArray();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        for (Object obj : objectArray) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (obj instanceof File) {</span>
+<span class="nc" id="L41">                fileList.add((File) obj);</span>
+            }
+        }
+<span class="nc" id="L44">        return fileList;</span>
+    }
+
+    private void initUI() {
+<span class="nc" id="L48">        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L50">        createLeftPanel();</span>
+<span class="nc" id="L51">        add(leftPanel);</span>
+
+<span class="nc" id="L53">        add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L55">        createRightPanel();</span>
+<span class="nc" id="L56">        add(rightPanel);</span>
+<span class="nc" id="L57">    }</span>
+
+    private void createLeftPanel() {
+<span class="nc" id="L60">        fileList = new JList&lt;&gt;();</span>
+<span class="nc" id="L61">        fileListModel = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L62">        fileList.setModel(fileListModel);</span>
+
+<span class="nc" id="L64">        JScrollPane scrollPane = new JScrollPane(fileList);</span>
+<span class="nc" id="L65">        scrollPane.setPreferredSize(new Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));</span>
+
+<span class="nc" id="L67">        leftPanel = new JPanel();</span>
+<span class="nc" id="L68">        leftPanel.setBorder(BorderFactory.createTitledBorder(&quot;File List&quot;));</span>
+<span class="nc" id="L69">        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L70">        leftPanel.setTransferHandler(new FileListTransferHandler());</span>
+<span class="nc" id="L71">        leftPanel.add(scrollPane);</span>
+<span class="nc" id="L72">    }</span>
+
+    private void createRightPanel() {
+<span class="nc" id="L75">        rightPanel = new JPanel();</span>
+<span class="nc" id="L76">        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L78">        JPanel rightContentPanel = new JPanel();</span>
+<span class="nc" id="L79">        rightPanel.add(Box.createVerticalGlue());</span>
+<span class="nc" id="L80">        rightPanel.add(rightContentPanel);</span>
+<span class="nc" id="L81">        rightPanel.add(Box.createVerticalGlue());</span>
+
+<span class="nc" id="L83">        rightContentPanel.setLayout(new GridLayout(6, 1, 0, Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L85">        JButton addFileButton = new JButton(&quot;Add File&quot;);</span>
+<span class="nc" id="L86">        addFileButton.addActionListener(new AddFileButtonActionListener());</span>
+<span class="nc" id="L87">        rightContentPanel.add(addFileButton);</span>
+
+<span class="nc" id="L89">        JButton addDirectoryButton = new JButton(&quot;Add Directory&quot;);</span>
+<span class="nc" id="L90">        addDirectoryButton.addActionListener(new AddDirectoryButtonActionListener());</span>
+<span class="nc" id="L91">        rightContentPanel.add(addDirectoryButton);</span>
+
+<span class="nc" id="L93">        JButton removeSelectedButton = new JButton(&quot;Remove Selected&quot;);</span>
+<span class="nc" id="L94">        removeSelectedButton.addActionListener(new RemoveSelectedButtonActionListener());</span>
+<span class="nc" id="L95">        rightContentPanel.add(removeSelectedButton);</span>
+
+<span class="nc" id="L97">        JButton clearButton = new JButton(&quot;Clear All&quot;);</span>
+<span class="nc" id="L98">        clearButton.addActionListener(new ClearButtonActionListener());</span>
+<span class="nc" id="L99">        rightContentPanel.add(clearButton);</span>
+
+<span class="nc" id="L101">        JButton selectAllButton = new JButton(&quot;Select All&quot;);</span>
+<span class="nc" id="L102">        selectAllButton.addActionListener(new SelectAllButtonActionListener());</span>
+<span class="nc" id="L103">        rightContentPanel.add(selectAllButton);</span>
+
+<span class="nc" id="L105">        JButton inverseSelectedButton = new JButton(&quot;Inverse Selected&quot;);</span>
+<span class="nc" id="L106">        inverseSelectedButton.addActionListener(new InverseSelectedButtonActionListener());</span>
+<span class="nc" id="L107">        rightContentPanel.add(inverseSelectedButton);</span>
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        for (Component component : rightContentPanel.getComponents()) {</span>
+<span class="nc" id="L110">            component.setPreferredSize(new Dimension(Constants.DEFAULT_BUTTON_WIDTH, Constants.DEFAULT_BUTTON_HEIGHT));</span>
+        }
+<span class="nc" id="L112">    }</span>
+
+<span class="nc" id="L114">    private final class FileListTransferHandler extends TransferHandler {</span>
+        @Override
+        public boolean importData(JComponent comp, Transferable t) {
+            try {
+<span class="nc" id="L118">                Object object = t.getTransferData(DataFlavor.javaFileListFlavor);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                for (File file : (List&lt;File&gt;)object) {</span>
+<span class="nc" id="L120">                    fileListModel.addElement(file);</span>
+<span class="nc" id="L121">                }</span>
+<span class="nc" id="L122">                return true;</span>
+<span class="nc" id="L123">            } catch (IOException e) {</span>
+<span class="nc" id="L124">                LOGGER.error(&quot;importData failed: IOException&quot;);</span>
+<span class="nc" id="L125">            } catch (UnsupportedFlavorException e) {</span>
+<span class="nc" id="L126">                LOGGER.error(&quot;importData failed: UnsupportedFlavorException&quot;);</span>
+<span class="nc" id="L127">            }</span>
+<span class="nc" id="L128">            return false;</span>
+        }
+
+        @Override
+        public boolean canImport(JComponent jComponent, DataFlavor[] dataFlavors) {
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            for (DataFlavor dataFlavor : dataFlavors) {</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">                if (DataFlavor.javaFileListFlavor.equals(dataFlavor)) {</span>
+<span class="nc" id="L135">                    return true;</span>
+                }
+            }
+<span class="nc" id="L138">            return false;</span>
+        }
+    }
+
+<span class="nc" id="L142">    private final class AddFileButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L145">            JFileChooser jfc = new JFileChooser();</span>
+<span class="nc" id="L146">            jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);</span>
+<span class="nc" id="L147">            jfc.setDialogTitle(&quot;Select A File&quot;);</span>
+<span class="nc" id="L148">            int ret = jfc.showDialog(new JLabel(), null);</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (ret == JFileChooser.APPROVE_OPTION) {</span>
+<span class="nc" id="L150">                File file = jfc.getSelectedFile();</span>
+<span class="nc" id="L151">                fileListModel.addElement(file);</span>
+            }
+<span class="nc" id="L153">        }</span>
+    }
+
+<span class="nc" id="L156">    private final class AddDirectoryButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L159">            JFileChooser jfc = new JFileChooser();</span>
+<span class="nc" id="L160">            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);</span>
+<span class="nc" id="L161">            jfc.setDialogTitle(&quot;Select A Directory&quot;);</span>
+<span class="nc" id="L162">            int ret = jfc.showDialog(new JLabel(), null);</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">            if (ret == JFileChooser.APPROVE_OPTION) {</span>
+<span class="nc" id="L164">                File file = jfc.getSelectedFile();</span>
+<span class="nc" id="L165">                fileListModel.addElement(file);</span>
+            }
+
+<span class="nc" id="L168">        }</span>
+    }
+
+<span class="nc" id="L171">    private final class RemoveSelectedButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L174">            List&lt;File&gt; files = fileList.getSelectedValuesList();</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            for (File file : files) {</span>
+<span class="nc" id="L176">                fileListModel.removeElement(file);</span>
+<span class="nc" id="L177">            }</span>
+<span class="nc" id="L178">        }</span>
+    }
+
+<span class="nc" id="L181">    private final class ClearButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L184">            fileListModel.removeAllElements();</span>
+<span class="nc" id="L185">        }</span>
+    }
+
+<span class="nc" id="L188">    private final class SelectAllButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L191">            int[] selectedIndices = new int[fileListModel.getSize()];</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">            for (int i = 0; i &lt; selectedIndices.length; i++) {</span>
+<span class="nc" id="L193">                selectedIndices[i] = i;</span>
+            }
+<span class="nc" id="L195">            fileList.clearSelection();</span>
+<span class="nc" id="L196">            fileList.setSelectedIndices(selectedIndices);</span>
+<span class="nc" id="L197">        }</span>
+    }
+
+<span class="nc" id="L200">    private final class InverseSelectedButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L203">            int[] newIndices = new int[fileListModel.getSize() - fileList.getSelectedIndices().length];</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            for (int i = 0, j = 0; i &lt; fileListModel.getSize(); ++i) {</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">                if (!fileList.isSelectedIndex(i)) {</span>
+<span class="nc" id="L206">                    newIndices[j++] = i;</span>
+                }
+            }
+<span class="nc" id="L209">            fileList.clearSelection();</span>
+<span class="nc" id="L210">            fileList.setSelectedIndices(newIndices);</span>
+<span class="nc" id="L211">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

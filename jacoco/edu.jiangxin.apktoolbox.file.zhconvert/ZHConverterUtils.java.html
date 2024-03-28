@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ZHConverterUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.zhconvert</a> &gt; <span class="el_source">ZHConverterUtils.java</span></div><h1>ZHConverterUtils.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.zhconvert;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Properties;
+
+public class ZHConverterUtils {
+<span class="nc" id="L12">    private static final Logger logger = LogManager.getLogger(ZHConverterUtils.class.getSimpleName());</span>
+
+<span class="nc" id="L14">    private Properties charMap = new Properties();</span>
+
+<span class="nc" id="L16">    private Properties charMap2 = new Properties();</span>
+
+<span class="nc" id="L18">    public ZHConverterUtils() {</span>
+<span class="nc" id="L19">        String dirpath = &quot;zhSimple2zhTw.properties&quot;;</span>
+<span class="nc" id="L20">        String dirpath2 = &quot;zhTw2zhSimple.properties&quot;;</span>
+<span class="nc" id="L21">        initProperties(dirpath,charMap);</span>
+<span class="nc" id="L22">        initProperties(dirpath2,charMap2);</span>
+<span class="nc" id="L23">    }</span>
+
+    private void initProperties(String rPath, Properties properties) {
+<span class="nc" id="L26">        File file = new File(rPath);</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (!file.exists()) {</span>
+            try {
+<span class="nc" id="L29">                file.createNewFile();</span>
+<span class="nc" id="L30">            } catch (IOException e) {</span>
+<span class="nc" id="L31">                logger.error(&quot;createNewFile failed: &quot; + e.getMessage());</span>
+<span class="nc" id="L32">                return;</span>
+<span class="nc" id="L33">            }</span>
+        }
+
+<span class="nc" id="L36">        try (InputStream is = new FileInputStream(file);</span>
+<span class="nc" id="L37">             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {</span>
+<span class="nc" id="L38">            properties.load(reader);</span>
+<span class="nc" id="L39">        } catch (IOException e) {</span>
+<span class="nc" id="L40">            logger.error(&quot;load failed: &quot; + e.getMessage());</span>
+<span class="nc" id="L41">        }</span>
+<span class="nc" id="L42">    }</span>
+
+
+    /**
+     *
+     * @param str
+     * @return
+     */
+    public String myConvertToTW(String str){
+<span class="nc" id="L51">        Iterator iterator = charMap.keySet().iterator();</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        while (iterator.hasNext()){</span>
+<span class="nc" id="L53">            String key = (String) iterator.next();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            if (key.length() &gt;= 1) {</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                if (str.contains(key)){</span>
+<span class="nc" id="L56">                    str = str.replaceAll(key,charMap.getProperty(key));</span>
+                }
+            }
+<span class="nc" id="L59">        }</span>
+<span class="nc" id="L60">        return str;</span>
+    }
+
+    /**
+     *
+     * @param str
+     * @return
+     */
+    public String myConvertToSimple(String str){
+<span class="nc" id="L69">        Iterator iterator = charMap2.keySet().iterator();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        while (iterator.hasNext()){</span>
+<span class="nc" id="L71">            String key = (String) iterator.next();</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (key.length() &gt;= 1) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                if (str.contains(key)){</span>
+<span class="nc" id="L74">                    str = str.replaceAll(key,charMap2.getProperty(key));</span>
+                }
+            }
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">        return str;</span>
+    }
+
+
+    /**
+     * 加入新词组对应
+     * @param key
+     * @param value
+     */
+    public void storeDataToProperties(String key,String value) {
+<span class="nc" id="L88">        charMap.setProperty(key,value);</span>
+<span class="nc" id="L89">        String filePath = &quot;zhSimple2zhTw.properties&quot;;</span>
+<span class="nc" id="L90">        try (OutputStream out = new FileOutputStream(filePath)) {</span>
+<span class="nc" id="L91">            charMap.store(out, &quot;加入新元素&quot;);</span>
+<span class="nc" id="L92">        } catch (IOException e) {</span>
+<span class="nc" id="L93">            logger.error(&quot;storeDataToProperties failed: IOException&quot;);</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">        charMap2.setProperty(value,key);</span>
+<span class="nc" id="L96">        String filePath2 = &quot;zhTw2zhSimple.properties&quot;;</span>
+<span class="nc" id="L97">        try (OutputStream out2 = new FileOutputStream(filePath2)) {</span>
+<span class="nc" id="L98">            charMap2.store(out2, &quot;加入新元素&quot;);</span>
+<span class="nc" id="L99">        } catch (IOException e) {</span>
+<span class="nc" id="L100">            logger.error(&quot;storeDataToProperties failed: IOException&quot;);</span>
+<span class="nc" id="L101">        }</span>
+<span class="nc" id="L102">    }</span>
+
+    public Properties getCharMap() {
+<span class="nc" id="L105">        return charMap;</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

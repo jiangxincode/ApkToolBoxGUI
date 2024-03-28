@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProtoToJson.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.supervised</a> &gt; <span class="el_source">ProtoToJson.java</span></div><h1>ProtoToJson.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.supervised;
+
+import com.google.protobuf.Descriptors;
+import com.google.protobuf.DynamicMessage;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.zip.InflaterInputStream;
+
+/**
+ * API to decode binary protobuf messages to readable JSON, based on protobuf descriptors given as {@link
+ * DescriptorCache}.
+ * &lt;p&gt;
+ * Instances can be created using the static factory methods {@link #fromCache(DescriptorCache)} and {@link
+ * #fromEmptyCache()}. In order to add additional descriptors to the cache, it can be get using {@link #getCache()}.
+ * &lt;p&gt;
+ * Conversion can be done using one of the various {@code toJson} overloads, for example {@link #toJson(Path)}. Variants
+ * accepting a {@code String messageTypeName}, like {@link #toJson(Path, String)} will use a descriptor suitable for the
+ * given message type. Other variants will attempt to automatically find a best match among all available descriptors.
+ * &lt;p&gt;
+ * The conversion methods throw
+ * &lt;ul&gt;
+ *     &lt;li&gt;{@link UncheckedIOException} if an I/O error occurs during conversion,&lt;/li&gt;
+ *     &lt;li&gt;{@link NoDescriptorFoundException} if no suitable descriptor could be found and&lt;/li&gt;
+ *     &lt;li&gt;{@link UncheckedInvalidProtocolBufferException} if a message could not be parsed with the demanded descriptor.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;p&gt;
+ * Usage example:
+ * &lt;pre&gt;{@code
+ * DescriptorCache cache = DescriptorCache.fromDirectory(Path.of(&quot;descriptorCache&quot;));
+ * ProtoToJson protoToJson = ProtoToJson.fromCache(cache);
+ *
+ * String json = protoToJson.toJson(Path.of(&quot;someProtoMessage.message&quot;));
+ * }&lt;/pre&gt;
+ * Descriptors can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for example:
+ * &lt;pre&gt;{@code
+ * protoc --descriptor_set_out foo.desc foo.proto
+ * }&lt;/pre&gt;
+ *
+ * @author Daniel Tischner {@literal &lt;zabuza.dev@gmail.com&gt;}
+ */
+public final class ProtoToJson {
+	/**
+	 * Creates an API from a given descriptor cache.
+	 *
+	 * @param cache The cache to use, not null
+	 *
+	 * @return The API instance
+	 */
+	public static ProtoToJson fromCache(final DescriptorCache cache) {
+<span class="nc" id="L60">		Objects.requireNonNull(cache);</span>
+
+<span class="nc" id="L62">		return new ProtoToJson(cache);</span>
+	}
+
+	/**
+	 * Creates an API from an empty descriptor cache. The cache can be get using {@link #getCache()}.
+	 *
+	 * @return The API instance
+	 */
+	public static ProtoToJson fromEmptyCache() {
+<span class="nc" id="L71">		return new ProtoToJson(DescriptorCache.emptyCache());</span>
+	}
+
+	/**
+	 * Decompresses the given data using ZLib (see {@link InflaterInputStream}).
+	 *
+	 * @param compressed The data to decompress, not null
+	 *
+	 * @return The decompressed data
+	 *
+	 * @throws IOException If an I/O error occurs during the decompression or if the given data is not ZLib encoded
+	 */
+	private static byte[] decompressZLib(final byte[] compressed) throws IOException {
+<span class="nc" id="L84">		Objects.requireNonNull(compressed);</span>
+<span class="nc" id="L85">		try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(compressed);</span>
+<span class="nc" id="L86">				final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L87">				final InflaterInputStream zLibOutputStream = new InflaterInputStream(inputStream)) {</span>
+<span class="nc" id="L88">			zLibOutputStream.transferTo(outputStream);</span>
+<span class="nc" id="L89">			return outputStream.toByteArray();</span>
+		}
+	}
+
+	/**
+	 * The cache used by the API, not null.
+	 */
+	private final DescriptorCache cache;
+	/**
+	 * The printer used to convert protobuf messages to JSOn, not null.
+	 */
+<span class="nc" id="L100">	private final JsonFormat.Printer printer = JsonFormat.printer();</span>
+
+	/**
+	 * Creates a new instance that uses the given descriptor cache.
+	 *
+	 * @param cache The cache to use, not null
+	 */
+<span class="nc" id="L107">	private ProtoToJson(final DescriptorCache cache) {</span>
+<span class="nc" id="L108">		this.cache = Objects.requireNonNull(cache);</span>
+<span class="nc" id="L109">	}</span>
+
+	/**
+	 * Gets the descriptor cache used by the API. For example, to add more descriptors to the cache.
+	 *
+	 * @return The cache used by the API
+	 */
+	public DescriptorCache getCache() {
+<span class="nc" id="L117">		return cache;</span>
+	}
+
+	/**
+	 * Converts the protobuf message given as a file to JSON.
+	 * &lt;p&gt;
+	 * The method will attempt to find a suitable descriptor to parse the message from the cache.
+	 *
+	 * @param messageFile Path to the protobuf message file, not null
+	 *
+	 * @return The JSON decoded message
+	 *
+	 * @throws NoDescriptorFoundException              If no suitable descriptor to parse the message could be found in
+	 *                                                 the descriptor cache
+	 * @throws UncheckedInvalidProtocolBufferException If the message is in an invalid format or not in the format
+	 *                                                 expected by the descriptor
+	 * @throws UncheckedIOException                    If an I/O error occurs during reading the file
+	 */
+	public String toJson(final Path messageFile) {
+<span class="nc" id="L136">		Objects.requireNonNull(messageFile);</span>
+
+		try {
+<span class="nc" id="L139">			return toJson(Files.readAllBytes(messageFile), (String) null);</span>
+<span class="nc" id="L140">		} catch (final IOException e) {</span>
+<span class="nc" id="L141">			throw new UncheckedIOException(e);</span>
+		}
+	}
+
+	/**
+	 * Converts the given raw protobuf message to JSON.
+	 * &lt;p&gt;
+	 * The method will attempt to find a suitable descriptor to parse the message from the cache.
+	 *
+	 * @param messageRaw The raw protobuf message, not null
+	 *
+	 * @return The JSON decoded message
+	 *
+	 * @throws NoDescriptorFoundException              If no suitable descriptor to parse the message could be found in
+	 *                                                 the descriptor cache
+	 * @throws UncheckedInvalidProtocolBufferException If the message is in an invalid format or not in the format
+	 *                                                 expected by the descriptor
+	 */
+	public String toJson(final byte[] messageRaw) {
+<span class="nc" id="L160">		Objects.requireNonNull(messageRaw);</span>
+
+<span class="nc" id="L162">		return toJson(messageRaw, (String) null);</span>
+	}
+
+	/**
+	 * Converts the protobuf message given as a file to JSON.
+	 * &lt;p&gt;
+	 * If {@code messageTypeName} is null, it will attempt to find a suitable descriptor from the cache. Otherwise it
+	 * will use a descriptor for the given message type.
+	 *
+	 * @param messageFile     Path to the protobuf message file, not null
+	 * @param messageTypeName The name of the messages type or null if the API should pick a suitable descriptor itself
+	 *
+	 * @return The JSON decoded message
+	 *
+	 * @throws NoDescriptorFoundException              If no suitable descriptor to parse the message could be found in
+	 *                                                 the descriptor cache
+	 * @throws UncheckedInvalidProtocolBufferException If the message is in an invalid format or not in the format
+	 *                                                 expected by the descriptor
+	 * @throws UncheckedIOException                    If an I/O error occurs during reading the file
+	 */
+	public String toJson(final Path messageFile, final String messageTypeName) {
+<span class="nc" id="L183">		Objects.requireNonNull(messageFile);</span>
+
+		try {
+<span class="nc" id="L186">			return toJson(Files.readAllBytes(messageFile), messageTypeName);</span>
+<span class="nc" id="L187">		} catch (final IOException e) {</span>
+<span class="nc" id="L188">			throw new UncheckedIOException(e);</span>
+		}
+	}
+
+	/**
+	 * Converts the given raw protobuf message to JSON.
+	 * &lt;p&gt;
+	 * If {@code messageTypeName} is null, it will attempt to find a suitable descriptor from the cache. Otherwise it
+	 * will use a descriptor for the given message type.
+	 *
+	 * @param messageRaw      The raw protobuf message, not null
+	 * @param messageTypeName The name of the messages type or null if the API should pick a suitable descriptor itself
+	 *
+	 * @return The JSON decoded message
+	 *
+	 * @throws NoDescriptorFoundException              If no suitable descriptor to parse the message could be found in
+	 *                                                 the descriptor cache
+	 * @throws UncheckedInvalidProtocolBufferException If the message is in an invalid format or not in the format
+	 *                                                 expected by the descriptor
+	 */
+	@SuppressWarnings(&quot;WeakerAccess&quot;)
+	public String toJson(final byte[] messageRaw, final String messageTypeName) {
+<span class="nc" id="L210">		Objects.requireNonNull(messageRaw);</span>
+
+<span class="nc bnc" id="L212" title="All 2 branches missed.">		if (messageTypeName == null) {</span>
+<span class="nc" id="L213">			final Optional&lt;DynamicMessage&gt; message = parseWithBestMatchingDescriptor(messageRaw);</span>
+<span class="nc" id="L214">			return toJson(message.orElseThrow(NoDescriptorFoundException::new));</span>
+		}
+
+<span class="nc" id="L217">		final Optional&lt;Descriptors.Descriptor&gt; descriptor = cache.getByTypeName(messageTypeName);</span>
+<span class="nc" id="L218">		return toJson(messageRaw, descriptor.orElseThrow(() -&gt; new NoDescriptorFoundException(messageTypeName)));</span>
+	}
+
+	/**
+	 * Converts the given raw protobuf message to JSON using the given descriptor.
+	 *
+	 * @param messageRaw The raw protobuf message, not null
+	 * @param descriptor The descriptor to use for parsing the message, not null
+	 *
+	 * @return The JSON decoded message
+	 *
+	 * @throws UncheckedInvalidProtocolBufferException If the message is in an invalid format or not in the format
+	 *                                                 expected by the given descriptor
+	 */
+	@SuppressWarnings(&quot;WeakerAccess&quot;)
+	public String toJson(final byte[] messageRaw, final Descriptors.Descriptor descriptor) {
+<span class="nc" id="L234">		Objects.requireNonNull(messageRaw);</span>
+<span class="nc" id="L235">		Objects.requireNonNull(descriptor);</span>
+
+		try {
+<span class="nc" id="L238">			return toJson(DynamicMessage.parseFrom(descriptor, messageRaw));</span>
+<span class="nc" id="L239">		} catch (final InvalidProtocolBufferException e) {</span>
+<span class="nc" id="L240">			throw new UncheckedInvalidProtocolBufferException(e);</span>
+		}
+	}
+
+	/**
+	 * Converts the given protobuf message to JSON.
+	 *
+	 * @param message The protobuf message, not null
+	 *
+	 * @return The JSON decoded message
+	 *
+	 * @throws UncheckedInvalidProtocolBufferException If the message is in an invalid format
+	 */
+	@SuppressWarnings(&quot;WeakerAccess&quot;)
+	public String toJson(final DynamicMessage message) {
+<span class="nc" id="L255">		Objects.requireNonNull(message);</span>
+
+		try {
+<span class="nc" id="L258">			return printer.print(message);</span>
+<span class="nc" id="L259">		} catch (final InvalidProtocolBufferException e) {</span>
+<span class="nc" id="L260">			throw new UncheckedInvalidProtocolBufferException(e);</span>
+		}
+	}
+
+	/**
+	 * Attempts to parse the given binary protobuf message with a suitable descriptor from the APIs descriptor cache.
+	 *
+	 * @param messageRaw The binary protobuf message to parse, not null
+	 *
+	 * @return The parsed protobuf message, if a suitable descriptor was found, otherwise empty
+	 */
+	private Optional&lt;DynamicMessage&gt; parseWithBestMatchingDescriptor(final byte[] messageRaw) {
+<span class="nc" id="L272">		Objects.requireNonNull(messageRaw);</span>
+
+<span class="nc" id="L274">		return cache.getDescriptors()</span>
+<span class="nc" id="L275">				.stream()</span>
+<span class="nc" id="L276">				.map(descriptor -&gt; {</span>
+					try {
+<span class="nc" id="L278">						return DynamicMessage.parseFrom(descriptor, messageRaw);</span>
+<span class="nc" id="L279">					} catch (final InvalidProtocolBufferException e) {</span>
+						//noinspection ReturnOfNull
+<span class="nc" id="L281">						return null;</span>
+					}
+				})
+<span class="nc" id="L284">				.filter(Objects::nonNull)</span>
+<span class="nc" id="L285">				.min(Comparator.comparingInt(message -&gt; message.getUnknownFields()</span>
+<span class="nc" id="L286">						.asMap()</span>
+<span class="nc" id="L287">						.size()));</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

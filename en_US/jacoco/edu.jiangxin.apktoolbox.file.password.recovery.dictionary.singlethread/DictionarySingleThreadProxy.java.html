@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DictionarySingleThreadProxy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread</a> &gt; <span class="el_source">DictionarySingleThreadProxy.java</span></div><h1>DictionarySingleThreadProxy.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread;
+
+import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+public class DictionarySingleThreadProxy {
+<span class="nc" id="L15">    private static final Logger logger = LogManager.getLogger(DictionarySingleThreadProxy.class.getSimpleName());</span>
+
+    private boolean isCancelled;
+
+    private static class DictionarySingleThreadProxyHolder {
+<span class="nc" id="L20">        private static final DictionarySingleThreadProxy instance = new DictionarySingleThreadProxy();</span>
+    }
+
+    private DictionarySingleThreadProxy() {
+    }
+
+    public static DictionarySingleThreadProxy getInstance() {
+<span class="nc" id="L27">        return DictionarySingleThreadProxy.DictionarySingleThreadProxyHolder.instance;</span>
+    }
+
+    public String startAndGet(File file, IChecker checker, String charsSet, Synchronizer synchronizer) {
+<span class="nc" id="L31">        isCancelled = false;</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        Predicate&lt;String&gt; isRecoveringPredicate = password -&gt; (!isCancelled);</span>
+<span class="nc" id="L33">        Function&lt;String, Stream&lt;String&gt;&gt; generator = password -&gt; {</span>
+<span class="nc" id="L34">            synchronizer.setCurrentPassword(password);</span>
+<span class="nc" id="L35">            synchronizer.increaseProgressBarValue();</span>
+<span class="nc" id="L36">            return Stream.of(password.toLowerCase(), password.toUpperCase());</span>
+        };
+<span class="nc" id="L38">        Predicate&lt;String&gt; verifier = checker::checkPassword;</span>
+<span class="nc" id="L39">        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsSet))) {</span>
+            // java.util.stream.BaseStream.parallel can not increase the speed in test
+<span class="nc" id="L41">            Optional&lt;String&gt; password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();</span>
+<span class="nc" id="L42">            return password.orElse(null);</span>
+<span class="nc" id="L43">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L44">            logger.info(&quot;FileNotFoundException&quot;);</span>
+<span class="nc" id="L45">        } catch (IOException e) {</span>
+<span class="nc" id="L46">            logger.info(&quot;IOException&quot;);</span>
+<span class="nc" id="L47">        }</span>
+<span class="nc" id="L48">        return null;</span>
+    }
+
+    public void cancel() {
+<span class="nc" id="L52">        isCancelled = true;</span>
+<span class="nc" id="L53">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.config</a> &gt; <span class="el_source">ConfigPanel.java</span></div><h1>ConfigPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.config;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+public class ConfigPanel extends EasyPanel {
+
+    private static final long serialVersionUID = 1L;
+
+
+    public ConfigPanel() throws HeadlessException {
+<span class="nc" id="L21">        super();</span>
+<span class="nc" id="L22">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L26">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L27">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L29">        createPathPanel(&quot;Path of 7ZIP(e.g.\&quot;C:/Program Files/7-Zip/7z.exe\&quot;)&quot;, &quot;https://www.7-zip.org/&quot;, Constants.SEVEN_ZIP_PATH_KEY);</span>
+<span class="nc" id="L30">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L32">        createPathPanel(&quot;Path of RAR(e.g.\&quot;C:/Program Files/WinRAR/Rar.exe\&quot;)&quot;, &quot;https://www.win-rar.com/&quot;, Constants.RAR_PATH_KEY);</span>
+<span class="nc" id="L33">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L35">        createPathPanel(&quot;Path of RAR(e.g.\&quot;C:/Program Files/WinRAR/WinRAR.exe\&quot;)&quot;, &quot;https://www.win-rar.com/&quot;, Constants.WIN_RAR_PATH_KEY);</span>
+<span class="nc" id="L36">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L37">    }</span>
+
+    private void createPathPanel(String label, String website, String confKey) {
+<span class="nc" id="L40">        JPanel pathPanel = new JPanel();</span>
+<span class="nc" id="L41">        pathPanel.setLayout(new BoxLayout(pathPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L42">        add(pathPanel);</span>
+
+<span class="nc" id="L44">        JPanel firstLinePanel = new JPanel();</span>
+<span class="nc" id="L45">        firstLinePanel.setLayout(new BoxLayout(firstLinePanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L47">        JLabel pathLabel = new JLabel(label);</span>
+
+<span class="nc" id="L49">        JButton visitWebsiteButton = new JButton(bundle.getString(&quot;download.button&quot;));</span>
+
+<span class="nc" id="L51">        firstLinePanel.add(pathLabel);</span>
+<span class="nc" id="L52">        firstLinePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L53">        firstLinePanel.add(visitWebsiteButton);</span>
+<span class="nc" id="L54">        firstLinePanel.add(Box.createHorizontalGlue());</span>
+
+<span class="nc" id="L56">        JPanel secondLinePanel = new JPanel();</span>
+<span class="nc" id="L57">        secondLinePanel.setLayout(new BoxLayout(secondLinePanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L59">        JTextField pathTextField = new JTextField();</span>
+<span class="nc" id="L60">        pathTextField.setText(conf.getString(confKey));</span>
+
+<span class="nc" id="L62">        JButton pathButton = new JButton(bundle.getString(&quot;choose.file.button&quot;));</span>
+
+<span class="nc" id="L64">        secondLinePanel.add(pathTextField);</span>
+<span class="nc" id="L65">        secondLinePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L66">        secondLinePanel.add(pathButton);</span>
+
+<span class="nc" id="L68">        pathPanel.add(firstLinePanel);</span>
+<span class="nc" id="L69">        pathPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L70">        pathPanel.add(secondLinePanel);</span>
+
+
+<span class="nc" id="L73">        visitWebsiteButton.addActionListener(new ActionListener() {</span>
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                URI uri;
+                try {
+<span class="nc" id="L78">                    uri = new URI(website);</span>
+<span class="nc" id="L79">                    Desktop.getDesktop().browse(uri);</span>
+<span class="nc" id="L80">                } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L81">                    logger.error(&quot;URISyntaxException&quot;, ex);</span>
+<span class="nc" id="L82">                } catch (IOException ex) {</span>
+<span class="nc" id="L83">                    logger.error(&quot;IOException&quot;, ex);</span>
+<span class="nc" id="L84">                }</span>
+<span class="nc" id="L85">            }</span>
+        });
+
+<span class="nc" id="L88">        pathButton.addActionListener(new ActionListener() {</span>
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L91">                JFileChooser jfc = new JFileChooser();</span>
+<span class="nc" id="L92">                jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);</span>
+<span class="nc" id="L93">                jfc.setDialogTitle(&quot;select a file&quot;);</span>
+<span class="nc" id="L94">                int ret = jfc.showDialog(new JLabel(), null);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                switch (ret) {</span>
+                    case JFileChooser.APPROVE_OPTION:
+<span class="nc" id="L97">                        File file = jfc.getSelectedFile();</span>
+<span class="nc" id="L98">                        pathTextField.setText(file.getAbsolutePath());</span>
+<span class="nc" id="L99">                        conf.setProperty(confKey, pathTextField.getText());</span>
+<span class="nc" id="L100">                        break;</span>
+                    default:
+                        break;
+                }
+<span class="nc" id="L104">            }</span>
+        });
+<span class="nc" id="L106">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
