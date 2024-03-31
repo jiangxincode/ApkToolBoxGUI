@@ -145,16 +145,16 @@ public class EncodeConvertPanel extends EasyPanel {
                 fileList.addAll(fileSet);
 
                 for (File file : fileList) {
-                    logger.info("process: " + file.getCanonicalPath());
                     String fromEncoder;
                     if (autoDetectCheckBox.isSelected()) {
                         fromEncoder = EncoderDetector.judgeFile(file.getCanonicalPath());
                     } else {
                         fromEncoder = fromComboBox.getSelectedItem().toString();
                     }
-                    logger.info("from: " + fromEncoder);
                     String toEncoder = toComboBox.getSelectedItem().toString();
+                    logger.info("processing: {} from {} to {}", file.getCanonicalPath(), fromEncoder, toEncoder);
                     EncoderConvert.encodeFile(file.getCanonicalPath(), fromEncoder, toEncoder);
+                    logger.info("processed");
                 }
 
                 logger.info("convert finish");

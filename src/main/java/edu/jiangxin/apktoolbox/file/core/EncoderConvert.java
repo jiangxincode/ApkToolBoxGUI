@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
@@ -36,7 +35,6 @@ public class EncoderConvert {
      * @param srcEncoder    源文件编码
      * @param desFileString 目的文件文件名
      * @param desEncoder    需要转换的编码
-     * @throws IOException
      */
     public static void encodeFile(String srcFileString, String srcEncoder, String desFileString, String desEncoder) {
         if (srcFileString.equals(desFileString)) {
@@ -55,7 +53,6 @@ public class EncoderConvert {
             }
         }
 
-        // see http://akini.mbnet.fi/java/unicodereader/
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(srcFileFile), srcEncoder));
                 BufferedWriter writer = new BufferedWriter(
@@ -66,11 +63,10 @@ public class EncoderConvert {
             }
         } catch (Exception e) {
             logger.error("Exception", e);
+            return;
         }
 
-        System.out.println("转换完成！");
         if (srcFileString.equals(desFileString + EncoderConvert.TMP_SUFFIX)) {
-            System.out.println("here");
             boolean success = srcFileFile.delete();
             if (!success) {
                 logger.error("delete srcFileFile failed");
@@ -84,7 +80,6 @@ public class EncoderConvert {
      * @param fileString 文件名
      * @param srcEncoder 原始编码
      * @param desEncoder 需要转换的编码
-     * @throws IOException
      */
     public static void encodeFile(String fileString, String srcEncoder, String desEncoder) {
         encodeFile(fileString, srcEncoder, fileString, desEncoder);
@@ -98,7 +93,6 @@ public class EncoderConvert {
      * @param desDirString 目的文件夹
      * @param desEncoder   需要转换的编码
      * @param suffix       指定需要转换的后缀
-     * @throws IOException
      */
     public static void encodeDir(String srcDirString, String srcEncoder, String desDirString, String desEncoder,
             String suffix) {
@@ -115,10 +109,7 @@ public class EncoderConvert {
             File tempFile = it.next();
             String desFileString = desDirFile.getAbsolutePath() + File.separator + tempFile.getName();
             String srcFileString = tempFile.getAbsolutePath();
-            System.out.println(srcFileString);
-            System.out.println(desFileString);
             encodeFile(srcFileString, srcEncoder, desFileString, desEncoder);
-            System.out.println("转换完成！");
         }
     }
 
@@ -129,7 +120,6 @@ public class EncoderConvert {
      * @param srcEncoder   原始编码
      * @param desDirString 目的文件夹
      * @param desEncoder   需要转换的编码
-     * @throws IOException
      */
     public static void encodeDir(String srcDirString, String srcEncoder, String desDirString, String desEncoder) {
         encodeDir(srcDirString, srcEncoder, desDirString, desEncoder, null);
@@ -140,7 +130,6 @@ public class EncoderConvert {
      * 
      * @param fromEncoder 原始编码
      * @param toEncoder   需要转换的编码
-     * @throws IOException
      */
     public static void encodeFiles(List<File> files, String fromEncoder, String toEncoder) {
         Iterator<File> it = files.iterator();
