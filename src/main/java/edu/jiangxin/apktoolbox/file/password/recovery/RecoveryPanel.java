@@ -9,6 +9,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.text.NumberFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     private JPanel optionPanel;
@@ -38,6 +41,14 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     private JCheckBox numberCheckBox;
     private JCheckBox lowercaseLetterCheckBox;
     private JCheckBox uppercaseLetterCheckBox;
+
+    private JCheckBox userIncludedCheckBox;
+
+    private JTextField userIncludedTextField;
+
+    private JCheckBox userExcludedCheckBox;
+
+    private JTextField userExcludedTextField;
 
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
@@ -106,7 +117,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
                 return;
             }
             recoveryFilePanel.setDescriptionAndFileExtensions(
-                    fileChecker.getDescription(), fileChecker.getFileExtensions());
+                    fileChecker.getFileDescription(), fileChecker.getFileExtensions());
         });
 
         FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();
@@ -116,7 +127,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         }
 
         recoveryFilePanel = new FilePanel("Choose Recovery File");
-        recoveryFilePanel.setDescriptionAndFileExtensions(fileChecker.getDescription(), fileChecker.getFileExtensions());
+        recoveryFilePanel.setDescriptionAndFileExtensions(fileChecker.getFileDescription(), fileChecker.getFileExtensions());
 
         categoryTabbedPane = new JTabbedPane();
 
@@ -162,12 +173,23 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         numberCheckBox.setSelected(true);
         lowercaseLetterCheckBox = new JCheckBox("Lowercase Letter");
         uppercaseLetterCheckBox = new JCheckBox("Uppercase Letter");
+        userIncludedCheckBox = new JCheckBox("User-defined");
+        userIncludedTextField = new JTextField(10);
+        userExcludedCheckBox = new JCheckBox("User-excluded");
+        userExcludedTextField = new JTextField(10);
+
 
         charsetPanel.add(numberCheckBox);
         charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         charsetPanel.add(lowercaseLetterCheckBox);
         charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         charsetPanel.add(uppercaseLetterCheckBox);
+        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        charsetPanel.add(userIncludedCheckBox);
+        charsetPanel.add(userIncludedTextField);
+        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        charsetPanel.add(userExcludedCheckBox);
+        charsetPanel.add(userExcludedTextField);
 
         JLabel minLabel = new JLabel("Minimum Length: ");
         JLabel maxLabel = new JLabel("Maximum Length: ");
@@ -318,21 +340,12 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
     }
 
     private void onStartByBruteForceCategory() {
-        StringBuilder sb = new StringBuilder();
-        if (numberCheckBox.isSelected()) {
-            sb.append("0123456789");
-        }
-        if (lowercaseLetterCheckBox.isSelected()) {
-            sb.append("abcdefghijklmnopqrstuvwxyz");
-        }
-        if (uppercaseLetterCheckBox.isSelected()) {
-            sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        }
-        if (sb.length() <= 0) {
+        String charset = calcCharset();
+        logger.info("Charset: {}", charset);
+        if (StringUtils.isEmpty(charset)) {
             JOptionPane.showMessageDialog(this, "Character set is empty!");
             return;
         }
-        final String charset = sb.toString();
 
         int minLength = (Integer) minSpinner.getValue();
         int maxLength = (Integer) maxSpinner.getValue();
@@ -363,6 +376,28 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         }
         showResultWithDialog(password);
         onStopByBruteForceCategory();
+    }
+
+    private String calcCharset() {
+        Set<Character> charsetSet = new HashSet<>();
+        if (numberCheckBox.isSelected()) {
+            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject("0123456789".toCharArray()));
+        }
+        if (lowercaseLetterCheckBox.isSelected()) {
+            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject("abcdefghijklmnopqrstuvwxyz".toCharArray()));
+        }
+        if (uppercaseLetterCheckBox.isSelected()) {
+            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject("ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()));
+        }
+        if (userIncludedCheckBox.isSelected()) {
+            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject(userIncludedTextField.getText().toCharArray()));
+        }
+        if (userExcludedCheckBox.isSelected()) {
+            for (char ch : userExcludedTextField.getText().toCharArray()) {
+                charsetSet.remove(ch);
+            }
+        }
+        return String.valueOf(ArrayUtils.toPrimitive(charsetSet.toArray(new Character[0])));
     }
 
     private void onStartByDictionarySingleThreadCategory() {

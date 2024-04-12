@@ -62,6 +62,7 @@ public class FilePanel extends JPanel {
         if (StringUtils.isNotEmpty(description) || (ArrayUtils.isNotEmpty(extensions))) {
             FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
             if (fileChooser != null) {
+                fileChooser.resetChoosableFileFilters();
                 fileChooser.addChoosableFileFilter(filter);
                 fileChooser.setAcceptAllFileFilterUsed(false);
             }
