@@ -1,10 +1,13 @@
 package edu.jiangxin.apktoolbox.file.password.recovery;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
-import edu.jiangxin.apktoolbox.file.password.recovery.bruteforce.BruteForceProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.CategoryFactory;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.CategoryType;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.bruteforce.BruteForceProxy;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread.DictionaryMultiThreadProxy;
-import edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread.DictionarySingleThreadProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread.DictionaryMultiThreadProxy;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.singlethread.DictionarySingleThreadProxy;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -34,7 +37,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
 
     private FilePanel dictionaryFilePanel;
 
-    private Category currentCategory = Category.UNKNOWN;
+    private CategoryType currentCategoryType = CategoryType.UNKNOWN;
 
     private JPanel operationPanel;
 
@@ -293,50 +296,41 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
 
         Component selectedPanel = categoryTabbedPane.getSelectedComponent();
         if (selectedPanel.equals(bruteForceCategoryPanel)) {
-            currentCategory = Category.BRUTE_FORCE;
+            currentCategoryType = CategoryType.BRUTE_FORCE;
         } else if (selectedPanel.equals(dictionaryCategoryPanel)) {
             int threadNum = (Integer) threadNumSpinner.getValue();
             if (threadNum == 1) {
-                currentCategory = Category.DICTIONARY_SINGLE_THREAD;
+                currentCategoryType = CategoryType.DICTIONARY_SINGLE_THREAD;
             } else {
-                currentCategory = Category.DICTIONARY_MULTI_THREAD;
+                currentCategoryType = CategoryType.DICTIONARY_MULTI_THREAD;
             }
         } else {
-            currentCategory = Category.UNKNOWN;
+            currentCategoryType = CategoryType.UNKNOWN;
         }
-        logger.info("onStart: " + currentCategory);
-        switch (currentCategory) {
-            case BRUTE_FORCE:
-                onStartByBruteForceCategory();
-                break;
-            case DICTIONARY_SINGLE_THREAD:
-                onStartByDictionarySingleThreadCategory();
-                break;
-            case DICTIONARY_MULTI_THREAD:
-                onStartByDictionaryMultiThreadCategory();
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
-                break;
+        logger.info("onStart: " + currentCategoryType);
+        switch (currentCategoryType) {
+            case BRUTE_FORCE -> onStartByBruteForceCategory();
+            case DICTIONARY_SINGLE_THREAD -> onStartByDictionarySingleThreadCategory();
+            case DICTIONARY_MULTI_THREAD -> onStartByDictionaryMultiThreadCategory();
+            default -> JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
         }
     }
 
     private void onStop() {
-        logger.info("onStop: " + currentCategory);
-        switch (currentCategory) {
-            case BRUTE_FORCE:
-                onStopByBruteForceCategory();
-                break;
-            case DICTIONARY_SINGLE_THREAD:
-                onStopByDictionarySingleThreadCategory();
-                break;
-            case DICTIONARY_MULTI_THREAD:
-                onStopByDictionaryMultiThreadCategory();
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "onStop failed: Invalid category!");
-                break;
+        logger.info("onStop: currentState: {}, currentCategoryType: {}", currentState, currentCategoryType);
+        if (getCurrentState() != State.WORKING) {
+            logger.error("onStop failed: Not in working state!");
+            return;
         }
+        if (currentCategoryType == CategoryType.UNKNOWN) {
+            logger.error("onStop failed: Invalid category!");
+            return;
+        }
+        setCurrentState(State.STOPPING);
+        ICategory category = CategoryFactory.getCategoryInstance(currentCategoryType);
+        category.cancel();
+        setCurrentState(State.IDLE);
+        currentCategoryType = CategoryType.UNKNOWN;
     }
 
     private void onStartByBruteForceCategory() {
@@ -375,7 +369,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
             }
         }
         showResultWithDialog(password);
-        onStopByBruteForceCategory();
+        onStop();
     }
 
     private String calcCharset() {
@@ -418,7 +412,9 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         DictionarySingleThreadProxy proxy = DictionarySingleThreadProxy.getInstance();
         String password = proxy.startAndGet(dictionaryFile, currentFileChecker, charsetName, this);
         showResultWithDialog(password);
-        onStopByDictionarySingleThreadCategory();
+        if (getCurrentState() == State.WORKING) {
+            onStop();
+        }
     }
 
     private void onStartByDictionaryMultiThreadCategory() {
@@ -438,34 +434,7 @@ public final class RecoveryPanel extends EasyPanel implements Synchronizer {
         DictionaryMultiThreadProxy proxy = DictionaryMultiThreadProxy.getInstance();
         String password = proxy.startAndGet(threadNum, dictionaryFile, currentFileChecker, this);
         showResultWithDialog(password);
-        onStopByDictionaryMultiThreadCategory();
-    }
-
-    private void onStopByBruteForceCategory() {
-        if (getCurrentState() != State.WORKING) {
-            return;
-        }
-        setCurrentState(State.STOPPING);
-        BruteForceProxy.getInstance().cancel();
-        setCurrentState(State.IDLE);
-    }
-
-    private void onStopByDictionarySingleThreadCategory() {
-        if (getCurrentState() != State.WORKING) {
-            return;
-        }
-        setCurrentState(State.STOPPING);
-        DictionarySingleThreadProxy.getInstance().cancel();
-        setCurrentState(State.IDLE);
-    }
-
-    private void onStopByDictionaryMultiThreadCategory() {
-        if (getCurrentState() != State.WORKING) {
-            return;
-        }
-        setCurrentState(State.STOPPING);
-        DictionaryMultiThreadProxy.getInstance().cancel();
-        setCurrentState(State.IDLE);
+        onStop();
     }
 
     private int getThreadCount(int charSetSize, int length, int maxThreadCount) {

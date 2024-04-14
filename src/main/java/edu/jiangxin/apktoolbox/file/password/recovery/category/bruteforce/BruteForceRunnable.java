@@ -1,6 +1,5 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.bruteforce;
 
-import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;

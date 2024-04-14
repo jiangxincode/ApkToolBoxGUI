@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

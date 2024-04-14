@@ -1,7 +1,8 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread;
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DictionaryMultiThreadProxy {
+public class DictionaryMultiThreadProxy implements ICategory {
     private static final Logger logger = LogManager.getLogger(DictionaryMultiThreadProxy.class.getSimpleName());
 
     private BigFileReader bigFileReader;
@@ -57,6 +58,7 @@ public class DictionaryMultiThreadProxy {
         return password;
     }
 
+    @Override
     public void cancel() {
         if (bigFileReader != null) {
             bigFileReader.shutdown();

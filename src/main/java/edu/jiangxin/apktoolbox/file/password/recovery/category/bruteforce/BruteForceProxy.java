@@ -1,6 +1,7 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class BruteForceProxy {
+public class BruteForceProxy implements ICategory {
     private static final Logger logger = LogManager.getLogger(BruteForceProxy.class.getSimpleName());
 
     private ExecutorService executorService;
@@ -48,6 +49,7 @@ public class BruteForceProxy {
         return password;
     }
 
+    @Override
     public void cancel() {
         bruteForceFuture.cancel(false);
         if (executorService != null && !executorService.isShutdown()) {

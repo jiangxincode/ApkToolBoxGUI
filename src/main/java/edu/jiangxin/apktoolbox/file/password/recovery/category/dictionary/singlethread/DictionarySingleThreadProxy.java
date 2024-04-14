@@ -1,6 +1,7 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.singlethread;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.singlethread;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class DictionarySingleThreadProxy {
+public class DictionarySingleThreadProxy implements ICategory {
     private static final Logger logger = LogManager.getLogger(DictionarySingleThreadProxy.class.getSimpleName());
 
     private boolean isCancelled;
@@ -48,6 +49,7 @@ public class DictionarySingleThreadProxy {
         return null;
     }
 
+    @Override
     public void cancel() {
         isCancelled = true;
     }

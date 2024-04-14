@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.bruteforce;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.bruteforce;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 

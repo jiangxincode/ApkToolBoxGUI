@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.file.password.recovery.dictionary.multithread;
+package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
