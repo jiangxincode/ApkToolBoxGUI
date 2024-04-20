@@ -31,7 +31,7 @@ public class DictionarySingleThreadProxy implements ICategory {
         return DictionarySingleThreadProxy.DictionarySingleThreadProxyHolder.instance;
     }
 
-    private String startAndGet(RecoveryPanel panel) {
+    private String startAndGet(String charsetName, RecoveryPanel panel) {
         isCancelled = false;
         Predicate<String> isRecoveringPredicate = password -> (!isCancelled);
         Function<String, Stream<String>> generator = password -> {
@@ -40,7 +40,7 @@ public class DictionarySingleThreadProxy implements ICategory {
             return Stream.of(password.toLowerCase(), password.toUpperCase());
         };
         Predicate<String> verifier = panel.getCurrentFileChecker()::checkPassword;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(panel.getDictionaryFile()), panel.getCharset()))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(panel.getDictionaryFile()), charsetName))) {
             // java.util.stream.BaseStream.parallel can not increase the speed in test
             Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
             return password.orElse(null);
@@ -60,7 +60,7 @@ public class DictionarySingleThreadProxy implements ICategory {
             return;
         }
         String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
-        logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+        logger.info("dictionary file: {}, charset: {}", dictionaryFile.getAbsolutePath(), charsetName);
         if (charsetName == null) {
             JOptionPane.showMessageDialog(panel, "Invalid charsetName");
             return;
@@ -68,7 +68,7 @@ public class DictionarySingleThreadProxy implements ICategory {
         panel.setCurrentState(State.WORKING);
         panel.setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
         panel.setProgressBarValue(0);
-        String password = startAndGet(panel);
+        String password = startAndGet(charsetName, panel);
         panel.showResultWithDialog(password);
     }
 

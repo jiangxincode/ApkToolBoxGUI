@@ -8,6 +8,9 @@ import edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.single
  * CategoryFactory is a factory class to create different category instance.
  */
 public class CategoryFactory {
+    private CategoryFactory() {
+    }
+
     public static ICategory getCategoryInstance(CategoryType categoryType) {
         return switch (categoryType) {
             case DICTIONARY_SINGLE_THREAD -> DictionarySingleThreadProxy.getInstance();

@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BruteForceFuture implements Future<String> {
     private static final Logger logger = LogManager.getLogger(BruteForceFuture.class.getSimpleName());
-    private String result = null;
+    private volatile String result = null;
     private final AtomicInteger finishedTaskCount = new AtomicInteger(0);
     private final int taskCount;
     private final Lock lock = new ReentrantLock();

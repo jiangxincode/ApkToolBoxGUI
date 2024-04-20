@@ -4,7 +4,6 @@ import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
 import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
-import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,14 +68,14 @@ public class DictionaryMultiThreadProxy implements ICategory {
             return;
         }
         int fileLineCount = Utils.getFileLineCount(dictionaryFile);
-        logger.info("File line count: " + fileLineCount);
+        logger.info("File line count: {}", fileLineCount);
 
         panel.setCurrentState(State.WORKING);
         panel.setProgressMaxValue(fileLineCount);
         panel.setProgressBarValue(0);
 
-        String password = startAndGet(panel);
-        panel.showResultWithDialog(password);
+        String resultPassword = startAndGet(panel);
+        panel.showResultWithDialog(resultPassword);
     }
 
     @Override

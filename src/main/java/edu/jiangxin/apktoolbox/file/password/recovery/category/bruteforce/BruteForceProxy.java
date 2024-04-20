@@ -72,10 +72,6 @@ public class BruteForceProxy implements ICategory {
         panel.setCurrentState(State.WORKING);
         String password = null;
         for (int length = minLength; length <= maxLength; length++) {
-            if (panel.getCurrentState() != State.WORKING) {
-                logger.info("Break because of state: {}", panel.getCurrentState());
-                break;
-            }
             panel.setProgressMaxValue((int) Math.pow(charset.length(), length));
             panel.setProgressBarValue(0);
             long startTime = System.currentTimeMillis();
@@ -85,7 +81,8 @@ public class BruteForceProxy implements ICategory {
             password = startAndGet(numThreads, length, fileChecker, charset, panel);
             long endTime = System.currentTimeMillis();
             logger.info("Current attempt length: {}, Cost time: {}ms", length, (endTime - startTime));
-            if (password != null) {
+            if (password != null || panel.getCurrentState() != State.WORKING) {
+                logger.info("Break state: {}", panel.getCurrentState());
                 break;
             }
         }

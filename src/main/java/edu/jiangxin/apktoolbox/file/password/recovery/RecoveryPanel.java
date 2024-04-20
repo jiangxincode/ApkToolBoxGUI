@@ -257,7 +257,6 @@ public final class RecoveryPanel extends EasyPanel {
         operationPanel.add(Box.createHorizontalGlue());
 
         startButton.addActionListener(e -> new Thread(this::onStart).start());
-
         stopButton.addActionListener(e -> new Thread(this::onStop).start());
 
         setCurrentState(State.IDLE);
@@ -302,7 +301,7 @@ public final class RecoveryPanel extends EasyPanel {
         } else {
             currentCategoryType = CategoryType.UNKNOWN;
         }
-        logger.info("onStart: " + currentCategoryType);
+        logger.info("onStart: {}", currentCategoryType);
         if (currentCategoryType == CategoryType.UNKNOWN) {
             JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
             return;
@@ -342,24 +341,26 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     public void setCurrentState(State currentState) {
-        this.currentState = currentState;
-        if (currentStateLabel != null) {
-            currentStateLabel.setText("State: " + currentState.toString());
-        }
-        if (currentState == State.WORKING) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            startButton.setEnabled(false);
-            stopButton.setEnabled(true);
-        } else if (currentState == State.STOPPING) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            startButton.setEnabled(false);
-            stopButton.setEnabled(false);
-        } else if (currentState == State.IDLE) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            startButton.setEnabled(true);
-            stopButton.setEnabled(false);
-            currentPasswordLabel.setText("");
-        }
+        SwingUtilities.invokeLater(() -> {
+            this.currentState = currentState;
+            if (currentStateLabel != null) {
+                currentStateLabel.setText("State: " + currentState.toString());
+            }
+            if (currentState == State.WORKING) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                startButton.setEnabled(false);
+                stopButton.setEnabled(true);
+            } else if (currentState == State.STOPPING) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                startButton.setEnabled(false);
+                stopButton.setEnabled(false);
+            } else if (currentState == State.IDLE) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                startButton.setEnabled(true);
+                stopButton.setEnabled(false);
+                currentPasswordLabel.setText("");
+            }
+        });
     }
 
     public State getCurrentState() {
@@ -367,21 +368,29 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     public void setProgressMaxValue(int maxValue) {
-        progressBar.setMaximum(maxValue);
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setMaximum(maxValue);
+        });
     }
 
     public void increaseProgressBarValue() {
-        setProgressBarValue(progressBar.getValue() + 1);
+        SwingUtilities.invokeLater(() -> {
+            setProgressBarValue(progressBar.getValue() + 1);
+        });
     }
 
     public void setProgressBarValue(int value) {
-        progressBar.setValue(value);
-        String text = numberFormat.format(((double) value) / progressBar.getMaximum());
-        progressBar.setString(text);
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setValue(value);
+            String text = numberFormat.format(((double) value) / progressBar.getMaximum());
+            progressBar.setString(text);
+        });
     }
 
     public void setCurrentPassword(String password) {
-        currentPasswordLabel.setText("Trying: " + password);
+        SwingUtilities.invokeLater(() -> {
+            currentPasswordLabel.setText("Trying: " + password);
+        });
     }
 
     public String getCharset() {
