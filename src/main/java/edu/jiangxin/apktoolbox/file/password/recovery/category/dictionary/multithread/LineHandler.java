@@ -1,7 +1,7 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread;
 
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
 import edu.jiangxin.apktoolbox.file.password.recovery.State;
-import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.FileChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,15 +14,15 @@ public class LineHandler {
 
     private AtomicBoolean success;
 
-    private Synchronizer synchronizer;
+    private RecoveryPanel panel;
     private FileChecker fileChecker;
 
     private CompleteCallback completeCallback;
 
-    public LineHandler(FileChecker fileChecker, AtomicBoolean success, Synchronizer synchronizer, CompleteCallback completeCallback) {
+    public LineHandler(FileChecker fileChecker, AtomicBoolean success, RecoveryPanel panel, CompleteCallback completeCallback) {
         this.fileChecker = fileChecker;
         this.success = success;
-        this.synchronizer = synchronizer;
+        this.panel = panel;
         this.completeCallback = completeCallback;
     }
 
@@ -30,12 +30,12 @@ public class LineHandler {
         return this.success;
     }
 
-    public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
-        if (success.compareAndSet(true, true) || synchronizer.getCurrentState() != State.WORKING) {
+    public void handle(String line, long currentLineCount) {
+        if (success.compareAndSet(true, true) || panel.getCurrentState() != State.WORKING) {
             return;
         }
-        synchronizer.setCurrentPassword(line);
-        synchronizer.setProgressBarValue(Math.toIntExact(currentLineCount));
+        panel.setCurrentPassword(line);
+        panel.setProgressBarValue(Math.toIntExact(currentLineCount));
 
         if (fileChecker.checkPassword(line)) {
             if (success.compareAndSet(false, true)) {
@@ -43,7 +43,7 @@ public class LineHandler {
                 completeCallback.onComplete(line);
             }
         } else {
-            if (!success.compareAndSet(true, true) && synchronizer.getCurrentState() == State.WORKING) {
+            if (!success.compareAndSet(true, true) && panel.getCurrentState() == State.WORKING) {
                 logger.info("try password[" + line + "] failed");
             }
         }

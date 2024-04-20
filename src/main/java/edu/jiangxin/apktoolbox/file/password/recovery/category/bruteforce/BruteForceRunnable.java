@@ -1,6 +1,6 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.category.bruteforce;
 
-import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
 import edu.jiangxin.apktoolbox.file.password.recovery.exception.UnsupportedVersionException;
 import org.apache.logging.log4j.LogManager;
@@ -11,13 +11,14 @@ public class BruteForceRunnable implements Runnable {
     private final int taskId;
     private final BruteForceFuture bruteForceFuture;
     private final BruteForceTaskParam consts;
-    private final Synchronizer synchronizer;
 
-    public BruteForceRunnable(int taskId, BruteForceTaskParam consts, BruteForceFuture bruteForceFuture, Synchronizer synchronizer) {
+    RecoveryPanel panel;
+
+    public BruteForceRunnable(int taskId, BruteForceTaskParam consts, BruteForceFuture bruteForceFuture, RecoveryPanel panel) {
         this.taskId = taskId;
         this.consts = consts;
         this.bruteForceFuture = bruteForceFuture;
-        this.synchronizer = synchronizer;
+        this.panel = panel;
     }
 
     @Override
@@ -55,8 +56,8 @@ public class BruteForceRunnable implements Runnable {
                 logger.error("Exception, stop", e);
                 result = -1;
             } finally {
-                synchronizer.setCurrentPassword(password);
-                synchronizer.increaseProgressBarValue();
+                panel.setCurrentPassword(password);
+                panel.increaseProgressBarValue();
             }
             if (result == 0) {
                 getNextCandidate(passwordIterator, consts.getCharsSet().length());

@@ -123,7 +123,7 @@ public class BigFileReader {
         } else {
             line = new String(bytes, charset);
         }
-        lineHandler.handle(line, counter.incrementAndGet(), this);
+        lineHandler.handle(line, counter.incrementAndGet());
     }
 
     private static class StartEndPair {

@@ -1,11 +1,14 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.singlethread;
 
-import edu.jiangxin.apktoolbox.file.password.recovery.Synchronizer;
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
-import edu.jiangxin.apktoolbox.file.password.recovery.checker.IChecker;
+import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,16 +31,16 @@ public class DictionarySingleThreadProxy implements ICategory {
         return DictionarySingleThreadProxy.DictionarySingleThreadProxyHolder.instance;
     }
 
-    public String startAndGet(File file, IChecker checker, String charsSet, Synchronizer synchronizer) {
+    private String startAndGet(RecoveryPanel panel) {
         isCancelled = false;
         Predicate<String> isRecoveringPredicate = password -> (!isCancelled);
         Function<String, Stream<String>> generator = password -> {
-            synchronizer.setCurrentPassword(password);
-            synchronizer.increaseProgressBarValue();
+            panel.setCurrentPassword(password);
+            panel.increaseProgressBarValue();
             return Stream.of(password.toLowerCase(), password.toUpperCase());
         };
-        Predicate<String> verifier = checker::checkPassword;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsSet))) {
+        Predicate<String> verifier = panel.getCurrentFileChecker()::checkPassword;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(panel.getDictionaryFile()), panel.getCharset()))) {
             // java.util.stream.BaseStream.parallel can not increase the speed in test
             Optional<String> password = br.lines().takeWhile(isRecoveringPredicate).flatMap(generator).filter(verifier).findFirst();
             return password.orElse(null);
@@ -47,6 +50,26 @@ public class DictionarySingleThreadProxy implements ICategory {
             logger.info("IOException");
         }
         return null;
+    }
+
+    @Override
+    public void start(RecoveryPanel panel) {
+        File dictionaryFile = panel.getDictionaryFile();
+        if (!dictionaryFile.isFile()) {
+            JOptionPane.showMessageDialog(panel, "Invalid dictionary file");
+            return;
+        }
+        String charsetName = EncoderDetector.judgeFile(dictionaryFile.getAbsolutePath());
+        logger.info("dictionary file: " + dictionaryFile.getAbsolutePath() + ", charset: " + charsetName);
+        if (charsetName == null) {
+            JOptionPane.showMessageDialog(panel, "Invalid charsetName");
+            return;
+        }
+        panel.setCurrentState(State.WORKING);
+        panel.setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
+        panel.setProgressBarValue(0);
+        String password = startAndGet(panel);
+        panel.showResultWithDialog(password);
     }
 
     @Override
