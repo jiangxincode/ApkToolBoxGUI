@@ -68,12 +68,13 @@ public class BruteForceProxy implements ICategory {
             JOptionPane.showMessageDialog(panel, "Minimum length is bigger than maximum length!");
             return;
         }
-
-        panel.setCurrentState(State.WORKING);
         String password = null;
+        int totalNumber = 0;
         for (int length = minLength; length <= maxLength; length++) {
-            panel.setProgressMaxValue((int) Math.pow(charset.length(), length));
-            panel.setProgressBarValue(0);
+            totalNumber += (int)Math.pow(charset.length(), length);
+        }
+        panel.resetProgressMaxValue(totalNumber);
+        for (int length = minLength; length <= maxLength; length++) {
             long startTime = System.currentTimeMillis();
             FileChecker fileChecker = panel.getCurrentFileChecker();
             int numThreads = getThreadCount(charset.length(), length, fileChecker.getMaxThreadNum());

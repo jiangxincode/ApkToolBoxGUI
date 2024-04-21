@@ -69,9 +69,15 @@ public final class RecoveryPanel extends EasyPanel {
 
     private JLabel currentPasswordLabel;
 
+    private JLabel currentSpeedLabel;
+
+    private int passwordTryCount = 0;
+
     private NumberFormat numberFormat;
 
     private State currentState = State.IDLE;
+
+    private Timer timer;
 
     public RecoveryPanel() {
         super();
@@ -94,6 +100,16 @@ public final class RecoveryPanel extends EasyPanel {
 
         createOperationPanel();
         add(operationPanel);
+
+        timer = new Timer(1000, e -> {
+            if (currentState == State.WORKING) {
+                int speed = progressBar.getValue() - passwordTryCount;
+                passwordTryCount = progressBar.getValue();
+                currentSpeedLabel.setText("Speed: " + speed + " passwords/s");
+            } else {
+                currentSpeedLabel.setText("");
+            }
+        });
     }
 
     private void createOptionPanel() {
@@ -246,9 +262,9 @@ public final class RecoveryPanel extends EasyPanel {
 
         startButton = new JButton("Start");
         stopButton = new JButton("Stop");
-        currentStateLabel = new JLabel();
-        currentPasswordLabel = new JLabel();
-        currentPasswordLabel.setText("");
+        currentStateLabel = new JLabel("");
+        currentPasswordLabel = new JLabel("");
+        currentSpeedLabel = new JLabel("");
 
         operationPanel.add(startButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -257,6 +273,8 @@ public final class RecoveryPanel extends EasyPanel {
         operationPanel.add(currentStateLabel);
         operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));
         operationPanel.add(currentPasswordLabel);
+        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));
+        operationPanel.add(currentSpeedLabel);
         operationPanel.add(Box.createHorizontalGlue());
 
         startButton.addActionListener(e -> new Thread(this::onStart).start());
@@ -309,6 +327,8 @@ public final class RecoveryPanel extends EasyPanel {
             JOptionPane.showMessageDialog(this, "onStart failed: Invalid category!");
             return;
         }
+        setCurrentState(State.WORKING);
+        timer.start();
         ICategory category = CategoryFactory.getCategoryInstance(currentCategoryType);
         category.start(this);
         if (currentState == State.WORKING) {
@@ -326,6 +346,7 @@ public final class RecoveryPanel extends EasyPanel {
             logger.error("onStop failed: Invalid category!");
             return;
         }
+        timer.stop();
         setCurrentState(State.STOPPING);
         ICategory category = CategoryFactory.getCategoryInstance(currentCategoryType);
         category.cancel();
@@ -395,20 +416,21 @@ public final class RecoveryPanel extends EasyPanel {
         return currentState;
     }
 
-    public void setProgressMaxValue(int maxValue) {
-        SwingUtilities.invokeLater(() -> progressBar.setMaximum(maxValue));
+    public void resetProgressMaxValue(int maxValue) {
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setMaximum(maxValue);
+            setProgressBarValue(0);
+        });
     }
 
     public void increaseProgressBarValue() {
         SwingUtilities.invokeLater(() -> setProgressBarValue(progressBar.getValue() + 1));
     }
 
-    public void setProgressBarValue(int value) {
-        SwingUtilities.invokeLater(() -> {
-            progressBar.setValue(value);
-            String text = numberFormat.format(((double) value) / progressBar.getMaximum());
-            progressBar.setString(text);
-        });
+    private void setProgressBarValue(int value) {
+        progressBar.setValue(value);
+        String text = numberFormat.format(((double) value) / progressBar.getMaximum());
+        progressBar.setString(text);
     }
 
     public void setCurrentPassword(String password) {

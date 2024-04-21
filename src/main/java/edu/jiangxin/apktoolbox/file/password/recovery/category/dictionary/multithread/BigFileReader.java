@@ -15,26 +15,28 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BigFileReader {
     private static final Logger logger = LogManager.getLogger(BigFileReader.class.getSimpleName());
 
-    private String charset;
-    private int bufferSize;
-    private ScheduledThreadPoolExecutor executorService;
-    private long fileLength;
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
+
+    private final String charset;
+    private final int bufferSize;
+    private final ScheduledThreadPoolExecutor executorService;
+    private final long fileLength;
     private RandomAccessFile rAccessFile;
-    private Set<StartEndPair> startEndPairs;
+    private final Set<StartEndPair> startEndPairs;
     private CyclicBarrier cyclicBarrier;
-    private AtomicLong counter = new AtomicLong(0);
-    private CompleteCallback callback;
+    private final AtomicInteger counter = new AtomicInteger(0);
+    private final CompleteCallback callback;
 
-    private AtomicBoolean success = new AtomicBoolean(false);
+    private final AtomicBoolean success = new AtomicBoolean(false);
 
-    private RecoveryPanel panel;
+    private final RecoveryPanel panel;
 
-    private BigFileReader(int bufferSize, CompleteCallback callback, RecoveryPanel panel) {
+    public BigFileReader(CompleteCallback callback, RecoveryPanel panel) {
         this.panel = panel;
         File file = panel.getDictionaryFile();
         if (!file.exists()) {
@@ -42,7 +44,7 @@ public class BigFileReader {
         }
         this.fileLength = file.length();
         this.charset = EncoderDetector.judgeFile(file.getAbsolutePath());
-        this.bufferSize = bufferSize;
+        this.bufferSize = DEFAULT_BUFFER_SIZE;
         try {
             this.rAccessFile = new RandomAccessFile(file, "r");
         } catch (FileNotFoundException e) {
@@ -106,41 +108,31 @@ public class BigFileReader {
         calculateStartEnd(endPosition + 1, size);
     }
 
-
-    public void shutdown(boolean now) {
+    public void shutdown() {
         try {
             rAccessFile.close();
         } catch (IOException e) {
             logger.error("shutdown IOException");
         }
-        if (now) {
-            executorService.shutdownNow();
-        } else {
-            executorService.shutdown();
-        }
+        executorService.shutdown();
         logger.info("shutdown executorService");
     }
 
-    public void shutdown() {
-        shutdown(false);
-    }
-
     private void handle(byte[] bytes) throws UnsupportedEncodingException {
+        if (success.compareAndSet(true, true) || panel.getCurrentState() != State.WORKING) {
+            return;
+        }
+
         String line;
         if (charset == null) {
             line = new String(bytes);
         } else {
             line = new String(bytes, charset);
         }
-        handle(line, counter.incrementAndGet());
-    }
 
-    private void handle(String line, long currentLineCount) {
-        if (success.compareAndSet(true, true) || panel.getCurrentState() != State.WORKING) {
-            return;
-        }
         panel.setCurrentPassword(line);
-        panel.setProgressBarValue(Math.toIntExact(currentLineCount));
+        panel.increaseProgressBarValue();
+        counter.decrementAndGet();
 
         if (panel.getCurrentFileChecker().checkPassword(line)) {
             if (success.compareAndSet(false, true)) {
@@ -183,17 +175,15 @@ public class BigFileReader {
             StartEndPair other = (StartEndPair) obj;
             if (end != other.end)
                 return false;
-            if (start != other.start)
-                return false;
-            return true;
+            return start == other.start;
         }
 
     }
 
     private class SliceReaderTask implements Runnable {
-        private long start;
-        private long sliceSize;
-        private byte[] readBuff;
+        private final long start;
+        private final long sliceSize;
+        private final byte[] readBuff;
 
         public SliceReaderTask(StartEndPair pair) {
             this.start = pair.start;
@@ -243,31 +233,5 @@ public class BigFileReader {
             }
         }
 
-    }
-
-    public static class Builder {
-        private int bufferSize = 1024 * 1024;
-
-        private CompleteCallback callback;
-
-        private RecoveryPanel panel;
-
-        public Builder(RecoveryPanel panel) {
-            this.panel = panel;
-        }
-
-        public Builder withBufferSize(int bufferSize) {
-            this.bufferSize = bufferSize;
-            return this;
-        }
-
-        public Builder withOnCompleteCallback(CompleteCallback callback) {
-            this.callback = callback;
-            return this;
-        }
-
-        public BigFileReader build() {
-            return new BigFileReader(this.bufferSize, this.callback, this.panel);
-        }
     }
 }

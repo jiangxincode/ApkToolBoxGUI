@@ -2,7 +2,6 @@ package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.singl
 
 import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
 import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
-import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -65,9 +64,7 @@ public class DictionarySingleThreadProxy implements ICategory {
             JOptionPane.showMessageDialog(panel, "Invalid charsetName");
             return;
         }
-        panel.setCurrentState(State.WORKING);
-        panel.setProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
-        panel.setProgressBarValue(0);
+        panel.resetProgressMaxValue(Utils.getFileLineCount(dictionaryFile));
         String password = startAndGet(charsetName, panel);
         panel.showResultWithDialog(password);
     }

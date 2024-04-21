@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread;
 
 import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
-import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -37,11 +36,7 @@ public class DictionaryMultiThreadProxy implements ICategory {
                 lock.notifyAll();
             }
         };
-        BigFileReader.Builder builder = new BigFileReader.Builder(panel);
-        bigFileReader = builder
-                .withBufferSize(1024 * 1024)
-                .withOnCompleteCallback(callback)
-                .build();
+        bigFileReader = new BigFileReader(callback, panel);
         bigFileReader.start();
         try {
             synchronized (lock) {
@@ -64,9 +59,7 @@ public class DictionaryMultiThreadProxy implements ICategory {
         int fileLineCount = Utils.getFileLineCount(dictionaryFile);
         logger.info("File line count: {}", fileLineCount);
 
-        panel.setCurrentState(State.WORKING);
-        panel.setProgressMaxValue(fileLineCount);
-        panel.setProgressBarValue(0);
+        panel.resetProgressMaxValue(fileLineCount);
 
         String resultPassword = startAndGet(panel);
         panel.showResultWithDialog(resultPassword);
