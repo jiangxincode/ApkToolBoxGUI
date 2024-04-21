@@ -1,5 +1,8 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.category.dictionary.multithread;
 
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.State;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,15 +14,14 @@ import java.util.Set;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BigFileReader {
     private static final Logger logger = LogManager.getLogger(BigFileReader.class.getSimpleName());
 
-    private int threadSize;
     private String charset;
     private int bufferSize;
-    private LineHandler lineHandler;
     private ScheduledThreadPoolExecutor executorService;
     private long fileLength;
     private RandomAccessFile rAccessFile;
@@ -28,24 +30,31 @@ public class BigFileReader {
     private AtomicLong counter = new AtomicLong(0);
     private CompleteCallback callback;
 
-    private BigFileReader(File file, LineHandler lineHandler, String charset, int bufferSize, int threadSize, CompleteCallback callback) {
+    private AtomicBoolean success = new AtomicBoolean(false);
+
+    private RecoveryPanel panel;
+
+    private BigFileReader(int bufferSize, CompleteCallback callback, RecoveryPanel panel) {
+        this.panel = panel;
+        File file = panel.getDictionaryFile();
+        if (!file.exists()) {
+            throw new IllegalArgumentException("文件不存在！");
+        }
         this.fileLength = file.length();
-        this.lineHandler = lineHandler;
-        this.charset = charset;
+        this.charset = EncoderDetector.judgeFile(file.getAbsolutePath());
         this.bufferSize = bufferSize;
-        this.threadSize = threadSize;
         try {
             this.rAccessFile = new RandomAccessFile(file, "r");
         } catch (FileNotFoundException e) {
             logger.error("BigFileReader FileNotFoundException");
         }
-        this.executorService = new ScheduledThreadPoolExecutor(threadSize);
-        startEndPairs = new HashSet<>();
+        this.executorService = new ScheduledThreadPoolExecutor(panel.getThreadNum());
+        this.startEndPairs = new HashSet<>();
         this.callback = callback;
     }
 
     public void start() {
-        long everySize = fileLength / threadSize;
+        long everySize = fileLength / panel.getThreadNum();
         try {
             calculateStartEnd(0, everySize);
         } catch (IOException e) {
@@ -123,7 +132,26 @@ public class BigFileReader {
         } else {
             line = new String(bytes, charset);
         }
-        lineHandler.handle(line, counter.incrementAndGet());
+        handle(line, counter.incrementAndGet());
+    }
+
+    private void handle(String line, long currentLineCount) {
+        if (success.compareAndSet(true, true) || panel.getCurrentState() != State.WORKING) {
+            return;
+        }
+        panel.setCurrentPassword(line);
+        panel.setProgressBarValue(Math.toIntExact(currentLineCount));
+
+        if (panel.getCurrentFileChecker().checkPassword(line)) {
+            if (success.compareAndSet(false, true)) {
+                logger.info("find password: {}", line);
+                callback.onComplete(line);
+            }
+        } else {
+            if (!success.compareAndSet(true, true) && panel.getCurrentState() == State.WORKING) {
+                logger.info("try password[{}] failed", line);
+            }
+        }
     }
 
     private static class StartEndPair {
@@ -218,29 +246,14 @@ public class BigFileReader {
     }
 
     public static class Builder {
-        private int threadSize = 1;
-        private String charset = null;
         private int bufferSize = 1024 * 1024;
-        private LineHandler handle;
-        private File file;
 
         private CompleteCallback callback;
 
-        public Builder(String file, LineHandler handle) {
-            this.file = new File(file);
-            if (!this.file.exists())
-                throw new IllegalArgumentException("文件不存在！");
-            this.handle = handle;
-        }
+        private RecoveryPanel panel;
 
-        public Builder withThreadSize(int size) {
-            this.threadSize = size;
-            return this;
-        }
-
-        public Builder withCharset(String charset) {
-            this.charset = charset;
-            return this;
+        public Builder(RecoveryPanel panel) {
+            this.panel = panel;
         }
 
         public Builder withBufferSize(int bufferSize) {
@@ -254,7 +267,7 @@ public class BigFileReader {
         }
 
         public BigFileReader build() {
-            return new BigFileReader(this.file, this.handle, this.charset, this.bufferSize, this.threadSize, this.callback);
+            return new BigFileReader(this.bufferSize, this.callback, this.panel);
         }
     }
 }

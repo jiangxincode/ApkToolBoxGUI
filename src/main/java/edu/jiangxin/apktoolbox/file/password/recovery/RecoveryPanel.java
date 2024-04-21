@@ -16,7 +16,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class RecoveryPanel extends EasyPanel {
@@ -350,17 +353,42 @@ public final class RecoveryPanel extends EasyPanel {
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 startButton.setEnabled(false);
                 stopButton.setEnabled(true);
+                updateUiComponent(false);
             } else if (currentState == State.STOPPING) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 startButton.setEnabled(false);
                 stopButton.setEnabled(false);
+                updateUiComponent(false);
             } else if (currentState == State.IDLE) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 startButton.setEnabled(true);
                 stopButton.setEnabled(false);
                 currentPasswordLabel.setText("");
+                updateUiComponent(true);
             }
         });
+    }
+
+    private void updateUiComponent(boolean enable) {
+        for (Component component : getComponents(optionPanel)) {
+            component.setEnabled(enable);
+        }
+    }
+
+    private Component[] getComponents(Component container) {
+        List<Component> list;
+
+        try {
+            list = new ArrayList<>(Arrays.asList(
+                    ((Container) container).getComponents()));
+            for (int index = 0; index < list.size(); index++) {
+                list.addAll(Arrays.asList(getComponents(list.get(index))));
+            }
+        } catch (ClassCastException e) {
+            list = new ArrayList<>();
+        }
+
+        return list.toArray(new Component[0]);
     }
 
     public State getCurrentState() {
@@ -368,15 +396,11 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     public void setProgressMaxValue(int maxValue) {
-        SwingUtilities.invokeLater(() -> {
-            progressBar.setMaximum(maxValue);
-        });
+        SwingUtilities.invokeLater(() -> progressBar.setMaximum(maxValue));
     }
 
     public void increaseProgressBarValue() {
-        SwingUtilities.invokeLater(() -> {
-            setProgressBarValue(progressBar.getValue() + 1);
-        });
+        SwingUtilities.invokeLater(() -> setProgressBarValue(progressBar.getValue() + 1));
     }
 
     public void setProgressBarValue(int value) {
@@ -388,9 +412,7 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     public void setCurrentPassword(String password) {
-        SwingUtilities.invokeLater(() -> {
-            currentPasswordLabel.setText("Trying: " + password);
-        });
+        SwingUtilities.invokeLater(() -> currentPasswordLabel.setText("Trying: " + password));
     }
 
     public String getCharset() {
