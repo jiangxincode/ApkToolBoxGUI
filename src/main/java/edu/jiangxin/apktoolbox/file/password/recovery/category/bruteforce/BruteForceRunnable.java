@@ -47,11 +47,11 @@ public class BruteForceRunnable implements Runnable {
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
             if (bruteForceFuture.isDone()) {
-                logger.debug("isDone: " + Thread.currentThread().getName());
+                logger.debug("isDone: ThreadName: {}", Thread.currentThread().getName());
                 return null;
             }
             if (bruteForceFuture.isCancelled()) {
-                logger.info("isCancelled: " + Thread.currentThread().getName());
+                logger.info("isCancelled: ThreadName: {}", Thread.currentThread().getName());
                 return null;
             }
             String password = transformIntToStr(passwordIterator, consts.getCharsSet());

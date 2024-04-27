@@ -81,9 +81,9 @@ public final class RecoveryPanel extends EasyPanel {
 
     private Timer timer;
 
-    private ExecutorService startExecutorService = Executors.newFixedThreadPool(1);
+    private final transient ExecutorService startExecutorService = Executors.newFixedThreadPool(1);
 
-    private ExecutorService stopExecutorService = Executors.newFixedThreadPool(1);
+    private final transient ExecutorService stopExecutorService = Executors.newFixedThreadPool(1);
 
     public RecoveryPanel() {
         super();
@@ -390,7 +390,6 @@ public final class RecoveryPanel extends EasyPanel {
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 startButton.setEnabled(true);
                 stopButton.setEnabled(false);
-                currentPasswordLabel.setText("Trying: ");
                 updateUiComponent(true);
             }
         });
@@ -434,11 +433,9 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     private void setProgressBarValue(int value) {
-        if (value > progressBar.getMaximum()) {
-            value = progressBar.getMaximum();
-        }
-        progressBar.setValue(value);
-        String text = numberFormat.format(((double) value) / progressBar.getMaximum());
+        int properValue = Math.min(value, progressBar.getMaximum());
+        progressBar.setValue(properValue);
+        String text = numberFormat.format(((double) properValue) / progressBar.getMaximum());
         progressBar.setString(text);
     }
 
