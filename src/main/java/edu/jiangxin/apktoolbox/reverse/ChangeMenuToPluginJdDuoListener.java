@@ -8,7 +8,7 @@ import java.io.File;
 public class ChangeMenuToPluginJdDuoListener extends ChangeMenuToPluginListener {
     @Override
     public String getPluginFilename() {
-        return "jd-gui-duo-2.0.77.zip";
+        return "jd-gui-duo-2.0.79.zip";
     }
 
     @Override
@@ -19,6 +19,6 @@ public class ChangeMenuToPluginJdDuoListener extends ChangeMenuToPluginListener 
     @Override
     public String getPluginStartupCmd() {
         String dirPath = getPluginFilename().replace(".zip", "");
-        return Utils.getPluginDirPath() + File.separator + dirPath + File.separator + "jd-gui-duo-2.0.77.exe";
+        return Utils.getPluginDirPath() + File.separator + dirPath + File.separator + "jd-gui-duo-2.0.79.exe";
     }
 }
