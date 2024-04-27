@@ -28,12 +28,14 @@ public class BruteForceFuture implements Future<String> {
 
     public void set(String result) {
         lock.lock();
+        logger.debug("set lock");
         try {
             if (result != null || finishedTaskCount.incrementAndGet() >= taskCount) {
                 this.result = result;
                 condition.signal();
             }
         } finally {
+            logger.debug("set unlock");
             lock.unlock();
         }
     }
@@ -41,12 +43,14 @@ public class BruteForceFuture implements Future<String> {
     @Override
     public String get() {
         lock.lock();
+        logger.debug("get lock");
         try {
             condition.await();
         } catch (InterruptedException e) {
             logger.error("await InterruptedException");
             Thread.currentThread().interrupt();
         } finally {
+            logger.debug("get unlock");
             lock.unlock();
         }
         return result;

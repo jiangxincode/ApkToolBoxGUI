@@ -92,7 +92,9 @@ public class BruteForceProxy implements ICategory {
 
     @Override
     public void cancel() {
-        bruteForceFuture.cancel(false);
+        if (bruteForceFuture != null) {
+            bruteForceFuture.cancel(false);
+        }
         if (executorService != null && !executorService.isShutdown()) {
             executorService.shutdown();
         }

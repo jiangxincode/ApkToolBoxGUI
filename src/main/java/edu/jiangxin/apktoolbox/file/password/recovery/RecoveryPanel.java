@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class RecoveryPanel extends EasyPanel {
     private JPanel optionPanel;
@@ -79,6 +81,10 @@ public final class RecoveryPanel extends EasyPanel {
 
     private Timer timer;
 
+    private ExecutorService startExecutorService = Executors.newFixedThreadPool(1);
+
+    private ExecutorService stopExecutorService = Executors.newFixedThreadPool(1);
+
     public RecoveryPanel() {
         super();
         initBase();
@@ -103,11 +109,10 @@ public final class RecoveryPanel extends EasyPanel {
 
         timer = new Timer(1000, e -> {
             if (currentState == State.WORKING) {
-                int speed = progressBar.getValue() - passwordTryCount;
-                passwordTryCount = progressBar.getValue();
+                int currentValue = progressBar.getValue();
+                int speed = currentValue - passwordTryCount;
+                passwordTryCount = currentValue;
                 currentSpeedLabel.setText("Speed: " + speed + " passwords/s");
-            } else {
-                currentSpeedLabel.setText("");
             }
         });
     }
@@ -262,9 +267,9 @@ public final class RecoveryPanel extends EasyPanel {
 
         startButton = new JButton("Start");
         stopButton = new JButton("Stop");
-        currentStateLabel = new JLabel("");
-        currentPasswordLabel = new JLabel("");
-        currentSpeedLabel = new JLabel("");
+        currentStateLabel = new JLabel("State: IDLE");
+        currentPasswordLabel = new JLabel("Trying: ");
+        currentSpeedLabel = new JLabel("Speed: 0 passwords/s");
 
         operationPanel.add(startButton);
         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -277,8 +282,8 @@ public final class RecoveryPanel extends EasyPanel {
         operationPanel.add(currentSpeedLabel);
         operationPanel.add(Box.createHorizontalGlue());
 
-        startButton.addActionListener(e -> new Thread(this::onStart).start());
-        stopButton.addActionListener(e -> new Thread(this::onStop).start());
+        startButton.addActionListener(e -> startExecutorService.submit(this::onStart));
+        stopButton.addActionListener(e -> stopExecutorService.submit(this::onStop));
 
         setCurrentState(State.IDLE);
     }
@@ -328,6 +333,7 @@ public final class RecoveryPanel extends EasyPanel {
             return;
         }
         setCurrentState(State.WORKING);
+        passwordTryCount = 0;
         timer.start();
         ICategory category = CategoryFactory.getCategoryInstance(currentCategoryType);
         category.start(this);
@@ -384,7 +390,7 @@ public final class RecoveryPanel extends EasyPanel {
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 startButton.setEnabled(true);
                 stopButton.setEnabled(false);
-                currentPasswordLabel.setText("");
+                currentPasswordLabel.setText("Trying: ");
                 updateUiComponent(true);
             }
         });
@@ -428,6 +434,9 @@ public final class RecoveryPanel extends EasyPanel {
     }
 
     private void setProgressBarValue(int value) {
+        if (value > progressBar.getMaximum()) {
+            value = progressBar.getMaximum();
+        }
         progressBar.setValue(value);
         String text = numberFormat.format(((double) value) / progressBar.getMaximum());
         progressBar.setString(text);
