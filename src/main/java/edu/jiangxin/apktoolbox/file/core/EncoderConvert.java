@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -123,18 +122,5 @@ public class EncoderConvert {
      */
     public static void encodeDir(String srcDirString, String srcEncoder, String desDirString, String desEncoder) {
         encodeDir(srcDirString, srcEncoder, desDirString, desEncoder, null);
-    }
-
-    /**
-     * 实现文件列表批量编码转换. see {@link #encodeFile(String, String, String, String)}
-     * 
-     * @param fromEncoder 原始编码
-     * @param toEncoder   需要转换的编码
-     */
-    public static void encodeFiles(List<File> files, String fromEncoder, String toEncoder) {
-        Iterator<File> it = files.iterator();
-        while (it.hasNext()) {
-            encodeFile(it.next().getAbsolutePath(), fromEncoder, toEncoder);
-        }
     }
 }

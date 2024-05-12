@@ -41,7 +41,11 @@ public class DownloadRunnable extends AbstractRunnable {
         }
 
         Map<String, List<String>> map = conn.getHeaderFields();
-        int downloadLength = Integer.parseInt(map.get("Content-Length").get(0));
+        List<String> contentLengthList = map.get("Content-Length");
+        int downloadLength = 1;
+        if (contentLengthList != null && !contentLengthList.isEmpty()) {
+            downloadLength = Integer.parseInt(contentLengthList.get(0));
+        }
 
         String urlStr = url.toString();
         String fileName = urlStr.substring(urlStr.lastIndexOf("/") + 1);
