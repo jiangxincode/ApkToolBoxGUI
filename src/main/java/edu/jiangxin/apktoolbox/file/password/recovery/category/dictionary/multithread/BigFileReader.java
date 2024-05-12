@@ -22,6 +22,8 @@ public class BigFileReader {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
+    private static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
+
     private final String charset;
     private final int bufferSize;
     private final ScheduledThreadPoolExecutor executorService;
@@ -50,13 +52,13 @@ public class BigFileReader {
         } catch (FileNotFoundException e) {
             logger.error("BigFileReader FileNotFoundException");
         }
-        this.executorService = new ScheduledThreadPoolExecutor(panel.getThreadNum());
+        this.executorService = new ScheduledThreadPoolExecutor(PROCESSOR_COUNT);
         this.startEndPairs = new HashSet<>();
         this.callback = callback;
     }
 
     public void start() {
-        long everySize = fileLength / panel.getThreadNum();
+        long everySize = fileLength / PROCESSOR_COUNT;
         try {
             calculateStartEnd(0, everySize);
         } catch (IOException e) {

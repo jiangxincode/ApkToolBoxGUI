@@ -77,7 +77,8 @@ public class BruteForceProxy implements ICategory {
         for (int length = minLength; length <= maxLength; length++) {
             long startTime = System.currentTimeMillis();
             FileChecker fileChecker = panel.getCurrentFileChecker();
-            int numThreads = getThreadCount(charset.length(), length, fileChecker.getMaxThreadNum());
+            int processorCount = Runtime.getRuntime().availableProcessors();
+            int numThreads = getThreadCount(charset.length(), length, processorCount);
             logger.info("[{}]Current attempt length: {}, thread number: {}", fileChecker, length, numThreads);
             password = startAndGet(numThreads, length, fileChecker, charset, panel);
             long endTime = System.currentTimeMillis();

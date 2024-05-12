@@ -21,10 +21,6 @@ public abstract class FileChecker implements IChecker {
         this.file = file;
     }
 
-    public int getMaxThreadNum() {
-        return 1000;
-    }
-
     public boolean prepareChecker() {
         return true;
     }

@@ -31,6 +31,15 @@ public class BruteForceFuture implements Future<String> {
         logger.debug("set lock");
         try {
             if (result != null || finishedTaskCount.incrementAndGet() >= taskCount) {
+                logger.info("set result: {}", result);
+                // Sleep to avoid the thread running too fast, which may cause bruteForceFuture#get has not been called
+                // Thus, condition.await maybe called after condition.signal
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    logger.error("sleep InterruptedException");
+                    Thread.currentThread().interrupt();
+                }
                 this.result = result;
                 condition.signal();
             }

@@ -23,14 +23,6 @@ public class BruteForceRunnable implements Runnable {
 
     @Override
     public void run() {
-        // Sleep to avoid the thread running too fast, which may cause bruteForceFuture#get has not been called
-        // Thus, condition.await maybe called after condition.signal
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            logger.error("sleep InterruptedException");
-            Thread.currentThread().interrupt();
-        }
         long rangeBegin = taskId * consts.getPasswordSubRangeSize();
         long rangeEnd = (taskId + 1) * consts.getPasswordSubRangeSize() - 1;
         logger.info("rangeBegin: {}, rangeEnd: {}", rangeBegin, rangeEnd);
@@ -47,7 +39,7 @@ public class BruteForceRunnable implements Runnable {
         transformDecToBaseN(rangeBegin, passwordIterator, consts.getCharsSet().length());
         for (long iterator = rangeBegin; iterator <= rangeEnd; iterator++) {
             if (bruteForceFuture.isDone()) {
-                logger.debug("isDone: ThreadName: {}", Thread.currentThread().getName());
+                logger.info("isDone: ThreadName: {}", Thread.currentThread().getName());
                 return null;
             }
             if (bruteForceFuture.isCancelled()) {

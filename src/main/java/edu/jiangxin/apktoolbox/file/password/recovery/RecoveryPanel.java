@@ -4,6 +4,9 @@ import edu.jiangxin.apktoolbox.file.password.recovery.category.CategoryFactory;
 import edu.jiangxin.apktoolbox.file.password.recovery.category.CategoryType;
 import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
 import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.thirdparty.ThirdParty7ZipChecker;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.thirdparty.ThirdPartyRarChecker;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.thirdparty.ThirdPartyWinRarChecker;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -56,7 +59,7 @@ public final class RecoveryPanel extends EasyPanel {
     private JSpinner minSpinner;
     private JSpinner maxSpinner;
 
-    private JSpinner threadNumSpinner;
+    private JCheckBox isUseMultiThreadCheckBox;
 
     private JProgressBar progressBar;
 
@@ -122,9 +125,9 @@ public final class RecoveryPanel extends EasyPanel {
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
         checkerTypeComboBox = new JComboBox<>();
-        checkerTypeComboBox.addItem(new ArchiveUsing7ZipChecker());
-        checkerTypeComboBox.addItem(new ArchiveUsingWinRarChecker());
-        checkerTypeComboBox.addItem(new RarUsingRarChecker());
+        checkerTypeComboBox.addItem(new ThirdParty7ZipChecker());
+        checkerTypeComboBox.addItem(new ThirdPartyWinRarChecker());
+        checkerTypeComboBox.addItem(new ThirdPartyRarChecker());
         checkerTypeComboBox.addItem(new ZipChecker());
         checkerTypeComboBox.addItem(new RarChecker());
         checkerTypeComboBox.addItem(new SevenZipChecker());
@@ -243,22 +246,17 @@ public final class RecoveryPanel extends EasyPanel {
         dictionaryFilePanel = new FilePanel("Choose Dictionary File");
         dictionaryFilePanel.setDescriptionAndFileExtensions("*.dic;*.txt", new String[]{"dic", "txt"});
 
-        JPanel threadNumPanel = new JPanel();
-        threadNumPanel.setLayout(new BoxLayout(threadNumPanel, BoxLayout.X_AXIS));
+        JPanel threadPanel = new JPanel();
+        threadPanel.setLayout(new BoxLayout(threadPanel, BoxLayout.X_AXIS));
 
         topLevelPanel.add(dictionaryFilePanel);
         topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        topLevelPanel.add(threadNumPanel);
+        topLevelPanel.add(threadPanel);
 
-        JLabel threadNumLabel = new JLabel("Thread Number: ");
+        isUseMultiThreadCheckBox = new JCheckBox("Use Multi-thread");
+        isUseMultiThreadCheckBox.setSelected(true);
 
-        threadNumSpinner = new JSpinner();
-        threadNumSpinner.setModel(new SpinnerNumberModel(1, 1, 1000, 1));
-        threadNumSpinner.setToolTipText("Thread Number");
-
-        threadNumPanel.add(threadNumLabel);
-        threadNumPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
-        threadNumPanel.add(threadNumSpinner);
+        threadPanel.add(isUseMultiThreadCheckBox);
     }
 
     private void createOperationPanel() {
@@ -318,11 +316,10 @@ public final class RecoveryPanel extends EasyPanel {
         if (selectedPanel.equals(bruteForceCategoryPanel)) {
             currentCategoryType = CategoryType.BRUTE_FORCE;
         } else if (selectedPanel.equals(dictionaryCategoryPanel)) {
-            int threadNum = (Integer) threadNumSpinner.getValue();
-            if (threadNum == 1) {
-                currentCategoryType = CategoryType.DICTIONARY_SINGLE_THREAD;
-            } else {
+            if (isUseMultiThreadCheckBox.isSelected()) {
                 currentCategoryType = CategoryType.DICTIONARY_MULTI_THREAD;
+            } else {
+                currentCategoryType = CategoryType.DICTIONARY_SINGLE_THREAD;
             }
         } else {
             currentCategoryType = CategoryType.UNKNOWN;
@@ -475,10 +472,6 @@ public final class RecoveryPanel extends EasyPanel {
 
     public int getMaxLength() {
         return (Integer) maxSpinner.getValue();
-    }
-
-    public int getThreadNum() {
-        return (Integer) threadNumSpinner.getValue();
     }
 
     public FileChecker getCurrentFileChecker() {

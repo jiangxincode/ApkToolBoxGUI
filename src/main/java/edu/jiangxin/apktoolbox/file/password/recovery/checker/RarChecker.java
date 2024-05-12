@@ -69,9 +69,4 @@ public final class RarChecker extends FileChecker {
         }
         return result;
     }
-
-    @Override
-    public int getMaxThreadNum() {
-        return 200;
-    }
 }
