@@ -18,34 +18,37 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 
 ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
 
-It's a collection of common tools, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
+It's a collection of common tools, password recovery, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
 
-## Feature and Usage
+ApkToolBoxGUI是一个方便程序员使用的工具，具有用户友好的图形界面。
 
-[![Project Documentation](https://img.shields.io/badge/ApkToolBoxGUI-Documentation-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
+它是一个常用工具的集合，包括密码恢复、编码转换、时间戳转换、颜色选择器等，此外还有一些专门用于Android开发的工具（这就是为什么它被命名为`ApkToolBoxGUI`）。
 
-* [Android Develop](./src/site/markdown/features/android_i18n_operation.md)
-* [Batch Rename](./src/site/markdown/features/batch_rename.md)
-* [Check Summary](./src/site/markdown/features/batch_rename.md)
-* [Color Picker](./src/site/markdown/features/color_picker.md)
-* [Base Convert](./src/site/markdown/features/convert_base.md)
-* [OS Pattern Convert](./src/site/markdown/features/convert_os_pattern.md)
-* [Time Convert](./src/site/markdown/features/convert_time_format.md)
-* [Decode protobuf](./src/site/markdown/features/decode_protobuf.md)
-* [Find Duplicate Files](./src/site/markdown/features/find_duplicate_files.md)
-* [Reverse Engineer](./src/site/markdown/features/reverse_engineer.md)
-* ...Much more
+## Feature and Usage(功能和使用方式)
 
-## Contribute
+[![Documentation](https://img.shields.io/badge/Documentation-文档-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
-<https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html>
+* [Password Recovery(密码恢复)](./src/site/markdown/features/recovery_file_password.md)
+* [Batch Rename(批量重命名)](./src/site/markdown/features/batch_rename.md)
+* [Check Summary(文件摘要检查)](./src/site/markdown/features/check_summary.md)
+* [Color Picker(颜色拾取器)](./src/site/markdown/features/color_picker.md)
+* [Base Convert(进制转换)](./src/site/markdown/features/convert_base.md)
+* [OS Pattern Convert(操作系统文件格式转换)](./src/site/markdown/features/convert_os_pattern.md)
+* [Time Convert(时间格式转换)](./src/site/markdown/features/convert_time_format.md)
+* [Decode Protobuf(Protobuf解码)](./src/site/markdown/features/decode_protobuf.md)
+* [Find Duplicate Files(重复文件查找)](./src/site/markdown/features/find_duplicate_files.md)
+* [Reverse Engineer(逆向工程)](./src/site/markdown/features/reverse_engineer.md)
+* [Android Develop(Android开发)](./src/site/markdown/features/android_i18n_operation.md)
+* ...
 
-## Contributors
+## Contribute(共同参与)
 
-All contributors will be listed here.
+[![Documentation](https://img.shields.io/badge/Contribute-共同参与-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html)
+
+## Contributors(贡献者)
 
 * Jiangxin <jiangxinnju@gmail.com>
 
-## Communication Group
+## Communication Group(交流群)
 
 ![QQ Group](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/QQ_Group.png)

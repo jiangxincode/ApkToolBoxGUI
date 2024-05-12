@@ -2,11 +2,9 @@
 
 ### WARNING
 
-```
 You can use this function only when you have the express authorization of opening and operating the encrypted file.
 
-I am only providing a generic tool, you are the one who decides what to do with it and you should take the responsability of using it!
-```
+I am only providing a generic tool, you are the one who decides what to do with it and you should take the responsibility of using it!
 
 ### Feature
 
