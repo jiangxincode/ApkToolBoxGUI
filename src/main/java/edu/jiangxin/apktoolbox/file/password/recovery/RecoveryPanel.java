@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -362,9 +364,28 @@ public final class RecoveryPanel extends EasyPanel {
             logger.error("Can not find password");
             JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
         } else {
-            logger.info("Find out the password: " + password);
-            JOptionPane.showMessageDialog(RecoveryPanel.this, "Find out the password: " + password);
+            logger.info("Find out the password: {}", password);
+            JPanel panel = createPasswordShowPanel(password);
+            JOptionPane.showMessageDialog(RecoveryPanel.this, panel, "Find out the password", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    private static JPanel createPasswordShowPanel(String password) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JTextField textField = new JTextField(password);
+        textField.setEditable(false);
+        textField.setColumns(20);
+        JButton button = new JButton("Copy");
+        button.addActionListener(e -> {
+            StringSelection stringSelection = new StringSelection(password);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        });
+        panel.add(textField);
+        panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        panel.add(button);
+        return panel;
     }
 
     public void setCurrentState(State currentState) {
