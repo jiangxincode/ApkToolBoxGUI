@@ -39,7 +39,7 @@ public class XmlBasedOfficeChecker extends FileChecker {
     @Override
     public boolean checkPassword(String password) {
         if (DEBUG) {
-            logger.info("checkPassword: " + password);
+            logger.info("checkPassword: {}", password);
         }
         boolean result = false;
         try (POIFSFileSystem pfs = new POIFSFileSystem(new FileInputStream(file))) {

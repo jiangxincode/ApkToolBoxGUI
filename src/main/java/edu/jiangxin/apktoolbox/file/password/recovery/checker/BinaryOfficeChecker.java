@@ -49,23 +49,26 @@ public class BinaryOfficeChecker extends FileChecker {
         try (FileInputStream fis = new FileInputStream(file);
              POIFSFileSystem pfs = new POIFSFileSystem(fis)) {
             String extension = FilenameUtils.getExtension(file.getName());
-            if ("xls".equals(extension)) {
-                try (POIDocument poiDocument = new HSSFWorkbook(pfs)) {
-                    logger.info("create workbook successfully" + poiDocument);
-                    result = true;
+            switch (extension) {
+                case "xls" -> {
+                    try (POIDocument poiDocument = new HSSFWorkbook(pfs)) {
+                        logger.info("create workbook successfully: {}", poiDocument);
+                        result = true;
+                    }
                 }
-            } else if ("doc".equals(extension)) {
-                try (POIDocument poiDocument = new HWPFDocument(pfs)) {
-                    logger.info("create document successfully" + poiDocument);
-                    result = true;
+                case "doc" -> {
+                    try (POIDocument poiDocument = new HWPFDocument(pfs)) {
+                        logger.info("create document successfully: {}", poiDocument);
+                        result = true;
+                    }
                 }
-            } else if ("ppt".equals(extension)) {
-                try (POIDocument poiDocument = new HSLFSlideShow(pfs)) {
-                    logger.info("create slideShow successfully" + poiDocument);
-                    result = true;
+                case "ppt" -> {
+                    try (POIDocument poiDocument = new HSLFSlideShow(pfs)) {
+                        logger.info("create slideShow successfully: {}", poiDocument);
+                        result = true;
+                    }
                 }
-            } else {
-                logger.error("Not supported: " + file.getName());
+                default -> logger.error("Not supported: {}", file.getName());
             }
         } catch (FileNotFoundException e) {
             logger.error("checkPassword FileNotFoundException");

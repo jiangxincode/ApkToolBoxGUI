@@ -52,9 +52,7 @@ public class PdfChecker extends FileChecker {
             pdDocument = Loader.loadPDF(new RandomAccessReadBufferedFile(file), password);
             result = true;
         } catch (InvalidPasswordException e) {
-            if (DEBUG) {
-                logger.error("[InvalidPasswordException]password is incorrect: " + password);
-            }
+            logger.debug("[InvalidPasswordException]password is incorrect: {}", password);
         } catch (IOException e) {
             throw new UnknownException(e);
         } finally {
