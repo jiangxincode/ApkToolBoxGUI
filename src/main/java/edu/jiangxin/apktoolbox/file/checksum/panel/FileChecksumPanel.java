@@ -38,30 +38,22 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
     private JPanel operationPanel;
     private JProgressBar progressBar;
 
-    public FileChecksumPanel(boolean isSelected) {
-        super(isSelected);
-    }
-
     @Override
     public void createUI() {
-        JPanel panel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
-        setViewportView(panel);
-
-        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-        panel.setLayout(boxLayout);
-
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createFileNamePanel();
-        panel.add(filePanel);
+        add(filePanel);
 
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOptionPanel();
-        panel.add(optionPanel);
+        add(optionPanel);
 
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
-        panel.add(operationPanel);
+        add(operationPanel);
     }
 
     private void createFileNamePanel() {

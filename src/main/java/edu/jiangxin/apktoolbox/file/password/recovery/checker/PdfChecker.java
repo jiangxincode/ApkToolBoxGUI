@@ -18,7 +18,6 @@ import java.io.IOException;
  * and adding or modifying text notes (using owner password).
  */
 public class PdfChecker extends FileChecker {
-    private static final boolean DEBUG = false;
 
     public PdfChecker() {
         super();

@@ -1,16 +1,15 @@
-package edu.jiangxin.apktoolbox.help;
+package edu.jiangxin.apktoolbox.help.settings;
 
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 
-public class LocalePanel extends EasyPanel {
+public class LocalePanel extends EasyChildTabbedPanel {
     private JPanel optionPanel;
 
     private JComboBox<String> typeComboBox;
@@ -19,12 +18,8 @@ public class LocalePanel extends EasyPanel {
 
     private static final String[] SUPPORTED_LANGUAGES = {Locale.CHINESE.getLanguage(), Locale.ENGLISH.getLanguage()};
 
-    public LocalePanel() throws HeadlessException {
-        super();
-    }
-
     @Override
-    public void initUI() {
+    public void createUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxLayout);
 
@@ -35,6 +30,8 @@ public class LocalePanel extends EasyPanel {
 
         createOperationPanel();
         add(operationPanel);
+
+        add(Box.createVerticalStrut(15 * Constants.DEFAULT_Y_BORDER));
     }
 
     private void createOptionPanel() {

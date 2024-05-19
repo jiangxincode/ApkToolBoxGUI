@@ -23,24 +23,20 @@ public class CompareFilesPanel extends EasyChildTabbedPanel {
 
     @Override
     public void createUI() {
-        JPanel panel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
-        setViewportView(panel);
-
-        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-        panel.setLayout(boxLayout);
-
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createFilePanel();
-        panel.add(firstFilePanel);
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        panel.add(secondFilePanel);
+        add(firstFilePanel);
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(secondFilePanel);
 
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
-        panel.add(operationPanel);
+        add(operationPanel);
 
-        panel.add(Box.createVerticalGlue());
+        add(Box.createVerticalGlue());
     }
 
     private void createFilePanel() {

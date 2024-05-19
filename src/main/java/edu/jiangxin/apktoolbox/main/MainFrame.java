@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.main;
 
 import edu.jiangxin.apktoolbox.Version;
-import edu.jiangxin.apktoolbox.config.ConfigPanel;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
@@ -22,6 +21,7 @@ import edu.jiangxin.apktoolbox.android.i18n.I18nAddPanel;
 import edu.jiangxin.apktoolbox.android.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
+import edu.jiangxin.apktoolbox.help.settings.SettingsPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolPanel;
@@ -154,8 +154,6 @@ public class MainFrame extends EasyFrame {
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
-        createConfigMenu();
-
         createReverseMenu();
 
         createAndroidMenu();
@@ -171,13 +169,9 @@ public class MainFrame extends EasyFrame {
         JMenu helpMenu = new JMenu(bundle.getString("help.title"));
         menuBar.add(helpMenu);
 
-        JMenuItem lookAndFeelMenuItem = new JMenuItem(bundle.getString("help.look.and.feel.title"));
-        lookAndFeelMenuItem.addActionListener(new ChangeMenuToPanelListener(LookAndFeelPanel.class, lookAndFeelMenuItem.getText()));
-        helpMenu.add(lookAndFeelMenuItem);
-
-        JMenuItem localeMenuItem = new JMenuItem(bundle.getString("help.locale.title"));
-        localeMenuItem.addActionListener(new ChangeMenuToPanelListener(LocalePanel.class, localeMenuItem.getText()));
-        helpMenu.add(localeMenuItem);
+        JMenuItem settingsMenuItem = new JMenuItem(bundle.getString("help.settings.title"));
+        settingsMenuItem.addActionListener(new ChangeMenuToPanelListener(SettingsPanel.class, settingsMenuItem.getText()));
+        helpMenu.add(settingsMenuItem);
 
         JMenuItem feedbackMenuItem = new JMenuItem(bundle.getString("help.feedback.title"));
         feedbackMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_FEEDBACK));
@@ -290,15 +284,6 @@ public class MainFrame extends EasyFrame {
         JMenuItem dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("android.dumpsys.alarm.title"));
         dumpsysAlarmMenuItem.addActionListener(new ChangeMenuToPanelListener(DumpsysAlarmPanel.class, dumpsysAlarmMenuItem.getText()));
         androidMenu.add(dumpsysAlarmMenuItem);
-    }
-
-    private void createConfigMenu() {
-        JMenu configMenu = new JMenu(bundle.getString("config.title"));
-        menuBar.add(configMenu);
-
-        JMenuItem configMenuItem = new JMenuItem(bundle.getString("config.title"));
-        configMenuItem.addActionListener(new ChangeMenuToPanelListener(ConfigPanel.class, configMenuItem.getText()));
-        configMenu.add(configMenuItem);
     }
 
     private void createReverseMenu() {

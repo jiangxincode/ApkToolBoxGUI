@@ -15,18 +15,32 @@ public class ChecksumPanel extends EasyPanel {
         setLayout(boxLayout);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("File Checksum", null, new FileChecksumPanel(true), "File Checksum");
-        tabbedPane.addTab("Verify Checksum", null, new VerifyChecksumPanel(), "Verify Checksum");
-        tabbedPane.addTab("Compare Files", null, new CompareFilesPanel(), "Compare Files");
-        tabbedPane.addTab("Scan Folder", null, new ScanFolderPanel(), "Scan Folder");
-        tabbedPane.addTab("String Hash", null, new StringHashPanel(), "String Hash");
+
+        EasyChildTabbedPanel fileChecksumPanel = new FileChecksumPanel();
+        tabbedPane.addTab("File Checksum", null, fileChecksumPanel, "File Checksum");
+
+        EasyChildTabbedPanel verifyChecksumPanel = new VerifyChecksumPanel();
+        tabbedPane.addTab("Verify Checksum", null, verifyChecksumPanel, "Verify Checksum");
+
+        EasyChildTabbedPanel compareFilesPanel = new CompareFilesPanel();
+        tabbedPane.addTab("Compare Files", null, compareFilesPanel, "Compare Files");
+
+        EasyChildTabbedPanel scanFolderPanel = new ScanFolderPanel();
+        tabbedPane.addTab("Scan Folder", null, scanFolderPanel, "Scan Folder");
+
+        EasyChildTabbedPanel stringHashPanel = new StringHashPanel();
+        tabbedPane.addTab("String Hash", null, stringHashPanel, "String Hash");
 
         tabbedPane.addChangeListener(e -> {
             EasyChildTabbedPanel selectedPanel = (EasyChildTabbedPanel) tabbedPane.getSelectedComponent();
             selectedPanel.onTabSelected();
         });
 
+        tabbedPane.setSelectedComponent(stringHashPanel);
+        stringHashPanel.onTabSelected();
+
         add(tabbedPane);
+        add(Box.createVerticalGlue());
     }
 
 }

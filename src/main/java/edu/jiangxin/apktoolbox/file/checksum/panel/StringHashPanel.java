@@ -6,7 +6,6 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,24 +38,20 @@ public class StringHashPanel extends EasyChildTabbedPanel {
 
     @Override
     public void createUI() {
-        JPanel panel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(boxLayout);
 
-        setViewportView(panel);
-
-        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-        panel.setLayout(boxLayout);
-
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createStringInputPanel();
-        panel.add(stringInputPanel);
+        add(stringInputPanel);
 
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOptionPanel();
-        panel.add(optionPanel);
+        add(optionPanel);
 
-        panel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
-        panel.add(operationPanel);
+        add(operationPanel);
     }
 
     private void createStringInputPanel() {
