@@ -28,26 +28,22 @@ ApkToolBoxGUI是一个方便程序员使用的工具，具有用户友好的图�
 
 [![Documentation](https://img.shields.io/badge/Documentation-文档-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
-* [Password Recovery(密码恢复)](./src/site/markdown/features/recovery_file_password.md)
-* [Batch Rename(批量重命名)](./src/site/markdown/features/batch_rename.md)
-* [Check Summary(文件摘要检查)](./src/site/markdown/features/check_summary.md)
-* [Color Picker(颜色拾取器)](./src/site/markdown/features/color_picker.md)
-* [Base Convert(进制转换)](./src/site/markdown/features/convert_base.md)
-* [OS Pattern Convert(操作系统文件格式转换)](./src/site/markdown/features/convert_os_pattern.md)
-* [Time Convert(时间格式转换)](./src/site/markdown/features/convert_time_format.md)
-* [Decode Protobuf(Protobuf解码)](./src/site/markdown/features/decode_protobuf.md)
-* [Find Duplicate Files(重复文件查找)](./src/site/markdown/features/find_duplicate_files.md)
-* [Reverse Engineer(逆向工程)](./src/site/markdown/features/reverse_engineer.md)
-* [Android Develop(Android开发)](./src/site/markdown/features/android_i18n_operation.md)
+* [Password Recovery(密码恢复)](https://jiangxincode.github.io/ApkToolBoxGUI/features/recovery_file_password.html)
+* [Batch Rename(批量重命名)](https://jiangxincode.github.io/ApkToolBoxGUI/features/batch_rename.html)
+* [Check Summary(文件摘要检查)](https://jiangxincode.github.io/ApkToolBoxGUI/features/check_summary.html)
+* [Color Picker(颜色拾取器)](https://jiangxincode.github.io/ApkToolBoxGUI/features/color_picker.html)
+* [Base Convert(进制转换)](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_base.html)
+* [OS Pattern Convert(操作系统文件格式转换)](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_os_pattern.html)
+* [Time Convert(时间格式转换)](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_time_format.html)
+* [Decode Protobuf(Protobuf解码)](https://jiangxincode.github.io/ApkToolBoxGUI/features/decode_protobuf.html)
+* [Find Duplicate Files(重复文件查找)](https://jiangxincode.github.io/ApkToolBoxGUI/features/find_duplicate_files.html)
+* [Reverse Engineer(逆向工程)](https://jiangxincode.github.io/ApkToolBoxGUI/features/reverse_engineer.html)
+* [Android Develop(Android开发)](https://jiangxincode.github.io/ApkToolBoxGUI/features/android_i18n_operation.html)
 * ...
 
 ## Contribute(共同参与)
 
 [![Documentation](https://img.shields.io/badge/Contribute-共同参与-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html)
-
-## Contributors(贡献者)
-
-* Jiangxin <jiangxinnju@gmail.com>
 
 ## Communication Group(交流群)
 
