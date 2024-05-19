@@ -88,6 +88,11 @@ public class MainFrame extends EasyFrame {
             Locale.setDefault(new Locale(currentLocaleLanguage));
 
             MainFrame frame = new MainFrame();
+
+            boolean isAlwaysOnTop = conf.getBoolean("always.on.top", false);
+            conf.setProperty("always.on.top", isAlwaysOnTop);
+            frame.setAlwaysOnTop(isAlwaysOnTop);
+
             frame.setVisible(true);
         });
     }

@@ -23,6 +23,10 @@ public class SettingsPanel extends EasyPanel {
         String localeTitle = bundle.getString("help.settings.locale.title");
         tabbedPane.addTab(localeTitle, null, localePanel, localeTitle);
 
+        EasyChildTabbedPanel alwaysOnTopPanel = new AlwaysOnTopPanel();
+        String alwaysOnTopTitle = bundle.getString("help.settings.always.on.top.title");
+        tabbedPane.addTab(alwaysOnTopTitle, null, alwaysOnTopPanel, alwaysOnTopTitle);
+
         EasyChildTabbedPanel dependencyPathPanel = new DependencyPathPanel();
         String dependencyPathTitle = bundle.getString("help.settings.dependency.path");
         tabbedPane.addTab(dependencyPathTitle, null, dependencyPathPanel, dependencyPathTitle);

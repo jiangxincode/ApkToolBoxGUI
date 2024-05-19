@@ -35,8 +35,7 @@
         </breadcrumbs>
         <menu name="Getting Started Guide">
             <item name="Getting Started Guide" href="getting_started_guide/getting_started_guide.html"/>
-            <item name="How To Change Language" href="getting_started_guide/how_to_change_language.html"/>
-            <item name="How To Change Look And Feel" href="getting_started_guide/how_to_change_look_and_feel.html"/>
+            <item name="Settings" href="getting_started_guide/settings.html"/>
         </menu>
         <menu name="Features">
             <item name="Recovery File Password" href="features/recovery_file_password.html"/>
