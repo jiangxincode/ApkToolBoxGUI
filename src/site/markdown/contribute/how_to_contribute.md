@@ -1,6 +1,7 @@
 ## How To Contribute
 
 * Report a bug or request a new feature by [Open an issue](https://github.com/jiangxincode/ApkToolBoxGUI/issues/new)
+
 * Submit Pull Request if you are interested in development with us:
   * Fix some bugs
   * Add some new features
@@ -10,6 +11,7 @@
   * Optimize the performance
   * Add some tests
   * Add some translations
+
 * Help us to broadcast this project and let more people know it
 
 Feel free to dive in! You can do everything to help this project. All you need to do is to follow the [Contributor Covenant](http://contributor-covenant.org/version/1/3/0/).
