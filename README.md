@@ -14,8 +14,6 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 [![Project Map](https://sourcespy.com/shield.svg)](https://sourcespy.com/github/jiangxincodeapktoolboxgui/)
 
-[![Security Status](https://www.murphysec.com/platform3/v31/badge/1749042420388737024.svg)](https://www.murphysec.com/console/report/1749042420174827520/1749042420388737024)
-
 ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
 
 It's a collection of common tools, password recovery, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
