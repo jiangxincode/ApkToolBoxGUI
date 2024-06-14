@@ -14,7 +14,7 @@
         <poi.version>5.2.5</poi.version>
         <log4j.version>2.23.1</log4j.version>
         <junit.version>5.10.2</junit.version>
-        <surefire.version>3.2.5</surefire.version>
+        <surefire.version>3.3.0</surefire.version>
         <protobuf.version>4.27.1</protobuf.version>
     </properties>
     <dependencies>
