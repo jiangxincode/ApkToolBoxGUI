@@ -26,12 +26,13 @@ jobs:
       - name: Install And Run Infer
         run: |
           # ref: https://sobaigu.com/shell-get-lastest-version-from-github.html
-          VERSION=$(wget -qO- -t1 -T2 "https://api.github.com/repos/jiangxincode/infer/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
-          wget "https://github.com/jiangxincode/infer/releases/download/v${VERSION}/infer-linux64-v${VERSION}.tar.xz"
-          tar xJf "infer-linux64-v${VERSION}.tar.xz"
-          rm -rf "infer-linux64-v${VERSION}.tar.xz"
-          ./infer-linux64-v${VERSION}/bin/infer --version
-          ./infer-linux64-v${VERSION}/bin/infer --sarif -- mvn -DskipTests=true clean package
+          INFER_VERSION=$(wget -qO- -t1 -T2 "https://api.github.com/repos/facebook/infer/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
+          INFER_FILENAME=infer-linux-x86_64-v${INFER_VERSION}
+          wget "https://github.com/facebook/infer/releases/download/v${INFER_VERSION}/${INFER_FILENAME}.tar.xz"
+          tar xJf "${INFER_FILENAME}.tar.xz"
+          rm -rf "${INFER_FILENAME}.tar.xz"
+          ./${INFER_FILENAME}/bin/infer --version
+          ./${INFER_FILENAME}/bin/infer --java-version 17 --sarif -- mvn -DskipTests=true clean package
           ls -al ./infer-out/
       - name: Upload SARIF output to GitHub Security Center
         uses: github/codeql-action/upload-sarif@v3
