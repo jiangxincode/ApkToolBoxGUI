@@ -3,31 +3,9 @@
  */
 package edu.jiangxin.apktoolbox.android.i18n;
 
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
+import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +16,13 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.Constants;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author jiangxin
@@ -48,19 +31,22 @@ import edu.jiangxin.apktoolbox.utils.Constants;
  */
 public class I18nAddPanel extends EasyPanel {
     
+    @Serial
     private static final long serialVersionUID = 1L;
     
     private static final String CHARSET = "UTF-8";
 
     private static final boolean REMOVE_LAST_LF_OPEN = true;
 
-    private static Map<String, String> replace = new HashedMap<String, String>();
+    private static final Map<String, String> replace = new HashedMap<>();
 
     private JTextField srcTextField;
 
     private JTextField targetTextField;
 
     private JTextField itemTextField;
+
+    private int operationCount = 0;
 
     static {
         replace.put("&quot;", "jiangxin001");
@@ -91,36 +77,36 @@ public class I18nAddPanel extends EasyPanel {
         add(operationPanel);
 
         JButton addButton = new JButton(bundle.getString("android.i18n.add.title"));
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String srcPath = checkAndGetDirContent(srcTextField, "android.i18n.add.src.dir", "Source directory is invalid");
-                if (srcPath == null) {
+        addButton.addActionListener(e -> {
+            String srcPath = checkAndGetDirContent(srcTextField, "android.i18n.add.src.dir", "Source directory is invalid");
+            if (srcPath == null) {
+                return;
+            }
+
+            String targetPath = checkAndGetDirContent(targetTextField, "android.i18n.add.target.dir", "Target directory is invalid");
+            if (targetPath == null) {
+                return;
+            }
+
+            String itemStr = checkAndGetStringContent(itemTextField, "android.i18n.add.items", "Items is empty");
+            if (itemStr == null) {
+                return;
+            }
+
+            List<String> items = new ArrayList<>(Arrays.asList(itemStr.split(";")));
+            operationCount = 0;
+
+            for (String item : items) {
+                int ret = innerProcessor(srcPath, targetPath, item);
+                if (ret != 0) {
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(I18nAddPanel.this, "Failed, please see the log", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
-                }
-
-                String targetPath = checkAndGetDirContent(targetTextField, "android.i18n.add.target.dir", "Target directory is invalid");
-                if (targetPath == null) {
-                    return;
-                }
-
-                String itemStr = checkAndGetStringContent(itemTextField, "android.i18n.add.items", "Items is empty");
-                if (itemStr == null) {
-                    return;
-                }
-
-                List<String> items = new ArrayList<>(Arrays.asList(itemStr.split(";")));
-
-                for (String item : items) {
-                    int ret = innerProcessor(srcPath, targetPath, item);
-                    if (ret != 0) {
-                        Toolkit.getDefaultToolkit().beep();
-                        JOptionPane.showMessageDialog(I18nAddPanel.this, "Failed, please see the log", "ERROR",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
                 }
             }
+            String message = String.format("Success: items: %d", operationCount);
+            JOptionPane.showMessageDialog(I18nAddPanel.this, message, "INFO", JOptionPane.INFORMATION_MESSAGE);
         });
 
         operationPanel.add(addButton);
@@ -175,8 +161,7 @@ public class I18nAddPanel extends EasyPanel {
 
     private int innerProcessor(String sourceBaseStr, String targetBaseStr, String itemName) {
         if (StringUtils.isAnyEmpty(sourceBaseStr, targetBaseStr, itemName)) {
-            logger.error("params are invalid: sourceBaseStr: " + sourceBaseStr + ", targetBaseStr: " + targetBaseStr
-                    + ", itemName: " + itemName);
+            logger.error("params are invalid: sourceBaseStr: {}, targetBaseStr: {}, itemName: {}", sourceBaseStr, targetBaseStr, itemName);
             return -1;
         }
         File sourceBaseFile = new File(sourceBaseStr);
@@ -198,19 +183,19 @@ public class I18nAddPanel extends EasyPanel {
 
             Element sourceElement = getSourceElement(sourceFile, itemName);
             if (sourceElement == null) {
-                logger.warn("sourceElement is null: " + sourceFile);
+                logger.warn("sourceElement is null: {}", sourceFile);
                 continue;
             }
 
             File targetFile = new File(new File(targetBaseFile, sourceParentFile.getName()), "strings.xml");
             if (!targetFile.exists()) {
-                logger.warn("targetFile does not exist: " + sourceFile);
+                logger.warn("targetFile does not exist: {}", sourceFile);
                 continue;
             }
             try {
-                prePocess(targetFile);
+                preProcess(targetFile);
             } catch (IOException e) {
-                logger.error("prePocess failed.", e);
+                logger.error("preProcess failed.", e);
                 return -1;
             }
             boolean res = setTargetElement(targetFile, sourceElement, itemName);
@@ -224,24 +209,25 @@ public class I18nAddPanel extends EasyPanel {
                 logger.error("postProcess failed.", e);
                 return -1;
             }
-            logger.info("count: " + (++count) + ", in path: " + sourceFile + ", out path: " + targetFile);
+            logger.info("count: {}, in path: {}, out path: {}", ++count, sourceFile, targetFile);
         }
+        operationCount += count;
         logger.info("finish one cycle");
         return 0;
     }
 
     private Element getSourceElement(File sourceFile, String itemName) {
         if (!sourceFile.exists()) {
-            logger.warn("sourceFile does not exist: " + sourceFile);
+            logger.warn("sourceFile does not exist: {}", sourceFile);
             return null;
         }
         SAXBuilder builder = new SAXBuilder();
         Document sourceDoc = null;
         try (InputStream in = new FileInputStream(sourceFile)) {
             sourceDoc = builder.build(in);
-            logger.info("build source document: " + sourceFile);
+            logger.info("build source document: {}", sourceFile);
         } catch (JDOMException | IOException e) {
-            logger.error("build source document failed: " + sourceFile, e);
+            logger.error("build source document failed: {}", sourceFile);
             return null;
         }
         if (sourceDoc == null) {
@@ -264,9 +250,9 @@ public class I18nAddPanel extends EasyPanel {
         Document targetDoc;
         try {
             targetDoc = builder.build(targetFile);
-            logger.info("build target document: " + targetFile);
+            logger.info("build target document: {}", targetFile);
         } catch (JDOMException | IOException e) {
-            logger.error("build target document failed: " + targetFile, e);
+            logger.error("build target document failed: {}", targetFile);
             return false;
         }
         Element targetRoot = targetDoc.getRootElement();
@@ -308,7 +294,7 @@ public class I18nAddPanel extends EasyPanel {
         return true;
     }
 
-    private static void prePocess(File file) throws IOException {
+    private static void preProcess(File file) throws IOException {
         String content = FileUtils.readFileToString(file, CHARSET);
         for (Map.Entry<String, String> entry : replace.entrySet()) {
             content = content.replaceAll(entry.getKey(), entry.getValue());

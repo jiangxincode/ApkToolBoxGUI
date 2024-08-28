@@ -1,26 +1,8 @@
 package edu.jiangxin.apktoolbox.android.i18n;
 
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
+import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
@@ -28,8 +10,16 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
-import edu.jiangxin.apktoolbox.utils.Constants;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author jiangxin
@@ -37,9 +27,10 @@ import edu.jiangxin.apktoolbox.utils.Constants;
  *
  */
 public class I18nFindLongestPanel extends EasyPanel {
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    List<I18nInfo> infos = new ArrayList<I18nInfo>();
+    private final transient List<I18nInfo> infos = new ArrayList<>();
 
     private JTextField srcTextField;
 
@@ -90,8 +81,8 @@ public class I18nFindLongestPanel extends EasyPanel {
                 } else {
                     I18nInfo info = infos.get(0);
                     StringBuilder sb = new StringBuilder();
-                    sb.append("length: ").append(info.length).append(System.getProperty("line.separator"))
-                            .append("text: ").append(info.text).append(System.getProperty("line.separator"))
+                    sb.append("length: ").append(info.length).append(System.lineSeparator())
+                            .append("text: ").append(info.text).append(System.lineSeparator())
                             .append("path: ").append(info.path);
                     Toolkit.getDefaultToolkit().beep();
                     JOptionPane.showMessageDialog(I18nFindLongestPanel.this, sb.toString(), "INFO",
@@ -143,7 +134,7 @@ public class I18nFindLongestPanel extends EasyPanel {
         try {
             return file.getCanonicalPath();
         } catch (IOException e) {
-            logger.error("getCanonicalPath failed: " + file.getAbsolutePath(), e);
+            logger.error("getCanonicalPath failed: {}", file.getAbsolutePath());
             return null;
         }
     }
@@ -167,7 +158,7 @@ public class I18nFindLongestPanel extends EasyPanel {
                 try {
                     sourceDoc = builder.build(sourceFile);
                 } catch (JDOMException | IOException e) {
-                    logger.error("build failed: " + sourceFile, e);
+                    logger.error("build failed: {}", sourceFile);
                     continue;
                 }
                 Element sourceRoot = sourceDoc.getRootElement();
@@ -186,17 +177,12 @@ public class I18nFindLongestPanel extends EasyPanel {
             }
 
         }
-        Collections.sort(infos, new Comparator<I18nInfo>() {
-            @Override
-            public int compare(I18nInfo o1, I18nInfo o2) {
-                return o2.length - o1.length;
-            }
-        });
+        infos.sort((o1, o2) -> o2.length - o1.length);
 
         logger.info(infos);
     }
 
-    class I18nInfo {
+    static class I18nInfo {
         String path;
         String text;
         int length;

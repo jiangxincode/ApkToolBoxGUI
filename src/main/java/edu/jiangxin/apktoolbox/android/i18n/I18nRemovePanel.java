@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,6 +32,7 @@ import edu.jiangxin.apktoolbox.utils.Constants;
  *
  */
 public class I18nRemovePanel extends EasyPanel {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     List<I18nFindLongestPanel.I18nInfo> infos = new ArrayList<>();
@@ -138,10 +140,9 @@ public class I18nRemovePanel extends EasyPanel {
                     Matcher matcher = pattern.matcher(content);
                     String resultString = matcher.replaceAll("");
                     FileUtils.writeStringToFile(sourceFile, resultString, CHARSET);
-                    logger.info("remove success, count: " + (++count) + ", and file: " + sourceFile);
+                    logger.info("remove success, count: {}, and file: {}", ++count, sourceFile);
                 } catch (IOException e) {
-                    logger.error("remove exception: " + sourceFile, e);
-                    continue;
+                    logger.error("remove exception: {}", sourceFile);
                 }
             }
         }
