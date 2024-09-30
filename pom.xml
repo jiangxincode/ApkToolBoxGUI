@@ -12,7 +12,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <pdf.version>3.0.3</pdf.version>
         <poi.version>5.3.0</poi.version>
-        <log4j.version>2.24.0</log4j.version>
+        <log4j.version>2.24.1</log4j.version>
         <junit.version>5.11.1</junit.version>
         <surefire.version>3.5.0</surefire.version>
         <protobuf.version>4.28.2</protobuf.version>
