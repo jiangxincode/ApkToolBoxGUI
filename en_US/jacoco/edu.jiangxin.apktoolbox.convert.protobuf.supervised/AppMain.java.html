@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppMain.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.supervised</a> &gt; <span class="el_source">AppMain.java</span></div><h1>AppMain.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.supervised;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * Desktop application offering the functionality of the {@link ProtoToJson}-API.
+ * &lt;p&gt;
+ * The user has the option to select a binary protobuf message which the application will then attempt to decode into
+ * readable JSON. The result will then be displayed in an advanced text editor window for further processing.
+ * &lt;p&gt;
+ * Message decoding requires protobuf descriptors that are put into the {@link #CACHE_DIRECTORY} in advance by the user.
+ * Such descriptors can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for
+ * example:
+ * &lt;pre&gt;{@code
+ * protoc --descriptor_set_out foo.desc foo.proto
+ * }&lt;/pre&gt;
+ *
+ * @author Daniel Tischner {@literal &lt;zabuza.dev@gmail.com&gt;}
+ */
+<span class="nc" id="L33">public enum AppMain {</span>
+	;
+	/**
+	 * The directory to use for the descriptor cache.
+	 */
+	@SuppressWarnings({ &quot;WeakerAccess&quot;, &quot;CallToSystemGetenv&quot; })
+<span class="nc" id="L39">	public static final Path CACHE_DIRECTORY = Path.of(System.getenv(&quot;LOCALAPPDATA&quot;), &quot;ProtoToJson&quot;, &quot;descriptorCache&quot;);</span>
+	/**
+	 * Preferred width for the GUI.
+	 */
+	private static final int WIDTH = 700;
+	/**
+	 * Preferred height for the GUI.
+	 */
+	private static final int HEIGHT = 700;
+
+	/**
+	 * Starts the desktop application.
+	 * &lt;p&gt;
+	 * Prior to using this, the user has to populate the {@link #CACHE_DIRECTORY} with protobuf descriptor files. Such
+	 * descriptors can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for
+	 * example:
+	 * &lt;pre&gt;{@code
+	 * protoc --descriptor_set_out foo.desc foo.proto
+	 * }&lt;/pre&gt;
+	 * The user has the option to select a binary protobuf message which the application will then attempt to decode
+	 * into readable JSON. The result will then be displayed in an advanced text editor window for further processing.
+	 *
+	 * @param args Null or empty if the user should be given the option to select a binary protobuf message. Otherwise
+	 *             one argument which is the path to the binary protobuf message to convert, the application will then
+	 *             directly proceed to decoding this message instead of asking the user for a message first.
+	 */
+	@SuppressWarnings(&quot;OverlyBroadCatchBlock&quot;)
+	public static void main(final String[] args) {
+		try {
+<span class="nc" id="L68">			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());</span>
+
+			// Establish API
+<span class="nc" id="L71">			final DescriptorCache cache = AppMain.createCache();</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">			if (cache.isEmpty()) {</span>
+				//noinspection HardcodedLineSeparator
+<span class="nc" id="L74">				AppMain.displayShortMessage(</span>
+						&quot;The descriptor cache is empty, could not load any descriptor, check the cache directory:\n&quot;
+<span class="nc" id="L76">								+ AppMain.CACHE_DIRECTORY.toAbsolutePath(), &quot;Empty descriptor cache&quot;,</span>
+						MessageType.ERROR);
+<span class="nc" id="L78">				return;</span>
+			}
+<span class="nc" id="L80">			final ProtoToJson protoToJson = ProtoToJson.fromCache(cache);</span>
+
+			// Pick which file to decode
+<span class="nc" id="L83">			final Optional&lt;Path&gt; protoFile = AppMain.chooseProtoFile(args);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">			if (protoFile.isEmpty()) {</span>
+<span class="nc" id="L85">				return;</span>
+			}
+
+			// Decode to JSON
+			final String protoJson;
+			//noinspection NestedTryStatement
+			try {
+<span class="nc" id="L92">				protoJson = protoToJson.toJson(protoFile.orElseThrow());</span>
+<span class="nc" id="L93">			} catch (final NoDescriptorFoundException e) {</span>
+				//noinspection HardcodedLineSeparator
+<span class="nc" id="L95">				AppMain.displayShortMessage(</span>
+						&quot;Unable to find a descriptor matching the given JSON message, check the cache directory:\n&quot;
+<span class="nc" id="L97">								+ AppMain.CACHE_DIRECTORY.toAbsolutePath(), &quot;No matching descriptor found&quot;,</span>
+						MessageType.ERROR);
+<span class="nc" id="L99">				return;</span>
+<span class="nc" id="L100">			}</span>
+
+			// Display the result
+<span class="nc" id="L103">			AppMain.displayJson(protoJson);</span>
+<span class="nc" id="L104">		} catch (final Throwable t) {</span>
+<span class="nc" id="L105">			final StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L106">			final PrintWriter pw = new PrintWriter(sw);</span>
+<span class="nc" id="L107">			t.printStackTrace(pw);</span>
+<span class="nc" id="L108">			AppMain.displayLongMessage(sw.toString(), &quot;Error&quot;, MessageType.ERROR);</span>
+<span class="nc" id="L109">		}</span>
+<span class="nc" id="L110">	}</span>
+
+	/**
+	 * Decides which binary protobuf message file to choose for decoding. Either given by {code args} or by asking the
+	 * user to choose a file.
+	 *
+	 * @param args Null or empty if the user should be given the option to select a binary protobuf message. Otherwise
+	 *             one argument which is the path to the binary protobuf message to convert, the method will then
+	 *             directly choose this file instead of asking the user for a file first.
+	 *
+	 * @return The selected binary protobuf message or empty if the user cancelled the process.
+	 */
+	private static Optional&lt;Path&gt; chooseProtoFile(final String[] args) {
+<span class="nc bnc" id="L123" title="All 4 branches missed.">		if (args != null &amp;&amp; args.length &gt; 0) {</span>
+<span class="nc" id="L124">			return Optional.of(Path.of(args[0]));</span>
+		}
+
+<span class="nc" id="L127">		@SuppressWarnings(&quot;AccessOfSystemProperties&quot;) final File workingDirectory =</span>
+<span class="nc" id="L128">				new File(System.getProperty(&quot;user.dir&quot;));</span>
+<span class="nc" id="L129">		final JFileChooser fileChooser = new JFileChooser(workingDirectory);</span>
+<span class="nc" id="L130">		fileChooser.setDialogTitle(&quot;Choose a protobuf message file&quot;);</span>
+
+<span class="nc bnc" id="L132" title="All 2 branches missed.">		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {</span>
+<span class="nc" id="L133">			return Optional.empty();</span>
+		}
+
+<span class="nc" id="L136">		return Optional.of(fileChooser.getSelectedFile()</span>
+<span class="nc" id="L137">				.toPath());</span>
+	}
+
+	private static DescriptorCache createCache() throws IOException {
+<span class="nc" id="L141">		Files.createDirectories(AppMain.CACHE_DIRECTORY);</span>
+<span class="nc" id="L142">		return DescriptorCache.fromDirectory(AppMain.CACHE_DIRECTORY);</span>
+	}
+
+	/**
+	 * Displays the given JSON text in an advanced text editor window.
+	 *
+	 * @param json The JSON to display, not null
+	 */
+	private static void displayJson(final String json) {
+<span class="nc" id="L151">		Objects.requireNonNull(json);</span>
+
+<span class="nc" id="L153">		AppMain.displayLongMessage(json, &quot;Decoded JSON message&quot;, MessageType.PLAIN);</span>
+<span class="nc" id="L154">	}</span>
+
+	/**
+	 * Displays a long text message in an advanced text editor window.
+	 *
+	 * @param message     The message to display, not null
+	 * @param title       The title of the window, not null
+	 * @param messageType The type of the message, not null
+	 */
+	private static void displayLongMessage(final String message, final String title, final MessageType messageType) {
+<span class="nc" id="L164">		Objects.requireNonNull(message);</span>
+<span class="nc" id="L165">		Objects.requireNonNull(title);</span>
+<span class="nc" id="L166">		Objects.requireNonNull(messageType);</span>
+
+<span class="nc" id="L168">		final RSyntaxTextArea textArea = new RSyntaxTextArea(message);</span>
+<span class="nc" id="L169">		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);</span>
+<span class="nc" id="L170">		textArea.setCodeFoldingEnabled(true);</span>
+<span class="nc" id="L171">		textArea.setEditable(false);</span>
+
+<span class="nc" id="L173">		final RTextScrollPane scrollPane = new RTextScrollPane(textArea);</span>
+<span class="nc" id="L174">		scrollPane.setPreferredSize(new Dimension(AppMain.WIDTH, AppMain.HEIGHT));</span>
+
+		//noinspection MagicConstant
+<span class="nc" id="L177">		JOptionPane.showMessageDialog(null, scrollPane, title, messageType.getCode());</span>
+<span class="nc" id="L178">	}</span>
+
+	/**
+	 * Displays a short text message in small popup window.
+	 *
+	 * @param message     The message to display, not null
+	 * @param title       The title of the window, not null
+	 * @param messageType The type of the message, not null
+	 */
+	@SuppressWarnings({ &quot;SameParameterValue&quot;, &quot;MagicConstant&quot; })
+	private static void displayShortMessage(final String message, final String title, final MessageType messageType) {
+<span class="nc" id="L189">		Objects.requireNonNull(message);</span>
+<span class="nc" id="L190">		Objects.requireNonNull(title);</span>
+<span class="nc" id="L191">		Objects.requireNonNull(messageType);</span>
+
+<span class="nc" id="L193">		JOptionPane.showMessageDialog(null, message, title, messageType.getCode());</span>
+<span class="nc" id="L194">	}</span>
+
+	/**
+	 * Dialog message types, with codes supported by {@link JOptionPane}.
+	 */
+<span class="nc" id="L199">	private enum MessageType {</span>
+		/**
+		 * A plain message, no additional indicators or decoration.
+		 */
+<span class="nc" id="L203">		PLAIN(JOptionPane.PLAIN_MESSAGE),</span>
+		/**
+		 * An error message.
+		 */
+<span class="nc" id="L207">		ERROR(JOptionPane.ERROR_MESSAGE),</span>
+		/**
+		 * An info message.
+		 */
+<span class="nc" id="L211">		INFO(JOptionPane.INFORMATION_MESSAGE),</span>
+		/**
+		 * A warning message.
+		 */
+<span class="nc" id="L215">		WARNING(JOptionPane.WARNING_MESSAGE),</span>
+		/**
+		 * A question message.
+		 */
+<span class="nc" id="L219">		QUESTION(JOptionPane.QUESTION_MESSAGE);</span>
+
+		/**
+		 * The corresponding code as supported by {@link JOptionPane}.
+		 */
+		private final int code;
+
+		/**
+		 * Creates a message type.
+		 *
+		 * @param code The corresponding code as supported by {@link JOptionPane}
+		 */
+<span class="nc" id="L231">		MessageType(final int code) {</span>
+<span class="nc" id="L232">			this.code = code;</span>
+<span class="nc" id="L233">		}</span>
+
+		/**
+		 * Gets the code of the message type, as supported by {@link JOptionPane}.
+		 *
+		 * @return The code of the message type
+		 */
+		@SuppressWarnings(&quot;WeakerAccess&quot;)
+		public int getCode() {
+<span class="nc" id="L242">			return code;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

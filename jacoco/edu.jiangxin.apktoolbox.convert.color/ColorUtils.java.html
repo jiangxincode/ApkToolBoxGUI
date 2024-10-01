@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColorUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color</a> &gt; <span class="el_source">ColorUtils.java</span></div><h1>ColorUtils.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color;
+
+import edu.jiangxin.apktoolbox.convert.color.colorspace.CielabColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.CmykColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.HsbColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.colorspace.HslColorSpace;
+
+import java.awt.*;
+import java.awt.color.ColorSpace;
+
+<span class="nc" id="L11">public class ColorUtils {</span>
+    public static Color hex2Color(String hexColor) {
+<span class="fc" id="L13">        return Color.decode(hexColor);</span>
+    }
+
+    public static String color2Hex(Color color) {
+<span class="fc" id="L17">        return String.format(&quot;0x%02X%02X%02X&quot;, color.getRed(), color.getGreen(), color.getBlue());</span>
+    }
+
+    public static Color hsb2Color(int hueI, int saturationI, int brightnessI) {
+<span class="nc" id="L21">        float[] hsbVal = hsbInt2Float(new int[]{hueI, saturationI, brightnessI});</span>
+<span class="nc" id="L22">        ColorSpace colorSpace = HsbColorSpace.getInstance();</span>
+<span class="nc" id="L23">        float[] rgbVal = colorSpace.toRGB(hsbVal);</span>
+<span class="nc" id="L24">        return new Color(rgbVal[0], rgbVal[1], rgbVal[2]);</span>
+    }
+
+    public static int[] color2Hsb(Color color) {
+<span class="nc" id="L28">        float[] rgbVal = color.getRGBColorComponents(null);</span>
+<span class="nc" id="L29">        ColorSpace colorSpace = HsbColorSpace.getInstance();</span>
+<span class="nc" id="L30">        float[] hsbVal = colorSpace.fromRGB(rgbVal);</span>
+<span class="nc" id="L31">        return hsbFloat2Int(hsbVal);</span>
+    }
+
+    public static Color hsl2Color(int hueI, int saturationI, int lightnessI) {
+<span class="nc" id="L35">        float[] hslVal = hslInt2Float(new int[]{hueI, saturationI, lightnessI});</span>
+<span class="nc" id="L36">        ColorSpace colorSpace = HslColorSpace.getInstance();</span>
+<span class="nc" id="L37">        float[] rgbVal = colorSpace.toRGB(hslVal);</span>
+<span class="nc" id="L38">        return new Color(rgbVal[0], rgbVal[1], rgbVal[2]);</span>
+    }
+
+    public static int[] color2Hsl(Color color) {
+<span class="nc" id="L42">        float[] rgbVal = color.getRGBColorComponents(null);</span>
+<span class="nc" id="L43">        ColorSpace colorSpace = HslColorSpace.getInstance();</span>
+<span class="nc" id="L44">        float[] hslVal = colorSpace.fromRGB(rgbVal);</span>
+<span class="nc" id="L45">        return hslFloat2Int(hslVal);</span>
+    }
+
+    public static Color cmyk2Color(int cyanI, int magentaI, int yellowI, int keyI) {
+<span class="nc" id="L49">        float[] cmykVal = cmykInt2Float(new int[]{cyanI, magentaI, yellowI, keyI});</span>
+<span class="nc" id="L50">        ColorSpace colorSpace = CmykColorSpace.getInstance();</span>
+<span class="nc" id="L51">        float[] rgbVal = colorSpace.toRGB(cmykVal);</span>
+<span class="nc" id="L52">        return new Color(rgbVal[0], rgbVal[1], rgbVal[2]);</span>
+    }
+
+    public static int[] color2Cmyk(Color color) {
+<span class="nc" id="L56">        float[] rgbVal = color.getRGBColorComponents(null);</span>
+<span class="nc" id="L57">        ColorSpace colorSpace = CmykColorSpace.getInstance();</span>
+<span class="nc" id="L58">        float[] cmykVal = colorSpace.fromRGB(rgbVal);</span>
+<span class="nc" id="L59">        return cmykFloat2Int(cmykVal);</span>
+    }
+
+    public static Color cielab2Color(int L, int a, int b) {
+<span class="nc" id="L63">        float[] cieLabVal = cielabInt2Float(new int[]{L, a, b});</span>
+<span class="nc" id="L64">        ColorSpace colorSpace = CielabColorSpace.getInstance();</span>
+<span class="nc" id="L65">        float[] rgbVal = colorSpace.toRGB(cieLabVal);</span>
+<span class="nc" id="L66">        return new Color(rgbVal[0], rgbVal[1], rgbVal[2]);</span>
+    }
+
+    public static int[] color2Cielab(Color color) {
+<span class="nc" id="L70">        float[] rgbVal = color.getRGBColorComponents(null);</span>
+<span class="nc" id="L71">        ColorSpace colorSpace = CielabColorSpace.getInstance();</span>
+<span class="nc" id="L72">        float[] cieLabVal = colorSpace.fromRGB(rgbVal);</span>
+<span class="nc" id="L73">        return cielabFloat2Int(cieLabVal);</span>
+    }
+
+    public static float[] rgbInt2Float(int[] value) {
+<span class="nc" id="L77">        float red = value[0] / 255f;</span>
+<span class="nc" id="L78">        float green = value[1] / 255f;</span>
+<span class="nc" id="L79">        float blue = value[2] / 255f;</span>
+<span class="nc" id="L80">        return new float[]{red, green, blue};</span>
+    }
+
+    public static int[] rgbFloat2Int(float[] value) {
+<span class="nc" id="L84">        int red = (int) (value[0] * 255);</span>
+<span class="nc" id="L85">        int green = (int) (value[1] * 255);</span>
+<span class="nc" id="L86">        int blue = (int) (value[2] * 255);</span>
+<span class="nc" id="L87">        return new int[]{red, green, blue};</span>
+    }
+
+    public static int[] hsbFloat2Int(float[] value) {
+<span class="nc" id="L91">        int hue = (int) (value[0] * 360);</span>
+<span class="nc" id="L92">        int saturation = (int) (value[1] * 100);</span>
+<span class="nc" id="L93">        int brightness = (int) (value[2] * 100);</span>
+<span class="nc" id="L94">        return new int[]{hue, saturation, brightness};</span>
+    }
+
+    public static float[] hsbInt2Float(int[] value) {
+<span class="nc" id="L98">        float hue = value[0] / 360f;</span>
+<span class="nc" id="L99">        float saturation = value[1] / 100f;</span>
+<span class="nc" id="L100">        float brightness = value[2] / 100f;</span>
+<span class="nc" id="L101">        return new float[]{hue, saturation, brightness};</span>
+    }
+
+    public static int[] hslFloat2Int(float[] value) {
+<span class="nc" id="L105">        int hue = (int) (value[0] * 360);</span>
+<span class="nc" id="L106">        int saturation = (int) (value[1] * 100);</span>
+<span class="nc" id="L107">        int lightness = (int) (value[2] * 100);</span>
+<span class="nc" id="L108">        return new int[]{hue, saturation, lightness};</span>
+    }
+
+    public static float[] hslInt2Float(int[] value) {
+<span class="nc" id="L112">        float hue = value[0] / 360f;</span>
+<span class="nc" id="L113">        float saturation = value[1] / 100f;</span>
+<span class="nc" id="L114">        float lightness = value[2] / 100f;</span>
+<span class="nc" id="L115">        return new float[]{hue, saturation, lightness};</span>
+    }
+
+
+    public static int[] cmykFloat2Int(float[] value) {
+<span class="nc" id="L120">        int cyan = (int) (value[0] * 100);</span>
+<span class="nc" id="L121">        int magenta = (int) (value[1] * 100);</span>
+<span class="nc" id="L122">        int yellow = (int) (value[2] * 100);</span>
+<span class="nc" id="L123">        int key = (int) (value[3] * 100);</span>
+<span class="nc" id="L124">        return new int[]{cyan, magenta, yellow, key};</span>
+    }
+
+    public static float[] cmykInt2Float(int[] value) {
+<span class="nc" id="L128">        float cyan = value[0] / 100f;</span>
+<span class="nc" id="L129">        float magenta = value[1] / 100f;</span>
+<span class="nc" id="L130">        float yellow = value[2] / 100f;</span>
+<span class="nc" id="L131">        float key = value[3] / 100f;</span>
+<span class="nc" id="L132">        return new float[]{cyan, magenta, yellow, key};</span>
+    }
+
+
+    public static int[] cielabFloat2Int(float[] value) {
+<span class="nc" id="L137">        int L = (int) value[0];</span>
+<span class="nc" id="L138">        int a = (int) value[1];</span>
+<span class="nc" id="L139">        int b = (int) value[2];</span>
+<span class="nc" id="L140">        return new int[]{L, a, b};</span>
+    }
+
+    public static float[] cielabInt2Float(int[] value) {
+<span class="nc" id="L144">        float L = (float) value[0];</span>
+<span class="nc" id="L145">        float a = (float) value[1];</span>
+<span class="nc" id="L146">        float b = (float) value[2];</span>
+<span class="nc" id="L147">        return new float[]{L, a, b};</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
