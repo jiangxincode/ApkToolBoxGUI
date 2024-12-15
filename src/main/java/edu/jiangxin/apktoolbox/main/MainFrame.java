@@ -316,6 +316,10 @@ public class MainFrame extends EasyFrame {
         jdDuoMenuItem.addActionListener(new ChangeMenuToPluginJdDuoListener());
         reverseMenu.add(jdDuoMenuItem);
 
+        JMenuItem jdaMenuItem = new JMenuItem(bundle.getString("reverse.jda.title"));
+        jdaMenuItem.addActionListener(new ChangeMenuToPluginJdaListener());
+        reverseMenu.add(jdaMenuItem);
+
         JMenuItem jADXMenuItem = new JMenuItem(bundle.getString("reverse.jadx.title"));
         jADXMenuItem.addActionListener(new ChangeMenuToPluginJadxListener());
         reverseMenu.add(jADXMenuItem);
