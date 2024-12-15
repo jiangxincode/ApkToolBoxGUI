@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlarmTreeTableDataModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.android.dumpsys.alarm</a> &gt; <span class="el_source">AlarmTreeTableDataModel.java</span></div><h1>AlarmTreeTableDataModel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
+
+import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
+import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTableModel;
+
+public class AlarmTreeTableDataModel extends MyAbstractTreeTableModel {
+<span class="nc" id="L7">    static protected String[] columnNames = { &quot;Object ID&quot;, &quot;Package&quot;, &quot;Alarm Type&quot;, &quot;When&quot;, &quot;Fire DateTime&quot; };</span>
+
+<span class="nc" id="L9">    static protected Class&lt;?&gt;[] columnTypes = { MyTreeTableModel.class, String.class, String.class, String.class, String.class };</span>
+
+    public AlarmTreeTableDataModel(AlarmTreeTableDataNode rootNode) {
+<span class="nc" id="L12">        super(rootNode);</span>
+<span class="nc" id="L13">        root = rootNode;</span>
+<span class="nc" id="L14">    }</span>
+
+    public Object getChild(Object parent, int index) {
+<span class="nc" id="L17">        return ((AlarmTreeTableDataNode) parent).getChildren().get(index);</span>
+    }
+
+
+    public int getChildCount(Object parent) {
+<span class="nc" id="L22">        return ((AlarmTreeTableDataNode) parent).getChildren().size();</span>
+    }
+
+
+    public int getColumnCount() {
+<span class="nc" id="L27">        return columnNames.length;</span>
+    }
+
+
+    public String getColumnName(int column) {
+<span class="nc" id="L32">        return columnNames[column];</span>
+    }
+
+
+    public Class&lt;?&gt; getColumnClass(int column) {
+<span class="nc" id="L37">        return columnTypes[column];</span>
+    }
+
+    public Object getValueAt(Object node, int column) {
+<span class="nc bnc" id="L41" title="All 6 branches missed.">        switch (column) {</span>
+            case 0:
+<span class="nc" id="L43">                return ((AlarmTreeTableDataNode) node).getObjectId();</span>
+            case 1:
+<span class="nc" id="L45">                return ((AlarmTreeTableDataNode) node).getAppPackage();</span>
+            case 2:
+<span class="nc" id="L47">                return ((AlarmTreeTableDataNode) node).getAlarmType();</span>
+            case 3:
+<span class="nc" id="L49">                return ((AlarmTreeTableDataNode) node).getWhen();</span>
+            case 4:
+<span class="nc" id="L51">                return ((AlarmTreeTableDataNode) node).getFireDateTime();</span>
+            default:
+                break;
+        }
+<span class="nc" id="L55">        return null;</span>
+    }
+
+    public boolean isCellEditable(Object node, int column) {
+<span class="nc" id="L59">        return true; // Important to activate TreeExpandListener</span>
+    }
+
+    public void setValueAt(Object aValue, Object node, int column) {
+<span class="nc" id="L63">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
