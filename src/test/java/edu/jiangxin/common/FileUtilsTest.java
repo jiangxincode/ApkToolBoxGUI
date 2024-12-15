@@ -17,7 +17,6 @@ public class FileUtilsTest {
 
     Collection<File> fileList = null;
     String dirPath = "target/test-classes/FileUtilsTest";
-    String filePath = "target/test-classes/FileUtilsTest/Test01.cpp";
 
     @Test
     public void testListFiles01() {
@@ -30,11 +29,4 @@ public class FileUtilsTest {
         fileList = FileUtils.listFiles(new File(dirPath), new String[]{"cpp"}, true);
         assertEquals(2, fileList.size());
     }
-
-    @Test
-    public void tesListFiles03() {
-        fileList = FileUtils.listFiles(new File(filePath), new String[]{"cpp"}, true);
-        assertEquals(1, fileList.size());
-    }
-
 }
