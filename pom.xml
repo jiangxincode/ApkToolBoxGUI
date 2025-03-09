@@ -11,11 +11,11 @@
         <sonar.organization>jiangxincode-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <pdf.version>3.0.3</pdf.version>
-        <poi.version>5.3.0</poi.version>
+        <poi.version>5.4.0</poi.version>
         <log4j.version>2.24.3</log4j.version>
         <junit.version>5.11.4</junit.version>
         <surefire.version>3.5.2</surefire.version>
-        <protobuf.version>4.29.2</protobuf.version>
+        <protobuf.version>4.29.3</protobuf.version>
     </properties>
     <dependencies>
         <dependency>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
-            <version>1.79</version>
+            <version>1.80</version>
         </dependency>
         <dependency>
             <groupId>com.github.junrar</groupId>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
+            <version>1.10.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.jiangxincode</groupId>
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20240303</version>
+            <version>20250107</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
@@ -245,7 +245,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.21.0</version>
+                            <version>10.21.1</version>
                         </dependency>
                     </dependencies>
                     <configuration>
