@@ -81,6 +81,7 @@ public class DuplicateSearchPanel extends EasyPanel {
 
         isSizeChecked = new JCheckBox("Size");
         isSizeChecked.setSelected(true);
+        isSizeChecked.setEnabled(false);
         isFileNameChecked = new JCheckBox("Filename");
         isMD5Checked = new JCheckBox("MD5");
         isModifiedTimeChecked = new JCheckBox("Last Modified Time");
@@ -157,11 +158,10 @@ public class DuplicateSearchPanel extends EasyPanel {
 
     public String getComparedKey(File file) {
         StringBuilder sb = new StringBuilder();
-        if (isSizeChecked.isSelected()) {
-            sb.append("[Size][");
-            sb.append(DigestUtils.md5Hex(String.valueOf(file.length())));
-            sb.append("]");
-        }
+        sb.append("[Size][");
+        sb.append(DigestUtils.md5Hex(String.valueOf(file.length())));
+        sb.append("]");
+        
         if (isFileNameChecked.isSelected()) {
             sb.append("[Filename][");
             sb.append(DigestUtils.md5Hex(file.getName()));
