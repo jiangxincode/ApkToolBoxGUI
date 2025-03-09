@@ -19,9 +19,14 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DuplicateSearchPanel extends EasyPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private JTabbedPane tabbedPane;
@@ -30,7 +35,6 @@ public class DuplicateSearchPanel extends EasyPanel {
 
     private FileListPanel fileListPanel;
 
-    private JCheckBox isSizeChecked;
     private JCheckBox isFileNameChecked;
     private JCheckBox isMD5Checked;
     private JCheckBox isModifiedTimeChecked;
@@ -48,6 +52,8 @@ public class DuplicateSearchPanel extends EasyPanel {
     private JButton searchButton;
     private JButton cancelButton;
 
+    private JProgressBar progressBar;
+
     private JMenuItem openDirMenuItem;
     private JMenuItem deleteFileMenuItem;
     private JMenuItem deleteFilesInSameDirMenuItem;
@@ -56,6 +62,7 @@ public class DuplicateSearchPanel extends EasyPanel {
     private Thread searchThread;
 
     final private Map<String, List<File>> duplicateFileGroupMap = new HashMap<>();
+
 
     @Override
     public void initUI() {
@@ -79,7 +86,7 @@ public class DuplicateSearchPanel extends EasyPanel {
         checkOptionPanel.setLayout(new BoxLayout(checkOptionPanel, BoxLayout.X_AXIS));
         checkOptionPanel.setBorder(BorderFactory.createTitledBorder("Check Options"));
 
-        isSizeChecked = new JCheckBox("Size");
+        JCheckBox isSizeChecked = new JCheckBox("Size");
         isSizeChecked.setSelected(true);
         isSizeChecked.setEnabled(false);
         isFileNameChecked = new JCheckBox("Filename");
@@ -116,6 +123,9 @@ public class DuplicateSearchPanel extends EasyPanel {
         operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));
         operationPanel.setBorder(BorderFactory.createTitledBorder("Operations"));
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        
         searchButton = new JButton("Search");
         cancelButton = new JButton("Cancel");
         searchButton.addActionListener(new OperationButtonActionListener());
@@ -126,6 +136,10 @@ public class DuplicateSearchPanel extends EasyPanel {
         operationPanel.add(cancelButton);
         operationPanel.add(Box.createHorizontalGlue());
 
+        progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setString("Ready");
+
         optionPanel.add(fileListPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(checkOptionPanel);
@@ -133,6 +147,8 @@ public class DuplicateSearchPanel extends EasyPanel {
         optionPanel.add(searchOptionPanel);
         optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         optionPanel.add(operationPanel);
+		optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        optionPanel.add(progressBar);
     }
 
     private void createResultPanel() {
@@ -365,10 +381,13 @@ public class DuplicateSearchPanel extends EasyPanel {
     }
 
     class SearchThread extends Thread {
-        private String[] extensions;
-        private boolean isRecursiveSearched;
-        private boolean isHiddenFileSearched;
-        private Map<String, List<File>> duplicateFileGroupMap;
+        private final ExecutorService executorService;
+        private final AtomicInteger processedFiles = new AtomicInteger(0);
+        private int totalFiles = 0;
+        private final String[] extensions;
+        private final boolean isRecursiveSearched;
+        private final boolean isHiddenFileSearched;
+        private final Map<String, List<File>> duplicateFileGroupMap;
 
         public SearchThread(String[] extensions, boolean isRecursiveSearched, boolean isHiddenFileSearched, Map<String, List<File>> duplicateFileGroupMap) {
             super();
@@ -376,34 +395,111 @@ public class DuplicateSearchPanel extends EasyPanel {
             this.isRecursiveSearched = isRecursiveSearched;
             this.isHiddenFileSearched = isHiddenFileSearched;
             this.duplicateFileGroupMap = duplicateFileGroupMap;
+            this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+            SwingUtilities.invokeLater(() -> {
+                progressBar.setValue(0);
+                progressBar.setString("Starting search...");
+            });
         }
 
         @Override
         public void run() {
-            super.run();
-            duplicateFileGroupMap.clear();
-            SwingUtilities.invokeLater(() -> {
-                resultTableModel.setRowCount(0);
-            });
-            List<File> fileList = fileListPanel.getFileList();
+            try {
+                duplicateFileGroupMap.clear();
+                SwingUtilities.invokeLater(() -> resultTableModel.setRowCount(0));
 
-            Set<File> fileSet = new TreeSet<>(fileList);
-            for (File file : fileList) {
-                fileSet.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, isRecursiveSearched));
+                List<File> fileList = fileListPanel.getFileList();
+                Set<File> fileSet = new TreeSet<>(fileList);
+                for (File file : fileList) {
+                    fileSet.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, isRecursiveSearched));
+                }
+
+                // 1. Group files by size first
+                Map<Long, List<File>> sizeGroups = new HashMap<>();
+                for (File file : fileSet) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
+                    if (file.isHidden() && !isHiddenFileSearched) {
+                        continue;
+                    }
+                    sizeGroups.computeIfAbsent(file.length(), k -> new ArrayList<>()).add(file);
+                }
+
+                // 2. Only process groups with duplicate sizes
+                List<Future<?>> futures = new ArrayList<>();
+                totalFiles = fileSet.size();
+                updateProgress();
+
+                for (Map.Entry<Long, List<File>> entry : sizeGroups.entrySet()) {
+                    if (entry.getValue().size() > 1) { // Only process groups with duplicates
+                        futures.add(executorService.submit(() -> {
+                            processFileGroup(entry.getValue());
+                            return null;
+                        }));
+                    } else {
+                        // Count single files directly
+                        incrementProcessedFiles();
+                    }
+                }
+
+                // Wait for all tasks to complete
+                for (Future<?> future : futures) {
+                    try {
+                        future.get();
+                    } catch (InterruptedException e) {
+                        logger.error("Search interrupted", e);
+                        Thread.currentThread().interrupt(); // Restore interrupted status
+                        return;
+                    }
+                }
+
+                showResult();
+            } catch (Exception e) {
+                logger.error("Search failed", e);
+                SwingUtilities.invokeLater(() -> progressBar.setString("Search failed"));
+            } finally {
+                executorService.shutdown();
             }
+        }
 
-            for (File file : fileSet) {
+        private void processFileGroup(List<File> files) {
+            Map<String, List<File>> groupMap = new HashMap<>();
+            for (File file : files) {
                 if (Thread.currentThread().isInterrupted()) {
-                    break;
+                    return;
                 }
-                if (file.isHidden() && !isHiddenFileSearched) {
-                    continue;
-                }
-                String hash = getComparedKey(file);
-                List<File> list = duplicateFileGroupMap.computeIfAbsent(hash, k -> new LinkedList<>());
-                list.add(file);
+                String key = getComparedKey(file);
+                groupMap.computeIfAbsent(key, k -> new ArrayList<>()).add(file);
+                incrementProcessedFiles();
             }
-            showResult();
+
+            // Merge results to main map
+            synchronized (duplicateFileGroupMap) {
+                for (Map.Entry<String, List<File>> entry : groupMap.entrySet()) {
+                    if (entry.getValue().size() > 1) {
+                        duplicateFileGroupMap.put(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
+        }
+
+        private void incrementProcessedFiles() {
+            processedFiles.incrementAndGet();
+            updateProgress();
+        }
+
+        private void updateProgress() {
+            if (totalFiles > 0) {
+                SwingUtilities.invokeLater(() -> {
+                    int processed = processedFiles.get();
+                    int percentage = (int) ((processed * 100.0) / totalFiles);
+                    progressBar.setValue(percentage);
+                    progressBar.setString(String.format("Processing: %d/%d files (%d%%)", 
+                        processed, totalFiles, percentage));
+                });
+            }
         }
     }
 }
