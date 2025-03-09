@@ -382,6 +382,9 @@ public class DuplicateSearchPanel extends EasyPanel {
         public void run() {
             super.run();
             duplicateFileGroupMap.clear();
+            SwingUtilities.invokeLater(() -> {
+                resultTableModel.setRowCount(0);
+            });
             List<File> fileList = fileListPanel.getFileList();
 
             Set<File> fileSet = new TreeSet<>(fileList);
