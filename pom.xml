@@ -15,7 +15,7 @@
         <log4j.version>2.24.3</log4j.version>
         <junit.version>5.11.4</junit.version>
         <surefire.version>3.5.2</surefire.version>
-        <protobuf.version>4.30.1</protobuf.version>
+        <protobuf.version>4.30.2</protobuf.version>
     </properties>
     <dependencies>
         <dependency>
