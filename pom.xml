@@ -13,7 +13,8 @@
         <pdf.version>3.0.4</pdf.version>
         <poi.version>5.4.1</poi.version>
         <log4j.version>2.24.3</log4j.version>
-        <junit.version>5.11.4</junit.version>
+        <junit.jupiter.version>5.12.1</junit.jupiter.version>
+        <junit.platform.version>1.12.2</junit.platform.version>
         <surefire.version>3.5.2</surefire.version>
         <protobuf.version>4.30.2</protobuf.version>
     </properties>
@@ -161,13 +162,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
