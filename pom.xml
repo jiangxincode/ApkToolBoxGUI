@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.jiangxin.apktoolbox</groupId>
     <artifactId>ApkToolBoxGUI</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <description>ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. </description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
