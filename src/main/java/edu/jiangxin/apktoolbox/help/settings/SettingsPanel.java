@@ -31,6 +31,10 @@ public class SettingsPanel extends EasyPanel {
         String dependencyPathTitle = bundle.getString("help.settings.dependency.path");
         tabbedPane.addTab(dependencyPathTitle, null, dependencyPathPanel, dependencyPathTitle);
 
+        EasyChildTabbedPanel addToStartupPanel = new AddToStartupPanel();
+        String addToStartupTitle = bundle.getString("help.settings.add.to.startup");
+        tabbedPane.addTab(addToStartupTitle, null, addToStartupPanel, addToStartupTitle);
+
         tabbedPane.addChangeListener(e -> {
             EasyChildTabbedPanel selectedPanel = (EasyChildTabbedPanel) tabbedPane.getSelectedComponent();
             selectedPanel.onTabSelected();
