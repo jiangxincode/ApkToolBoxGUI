@@ -56,13 +56,13 @@ public final class RarChecker extends FileChecker {
             result = true;
         } catch (CrcErrorException e) {
             if (DEBUG) {
-                logger.error("[CrcErrorException]password is incorrect: " + password);
+                logger.error("[CrcErrorException]password is incorrect: {}", password);
             }
         } catch (UnsupportedRarV5Exception e) {
             throw new UnsupportedVersionException(e);
         } catch (RarException e) {
             if (DEBUG) {
-                logger.error("[RarException]password is incorrect: " + password);
+                logger.error("[RarException]password is incorrect: {}", password);
             }
         } catch (IOException e) {
             throw new UnknownException(e);

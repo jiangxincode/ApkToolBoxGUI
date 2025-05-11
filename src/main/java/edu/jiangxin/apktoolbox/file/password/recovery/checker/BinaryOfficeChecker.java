@@ -70,12 +70,10 @@ public class BinaryOfficeChecker extends FileChecker {
                 }
                 default -> logger.error("Not supported: {}", file.getName());
             }
-        } catch (FileNotFoundException e) {
-            logger.error("checkPassword FileNotFoundException");
-        } catch (IOException e) {
-            logger.error("checkPassword IOException");
-        } catch (EncryptedDocumentException e) {
-            logger.error("checkPassword EncryptedDocumentException");
+        } catch (Exception e) {
+            if (DEBUG) {
+                logger.error("checkPassword: {}", e.getClass());
+            }
         }
         return result;
     }

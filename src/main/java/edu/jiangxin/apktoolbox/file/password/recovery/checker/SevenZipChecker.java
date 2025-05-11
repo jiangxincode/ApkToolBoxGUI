@@ -54,7 +54,7 @@ public final class SevenZipChecker extends FileChecker {
     @Override
     public boolean checkPassword(String password) {
         if (DEBUG) {
-            logger.info("checkPassword: " + password);
+            logger.info("checkPassword: {}", password);
         }
         if (isSplitFile) {
             SevenZFile.Builder builder = new SevenZFile.Builder();

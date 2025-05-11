@@ -50,7 +50,7 @@ public final class ZipChecker extends FileChecker {
             result = true;
         } catch (ZipException e) {
             if (DEBUG) {
-                logger.error("checkPassword", e);
+                logger.error("checkPassword: ", e.getClass());
             }
         } catch (IOException e) {
             throw new UnknownException(e);

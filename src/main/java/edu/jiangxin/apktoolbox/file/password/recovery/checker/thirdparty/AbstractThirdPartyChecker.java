@@ -53,7 +53,9 @@ public abstract class AbstractThirdPartyChecker extends FileChecker {
             int exitValue = exec.execute(commandLine);
             result = (exitValue == 0);
         } catch (IOException e) {
-            logger.error("checkPassword IOException");
+            if (DEBUG) {
+                logger.error("checkPassword: IOException");
+            }
         }
         return result;
     }

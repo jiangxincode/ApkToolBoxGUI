@@ -46,12 +46,10 @@ public class XmlBasedOfficeChecker extends FileChecker {
             EncryptionInfo info = new EncryptionInfo(pfs);
             Decryptor decryptor = Decryptor.getInstance(info);
             result = decryptor.verifyPassword(password);
-        } catch (FileNotFoundException e) {
-            logger.error("checkPassword FileNotFoundException");
-        } catch (IOException e) {
-            logger.error("checkPassword IOException");
-        } catch (GeneralSecurityException e) {
-            logger.error("checkPassword GeneralSecurityException");
+        } catch (Exception e) {
+            if (DEBUG) {
+                logger.error("checkPassword: {}", e.getClass());
+            }
         }
         return result;
     }
