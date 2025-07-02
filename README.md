@@ -13,35 +13,41 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 
+
+[Deutsch](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=de) |
+[Español](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=es) |
+[français](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=fr) |
+[日本語](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=ja) |
+[한국어](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=ko) |
+[Português](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=pt) |
+[Русский](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=ru) |
+[中文](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=zh)
+
 ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
 
 It's a collection of common tools, password recovery, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
 
-ApkToolBoxGUI是一个方便程序员使用的工具，具有用户友好的图形界面。
-
-它是一个常用工具的集合，包括密码恢复、编码转换、时间戳转换、颜色选择器等，此外还有一些专门用于Android开发的工具（这就是为什么它被命名为`ApkToolBoxGUI`）。
-
-## Feature and Usage(功能和使用方式)
+## Feature and Usage
 
 [![Documentation](https://img.shields.io/badge/Documentation-文档-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
-* [Password Recovery(密码恢复)](https://jiangxincode.github.io/ApkToolBoxGUI/features/recovery_file_password.html)
-* [Batch Rename(批量重命名)](https://jiangxincode.github.io/ApkToolBoxGUI/features/batch_rename.html)
-* [Check Summary(文件摘要检查)](https://jiangxincode.github.io/ApkToolBoxGUI/features/check_summary.html)
-* [Color Picker(颜色拾取器)](https://jiangxincode.github.io/ApkToolBoxGUI/features/color_picker.html)
-* [Base Convert(进制转换)](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_base.html)
-* [OS Pattern Convert(操作系统文件格式转换)](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_os_pattern.html)
-* [Time Convert(时间格式转换)](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_time_format.html)
-* [Decode Protobuf(Protobuf解码)](https://jiangxincode.github.io/ApkToolBoxGUI/features/decode_protobuf.html)
-* [Find Duplicate Files(重复文件查找)](https://jiangxincode.github.io/ApkToolBoxGUI/features/find_duplicate_files.html)
-* [Reverse Engineer(逆向工程)](https://jiangxincode.github.io/ApkToolBoxGUI/features/reverse_engineer.html)
-* [Android Develop(Android开发)](https://jiangxincode.github.io/ApkToolBoxGUI/features/android_i18n_operation.html)
+* [Password Recovery](https://jiangxincode.github.io/ApkToolBoxGUI/features/recovery_file_password.html)
+* [Batch Rename](https://jiangxincode.github.io/ApkToolBoxGUI/features/batch_rename.html)
+* [Check Summary](https://jiangxincode.github.io/ApkToolBoxGUI/features/check_summary.html)
+* [Color Picker](https://jiangxincode.github.io/ApkToolBoxGUI/features/color_picker.html)
+* [Base Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_base.html)
+* [OS Pattern Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_os_pattern.html)
+* [Time Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_time_format.html)
+* [Decode Protobuf](https://jiangxincode.github.io/ApkToolBoxGUI/features/decode_protobuf.html)
+* [Find Duplicate Files](https://jiangxincode.github.io/ApkToolBoxGUI/features/find_duplicate_files.html)
+* [Reverse Engineer](https://jiangxincode.github.io/ApkToolBoxGUI/features/reverse_engineer.html)
+* [Android Develop](https://jiangxincode.github.io/ApkToolBoxGUI/features/android_i18n_operation.html)
 * ...
 
-## Contribute(共同参与)
+## Contribute
 
 [![Documentation](https://img.shields.io/badge/Contribute-共同参与-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html)
 
-## Communication Group(交流群)
+## Communication Group
 
 ![QQ Group](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/QQ_Group.png)
