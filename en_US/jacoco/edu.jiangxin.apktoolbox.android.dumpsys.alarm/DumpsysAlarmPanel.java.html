@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DumpsysAlarmPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.android.dumpsys.alarm</a> &gt; <span class="el_source">DumpsysAlarmPanel.java</span></div><h1>DumpsysAlarmPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
+
+import edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
+import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DumpsysAlarmPanel extends EasyPanel {
+
+    private JPanel operationPanel;
+
+    private JPanel lastDateTimePanel;
+
+    private JTextField lastDateTimeField;
+
+    private JPanel systemUptime1Panel;
+
+    private JTextField systemUptime1Field;
+
+    private JPanel systemUptime2Panel;
+
+    private JTextField systemUptime2Field;
+
+    private JPanel packagePanel;
+
+    private JTextField packageField;
+
+    private JTabbedPane tabbedPane;
+
+    private JPanel tabularFormTabPanel;
+
+    private JPanel rawSourceTabPanel;
+
+    private JEditorPane editorPane;
+
+    private List&lt;AlarmTreeTableDataNode&gt; children;
+
+    private String alarmInfoString;
+
+    private boolean alarmInfoValid;
+
+    public DumpsysAlarmPanel() throws HeadlessException {
+<span class="nc" id="L60">        super();</span>
+<span class="nc" id="L61">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L65">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L66">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L68">        createOptionPanel();</span>
+<span class="nc" id="L69">        add(operationPanel);</span>
+<span class="nc" id="L70">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L72">        createLastDateTimePanel();</span>
+<span class="nc" id="L73">        add(lastDateTimePanel);</span>
+<span class="nc" id="L74">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L76">        createSystemUptime1Panel();</span>
+<span class="nc" id="L77">        add(systemUptime1Panel);</span>
+<span class="nc" id="L78">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L80">        createSystemUptime2Panel();</span>
+<span class="nc" id="L81">        add(systemUptime2Panel);</span>
+<span class="nc" id="L82">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L84">        createPackagePanel();</span>
+<span class="nc" id="L85">        add(packagePanel);</span>
+<span class="nc" id="L86">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L88">        createTabbedPane();</span>
+<span class="nc" id="L89">        add(tabbedPane);</span>
+<span class="nc" id="L90">    }</span>
+
+    private void createOptionPanel() {
+<span class="nc" id="L93">        operationPanel = new JPanel();</span>
+<span class="nc" id="L94">        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L96">        JButton loadFromDeviceButton = new JButton(&quot;Load From Device&quot;);</span>
+<span class="nc" id="L97">        loadFromDeviceButton.addActionListener(new LoadFromDeviceButtonActionListener());</span>
+
+<span class="nc" id="L99">        JButton loadFromFileButton = new JButton(&quot;Load From File&quot;);</span>
+<span class="nc" id="L100">        loadFromFileButton.addActionListener(new LoadFromFileButtonActionListener());</span>
+
+<span class="nc" id="L102">        operationPanel.add(loadFromDeviceButton);</span>
+<span class="nc" id="L103">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L104">        operationPanel.add(loadFromFileButton);</span>
+<span class="nc" id="L105">        operationPanel.add(Box.createHorizontalGlue());</span>
+<span class="nc" id="L106">    }</span>
+
+    private void createLastDateTimePanel() {
+<span class="nc" id="L109">        lastDateTimePanel = new JPanel();</span>
+<span class="nc" id="L110">        lastDateTimePanel.setLayout(new BoxLayout(lastDateTimePanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L112">        JLabel lastDateTimeLabel = new JLabel(&quot;Last DateTime&quot;);</span>
+
+<span class="nc" id="L114">        lastDateTimeField = new JTextField();</span>
+
+<span class="nc" id="L116">        lastDateTimePanel.add(lastDateTimeLabel);</span>
+<span class="nc" id="L117">        lastDateTimePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L118">        lastDateTimePanel.add(lastDateTimeField);</span>
+<span class="nc" id="L119">    }</span>
+
+    private void createSystemUptime1Panel() {
+<span class="nc" id="L122">        systemUptime1Panel = new JPanel();</span>
+<span class="nc" id="L123">        systemUptime1Panel.setLayout(new BoxLayout(systemUptime1Panel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L125">        JLabel systemUptime1Label = new JLabel(&quot;System Uptime(ms)&quot;);</span>
+
+<span class="nc" id="L127">        systemUptime1Field = new JTextField();</span>
+
+<span class="nc" id="L129">        systemUptime1Panel.add(systemUptime1Label);</span>
+<span class="nc" id="L130">        systemUptime1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L131">        systemUptime1Panel.add(systemUptime1Field);</span>
+<span class="nc" id="L132">    }</span>
+
+    private void createSystemUptime2Panel() {
+<span class="nc" id="L135">        systemUptime2Panel = new JPanel();</span>
+<span class="nc" id="L136">        systemUptime2Panel.setLayout(new BoxLayout(systemUptime2Panel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L138">        JLabel systemUptime2Label = new JLabel(&quot;System Uptime&quot;);</span>
+
+<span class="nc" id="L140">        systemUptime2Field = new JTextField();</span>
+
+<span class="nc" id="L142">        systemUptime2Panel.add(systemUptime2Label);</span>
+<span class="nc" id="L143">        systemUptime2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L144">        systemUptime2Panel.add(systemUptime2Field);</span>
+<span class="nc" id="L145">    }</span>
+
+    private void createPackagePanel() {
+<span class="nc" id="L148">        packagePanel = new JPanel();</span>
+<span class="nc" id="L149">        packagePanel.setLayout(new BoxLayout(packagePanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L151">        JLabel packageLabel = new JLabel(&quot;Package&quot;);</span>
+
+<span class="nc" id="L153">        packageField = new JTextField();</span>
+
+<span class="nc" id="L155">        packagePanel.add(packageLabel);</span>
+<span class="nc" id="L156">        packagePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L157">        packagePanel.add(packageField);</span>
+<span class="nc" id="L158">    }</span>
+
+    private void createTabbedPane() {
+<span class="nc" id="L161">        tabbedPane = new JTabbedPane();</span>
+
+<span class="nc" id="L163">        tabularFormTabPanel = new JPanel();</span>
+<span class="nc" id="L164">        createTable();</span>
+<span class="nc" id="L165">        tabbedPane.addTab(&quot;Tabular Form&quot;, null, tabularFormTabPanel, &quot;Tabular Form&quot;);</span>
+
+<span class="nc" id="L167">        rawSourceTabPanel = new JPanel();</span>
+<span class="nc" id="L168">        createRawSource();</span>
+<span class="nc" id="L169">        tabbedPane.addTab(&quot;Raw source&quot;, null, rawSourceTabPanel, &quot;Raw source&quot;);</span>
+<span class="nc" id="L170">    }</span>
+
+    private void createTable() {
+<span class="nc" id="L173">        children = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L174">        AlarmTreeTableDataNode root = new AlarmTreeTableDataNode(&quot;Root&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, children);</span>
+<span class="nc" id="L175">        MyAbstractTreeTableModel treeTableModel = new AlarmTreeTableDataModel(root);</span>
+<span class="nc" id="L176">        MyTreeTable myTreeTable = new MyTreeTable(treeTableModel);</span>
+<span class="nc" id="L177">        JScrollPane scrollPane = new JScrollPane(myTreeTable);</span>
+<span class="nc" id="L178">        scrollPane.setPreferredSize(new Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));</span>
+<span class="nc" id="L179">        tabularFormTabPanel.add(scrollPane);</span>
+<span class="nc" id="L180">    }</span>
+
+    private void createRawSource() {
+<span class="nc" id="L183">        editorPane = new JEditorPane(&quot;text/plain&quot;, &quot;&quot;);</span>
+<span class="nc" id="L184">        editorPane.setEditable(false);</span>
+<span class="nc" id="L185">        JScrollPane scrollPane = new JScrollPane(editorPane);</span>
+<span class="nc" id="L186">        scrollPane.setPreferredSize(new Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));</span>
+<span class="nc" id="L187">        rawSourceTabPanel.add(scrollPane);</span>
+<span class="nc" id="L188">    }</span>
+
+    private void getAlarmInfoStringFromDevice() {
+<span class="nc" id="L191">        final String cmd = &quot;adb shell dumpsys alarm&quot;;</span>
+<span class="nc" id="L192">        logger.info(cmd);</span>
+<span class="nc" id="L193">        try (ByteArrayOutputStream outStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L194">             ByteArrayOutputStream errStream = new ByteArrayOutputStream()</span>
+        ) {
+<span class="nc" id="L196">            CommandLine commandLine = CommandLine.parse(cmd);</span>
+<span class="nc" id="L197">            DefaultExecutor exec = new DefaultExecutor();</span>
+<span class="nc" id="L198">            PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);</span>
+<span class="nc" id="L199">            exec.setStreamHandler(streamHandler);</span>
+<span class="nc" id="L200">            int exitValue = exec.execute(commandLine);</span>
+<span class="nc" id="L201">            logger.info(&quot;exitValue: [&quot; + exitValue + &quot;]&quot;);</span>
+
+<span class="nc" id="L203">            alarmInfoString = outStream.toString(&quot;UTF-8&quot;);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            alarmInfoValid = !StringUtils.isEmpty(alarmInfoString);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (!alarmInfoValid) {</span>
+<span class="nc" id="L206">                alarmInfoString = errStream.toString(&quot;UTF-8&quot;);</span>
+            }
+<span class="nc" id="L208">        } catch (IOException ioe) {</span>
+<span class="nc" id="L209">            logger.error(&quot;exec fail&quot;, ioe.getMessage());</span>
+<span class="nc" id="L210">        }</span>
+<span class="nc" id="L211">    }</span>
+
+    private void getAlarmInfoStringFromFile() {
+<span class="nc" id="L214">        JFileChooser jfc = new JFileChooser();</span>
+<span class="nc" id="L215">        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);</span>
+<span class="nc" id="L216">        jfc.setDialogTitle(&quot;Select a dumpsys alarm file&quot;);</span>
+<span class="nc" id="L217">        int ret = jfc.showDialog(new JLabel(), null);</span>
+<span class="nc" id="L218">        File file = jfc.getSelectedFile();</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        switch (ret) {</span>
+            case JFileChooser.APPROVE_OPTION:
+                try {
+<span class="nc" id="L222">                    alarmInfoString = FileUtils.readFileToString(file, Charset.forName(EncoderDetector.judgeFile(file.getCanonicalPath())));</span>
+<span class="nc" id="L223">                    alarmInfoValid = true;</span>
+<span class="nc" id="L224">                } catch (IOException ex) {</span>
+<span class="nc" id="L225">                    logger.error(&quot;readFileToString failed&quot;, ex);</span>
+<span class="nc" id="L226">                    alarmInfoValid = false;</span>
+<span class="nc" id="L227">                }</span>
+<span class="nc" id="L228">                break;</span>
+            default:
+                break;
+        }
+<span class="nc" id="L232">    }</span>
+
+    private void updateUIFromString() {
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        alarmInfoString = StringUtils.isEmpty(alarmInfoString) ? &quot;&quot; : alarmInfoString;</span>
+<span class="nc" id="L236">        editorPane.setText(alarmInfoString);</span>
+
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (!alarmInfoValid) {</span>
+<span class="nc" id="L239">            children.clear();</span>
+<span class="nc" id="L240">            return;</span>
+        }
+
+<span class="nc" id="L243">        String tmpInputString = alarmInfoString;</span>
+
+<span class="nc" id="L245">        String timeInformation = StringUtils.substringBetween(alarmInfoString, &quot;nowRTC=&quot;, &quot;mLastTimeChangeClockTime=&quot;).trim().replace(&quot; &quot;, &quot;=&quot;);</span>
+<span class="nc" id="L246">        String[] components = timeInformation.split(&quot;=&quot;);</span>
+
+<span class="nc" id="L248">        SharedData sharedData = SharedData.getInstance();</span>
+<span class="nc" id="L249">        sharedData.setTimestamp(Long.valueOf(components[0]));</span>
+<span class="nc" id="L250">        sharedData.setDateTime(components[1] + &quot; &quot; + components[2]);</span>
+<span class="nc" id="L251">        sharedData.setUptimeMs(Long.valueOf(components[4]));</span>
+
+<span class="nc" id="L253">        long uptimeSeconds = sharedData.getUptimeMs() / 1000;</span>
+<span class="nc" id="L254">        long uptimeHours = uptimeSeconds / 3600;</span>
+<span class="nc" id="L255">        long uptimeMinutes = (uptimeSeconds % 3600) / 60;</span>
+<span class="nc" id="L256">        long uptimeSecs = uptimeSeconds % 60;</span>
+
+<span class="nc" id="L258">        systemUptime1Field.setText(String.valueOf(sharedData.getUptimeMs()));</span>
+<span class="nc" id="L259">        systemUptime2Field.setText(uptimeHours + &quot;:&quot; + uptimeMinutes + &quot;:&quot; + uptimeSecs);</span>
+<span class="nc" id="L260">        lastDateTimeField.setText(sharedData.getDateTime());</span>
+
+<span class="nc" id="L262">        String pendingAlarmBatchesCountStr = StringUtils.substringBetween(tmpInputString, &quot;Pending alarm batches: &quot;, System.getProperty(&quot;line.separator&quot;));</span>
+<span class="nc" id="L263">        int pendingAlarmBatches = Integer.valueOf(pendingAlarmBatchesCountStr);</span>
+<span class="nc" id="L264">        tmpInputString = StringUtils.substringAfter(tmpInputString, &quot;Pending alarm batches: &quot;);</span>
+
+<span class="nc" id="L266">        List&lt;AlarmBatch&gt; listBatches = new ArrayList&lt;&gt;();</span>
+        while (true) {
+<span class="nc" id="L268">            String batchDefinition = StringUtils.substringBetween(tmpInputString, &quot;Batch{&quot;, &quot;}:&quot; + System.getProperty(&quot;line.separator&quot;));</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">            if (StringUtils.isEmpty(batchDefinition)) {</span>
+<span class="nc" id="L270">                break;</span>
+            }
+<span class="nc" id="L272">            AlarmBatch alarmBatch = AlarmBatch.fromString(batchDefinition);</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">            if (alarmBatch == null) {</span>
+<span class="nc" id="L274">                break;</span>
+            }
+<span class="nc" id="L276">            String alarmListDefinition = StringUtils.substringBetween(tmpInputString, &quot;}:&quot; + System.getProperty(&quot;line.separator&quot;), &quot;Batch{&quot;);</span>
+<span class="nc" id="L277">            alarmListDefinition.replace(&quot;ELAPSED_WAKEUP&quot;, &quot;ELAPSED&quot;).replace(&quot;RTC_WAKEUP&quot;, &quot;ELAPSED&quot;).replace(&quot;RTC&quot;, &quot;ELAPSED&quot;);</span>
+<span class="nc" id="L278">            String[] alarmListTmp = alarmListDefinition.split(&quot;ELAPSED&quot;);</span>
+<span class="nc" id="L279">            List&lt;String&gt; alarmList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">            for (int i = 0; i &lt; alarmListTmp.length; i++) {</span>
+<span class="nc bnc" id="L281" title="All 4 branches missed.">                if (StringUtils.isNotEmpty(alarmListTmp[i]) &amp;&amp; StringUtils.isNotBlank(alarmListTmp[i])) {</span>
+<span class="nc" id="L282">                    alarmList.add(alarmListTmp[i]);</span>
+                }
+            }
+
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            for (int i = 0; i &lt; alarmList.size(); ++i) {</span>
+<span class="nc" id="L287">                Alarm alarm = Alarm.fromString(alarmList.get(i));</span>
+<span class="nc bnc" id="L288" title="All 4 branches missed.">                if (StringUtils.isNotEmpty(packageField.getText()) &amp;&amp; StringUtils.equals(alarm.getOwnerPackageName(), packageField.getText())) {</span>
+<span class="nc" id="L289">                    continue;</span>
+                }
+<span class="nc" id="L291">                alarmBatch.appendAlarm(alarm);</span>
+            }
+
+<span class="nc" id="L294">            listBatches.add(alarmBatch);</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">            if (listBatches.size() == pendingAlarmBatches) {</span>
+<span class="nc" id="L296">                break;</span>
+            }
+
+<span class="nc" id="L299">            tmpInputString = StringUtils.substringAfter(tmpInputString, &quot;Batch{&quot;);</span>
+<span class="nc" id="L300">        }</span>
+<span class="nc" id="L301">        children.clear();</span>
+<span class="nc" id="L302">        children.addAll(alarmBatches2AlarmTreeTableDataNodeList(listBatches));</span>
+<span class="nc" id="L303">    }</span>
+
+    private List&lt;AlarmTreeTableDataNode&gt; alarmBatches2AlarmTreeTableDataNodeList(List&lt;AlarmBatch&gt; listBatches) {
+<span class="nc" id="L306">        List&lt;AlarmTreeTableDataNode&gt; sonList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        for (AlarmBatch alarmBatch : listBatches) {</span>
+<span class="nc" id="L308">            List&lt;AlarmTreeTableDataNode&gt; grandsonList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L309">            List&lt;Alarm&gt; alarmList = alarmBatch.getListAlarms();</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">            for (Alarm alarm : alarmList) {</span>
+<span class="nc" id="L311">                String objectId = alarm.getSignature() + &quot; [&quot; + alarm.getId() + &quot;]&quot;;</span>
+<span class="nc" id="L312">                AlarmTreeTableDataNode grandson = new AlarmTreeTableDataNode(objectId, alarm.getOwnerPackageName(), alarm.getAlarmType(), String.valueOf(alarm.getWhen()),String.valueOf(alarm.getWhen()), null);</span>
+<span class="nc" id="L313">                grandsonList.add(grandson);</span>
+<span class="nc" id="L314">            }</span>
+<span class="nc" id="L315">            String objectId = alarmBatch.getSignature() + &quot; [&quot; + alarmBatch.getId() + &quot;] (&quot; + alarmBatch.getAlarmCount() + &quot; alarms)&quot;;</span>
+<span class="nc" id="L316">            AlarmTreeTableDataNode son = new AlarmTreeTableDataNode(objectId, null, null, null, null, grandsonList);</span>
+<span class="nc" id="L317">            sonList.add(son);</span>
+<span class="nc" id="L318">        }</span>
+<span class="nc" id="L319">        return sonList;</span>
+    }
+
+<span class="nc" id="L322">    private final class LoadFromDeviceButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L325">            getAlarmInfoStringFromDevice();</span>
+<span class="nc" id="L326">            updateUIFromString();</span>
+<span class="nc" id="L327">        }</span>
+    }
+
+<span class="nc" id="L330">    private final class LoadFromFileButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L333">            getAlarmInfoStringFromFile();</span>
+<span class="nc" id="L334">            updateUIFromString();</span>
+<span class="nc" id="L335">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

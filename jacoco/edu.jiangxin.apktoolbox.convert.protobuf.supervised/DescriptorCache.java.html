@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DescriptorCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.supervised</a> &gt; <span class="el_source">DescriptorCache.java</span></div><h1>DescriptorCache.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.supervised;
+
+import com.google.protobuf.DescriptorProtos;
+import com.google.protobuf.Descriptors;
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Stream;
+
+/**
+ * Cache containing protobuf descriptors used by {@link ProtoToJson} in order to decode binary protobuf messages.
+ * &lt;p&gt;
+ * An instance can be created using the static factory methods {@link #emptyCache()}, {@link #fromDirectory(Path)} and
+ * {@link #fromFile(Path)}.
+ * &lt;p&gt;
+ * Additional descriptors can be added using {@link #addDescriptor(Descriptors.Descriptor)}, {@link
+ * #addDescriptors(Path)} and {@link #addDescriptors(byte[])}. They can be received using {@link #getByTypeName(String)}
+ * and {@link #getDescriptors()}.
+ * &lt;p&gt;
+ * Descriptors can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for example:
+ * &lt;pre&gt;{@code
+ * protoc --descriptor_set_out foo.desc foo.proto
+ * }&lt;/pre&gt;
+ *
+ * @author Daniel Tischner {@literal &lt;zabuza.dev@gmail.com&gt;}
+ */
+public final class DescriptorCache {
+<span class="nc" id="L32">	private static final Descriptors.FileDescriptor[] DEPENDENCIES = new Descriptors.FileDescriptor[0];</span>
+
+	/**
+	 * Creates an instance that initially has no descriptors.
+	 *
+	 * @return The created instance
+	 */
+	public static DescriptorCache emptyCache() {
+<span class="nc" id="L40">		return new DescriptorCache();</span>
+	}
+
+	/**
+	 * Creates an instance from a directory containing descriptor files.
+	 * &lt;p&gt;
+	 * The directory must not contain files that are not valid descriptor files.
+	 * &lt;p&gt;
+	 * Descriptor files can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for
+	 * example:
+	 * &lt;pre&gt;{@code
+	 * protoc --descriptor_set_out foo.desc foo.proto
+	 * }&lt;/pre&gt;
+	 *
+	 * @param directory The directory containing the descriptor files, not null.
+	 *
+	 * @return The created instance that has all descriptors available in the given directory
+	 *
+	 * @throws IllegalArgumentException                If the {@code directory} is not a directory
+	 * @throws UncheckedIOException                    If an I/O error occurs during reading the files
+	 * @throws UncheckedInvalidProtocolBufferException If a file is not a valid descriptor file
+	 * @throws UncheckedDescriptorValidationException  If a file contains malformed descriptors
+	 */
+	public static DescriptorCache fromDirectory(final Path directory) {
+<span class="nc" id="L64">		Objects.requireNonNull(directory);</span>
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">		if (!Files.isDirectory(directory)) {</span>
+<span class="nc" id="L67">			throw new IllegalArgumentException(&quot;Path must be a directory: &quot; + directory);</span>
+		}
+
+<span class="nc" id="L70">		final DescriptorCache cache = new DescriptorCache();</span>
+<span class="nc" id="L71">		try (final Stream&lt;Path&gt; walk = Files.walk(directory)) {</span>
+<span class="nc" id="L72">			walk.filter(Files::isRegularFile)</span>
+<span class="nc" id="L73">					.forEach(cache::addDescriptors);</span>
+<span class="nc" id="L74">		} catch (final IOException e) {</span>
+<span class="nc" id="L75">			throw new UncheckedIOException(e);</span>
+<span class="nc" id="L76">		}</span>
+<span class="nc" id="L77">		return cache;</span>
+	}
+
+	/**
+	 * Creates an instance from a single descriptor file.
+	 * &lt;p&gt;
+	 * Descriptor files can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for
+	 * example:
+	 * &lt;pre&gt;{@code
+	 * protoc --descriptor_set_out foo.desc foo.proto
+	 * }&lt;/pre&gt;
+	 *
+	 * @param descriptorsFile The descriptor file, not null.
+	 *
+	 * @return The created instance that has all descriptors available in the given file
+	 *
+	 * @throws IllegalArgumentException                If the {@code descriptorsFile} is not a regular file
+	 * @throws UncheckedIOException                    If an I/O error occurs during reading the files
+	 * @throws UncheckedInvalidProtocolBufferException If the file is not a valid descriptor file
+	 * @throws UncheckedDescriptorValidationException  If the file contains malformed descriptors
+	 */
+	public static DescriptorCache fromFile(final Path descriptorsFile) {
+<span class="nc" id="L99">		Objects.requireNonNull(descriptorsFile);</span>
+
+<span class="nc bnc" id="L101" title="All 2 branches missed.">		if (!Files.isRegularFile(descriptorsFile)) {</span>
+<span class="nc" id="L102">			throw new IllegalArgumentException(&quot;Path must be a regular file: &quot; + descriptorsFile);</span>
+		}
+<span class="nc" id="L104">		final DescriptorCache cache = new DescriptorCache();</span>
+<span class="nc" id="L105">		cache.addDescriptors(descriptorsFile);</span>
+<span class="nc" id="L106">		return cache;</span>
+	}
+
+	/**
+	 * Maps message type names to the descriptor suitable for parsing messages of that type, not null.
+	 */
+<span class="nc" id="L112">	private final Map&lt;String, Descriptors.Descriptor&gt; typeNameToDescriptor = new HashMap&lt;&gt;();</span>
+
+	/**
+	 * Creates a new instance with no descriptors.
+	 */
+<span class="nc" id="L117">	private DescriptorCache() {</span>
+
+<span class="nc" id="L119">	}</span>
+
+	/**
+	 * Adds the given descriptor to the cache.
+	 * &lt;p&gt;
+	 * Overwriting any descriptor previously registered for the same message type.
+	 *
+	 * @param descriptor The descriptor to add, not null
+	 *
+	 * @return The descriptor previously associated to the message type, if any
+	 */
+	@SuppressWarnings({ &quot;WeakerAccess&quot;, &quot;UnusedReturnValue&quot; })
+	public Optional&lt;Descriptors.Descriptor&gt; addDescriptor(final Descriptors.Descriptor descriptor) {
+<span class="nc" id="L132">		Objects.requireNonNull(descriptor);</span>
+<span class="nc" id="L133">		final String typeName = Objects.requireNonNull(descriptor.getName());</span>
+
+<span class="nc" id="L135">		return Optional.ofNullable(typeNameToDescriptor.put(typeName, descriptor));</span>
+	}
+
+	/**
+	 * Adds all descriptors given in a descriptor file to the cache.
+	 * &lt;p&gt;
+	 * Overwriting any descriptors previously registered for the same message types.
+	 * &lt;p&gt;
+	 * Descriptor files can be obtained by applying a {@code protoc} command on the protobuf schema {@code .proto}, for
+	 * example:
+	 * &lt;pre&gt;{@code
+	 * protoc --descriptor_set_out foo.desc foo.proto
+	 * }&lt;/pre&gt;
+	 *
+	 * @param descriptorsFile The descriptor file, not null.
+	 *
+	 * @throws IllegalArgumentException                If the {@code descriptorsFile} is not a regular file
+	 * @throws UncheckedIOException                    If an I/O error occurs during reading the file
+	 * @throws UncheckedInvalidProtocolBufferException If the file is not a valid descriptor file
+	 * @throws UncheckedDescriptorValidationException  If the file contains malformed descriptors
+	 */
+	@SuppressWarnings(&quot;WeakerAccess&quot;)
+	public void addDescriptors(final Path descriptorsFile) {
+<span class="nc" id="L158">		Objects.requireNonNull(descriptorsFile);</span>
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">		if (!Files.isRegularFile(descriptorsFile)) {</span>
+<span class="nc" id="L161">			throw new IllegalArgumentException(&quot;Path must be a regular file: &quot; + descriptorsFile);</span>
+		}
+
+		try {
+<span class="nc" id="L165">			addDescriptors(Files.readAllBytes(descriptorsFile));</span>
+<span class="nc" id="L166">		} catch (final IOException e) {</span>
+<span class="nc" id="L167">			throw new UncheckedIOException(&quot;While reading: &quot; + descriptorsFile.toAbsolutePath(), e);</span>
+<span class="nc" id="L168">		}</span>
+<span class="nc" id="L169">	}</span>
+
+	/**
+	 * Adds all descriptors given as a raw descriptor set to the cache.
+	 * &lt;p&gt;
+	 * Overwriting any descriptors previously registered for the same message types.
+	 *
+	 * @param descriptorsRaw The raw descriptor set, not null.
+	 *
+	 * @throws UncheckedInvalidProtocolBufferException If the file is not a valid descriptor file
+	 * @throws UncheckedDescriptorValidationException  If the file contains malformed descriptors
+	 */
+	@SuppressWarnings(&quot;WeakerAccess&quot;)
+	public void addDescriptors(final byte[] descriptorsRaw) {
+<span class="nc" id="L183">		Objects.requireNonNull(descriptorsRaw);</span>
+
+		try {
+<span class="nc" id="L186">			final DescriptorProtos.FileDescriptorSet descriptorSet =</span>
+<span class="nc" id="L187">					DescriptorProtos.FileDescriptorSet.parseFrom(descriptorsRaw);</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">			for (final DescriptorProtos.FileDescriptorProto descriptorFile : descriptorSet.getFileList()) {</span>
+<span class="nc" id="L189">				final Descriptors.FileDescriptor fileDescriptor =</span>
+<span class="nc" id="L190">						Descriptors.FileDescriptor.buildFrom(descriptorFile, DescriptorCache.DEPENDENCIES);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">				for (final Descriptors.Descriptor descriptor : fileDescriptor.getMessageTypes()) {</span>
+<span class="nc" id="L192">					addDescriptor(descriptor);</span>
+<span class="nc" id="L193">				}</span>
+<span class="nc" id="L194">			}</span>
+<span class="nc" id="L195">		} catch (final InvalidProtocolBufferException e) {</span>
+<span class="nc" id="L196">			throw new UncheckedInvalidProtocolBufferException(e);</span>
+<span class="nc" id="L197">		} catch (final Descriptors.DescriptorValidationException e) {</span>
+<span class="nc" id="L198">			throw new UncheckedDescriptorValidationException(e);</span>
+<span class="nc" id="L199">		}</span>
+<span class="nc" id="L200">	}</span>
+
+	/**
+	 * Gets the descriptor registered for the given message type name, if any.
+	 *
+	 * @param typeName The message type name, not null
+	 *
+	 * @return The descriptor registered for the given message type name, if any
+	 */
+	public Optional&lt;Descriptors.Descriptor&gt; getByTypeName(final String typeName) {
+<span class="nc" id="L210">		Objects.requireNonNull(typeName);</span>
+
+<span class="nc" id="L212">		return Optional.ofNullable(typeNameToDescriptor.get(typeName));</span>
+	}
+
+	/**
+	 * Gets all descriptors registered by this cache.
+	 *
+	 * @return An unmodifiable collection of all registered descriptors
+	 */
+	public Collection&lt;Descriptors.Descriptor&gt; getDescriptors() {
+<span class="nc" id="L221">		return Collections.unmodifiableCollection(typeNameToDescriptor.values());</span>
+	}
+
+	/**
+	 * Gets all by this cache registered mappings of message type names to their descriptors.
+	 *
+	 * @return An unmodifiable collection of all registered message type name to descriptor mappings
+	 */
+	public Collection&lt;Map.Entry&lt;String, Descriptors.Descriptor&gt;&gt; getEntries() {
+<span class="nc" id="L230">		return Collections.unmodifiableCollection(typeNameToDescriptor.entrySet());</span>
+	}
+
+	/**
+	 * Whether the cache has no descriptors registered.
+	 *
+	 * @return True if the cache has no descriptors registered, false otherwise
+	 */
+	public boolean isEmpty() {
+<span class="nc" id="L239">		return typeNameToDescriptor.isEmpty();</span>
+	}
+
+	/**
+	 * Gets how many descriptors are currently registered to the cache.
+	 *
+	 * @return The amount of descriptors registered to the cache
+	 */
+	public int size() {
+<span class="nc" id="L248">		return typeNameToDescriptor.size();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
