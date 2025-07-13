@@ -23,9 +23,9 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [Русский](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=ru) |
 [中文](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=zh)
 
-ApkToolBoxGUI is a handy tool for programmer with user-friendly GUI. 
+ApkToolBoxGUI is a handy tool for programmers with user-friendly GUI. 
 
-It's a collection of common tools, password recovery, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development(That is why it is named `ApkToolBoxGUI`).
+It's a collection of common tools, password recovery, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development (That is why it is named `ApkToolBoxGUI`).
 
 ## Feature and Usage
 
