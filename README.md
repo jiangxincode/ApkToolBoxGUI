@@ -9,7 +9,7 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [![Code Scan](https://img.shields.io/badge/Github-CodeScan-green)](https://github.com/jiangxincode/ApkToolBoxGUI/security/code-scanning)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jiangxincode_ApkToolBoxGUI&metric=alert_status)](https://sonarcloud.io/dashboard?id=jiangxincode_ApkToolBoxGUI)
 [![CodeFactor](https://www.codefactor.io/repository/github/jiangxincode/apktoolboxgui/badge)](https://www.codefactor.io/repository/github/jiangxincode/apktoolboxgui)
-[![Code Climate Maintainability](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI/maintainability.svg)](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI)
+[![Qlty Cloud Maintainability](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI/maintainability.svg)](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 
