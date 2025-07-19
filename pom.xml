@@ -13,8 +13,9 @@
         <pdf.version>3.0.5</pdf.version>
         <poi.version>5.4.1</poi.version>
         <log4j.version>2.25.1</log4j.version>
-        <junit.jupiter.version>5.13.2</junit.jupiter.version>
-        <junit.platform.version>1.13.2</junit.platform.version>
+        <junit.minor.version>13.3</junit.minor.version>
+        <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
+        <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
         <surefire.version>3.5.3</surefire.version>
         <protobuf.version>4.31.1</protobuf.version>
     </properties>
