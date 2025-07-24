@@ -17,7 +17,7 @@ public class PluginUtils {
 
     private static final String URL_PREFIX = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/";
 
-    private static final String DOWNLOAD_VERSION = "v1.0.5";
+    private static final String DOWNLOAD_VERSION = "v1.0.6";
 
     private PluginUtils() {
         //do nothing

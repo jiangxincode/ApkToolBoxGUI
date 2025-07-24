@@ -21,7 +21,7 @@ public class ApktoolPanel extends PluginPanel {
 
     @Override
     public String getPluginFilename() {
-        return "apktool_2.9.2.jar";
+        return "apktool_2.12.0.jar";
     }
 
     @Override

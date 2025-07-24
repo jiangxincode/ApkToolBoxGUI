@@ -13,7 +13,7 @@ import java.io.File;
 public class ChangeMenuToPluginJadxListener extends ChangeMenuToPluginListener {
     @Override
     public String getPluginFilename() {
-        return "jadx-1.4.7.zip";
+        return "jadx-1.5.2.zip";
     }
 
     @Override
