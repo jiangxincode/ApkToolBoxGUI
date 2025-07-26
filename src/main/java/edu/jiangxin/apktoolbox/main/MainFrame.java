@@ -174,6 +174,10 @@ public class MainFrame extends EasyFrame {
         JMenu helpMenu = new JMenu(bundle.getString("help.title"));
         menuBar.add(helpMenu);
 
+        JMenuItem documentMenuItem = new JMenuItem(bundle.getString("help.document.title"));
+        documentMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_DOCUMENT));
+        helpMenu.add(documentMenuItem);
+
         JMenuItem settingsMenuItem = new JMenuItem(bundle.getString("help.settings.title"));
         settingsMenuItem.addActionListener(new ChangeMenuToPanelListener(SettingsPanel.class, settingsMenuItem.getText()));
         helpMenu.add(settingsMenuItem);

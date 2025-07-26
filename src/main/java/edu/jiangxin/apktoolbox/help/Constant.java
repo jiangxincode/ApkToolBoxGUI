@@ -13,6 +13,8 @@ public class Constant {
     private Constant() {
     }
 
+    public static final String URL_DOCUMENT = "https://jiangxincode.github.io/ApkToolBoxGUI";
+
     public static final String URL_PLUGIN_VERSION = "https://jiangxincode.github.io/ApkToolBoxGUI/features/reverse_engineer.html";
 
     /**
