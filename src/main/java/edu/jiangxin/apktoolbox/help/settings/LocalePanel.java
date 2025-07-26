@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
@@ -40,6 +41,7 @@ public class LocalePanel extends EasyChildTabbedPanel {
 
         JLabel typeLabel = new JLabel("Locale:");
         typeComboBox = new JComboBox<>();
+        typeComboBox.setMaximumSize(new Dimension(Constants.DEFAULT_COMBOBOX_WIDTH, Constants.DEFAULT_COMBOBOX_HEIGHT));
 
         String currentLocaleLanguage = conf.getString("locale.language");
         if (StringUtils.isEmpty(currentLocaleLanguage)) {

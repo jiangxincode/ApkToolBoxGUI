@@ -152,12 +152,12 @@ public class ScreenShotPanel extends EasyPanel {
             }
             File file = new File(dirName, fileName);
             try {
-                Utils.blockedExecutor("adb shell /system/bin/screencap -p /sdcard/screenshot.png");
+                Utils.executor("adb shell /system/bin/screencap -p /sdcard/screenshot.png", true);
                 logger.info("screencap finish");
-                Utils.blockedExecutor("adb pull /sdcard/screenshot.png " + file.getCanonicalPath());
+                Utils.executor("adb pull /sdcard/screenshot.png " + file.getCanonicalPath(), true);
                 logger.info("pull finish");
                 if (openCheckBox.isSelected()) {
-                    Utils.blockedExecutor("explorer /e,/select, " + file.getCanonicalPath());
+                    Utils.executor("explorer /e,/select, " + file.getCanonicalPath(), true);
                     logger.info("open dir finish");
                 }
                 if (copyCheckBox.isSelected()) {

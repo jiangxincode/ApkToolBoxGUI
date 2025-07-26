@@ -6,6 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -47,6 +48,7 @@ public class LookAndFeelPanel extends EasyChildTabbedPanel {
 
         JLabel typeLabel = new JLabel("Type:");
         typeComboBox = new JComboBox<>();
+        typeComboBox.setMaximumSize(new Dimension(Constants.DEFAULT_COMBOBOX_WIDTH, Constants.DEFAULT_COMBOBOX_HEIGHT));
 
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
         if (ArrayUtils.isEmpty(lookAndFeelInfos)) {

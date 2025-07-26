@@ -62,6 +62,7 @@ public class DownloadRunnable extends AbstractRunnable {
                 progress = (int)(count * 100 / downloadLength);
             }
         } catch (IOException e) {
+            SwingUtilities.invokeLater(() -> progressBarDialog.dispose());
             LOGGER.error("download failed: {}", e.getMessage());
             callback.onDownloadFinished(ChangeMenuPreparePluginController.RESULT_DOWNLOAD_FAILED);
             return;

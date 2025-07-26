@@ -171,7 +171,7 @@ public class Utils {
         }
     }
 
-    public static void blockedExecutor(String cmd) {
+    public static void executor(String cmd, boolean isBlocked) {
         logger.info(cmd);
         try (ProcessLogOutputStream outStream = new ProcessLogOutputStream(logger, Level.INFO);
              ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
@@ -180,36 +180,27 @@ public class Utils {
             DefaultExecutor exec = new DefaultExecutor();
             PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
             exec.setStreamHandler(streamHandler);
-            int exitValue = exec.execute(commandLine);
-            logger.info("exitValue: [" + exitValue + "]");
-        } catch (IOException ioe) {
-            logger.error("exec fail. ", ioe);
-        }
-    }
+            if (isBlocked) {
+                int exitValue = exec.execute(commandLine);
+                logger.info("exitValue: [" + exitValue + "]");
+            } else {
+                DefaultExecuteResultHandler erh = new DefaultExecuteResultHandler() {
+                    @Override
+                    public void onProcessComplete(int exitValue) {
+                        logger.info("complete: [" + cmd + "], exitValue: [" + exitValue + "]");
+                    }
 
-    public static void unBlockedExecutor(String cmd) {
-        logger.info(cmd);
-        try (ProcessLogOutputStream outStream = new ProcessLogOutputStream(logger, Level.INFO);
-             ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
-        ) {
-            CommandLine commandLine = CommandLine.parse(cmd);
-            DefaultExecutor exec = new DefaultExecutor();
-            PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
-            exec.setStreamHandler(streamHandler);
-            DefaultExecuteResultHandler erh = new DefaultExecuteResultHandler() {
-                @Override
-                public void onProcessComplete(int exitValue) {
-                    logger.info("complete: [" + cmd + "], exitValue: [" + exitValue + "]");
-                }
+                    @Override
+                    public void onProcessFailed(ExecuteException ee) {
+                        logger.info("failed: [" + cmd + "], execute exception: [" + ee.getMessage() + "]");
+                    }
+                };
+                exec.execute(commandLine, erh);
+            }
 
-                @Override
-                public void onProcessFailed(ExecuteException ee) {
-                    logger.info("failed: [" + cmd + "], execute exception: [" + ee.getMessage() + "]");
-                }
-            };
-            exec.execute(commandLine, erh);
         } catch (IOException ioe) {
-            logger.error("exec fail. ", ioe);
+            logger.error("exec fail: {}", ioe.getMessage());
+            JOptionPane.showMessageDialog(null, ioe.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

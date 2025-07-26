@@ -22,7 +22,7 @@ public abstract class ChangeMenuToPluginListener implements IPlugin, ChangeMenuL
     @Override
     public void onChangeMenu() {
         String cmd = getPluginStartupCmd();
-        Utils.unBlockedExecutor(cmd);
+        Utils.executor(cmd, false);
     }
 
     @Override

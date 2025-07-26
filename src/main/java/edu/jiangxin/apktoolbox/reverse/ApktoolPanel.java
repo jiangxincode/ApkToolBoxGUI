@@ -184,7 +184,7 @@ public class ApktoolPanel extends PluginPanel {
                 if (overrideCheckBox.isSelected()) {
                     sb.append(" -f");
                 }
-                Utils.blockedExecutor(sb.toString());
+                Utils.executor(sb.toString(), true);
             }
         }
     }
@@ -264,14 +264,14 @@ public class ApktoolPanel extends PluginPanel {
                 StringBuilder sb = new StringBuilder();
                 sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(" b ")
                         .append(srcPath).append(" -o ").append(targetPath);
-                Utils.blockedExecutor(sb.toString());
+                Utils.executor(sb.toString(), true);
                 if (signAPK.isSelected()) {
                     sb = new StringBuilder();
                     sb.append(ApktoolPanel.this.getPluginStartupCmd())
                             .append(" -keystore ").append(Utils.getToolsPath()).append(File.separator)
                             .append("debug.keystore").append(" -alias androiddebugkey -pswd android ")
                             .append(targetPath);
-                    Utils.blockedExecutor(sb.toString());
+                    Utils.executor(sb.toString(), true);
                 }
             }
         }

@@ -14,6 +14,10 @@ public class Constants {
     public static final int DEFAULT_BUTTON_WIDTH = 150;
 
     public static final int DEFAULT_BUTTON_HEIGHT = 23;
+
+    public static final int DEFAULT_COMBOBOX_WIDTH = 500;
+
+    public static final int DEFAULT_COMBOBOX_HEIGHT = 30;
     
     public static final int DEFAULT_X_BORDER = 10;
     

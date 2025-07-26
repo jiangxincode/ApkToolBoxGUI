@@ -200,7 +200,7 @@ public class ApkSignerPanel extends PluginPanel {
                     .append(" -alias ").append(alias).append(" -aliaspswd ").append(aliasPassword).append(" ")
                     .append(apkPath);
 
-            Utils.blockedExecutor(sb.toString());
+            Utils.executor(sb.toString(), true);
         }
     }
 }
