@@ -6,7 +6,13 @@ public interface IPlugin {
 
     String getPluginFilename();
 
-    boolean isPluginNeedUnzip();
+    default boolean isPluginNeedUnzip() {
+        return false;
+    }
 
     String getPluginStartupCmd();
+
+    default boolean isPluginNeedUnzipToSeparateDir() {
+        return false;
+    }
 }

@@ -351,9 +351,7 @@ public class MainFrame extends EasyFrame {
         @Override
         public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
             if (panel instanceof PluginPanel pluginPanel) {
-                pluginPanel.preparePlugin(
-                        new ChangeMenuPreparePluginController(
-                                pluginPanel.getPluginFilename(), pluginPanel.isPluginNeedUnzip(), callBack));
+                pluginPanel.preparePlugin(new ChangeMenuPreparePluginController(pluginPanel.getPluginFilename(), pluginPanel.isPluginNeedUnzip(), pluginPanel.isPluginNeedUnzipToSeparateDir(), callBack));
             }
         }
 

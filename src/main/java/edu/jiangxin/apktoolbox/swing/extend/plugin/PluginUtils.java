@@ -54,11 +54,11 @@ public class PluginUtils {
     }
 
 
-    public static void unzipPlugin(String pluginFilename, IPreparePluginCallback callback) {
+    public static void unzipPlugin(String pluginFilename, boolean isPluginNeedUnzipToSeparateDir, IPreparePluginCallback callback) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        UnzipRunnable unzipRunnable = new UnzipRunnable(pluginFile, callback);
+        UnzipRunnable unzipRunnable = new UnzipRunnable(pluginFile, isPluginNeedUnzipToSeparateDir, callback);
         executorService.submit(unzipRunnable);
     }
 }

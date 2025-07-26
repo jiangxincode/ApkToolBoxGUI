@@ -16,7 +16,7 @@ public abstract class ChangeMenuToPluginListener implements IPlugin, ChangeMenuL
 
     @Override
     public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
-        preparePlugin(new ChangeMenuPreparePluginController(getPluginFilename(), isPluginNeedUnzip(), callBack));
+        preparePlugin(new ChangeMenuPreparePluginController(getPluginFilename(), isPluginNeedUnzip(), isPluginNeedUnzipToSeparateDir(), callBack));
     }
 
     @Override
@@ -28,11 +28,6 @@ public abstract class ChangeMenuToPluginListener implements IPlugin, ChangeMenuL
     @Override
     public void preparePlugin(IPreparePluginCallback callBack) {
         callBack.onPrepareStarted();
-    }
-
-    @Override
-    public boolean isPluginNeedUnzip() {
-        return false;
     }
 
     @Override

@@ -22,6 +22,11 @@ public class ChangeMenuToPluginJadxListener extends ChangeMenuToPluginListener {
     }
 
     @Override
+    public boolean isPluginNeedUnzipToSeparateDir() {
+        return true;
+    }
+
+    @Override
     public String getPluginStartupCmd() {
         String dirPath = getPluginFilename().replace(".zip", "");
         return Utils.getPluginDirPath() + File.separator + dirPath + File.separator + "bin" + File.separator + "jadx-gui.bat";

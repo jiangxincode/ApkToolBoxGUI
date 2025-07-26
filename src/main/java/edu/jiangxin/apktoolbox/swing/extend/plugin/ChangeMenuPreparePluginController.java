@@ -15,6 +15,8 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
     private static final Logger logger = LogManager.getLogger(ChangeMenuPreparePluginController.class.getSimpleName());
     private final String pluginFilename;
     private final boolean isPluginNeedUnzip;
+    private final boolean isPluginNeedUnzipToSeparateDir;
+
     private final IPreChangeMenuCallBack callBack;
 
     public static final int RESULT_CHECK_SUCCESS = 0;
@@ -35,9 +37,10 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
 
     public static final int RESULT_UNZIP_CANCELLED = 1;
 
-    public ChangeMenuPreparePluginController(String pluginFilename, boolean isPluginNeedUnzip, IPreChangeMenuCallBack callBack) {
+    public ChangeMenuPreparePluginController(String pluginFilename, boolean isPluginNeedUnzip, boolean isPluginNeedUnzipToSeparateDir, IPreChangeMenuCallBack callBack) {
         this.pluginFilename = pluginFilename;
         this.isPluginNeedUnzip = isPluginNeedUnzip;
+        this.isPluginNeedUnzipToSeparateDir = isPluginNeedUnzipToSeparateDir;
         this.callBack = callBack;
     }
 
@@ -50,7 +53,7 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
     public void onCheckFinished(int result) {
         switch (result) {
             case RESULT_CHECK_SUCCESS -> onPrepareFinished();
-            case RESULT_CHECK_ZIP_EXIST -> PluginUtils.unzipPlugin(pluginFilename, this);
+            case RESULT_CHECK_ZIP_EXIST -> PluginUtils.unzipPlugin(pluginFilename, isPluginNeedUnzipToSeparateDir, this);
             case RESULT_CHECK_ZIP_NOT_EXIST -> {
                 int userChoose = JOptionPane.showConfirmDialog(null, "未找到对应插件，是否下载", "提示", JOptionPane.YES_NO_OPTION);
                 if (userChoose == JOptionPane.YES_OPTION) {
@@ -66,7 +69,7 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
         switch (result) {
             case RESULT_DOWNLOAD_SUCCESS:
                 if (isPluginNeedUnzip) {
-                    PluginUtils.unzipPlugin(pluginFilename, this);
+                    PluginUtils.unzipPlugin(pluginFilename, isPluginNeedUnzipToSeparateDir, this);
                 } else {
                     onPrepareFinished();
                 }

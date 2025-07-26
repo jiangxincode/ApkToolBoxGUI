@@ -15,10 +15,12 @@ import java.io.IOException;
 public class UnzipRunnable extends AbstractRunnable {
     private static final Logger LOGGER = LogManager.getLogger(UnzipRunnable.class.getSimpleName());
     private final File pluginFile;
+    private final boolean isPluginNeedUnzipToSeparateDir;
 
-    public UnzipRunnable(File pluginFile, IPreparePluginCallback callback) {
+    public UnzipRunnable(File pluginFile, boolean isPluginNeedUnzipToSeparateDir, IPreparePluginCallback callback) {
         super("Unzipping...", callback);
         this.pluginFile = pluginFile;
+        this.isPluginNeedUnzipToSeparateDir = isPluginNeedUnzipToSeparateDir;
     }
 
     @Override
@@ -26,6 +28,18 @@ public class UnzipRunnable extends AbstractRunnable {
         SwingUtilities.invokeLater(() -> progressBarDialog.setVisible(true));
         LOGGER.info("Unzip file: {}", pluginFile);
         String parentDir = pluginFile.getParent();
+        if (isPluginNeedUnzipToSeparateDir) {
+            String dirName = pluginFile.getName().substring(0, pluginFile.getName().lastIndexOf('.'));
+            parentDir = new File(parentDir, dirName).getAbsolutePath();
+            FileUtils.deleteQuietly(new File(parentDir));
+            try {
+                FileUtils.forceMkdir(new File(parentDir));
+            } catch (IOException e) {
+                LOGGER.error("forceMkdir failed: IOException");
+                callback.onUnzipFinished(ChangeMenuPreparePluginController.RESULT_UNZIP_FAILED);
+                return;
+            }
+        }
         try (ZipFile zipFile = new ZipFile(pluginFile)) {
             zipFile.setRunInThread(true);
             zipFile.extractAll(parentDir);
