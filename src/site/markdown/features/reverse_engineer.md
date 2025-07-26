@@ -16,3 +16,13 @@ Using third-party tools to decompile package like jar, aar, war, apk, dex and so
 | ApkSigner       | 1.3            | <http://apk.aq.163.com/apkpack.do#download>                 | Apache 2.0 |
 | AXMLPrinter3    | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3>              | Apache 2.0 |
 | GDA             | 4.11           | <https://github.com/charles2gan/GDA-android-reversing-Tool> | Apache 2.0 |
+
+### Issues
+
+If you find some dependencies are too old, please create an issue in the [Issue Tracker](https://github.com/jiangxincode/ApkToolBoxGUI/issues/new?title=%5BDependencyTooOld%5D+).
+
+In the issue, please provide the following information:
+
+- The name of the dependency.
+- The latest version.
+- The website to download the latest dependency.

@@ -296,6 +296,10 @@ public class MainFrame extends EasyFrame {
         reverseMenu.setMnemonic(KeyEvent.VK_R);
         menuBar.add(reverseMenu);
 
+        JMenuItem pluginVersionMenuItem = new JMenuItem(bundle.getString("reverse.plugin.version.title"));
+        pluginVersionMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_PLUGIN_VERSION));
+        reverseMenu.add(pluginVersionMenuItem);
+
         JMenuItem apktoolMenuItem = new JMenuItem(bundle.getString("reverse.apktool.title"), KeyEvent.VK_D);
         apktoolMenuItem.addActionListener(new ChangeMenuToPanelListener(ApktoolPanel.class, apktoolMenuItem.getText()));
         reverseMenu.add(apktoolMenuItem);
