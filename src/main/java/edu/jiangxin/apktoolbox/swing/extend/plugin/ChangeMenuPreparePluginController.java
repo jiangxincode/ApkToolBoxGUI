@@ -43,7 +43,7 @@ public class ChangeMenuPreparePluginController implements IPreparePluginCallback
 
     @Override
     public void onPrepareStarted() {
-        PluginUtils.checkPlugin(pluginFilename, this);
+        PluginUtils.checkPlugin(pluginFilename, isPluginNeedUnzip, this);
     }
 
     @Override

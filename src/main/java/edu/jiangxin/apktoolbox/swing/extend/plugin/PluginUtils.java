@@ -23,10 +23,12 @@ public class PluginUtils {
         //do nothing
     }
 
-    public static void checkPlugin(String pluginFilename, IPreparePluginCallback callBack) {
+    public static void checkPlugin(String pluginFilename, boolean isPluginNeedUnzip, IPreparePluginCallback callBack) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
         File pluginDir = new File(Utils.getPluginDirPath(), pluginFilename.substring(0, pluginFilename.lastIndexOf(".")));
-        if (pluginFile.exists() && pluginDir.exists()) {
+        if (pluginFile.exists() && !isPluginNeedUnzip) {
+            callBack.onCheckFinished(ChangeMenuPreparePluginController.RESULT_CHECK_SUCCESS);
+        } else if (pluginFile.exists() && pluginDir.exists()) {
             callBack.onCheckFinished(ChangeMenuPreparePluginController.RESULT_CHECK_SUCCESS);
         } else if (pluginFile.exists() && !pluginDir.exists()) {
             callBack.onCheckFinished(ChangeMenuPreparePluginController.RESULT_CHECK_ZIP_EXIST);
