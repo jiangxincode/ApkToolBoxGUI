@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Alarm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.android.dumpsys.alarm</a> &gt; <span class="el_source">Alarm.java</span></div><h1>Alarm.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.android.dumpsys.alarm;
+
+import org.apache.commons.lang3.StringUtils;
+
+public class Alarm {
+    private String signature;
+    private String alarmType;
+    private int index;
+    private String id;
+    private int type;
+    private String ownerPackageName;
+    private AlarmBatch parentBatch;
+    private long when;
+
+    public String getOwnerPackageName() {
+<span class="nc" id="L16">        return ownerPackageName;</span>
+    }
+
+    public void setParentBatch(AlarmBatch parentBatch) {
+<span class="nc" id="L20">        this.parentBatch = parentBatch;</span>
+<span class="nc" id="L21">    }</span>
+
+    public static Alarm fromString(String stringDefinition) {
+<span class="nc" id="L24">        return new Alarm(stringDefinition);</span>
+    }
+
+<span class="nc" id="L27">    private Alarm(String stringDefinition) {</span>
+<span class="nc" id="L28">        signature = &quot;ALARM&quot;;</span>
+<span class="nc" id="L29">        parentBatch = null;</span>
+
+<span class="nc" id="L31">        index = Integer.valueOf(StringUtils.substringBetween(stringDefinition, &quot; #&quot;, &quot;: &quot;));</span>
+
+<span class="nc" id="L33">        String alarmDefinition = StringUtils.substringBetween(stringDefinition, &quot;Alarm{&quot;, &quot;}&quot; + System.getProperty(&quot;line.separator&quot;));</span>
+
+<span class="nc" id="L35">        String[] tmp = alarmDefinition.split(&quot; &quot;);</span>
+
+<span class="nc" id="L37">        id = tmp[0];</span>
+<span class="nc" id="L38">        type = Integer.valueOf(tmp[2]);</span>
+
+<span class="nc bnc" id="L40" title="All 5 branches missed.">        switch (type) {</span>
+            case 0:
+<span class="nc" id="L42">                alarmType = &quot;RTC_WAKEUP&quot;;</span>
+<span class="nc" id="L43">                break;</span>
+            case 1:
+<span class="nc" id="L45">                alarmType = &quot;RTC&quot;;</span>
+<span class="nc" id="L46">                break;</span>
+            case 2:
+<span class="nc" id="L48">                alarmType = &quot;ELAPSED_WAKEUP&quot;;</span>
+<span class="nc" id="L49">                break;</span>
+            case 3:
+<span class="nc" id="L51">                alarmType = &quot;ELAPSED&quot;;</span>
+                break;
+        }
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (tmp.length &gt;= 5) {</span>
+<span class="nc" id="L56">            when = Long.valueOf(tmp[4]);</span>
+<span class="nc" id="L57">            ownerPackageName = StringUtils.substringBetween(alarmDefinition, tmp[4]+&quot; &quot;, &quot; procName&quot;);</span>
+<span class="nc bnc" id="L58" title="All 4 branches missed.">            if (ownerPackageName != null &amp;&amp; ownerPackageName.contains(&quot;}&quot;)) {</span>
+<span class="nc" id="L59">                ownerPackageName = StringUtils.substringAfterLast(ownerPackageName, &quot;}&quot;);</span>
+            }
+        }
+<span class="nc" id="L62">    }</span>
+
+    public String getSignature() {
+<span class="nc" id="L65">        return signature;</span>
+    }
+
+    public String getAlarmType() {
+<span class="nc" id="L69">        return alarmType;</span>
+    }
+
+    public int getIndex() {
+<span class="nc" id="L73">        return index;</span>
+    }
+
+    public String getId() {
+<span class="nc" id="L77">        return id;</span>
+    }
+
+    public int getType() {
+<span class="nc" id="L81">        return type;</span>
+    }
+
+    public AlarmBatch getParentBatch() {
+<span class="nc" id="L85">        return parentBatch;</span>
+    }
+
+    public long getWhen() {
+<span class="nc" id="L89">        return when;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
