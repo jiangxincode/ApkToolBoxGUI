@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 public class PluginUtils {
     private static final Logger logger = LogManager.getLogger(PluginUtils.class.getSimpleName());
 
-    private static final String URL_PREFIX = "https://gitee.com/jiangxinnju/apk-tool-box-gui-plugins/releases/download/";
+    private static final String URL_PREFIX = "http://124.222.145.48/download/ApkToolBoxGUI/";
 
     private static final String DOWNLOAD_VERSION = "v1.0.6";
 
