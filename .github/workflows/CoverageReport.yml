@@ -31,7 +31,7 @@ jobs:
         run: |
           mvn clean test jacoco:report coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}
       - name: Publish coverage report to QLTY
-        uses: qltysh/qlty-action/coverage@v1
+        uses: qltysh/qlty-action/coverage@v2
         with:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
           files: target/site/jacoco/jacoco.xml
