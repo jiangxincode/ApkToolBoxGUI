@@ -9,10 +9,12 @@
         </File>
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
+                    pattern="%d{DEFAULT} %highlight{%-5level}{ERROR=Bright Red, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White}[%t] %-5level %logger{36} - %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
+        <Logger name="org.apache.fontbox" level="error" additivity="false"/>
+        <Logger name="org.apache.pdfbox.pdmodel.font" level="error" additivity="false"/>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>

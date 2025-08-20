@@ -172,7 +172,7 @@ public class DuplicateSearchPanel extends EasyPanel {
         resultPanel.add(scrollPane);
     }
 
-    public String getComparedKey(File file) {
+    private String getComparedKey(File file) {
         StringBuilder sb = new StringBuilder();
         sb.append("[Size][");
         sb.append(DigestUtils.md5Hex(String.valueOf(file.length())));
