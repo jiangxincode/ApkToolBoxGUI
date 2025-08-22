@@ -17,7 +17,7 @@
         <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
         <surefire.version>3.5.3</surefire.version>
-        <protobuf.version>4.31.1</protobuf.version>
+        <protobuf.version>4.32.0</protobuf.version>
         <pdf.version>3.0.2</pdf.version>
     </properties>
     <dependencies>
@@ -254,7 +254,7 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.9.3.2</version>
+                    <version>4.9.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -264,7 +264,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.26.1</version>
+                            <version>11.0.0</version>
                         </dependency>
                     </dependencies>
                     <configuration>
@@ -284,7 +284,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
+                    <version>3.11.3</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
                         <charset>UTF-8</charset>
