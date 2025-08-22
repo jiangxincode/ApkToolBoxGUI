@@ -18,7 +18,7 @@
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
         <surefire.version>3.5.3</surefire.version>
         <protobuf.version>4.32.0</protobuf.version>
-        <pdf.version>3.0.2</pdf.version>
+        <pdf.version>3.0.5</pdf.version>
     </properties>
     <dependencies>
         <dependency>
