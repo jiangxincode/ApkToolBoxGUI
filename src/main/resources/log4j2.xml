@@ -14,7 +14,7 @@
     </Appenders>
     <Loggers>
         <Logger name="org.apache.fontbox" level="error" additivity="false"/>
-        <Logger name="org.apache.pdfbox.pdmodel.font" level="error" additivity="false"/>
+        <Logger name="org.apache.pdfbox" level="error" additivity="false"/>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>

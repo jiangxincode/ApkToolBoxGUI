@@ -22,8 +22,7 @@ import edu.jiangxin.apktoolbox.android.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
 import edu.jiangxin.apktoolbox.help.settings.SettingsPanel;
-import edu.jiangxin.apktoolbox.pdf.EncryptedFinderPanel;
-import edu.jiangxin.apktoolbox.pdf.ScannedFinderPanel;
+import edu.jiangxin.apktoolbox.pdf.PdfFinderPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolPanel;
@@ -207,13 +206,9 @@ public class MainFrame extends EasyFrame {
         JMenu pdfMenu = new JMenu(bundle.getString("pdf.title"));
         menuBar.add(pdfMenu);
 
-        JMenuItem scannedPdfFinderMenuItem = new JMenuItem(bundle.getString("pdf.scanned.finder.title"));
-        scannedPdfFinderMenuItem.addActionListener(new ChangeMenuToPanelListener(ScannedFinderPanel.class, scannedPdfFinderMenuItem.getText()));
-        pdfMenu.add(scannedPdfFinderMenuItem);
-
-        JMenuItem encryptedPdfFinderMenuItem = new JMenuItem(bundle.getString("pdf.encrypted.finder.title"));
-        encryptedPdfFinderMenuItem.addActionListener(new ChangeMenuToPanelListener(EncryptedFinderPanel.class, encryptedPdfFinderMenuItem.getText()));
-        pdfMenu.add(encryptedPdfFinderMenuItem);
+        JMenuItem pdfFinderMenuItem = new JMenuItem(bundle.getString("pdf.finder.title"));
+        pdfFinderMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfFinderPanel.class, pdfFinderMenuItem.getText()));
+        pdfMenu.add(pdfFinderMenuItem);
     }
 
     private void createFileMenu() {

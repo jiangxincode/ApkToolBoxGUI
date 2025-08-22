@@ -5,18 +5,11 @@ import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.DateUtils;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serial;
@@ -27,7 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ScannedFinderPanel extends EasyPanel {
+public class PdfFinderPanel extends EasyPanel {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -37,6 +30,10 @@ public class ScannedFinderPanel extends EasyPanel {
     private JPanel optionPanel;
 
     private FileListPanel fileListPanel;
+
+    private JRadioButton scannedRadioButton;
+
+    private JRadioButton encryptedRadioButton;
 
     private JSpinner thresholdSpinner;
 
@@ -55,7 +52,7 @@ public class ScannedFinderPanel extends EasyPanel {
 
     private JMenuItem openDirMenuItem;
 
-    private Thread searchThread;
+    private SearchThread searchThread;
 
     final private List<File> scannedFileList = new ArrayList<>();
 
@@ -82,10 +79,29 @@ public class ScannedFinderPanel extends EasyPanel {
         checkOptionPanel.setLayout(new BoxLayout(checkOptionPanel, BoxLayout.X_AXIS));
         checkOptionPanel.setBorder(BorderFactory.createTitledBorder("Check Options"));
 
+        ButtonGroup buttonGroup = new ButtonGroup();
+        ItemListener itemListener = new RadioButtonItemListener();
+
+        scannedRadioButton = new JRadioButton("查找扫描的PDF文件");
+        scannedRadioButton.setSelected(true);
+        scannedRadioButton.addItemListener(itemListener);
+        buttonGroup.add(scannedRadioButton);
+
+        encryptedRadioButton = new JRadioButton("查找加密的PDF文件");
+        encryptedRadioButton.addItemListener(itemListener);
+        buttonGroup.add(encryptedRadioButton);
+
+        JPanel typePanel = new JPanel();
+        typePanel.setLayout(new FlowLayout(FlowLayout.LEFT,10,3));
+        typePanel.add(scannedRadioButton);
+        typePanel.add(encryptedRadioButton);
+
         JLabel thresholdLabel = new JLabel("Threshold: ");
         thresholdSpinner = new JSpinner();
         thresholdSpinner.setModel(new SpinnerNumberModel(1, 0, 100, 1));
 
+        checkOptionPanel.add(typePanel);
+        checkOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         checkOptionPanel.add(thresholdLabel);
         checkOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         checkOptionPanel.add(thresholdSpinner);
@@ -109,6 +125,7 @@ public class ScannedFinderPanel extends EasyPanel {
 
         searchButton = new JButton("Search");
         cancelButton = new JButton("Cancel");
+        cancelButton.setEnabled(false);
         searchButton.addActionListener(new OperationButtonActionListener());
         cancelButton.addActionListener(new OperationButtonActionListener());
         operationPanel.add(searchButton);
@@ -154,27 +171,17 @@ public class ScannedFinderPanel extends EasyPanel {
     }
 
     private void processFile(File file) {
-        int threshold = (Integer) thresholdSpinner.getValue();
-        int length = 0;
-        boolean isEncrypted;
-
-        try (PDDocument document = Loader.loadPDF(file)) {
-            isEncrypted = document.isEncrypted();
-            if (isEncrypted) {
-                document.setAllSecurityToBeRemoved(true);
+        if (scannedRadioButton.isSelected()) {
+            int threshold = (Integer) thresholdSpinner.getValue();
+            if (PdfUtils.isScannedPdf(file, threshold)) {
+                scannedFileList.add(file);
             }
-
-            PDFTextStripper stripper = new PDFTextStripper();
-            String text = stripper.getText(document).trim();
-            length = text.length();
-        } catch (IOException e) {
-            logger.error("Error reading PDF file: {}", file.getAbsolutePath());
-            return;
-        }
-        logger.info("Processing file: {}, is encrypted: {}, text size: {}", file.getPath(), isEncrypted, length);
-
-        if (length < threshold) {
-            scannedFileList.add(file);
+        } else if (encryptedRadioButton.isSelected()) {
+            if (PdfUtils.isEncryptedPdf(file)) {
+                scannedFileList.add(file);
+            }
+        } else {
+            logger.error("Invalid option selected");
         }
     }
 
@@ -235,11 +242,16 @@ public class ScannedFinderPanel extends EasyPanel {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
             if (source.equals(searchButton)) {
+                searchButton.setEnabled(false);
+                cancelButton.setEnabled(true);
                 searchThread = new SearchThread(isRecursiveSearched.isSelected(), scannedFileList);
                 searchThread.start();
             } else if (source.equals(cancelButton)) {
+                searchButton.setEnabled(true);
+                cancelButton.setEnabled(false);
                 if (searchThread.isAlive()) {
                     searchThread.interrupt();
+                    searchThread.executorService.shutdownNow();
                 }
             }
 
@@ -269,7 +281,7 @@ public class ScannedFinderPanel extends EasyPanel {
     }
 
     class SearchThread extends Thread {
-        private final ExecutorService executorService;
+        public final ExecutorService executorService;
         private final AtomicInteger processedFiles = new AtomicInteger(0);
         private int totalFiles = 0;
         private final boolean isRecursiveSearched;
@@ -335,6 +347,10 @@ public class ScannedFinderPanel extends EasyPanel {
                 SwingUtilities.invokeLater(() -> progressBar.setString("Search failed"));
             } finally {
                 executorService.shutdown();
+                SwingUtilities.invokeLater(() -> {
+                    searchButton.setEnabled(true);
+                    cancelButton.setEnabled(false);
+                });
             }
         }
 
@@ -352,6 +368,13 @@ public class ScannedFinderPanel extends EasyPanel {
                     progressBar.setString(String.format("Processing: %d/%d files (%d%%)", processed, totalFiles, percentage));
                 });
             }
+        }
+    }
+
+    class RadioButtonItemListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            thresholdSpinner.setEnabled(scannedRadioButton.isSelected());
         }
     }
 }
