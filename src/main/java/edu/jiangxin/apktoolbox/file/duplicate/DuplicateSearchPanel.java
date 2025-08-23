@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
+import edu.jiangxin.apktoolbox.utils.RevealFileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +60,7 @@ public class DuplicateSearchPanel extends EasyPanel {
     private JMenuItem deleteFilesInSameDirMenuItem;
     private JMenuItem deleteFilesInSameDirRecursiveMenuItem;
 
-    private Thread searchThread;
+    private SearchThread searchThread;
 
     final private Map<String, List<File>> duplicateFileGroupMap = new HashMap<>();
 
@@ -125,9 +126,10 @@ public class DuplicateSearchPanel extends EasyPanel {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        
+
         searchButton = new JButton("Search");
         cancelButton = new JButton("Cancel");
+        cancelButton.setEnabled(false);
         searchButton.addActionListener(new OperationButtonActionListener());
         cancelButton.addActionListener(new OperationButtonActionListener());
         operationPanel.add(searchButton);
@@ -263,13 +265,7 @@ public class DuplicateSearchPanel extends EasyPanel {
             int rowIndex = resultTable.getSelectedRow();
             String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
             File parent = new File(parentPath);
-            if (parent.isDirectory()) {
-                try {
-                    Desktop.getDesktop().open(parent);
-                } catch (IOException e) {
-                    logger.error("open parent failed: " + parent.getPath());
-                }
-            }
+            RevealFileUtils.revealDirectory(parent);
         }
 
         private void onDeleteFile() {
@@ -336,6 +332,8 @@ public class DuplicateSearchPanel extends EasyPanel {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
             if (source.equals(searchButton)) {
+                searchButton.setEnabled(false);
+                cancelButton.setEnabled(true);
                 String[] extensions = null;
                 if (StringUtils.isNotEmpty(suffixTextField.getText())) {
                     extensions = suffixTextField.getText().split(",");
@@ -343,8 +341,11 @@ public class DuplicateSearchPanel extends EasyPanel {
                 searchThread = new SearchThread(extensions, isRecursiveSearched.isSelected(), isHiddenFileSearched.isSelected(), duplicateFileGroupMap);
                 searchThread.start();
             } else if (source.equals(cancelButton)) {
+                searchButton.setEnabled(true);
+                cancelButton.setEnabled(false);
                 if (searchThread.isAlive()) {
                     searchThread.interrupt();
+                    searchThread.executorService.shutdownNow();
                 }
             }
 
@@ -461,6 +462,10 @@ public class DuplicateSearchPanel extends EasyPanel {
                 SwingUtilities.invokeLater(() -> progressBar.setString("Search failed"));
             } finally {
                 executorService.shutdown();
+                SwingUtilities.invokeLater(() -> {
+                    searchButton.setEnabled(true);
+                    cancelButton.setEnabled(false);
+                });
             }
         }
 

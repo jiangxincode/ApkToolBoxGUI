@@ -5,13 +5,13 @@ import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.DateUtils;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
+import edu.jiangxin.apktoolbox.utils.RevealFileUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serial;
 import java.util.*;
 import java.util.List;
@@ -249,13 +249,7 @@ public class PdfFinderPanel extends EasyPanel {
             int rowIndex = resultTable.getSelectedRow();
             String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(PdfFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
             File parent = new File(parentPath);
-            if (parent.isDirectory()) {
-                try {
-                    Desktop.getDesktop().open(parent);
-                } catch (IOException e) {
-                    logger.error("open parent failed: {}", parent.getPath());
-                }
-            }
+            RevealFileUtils.revealDirectory(parent);
         }
     }
 
