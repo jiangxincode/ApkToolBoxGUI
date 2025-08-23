@@ -14,4 +14,4 @@
 
 ### Snapshot
 
-![CheckSum](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/Checksum_01.png)
+![CheckSum](https://raw.githubusercontent.com/wiki/jiangxincode/ApkToolBoxGUI/CheckDigest.png)
