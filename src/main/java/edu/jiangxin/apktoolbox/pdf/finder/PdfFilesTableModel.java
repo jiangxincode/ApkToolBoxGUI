@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.pdf;
+package edu.jiangxin.apktoolbox.pdf.finder;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;

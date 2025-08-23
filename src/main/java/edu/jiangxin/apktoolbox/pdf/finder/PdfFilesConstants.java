@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.pdf;
+package edu.jiangxin.apktoolbox.pdf.finder;
 
 import java.awt.*;
 import java.util.Vector;

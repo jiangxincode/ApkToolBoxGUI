@@ -7,6 +7,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.pdmodel.encryption.ProtectionPolicy;
+import org.apache.pdfbox.pdmodel.encryption.SecurityHandler;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
@@ -101,5 +103,19 @@ public class PdfUtils {
         }
         LOGGER.info("Processing file: {}, has annotations: {}", file.getPath(), hasAnnotations);
         return hasAnnotations;
+    }
+
+    public static void removePassword(File encryptedFile, File targetDir) {
+        try (PDDocument document = Loader.loadPDF(encryptedFile)) {
+            boolean isEncrypted = document.isEncrypted();
+            if (isEncrypted) {
+                document.setAllSecurityToBeRemoved(true);
+            }
+            String targetFilePath = targetDir.getAbsolutePath() + File.separator + encryptedFile.getName();
+            document.save(targetFilePath);
+            LOGGER.info("Remove password success: {}", targetFilePath);
+        } catch (IOException e) {
+            LOGGER.error("Error processing PDF file: {}", e.getMessage());
+        }
     }
 }

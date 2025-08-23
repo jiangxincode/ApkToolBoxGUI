@@ -1,5 +1,6 @@
-package edu.jiangxin.apktoolbox.pdf;
+package edu.jiangxin.apktoolbox.pdf.finder;
 
+import edu.jiangxin.apktoolbox.pdf.PdfUtils;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -27,7 +28,7 @@ public class PdfFinderPanel extends EasyPanel {
 
     private JTabbedPane tabbedPane;
 
-    private JPanel optionPanel;
+    private JPanel mainPanel;
 
     private FileListPanel fileListPanel;
 
@@ -56,9 +57,11 @@ public class PdfFinderPanel extends EasyPanel {
 
     private JMenuItem openDirMenuItem;
 
+    private JMenuItem copyFilesMenuItem;
+
     private SearchThread searchThread;
 
-    final private List<File> scannedFileList = new ArrayList<>();
+    final private List<File> resultFileList = new ArrayList<>();
 
 
     @Override
@@ -66,16 +69,16 @@ public class PdfFinderPanel extends EasyPanel {
         tabbedPane = new JTabbedPane();
         add(tabbedPane);
 
-        createOptionPanel();
-        tabbedPane.addTab("Option", null, optionPanel, "Show Search Options");
+        createMainPanel();
+        tabbedPane.addTab("Option", null, mainPanel, "Show Search Options");
 
         createResultPanel();
         tabbedPane.addTab("Result", null, resultPanel, "Show Search Result");
     }
 
-    private void createOptionPanel() {
-        optionPanel = new JPanel();
-        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
+    private void createMainPanel() {
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         fileListPanel = new FileListPanel();
 
@@ -152,15 +155,15 @@ public class PdfFinderPanel extends EasyPanel {
         progressBar.setStringPainted(true);
         progressBar.setString("Ready");
 
-        optionPanel.add(fileListPanel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(checkOptionPanel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(searchOptionPanel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(operationPanel);
-        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-        optionPanel.add(progressBar);
+        mainPanel.add(fileListPanel);
+        mainPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        mainPanel.add(checkOptionPanel);
+        mainPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        mainPanel.add(searchOptionPanel);
+        mainPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        mainPanel.add(operationPanel);
+        mainPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        mainPanel.add(progressBar);
     }
 
     private void createResultPanel() {
@@ -188,19 +191,19 @@ public class PdfFinderPanel extends EasyPanel {
         if (scannedRadioButton.isSelected()) {
             int threshold = (Integer) thresholdSpinner.getValue();
             if (PdfUtils.isScannedPdf(file, threshold)) {
-                scannedFileList.add(file);
+                resultFileList.add(file);
             }
         } else if (encryptedRadioButton.isSelected()) {
             if (PdfUtils.isEncryptedPdf(file)) {
-                scannedFileList.add(file);
+                resultFileList.add(file);
             }
         } else if (nonOutlineRadioButton.isSelected()) {
             if (PdfUtils.isNonOutlinePdf(file)) {
-                scannedFileList.add(file);
+                resultFileList.add(file);
             }
         } else if (hasAnnotationsRadioButton.isSelected()) {
             if (PdfUtils.hasAnnotations(file)) {
-                scannedFileList.add(file);
+                resultFileList.add(file);
             }
         } else {
             logger.error("Invalid option selected");
@@ -213,21 +216,30 @@ public class PdfFinderPanel extends EasyPanel {
             super.mouseReleased(e);
             int r = resultTable.rowAtPoint(e.getPoint());
             if (r >= 0 && r < resultTable.getRowCount()) {
-                resultTable.setRowSelectionInterval(r, r);
+                if (!resultTable.isRowSelected(r)) {
+                    resultTable.setRowSelectionInterval(r, r);
+                }
             } else {
                 resultTable.clearSelection();
             }
-            int rowIndex = resultTable.getSelectedRow();
-            if (rowIndex < 0) {
+            int[] rowsIndex = resultTable.getSelectedRows();
+            if (rowsIndex == null || rowsIndex.length == 0) {
                 return;
             }
             if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                 JPopupMenu popupmenu = new JPopupMenu();
                 MyMenuActionListener menuActionListener = new MyMenuActionListener();
 
-                openDirMenuItem = new JMenuItem("Open parent folder of this file");
-                openDirMenuItem.addActionListener(menuActionListener);
-                popupmenu.add(openDirMenuItem);
+                if (rowsIndex.length == 1) {
+                    openDirMenuItem = new JMenuItem("Open parent folder of this file");
+                    openDirMenuItem.addActionListener(menuActionListener);
+                    popupmenu.add(openDirMenuItem);
+                    popupmenu.addSeparator();
+                }
+
+                copyFilesMenuItem = new JMenuItem("Copy selected files to...");
+                copyFilesMenuItem.addActionListener(menuActionListener);
+                popupmenu.add(copyFilesMenuItem);
 
                 popupmenu.show(e.getComponent(), e.getX(), e.getY());
             }
@@ -240,6 +252,8 @@ public class PdfFinderPanel extends EasyPanel {
             Object source = actionEvent.getSource();
             if (source.equals(openDirMenuItem)) {
                 onOpenDir();
+            } else if (source.equals(copyFilesMenuItem)) {
+                onCopyFiles();
             } else {
                 logger.error("invalid source");
             }
@@ -251,6 +265,38 @@ public class PdfFinderPanel extends EasyPanel {
             File parent = new File(parentPath);
             RevealFileUtils.revealDirectory(parent);
         }
+
+        private void onCopyFiles() {
+            int[] selectedRows = resultTable.getSelectedRows();
+            if (selectedRows.length == 0) {
+                JOptionPane.showMessageDialog(PdfFinderPanel.this, "No rows selected", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            List<File> filesToCopy = new ArrayList<>();
+            for (int rowIndex : selectedRows) {
+                String filePath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(PdfFilesConstants.COLUMN_NAME_FILE_NAME).getModelIndex()).toString();
+                String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(PdfFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();
+                File file = new File(parentPath, filePath);
+                filesToCopy.add(file);
+            }
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setDialogTitle("Select Target Directory");
+            int returnValue = fileChooser.showOpenDialog(PdfFinderPanel.this);
+            if (returnValue != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            File targetDir = fileChooser.getSelectedFile();
+            for (File file : filesToCopy) {
+                try {
+                    org.apache.commons.io.FileUtils.copyFileToDirectory(file, targetDir);
+                } catch (Exception e) {
+                    logger.error("Copy file failed: " + file.getAbsolutePath(), e);
+                }
+            }
+        }
+
+
     }
 
     class OperationButtonActionListener implements ActionListener {
@@ -260,7 +306,7 @@ public class PdfFinderPanel extends EasyPanel {
             if (source.equals(searchButton)) {
                 searchButton.setEnabled(false);
                 cancelButton.setEnabled(true);
-                searchThread = new SearchThread(isRecursiveSearched.isSelected(), scannedFileList);
+                searchThread = new SearchThread(isRecursiveSearched.isSelected());
                 searchThread.start();
             } else if (source.equals(cancelButton)) {
                 searchButton.setEnabled(true);
@@ -277,7 +323,7 @@ public class PdfFinderPanel extends EasyPanel {
     private void showResult() {
         SwingUtilities.invokeLater(() -> {
             int index = 0;
-            for (File file : scannedFileList) {
+            for (File file : resultFileList) {
                 index++;
                 Vector<Object> rowData = getRowVector(index, file);
                 resultTableModel.addRow(rowData);
@@ -301,12 +347,10 @@ public class PdfFinderPanel extends EasyPanel {
         private final AtomicInteger processedFiles = new AtomicInteger(0);
         private int totalFiles = 0;
         private final boolean isRecursiveSearched;
-        private final List<File> scannedFileList;
 
-        public SearchThread(boolean isRecursiveSearched, List<File> scannedFileList) {
+        public SearchThread(boolean isRecursiveSearched) {
             super();
             this.isRecursiveSearched = isRecursiveSearched;
-            this.scannedFileList = scannedFileList;
             this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
             SwingUtilities.invokeLater(() -> {
@@ -318,7 +362,7 @@ public class PdfFinderPanel extends EasyPanel {
         @Override
         public void run() {
             try {
-                scannedFileList.clear();
+                resultFileList.clear();
                 SwingUtilities.invokeLater(() -> resultTableModel.setRowCount(0));
 
                 List<File> fileList = fileListPanel.getFileList();

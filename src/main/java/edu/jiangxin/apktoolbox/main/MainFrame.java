@@ -22,7 +22,8 @@ import edu.jiangxin.apktoolbox.android.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
 import edu.jiangxin.apktoolbox.help.settings.SettingsPanel;
-import edu.jiangxin.apktoolbox.pdf.PdfFinderPanel;
+import edu.jiangxin.apktoolbox.pdf.finder.PdfFinderPanel;
+import edu.jiangxin.apktoolbox.pdf.passwordremover.PdfPasswordRemoverPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolPanel;
@@ -209,6 +210,10 @@ public class MainFrame extends EasyFrame {
         JMenuItem pdfFinderMenuItem = new JMenuItem(bundle.getString("pdf.finder.title"));
         pdfFinderMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfFinderPanel.class, pdfFinderMenuItem.getText()));
         pdfMenu.add(pdfFinderMenuItem);
+
+        JMenuItem pdfPasswordRemoverMenuItem = new JMenuItem(bundle.getString("pdf.password.remover.title"));
+        pdfPasswordRemoverMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfPasswordRemoverPanel.class, pdfPasswordRemoverMenuItem.getText()));
+        pdfMenu.add(pdfPasswordRemoverMenuItem);
     }
 
     private void createFileMenu() {
