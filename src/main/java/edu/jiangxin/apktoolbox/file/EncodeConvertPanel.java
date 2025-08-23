@@ -6,7 +6,7 @@ import edu.jiangxin.apktoolbox.swing.extend.autocomplete.AutoCompleteComboBox;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import org.apache.commons.io.FileUtils;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;

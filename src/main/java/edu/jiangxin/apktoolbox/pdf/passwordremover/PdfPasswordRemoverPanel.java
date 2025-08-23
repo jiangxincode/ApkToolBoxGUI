@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -163,7 +164,7 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
                 Set<File> fileSet = new TreeSet<>();
                 String[] extensions = new String[]{"pdf", "PDF"};
                 for (File file : fileList) {
-                    fileSet.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, isRecursiveSearched));
+                    fileSet.addAll(FileUtils.listFiles(file, extensions, isRecursiveSearched));
                 }
 
                 List<Future<?>> futures = new ArrayList<>();

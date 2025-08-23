@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.utils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -7,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class FileUtils {
 
@@ -70,6 +73,35 @@ public class FileUtils {
             LOGGER.error("getCanonicalPathQuiet failed: IOException");
             return null;
         }
+    }
+
+
+    public static Set<File> listFiles(final File file, final String[] extensions, final boolean recursive) {
+        Set<File> files = new TreeSet<>();
+        if (!file.exists()) {
+            LOGGER.error("file does not exist: {}", file.getAbsolutePath());
+            return files;
+        }
+
+        if (file.isDirectory()) {
+            files.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, recursive));
+            return files;
+        }
+        if (file.isFile()) {
+            String fileName = file.getName();
+            if (ArrayUtils.isEmpty(extensions)) {
+                files.add(file);
+                return files;
+            }
+            for (String extension : extensions) {
+                if (fileName.endsWith(extension)) {
+                    files.add(file);
+                    return files;
+                }
+            }
+        }
+        LOGGER.warn("file is not directory or file: {}", file.getAbsolutePath());
+        return files;
     }
 }
 

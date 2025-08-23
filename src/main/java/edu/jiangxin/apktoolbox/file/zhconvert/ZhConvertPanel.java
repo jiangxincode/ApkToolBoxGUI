@@ -4,7 +4,7 @@ import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
-import org.apache.commons.io.FileUtils;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -201,16 +201,16 @@ public class ZhConvertPanel extends EasyPanel {
         jTextArea.append("文件转换开始：\n");
         for (File file : fileList){
             jTextArea.append("开始转换："+file + "\n");
-            String content = FileUtils.readFileToString(file, "utf-8");
+            String content = org.apache.commons.io.FileUtils.readFileToString(file, "utf-8");
 
             if (converType.equals(Constants.zhSimple2zhTw)){
                 String str = myZHConverterUtils.myConvertToTW(content);
                 String result = ZhConverterUtil.toTraditional(str);
-                FileUtils.write(file,result,"UTF-8");
+                org.apache.commons.io.FileUtils.write(file,result,"UTF-8");
             }else{
                 String str = myZHConverterUtils.myConvertToSimple(content);
                 String result = ZhConverterUtil.toSimple(str);
-                FileUtils.write(file,result,"UTF-8");
+                org.apache.commons.io.FileUtils.write(file,result,"UTF-8");
             }
             jTextArea.append("转换完成："+file + "\n");
             jTextArea.setCaretPosition(jTextArea.getText().length());

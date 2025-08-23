@@ -369,7 +369,7 @@ public class PdfFinderPanel extends EasyPanel {
                 Set<File> fileSet = new TreeSet<>();
                 String[] extensions = new String[]{"pdf", "PDF"};
                 for (File file : fileList) {
-                    fileSet.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, isRecursiveSearched));
+                    fileSet.addAll(FileUtils.listFiles(file, extensions, isRecursiveSearched));
                 }
 
                 List<Future<?>> futures = new ArrayList<>();

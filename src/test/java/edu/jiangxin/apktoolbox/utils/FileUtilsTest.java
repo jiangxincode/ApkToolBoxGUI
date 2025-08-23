@@ -1,6 +1,5 @@
-package edu.jiangxin.common;
+package edu.jiangxin.apktoolbox.utils;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
