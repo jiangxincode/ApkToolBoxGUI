@@ -34,6 +34,8 @@ It's a collection of common tools, password recovery, encoding convert, timestam
 [![Documentation](https://img.shields.io/badge/Documentation-文档-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI)
 
 * [Password Recovery](https://jiangxincode.github.io/ApkToolBoxGUI/features/recovery_file_password.html)
+* [Special PDF Files Finder](https://jiangxincode.github.io/ApkToolBoxGUI/features/pdf_finder.html)
+* [PDF Password Remover](https://jiangxincode.github.io/ApkToolBoxGUI/features/pdf_password_remover.html)
 * [Batch Rename](https://jiangxincode.github.io/ApkToolBoxGUI/features/batch_rename.html)
 * [Check Summary](https://jiangxincode.github.io/ApkToolBoxGUI/features/check_summary.html)
 * [Color Picker](https://jiangxincode.github.io/ApkToolBoxGUI/features/color_picker.html)
