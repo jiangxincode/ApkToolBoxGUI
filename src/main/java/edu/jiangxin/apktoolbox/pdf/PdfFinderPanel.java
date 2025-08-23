@@ -35,6 +35,10 @@ public class PdfFinderPanel extends EasyPanel {
 
     private JRadioButton encryptedRadioButton;
 
+    private JRadioButton nonOutlineRadioButton;
+
+    private JRadioButton hasAnnotationsRadioButton;
+
     private JSpinner thresholdSpinner;
 
     private JCheckBox isRecursiveSearched;
@@ -91,10 +95,20 @@ public class PdfFinderPanel extends EasyPanel {
         encryptedRadioButton.addItemListener(itemListener);
         buttonGroup.add(encryptedRadioButton);
 
+        nonOutlineRadioButton = new JRadioButton("查找没有目录的PDF文件");
+        nonOutlineRadioButton.addItemListener(itemListener);
+        buttonGroup.add(nonOutlineRadioButton);
+
+        hasAnnotationsRadioButton = new JRadioButton("查找有注释的PDF文件");
+        hasAnnotationsRadioButton.addItemListener(itemListener);
+        buttonGroup.add(hasAnnotationsRadioButton);
+
         JPanel typePanel = new JPanel();
         typePanel.setLayout(new FlowLayout(FlowLayout.LEFT,10,3));
         typePanel.add(scannedRadioButton);
         typePanel.add(encryptedRadioButton);
+        typePanel.add(nonOutlineRadioButton);
+        typePanel.add(hasAnnotationsRadioButton);
 
         JLabel thresholdLabel = new JLabel("Threshold: ");
         thresholdSpinner = new JSpinner();
@@ -178,6 +192,14 @@ public class PdfFinderPanel extends EasyPanel {
             }
         } else if (encryptedRadioButton.isSelected()) {
             if (PdfUtils.isEncryptedPdf(file)) {
+                scannedFileList.add(file);
+            }
+        } else if (nonOutlineRadioButton.isSelected()) {
+            if (PdfUtils.isNonOutlinePdf(file)) {
+                scannedFileList.add(file);
+            }
+        } else if (hasAnnotationsRadioButton.isSelected()) {
+            if (PdfUtils.hasAnnotations(file)) {
                 scannedFileList.add(file);
             }
         } else {

@@ -39,6 +39,7 @@
         </menu>
         <menu name="Features">
             <item name="Recovery File Password" href="features/recovery_file_password.html"/>
+            <item name="Find Special PDF Files" href="features/pdf_finder.html"/>
             <item name="Convert Encoding" href="features/convert_encoding.html"/>
             <item name="Convert OS Pattern" href="features/convert_os_pattern.html"/>
             <item name="Convert Simplified/Traditional Chinese" href="features/convert_simplified_traditional_chinese.html"/>

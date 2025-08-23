@@ -1,17 +1,19 @@
 package edu.jiangxin.apktoolbox.pdf;
 
-import edu.jiangxin.apktoolbox.utils.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PdfUtils {
-    private static final Logger LOGGER = LogManager.getLogger(DateUtils.class.getSimpleName());
+    private static final Logger LOGGER = LogManager.getLogger(PdfUtils.class.getSimpleName());
     public static boolean isScannedPdf(File file, int threshold) {
         int length = 0;
 
@@ -43,5 +45,61 @@ public class PdfUtils {
         }
         LOGGER.info("Processing file: {}, is encrypted: {}", file.getPath(), isEncrypted);
         return isEncrypted;
+    }
+
+    public static boolean isNonOutlinePdf(File file) {
+        boolean hasOutline = false;
+
+        try (PDDocument document = Loader.loadPDF(file)) {
+            boolean isEncrypted = document.isEncrypted();
+            if (isEncrypted) {
+                document.setAllSecurityToBeRemoved(true);
+            }
+
+            if (document.getDocumentCatalog() != null && document.getDocumentCatalog().getDocumentOutline() != null) {
+                hasOutline = true;
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error reading PDF file: {}", e.getMessage());
+            return false;
+        }
+        LOGGER.info("Processing file: {}, has outline: {}", file.getPath(), hasOutline);
+        return !hasOutline;
+    }
+
+    public static boolean hasAnnotations(File file) {
+        boolean hasAnnotations = false;
+
+        try (PDDocument document = Loader.loadPDF(file)) {
+            boolean isEncrypted = document.isEncrypted();
+            if (isEncrypted) {
+                document.setAllSecurityToBeRemoved(true);
+            }
+            PDDocumentCatalog catalog = document.getDocumentCatalog();
+            if (catalog == null) {
+                return false;
+            }
+            PDPageTree pages = document.getDocumentCatalog().getPages();
+            if (pages == null || pages.getCount() == 0) {
+                return false;
+            }
+
+            for (PDPage page : pages) {
+                if (page.getAnnotations() != null && !page.getAnnotations().isEmpty()) {
+                    int pageNumber = page.getCOSObject().getInt("PageNumber", 0);
+                    String subType = page.getAnnotations().get(0).getSubtype();
+                    LOGGER.info("Found annotations on page: {}, subType: {}", pageNumber, subType);
+                    if (!subType.equals("Link")) {
+                        hasAnnotations = true;
+                        break; // No need to check further if we found annotations
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error reading PDF file: {}", e.getMessage());
+            return hasAnnotations;
+        }
+        LOGGER.info("Processing file: {}, has annotations: {}", file.getPath(), hasAnnotations);
+        return hasAnnotations;
     }
 }
