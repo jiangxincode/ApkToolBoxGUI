@@ -1,5 +1,6 @@
 package edu.jiangxin.apktoolbox.pdf;
 
+import com.itextpdf.kernel.pdf.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.Loader;
@@ -116,6 +117,24 @@ public class PdfUtils {
             LOGGER.info("Remove password success: {}", targetFilePath);
         } catch (IOException e) {
             LOGGER.error("Error processing PDF file: {}", e.getMessage());
+        }
+    }
+
+    public static void removePasswordWithIText(File encryptedFile, File targetDir) {
+        PdfReader reader;
+        try {
+            reader = new PdfReader(encryptedFile).setUnethicalReading(true);
+        } catch (IOException e) {
+            LOGGER.error("Error reading PDF file: {}", e.getMessage());
+            return;
+        }
+        String targetFilePath = targetDir.getAbsolutePath() + File.separator + encryptedFile.getName();
+
+        try (PdfDocument pdfDoc = new PdfDocument(reader,
+                new PdfWriter(targetFilePath))) {
+            LOGGER.info("Remove password success: {}", targetFilePath);
+        } catch (IOException e) {
+            LOGGER.error("Error writing PDF file: {}", e.getMessage());
         }
     }
 }

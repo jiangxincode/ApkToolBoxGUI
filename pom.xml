@@ -12,13 +12,13 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <pdf.version>3.0.5</pdf.version>
         <poi.version>5.4.1</poi.version>
+        <itext.version>9.2.0</itext.version>
         <log4j.version>2.25.1</log4j.version>
         <junit.minor.version>13.3</junit.minor.version>
         <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
         <surefire.version>3.5.3</surefire.version>
         <protobuf.version>4.32.0</protobuf.version>
-        <pdf.version>3.0.5</pdf.version>
     </properties>
     <dependencies>
         <dependency>
@@ -80,6 +80,16 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-scratchpad</artifactId>
             <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>bouncy-castle-adapter</artifactId>
+            <version>${itext.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -160,16 +170,6 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>${pdf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox-io</artifactId>
-            <version>${pdf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -111,11 +111,9 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            PdfUtils.removePassword(encryptedFile, targetDir);
-        } catch (Exception e) {
-            logger.error("Process file failed: " + encryptedFile.getAbsolutePath(), e);
+            PdfUtils.removePasswordWithIText(encryptedFile, targetDir);
         } catch (Throwable t) {
-            logger.error("Process file failed: " + encryptedFile.getAbsolutePath(), t);
+            logger.error("Process file failed: {}", encryptedFile.getAbsolutePath(), t);
         }
     }
 
