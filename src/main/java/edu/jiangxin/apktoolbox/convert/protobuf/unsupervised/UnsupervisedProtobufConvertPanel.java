@@ -9,7 +9,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import javax.swing.*;
 import java.awt.*;
 
-public class ProtobufConvertPanel extends EasyPanel {
+public class UnsupervisedProtobufConvertPanel extends EasyPanel {
 
     private JPanel contentPanel;
 

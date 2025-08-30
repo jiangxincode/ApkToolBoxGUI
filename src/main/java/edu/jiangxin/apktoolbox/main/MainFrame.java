@@ -4,7 +4,8 @@ import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
-import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.ProtobufConvertPanel;
+import edu.jiangxin.apktoolbox.convert.protobuf.supervised.SupervisedProtobufConvertPanel;
+import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
@@ -277,9 +278,13 @@ public class MainFrame extends EasyFrame {
         relationShipConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(RelationShipConvertPanel.class, relationShipConvertMenuItem.getText()));
         convertMenu.add(relationShipConvertMenuItem);
 
-        JMenuItem protobufConvertMenuItem = new JMenuItem(bundle.getString("convert.protobuf.title"));
-        protobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(ProtobufConvertPanel.class, protobufConvertMenuItem.getText()));
-        convertMenu.add(protobufConvertMenuItem);
+        JMenuItem unsupervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString("convert.protobuf.unsupervised.title"));
+        unsupervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(UnsupervisedProtobufConvertPanel.class, unsupervisedProtobufConvertMenuItem.getText()));
+        convertMenu.add(unsupervisedProtobufConvertMenuItem);
+
+        JMenuItem supervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString("convert.protobuf.supervised.title"));
+        supervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(SupervisedProtobufConvertPanel.class, supervisedProtobufConvertMenuItem.getText()));
+        convertMenu.add(supervisedProtobufConvertMenuItem);
     }
 
     private void createAndroidMenu() {
