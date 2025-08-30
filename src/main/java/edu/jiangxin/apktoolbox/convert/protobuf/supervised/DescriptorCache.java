@@ -89,10 +89,8 @@ public final class DescriptorCache {
                     addDescriptor(descriptor);
                 }
             }
-        } catch (final InvalidProtocolBufferException e) {
-            throw new UncheckedInvalidProtocolBufferException(e);
-        } catch (final Descriptors.DescriptorValidationException e) {
-            throw new UncheckedDescriptorValidationException(e);
+        } catch (final InvalidProtocolBufferException | Descriptors.DescriptorValidationException e) {
+            throw new RuntimeException(e);
         }
     }
 

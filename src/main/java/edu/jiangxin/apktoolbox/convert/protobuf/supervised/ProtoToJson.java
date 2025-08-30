@@ -79,11 +79,11 @@ public final class ProtoToJson {
 
         if (messageTypeName == null) {
             final Optional<DynamicMessage> message = parseWithBestMatchingDescriptor(messageRaw);
-            return toJson(message.orElseThrow(NoDescriptorFoundException::new));
+            return toJson(message.orElseThrow(RuntimeException::new));
         }
 
         final Optional<Descriptors.Descriptor> descriptor = cache.getByTypeName(messageTypeName);
-        return toJson(messageRaw, descriptor.orElseThrow(() -> new NoDescriptorFoundException(messageTypeName)));
+        return toJson(messageRaw, descriptor.orElseThrow(() -> new RuntimeException(messageTypeName)));
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -94,7 +94,7 @@ public final class ProtoToJson {
         try {
             return toJson(DynamicMessage.parseFrom(descriptor, messageRaw));
         } catch (final InvalidProtocolBufferException e) {
-            throw new UncheckedInvalidProtocolBufferException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,7 +105,7 @@ public final class ProtoToJson {
         try {
             return printer.print(message);
         } catch (final InvalidProtocolBufferException e) {
-            throw new UncheckedInvalidProtocolBufferException(e);
+            throw new RuntimeException(e);
         }
     }
 

@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
-import java.util.Objects;
 
 public class SupervisedProtobufConvertPanel extends EasyPanel {
 
@@ -97,10 +96,10 @@ public class SupervisedProtobufConvertPanel extends EasyPanel {
             Path path = descriptorCacheDirectory.toPath();
             final DescriptorCache cache = DescriptorCache.fromDirectory(path);
             if (cache.isEmpty()) {
-                displayShortMessage(
+                displayErrorMessage(
                         "The descriptor cache is empty, could not load any descriptor, check the cache directory:\n"
-                                + path.toAbsolutePath(), "Empty descriptor cache",
-                        MessageType.ERROR);
+                                + path.toAbsolutePath(), "Empty descriptor cache"
+                );
                 return;
             }
 
@@ -108,11 +107,11 @@ public class SupervisedProtobufConvertPanel extends EasyPanel {
             final String jsonString;
             try {
                 jsonString = protoToJson.toJson(byteArray);
-            } catch (final NoDescriptorFoundException e) {
-                displayShortMessage(
+            } catch (final RuntimeException e) {
+                displayErrorMessage(
                         "Unable to find a descriptor matching the given JSON message, check the cache directory:\n"
-                                + path.toAbsolutePath(), "No matching descriptor found",
-                        MessageType.ERROR);
+                                + path.toAbsolutePath(), "No matching descriptor found"
+                );
                 return;
             }
 
@@ -121,44 +120,11 @@ public class SupervisedProtobufConvertPanel extends EasyPanel {
             final StringWriter sw = new StringWriter();
             final PrintWriter pw = new PrintWriter(sw);
             t.printStackTrace(pw);
-            displayLongMessage(sw.toString(), "Error", MessageType.ERROR);
+            displayErrorMessage(sw.toString(), "Error");
         }
     }
 
-    private static void displayLongMessage(final String message, final String title, final MessageType messageType) {
-        Objects.requireNonNull(message);
-        Objects.requireNonNull(title);
-        Objects.requireNonNull(messageType);
-        final RSyntaxTextArea textArea = new RSyntaxTextArea(message);
-        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
-        textArea.setCodeFoldingEnabled(true);
-        textArea.setEditable(false);
-        final RTextScrollPane scrollPane = new RTextScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        JOptionPane.showMessageDialog(null, scrollPane, title, messageType.getCode());
-    }
-
-    private static void displayShortMessage(final String message, final String title, final MessageType messageType) {
-        Objects.requireNonNull(message);
-        Objects.requireNonNull(title);
-        Objects.requireNonNull(messageType);
-        JOptionPane.showMessageDialog(null, message, title, messageType.getCode());
-    }
-
-    private enum MessageType {
-        PLAIN(JOptionPane.PLAIN_MESSAGE),
-        ERROR(JOptionPane.ERROR_MESSAGE),
-        INFO(JOptionPane.INFORMATION_MESSAGE),
-        WARNING(JOptionPane.WARNING_MESSAGE),
-        QUESTION(JOptionPane.QUESTION_MESSAGE);
-        private final int code;
-
-        MessageType(final int code) {
-            this.code = code;
-        }
-
-        public int getCode() {
-            return code;
-        }
+    private static void displayErrorMessage(final String message, final String title) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }
