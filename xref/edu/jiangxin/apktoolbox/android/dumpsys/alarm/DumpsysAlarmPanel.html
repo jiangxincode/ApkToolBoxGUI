@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>DumpsysAlarmPanel xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../apidocs/edu/jiangxin/apktoolbox/android/dumpsys/alarm/DumpsysAlarmPanel.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> edu.jiangxin.apktoolbox.android.dumpsys.alarm;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> edu.jiangxin.apktoolbox.file.core.EncoderDetector;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> edu.jiangxin.apktoolbox.swing.treetable.MyAbstractTreeTableModel;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> edu.jiangxin.apktoolbox.utils.Constants;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.apache.commons.exec.CommandLine;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.apache.commons.exec.DefaultExecutor;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.exec.PumpStreamHandler;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.io.FileUtils;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.StringUtils;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> javax.swing.*;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> java.awt.*;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> java.awt.event.ActionEvent;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> java.awt.event.ActionListener;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.ByteArrayOutputStream;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.nio.charset.Charset;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DumpsysAlarmPanel" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/DumpsysAlarmPanel.html#DumpsysAlarmPanel">DumpsysAlarmPanel</a> <strong class="jxr_keyword">extends</strong> <a name="EasyPanel" href="../../../../../../edu/jiangxin/apktoolbox/swing/extend/EasyPanel.html#EasyPanel">EasyPanel</a> {
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">private</strong> JPanel operationPanel;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">private</strong> JPanel lastDateTimePanel;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">private</strong> JTextField lastDateTimeField;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> JPanel systemUptime1Panel;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">private</strong> JTextField systemUptime1Field;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">private</strong> JPanel systemUptime2Panel;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">private</strong> JTextField systemUptime2Field;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">private</strong> JPanel packagePanel;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">private</strong> JTextField packageField;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">private</strong> JTabbedPane tabbedPane;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> JPanel tabularFormTabPanel;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">private</strong> JPanel rawSourceTabPanel;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">private</strong> JEditorPane editorPane;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">private</strong> List&lt;AlarmTreeTableDataNode&gt; children;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">private</strong> String alarmInfoString;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> alarmInfoValid;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">public</strong> <a name="DumpsysAlarmPanel" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/DumpsysAlarmPanel.html#DumpsysAlarmPanel">DumpsysAlarmPanel</a>() <strong class="jxr_keyword">throws</strong> HeadlessException {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      @Override
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> initUI() {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          BoxLayout boxLayout = <strong class="jxr_keyword">new</strong> BoxLayout(<strong class="jxr_keyword">this</strong>, BoxLayout.Y_AXIS);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          setLayout(boxLayout);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          createOptionPanel();
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          add(operationPanel);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          createLastDateTimePanel();
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          add(lastDateTimePanel);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          createSystemUptime1Panel();
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          add(systemUptime1Panel);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>          createSystemUptime2Panel();
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          add(systemUptime2Panel);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          createPackagePanel();
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          add(packagePanel);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          createTabbedPane();
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          add(tabbedPane);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createOptionPanel() {
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          operationPanel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          operationPanel.setLayout(<strong class="jxr_keyword">new</strong> BoxLayout(operationPanel, BoxLayout.X_AXIS));
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          JButton loadFromDeviceButton = <strong class="jxr_keyword">new</strong> JButton(<span class="jxr_string">"Load From Device"</span>);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          loadFromDeviceButton.addActionListener(<strong class="jxr_keyword">new</strong> LoadFromDeviceButtonActionListener());
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          JButton loadFromFileButton = <strong class="jxr_keyword">new</strong> JButton(<span class="jxr_string">"Load From File"</span>);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         loadFromFileButton.addActionListener(<strong class="jxr_keyword">new</strong> LoadFromFileButtonActionListener());
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         operationPanel.add(loadFromDeviceButton);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>         operationPanel.add(loadFromFileButton);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         operationPanel.add(Box.createHorizontalGlue());
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     }
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createLastDateTimePanel() {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         lastDateTimePanel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         lastDateTimePanel.setLayout(<strong class="jxr_keyword">new</strong> BoxLayout(lastDateTimePanel, BoxLayout.X_AXIS));
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         JLabel lastDateTimeLabel = <strong class="jxr_keyword">new</strong> JLabel(<span class="jxr_string">"Last DateTime"</span>);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         lastDateTimeField = <strong class="jxr_keyword">new</strong> JTextField();
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         lastDateTimePanel.add(lastDateTimeLabel);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         lastDateTimePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         lastDateTimePanel.add(lastDateTimeField);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     }
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createSystemUptime1Panel() {
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>         systemUptime1Panel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>         systemUptime1Panel.setLayout(<strong class="jxr_keyword">new</strong> BoxLayout(systemUptime1Panel, BoxLayout.X_AXIS));
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         JLabel systemUptime1Label = <strong class="jxr_keyword">new</strong> JLabel(<span class="jxr_string">"System Uptime(ms)"</span>);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>         systemUptime1Field = <strong class="jxr_keyword">new</strong> JTextField();
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         systemUptime1Panel.add(systemUptime1Label);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         systemUptime1Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         systemUptime1Panel.add(systemUptime1Field);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createSystemUptime2Panel() {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>         systemUptime2Panel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         systemUptime2Panel.setLayout(<strong class="jxr_keyword">new</strong> BoxLayout(systemUptime2Panel, BoxLayout.X_AXIS));
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         JLabel systemUptime2Label = <strong class="jxr_keyword">new</strong> JLabel(<span class="jxr_string">"System Uptime"</span>);
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         systemUptime2Field = <strong class="jxr_keyword">new</strong> JTextField();
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         systemUptime2Panel.add(systemUptime2Label);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         systemUptime2Panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         systemUptime2Panel.add(systemUptime2Field);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createPackagePanel() {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         packagePanel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>         packagePanel.setLayout(<strong class="jxr_keyword">new</strong> BoxLayout(packagePanel, BoxLayout.X_AXIS));
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         JLabel packageLabel = <strong class="jxr_keyword">new</strong> JLabel(<span class="jxr_string">"Package"</span>);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         packageField = <strong class="jxr_keyword">new</strong> JTextField();
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         packagePanel.add(packageLabel);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         packagePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>         packagePanel.add(packageField);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createTabbedPane() {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>         tabbedPane = <strong class="jxr_keyword">new</strong> JTabbedPane();
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>         tabularFormTabPanel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         createTable();
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         tabbedPane.addTab(<span class="jxr_string">"Tabular Form"</span>, <strong class="jxr_keyword">null</strong>, tabularFormTabPanel, <span class="jxr_string">"Tabular Form"</span>);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> 
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         rawSourceTabPanel = <strong class="jxr_keyword">new</strong> JPanel();
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         createRawSource();
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         tabbedPane.addTab(<span class="jxr_string">"Raw source"</span>, <strong class="jxr_keyword">null</strong>, rawSourceTabPanel, <span class="jxr_string">"Raw source"</span>);
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>     }
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createTable() {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         children = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>         <a name="AlarmTreeTableDataNode" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataNode.html#AlarmTreeTableDataNode">AlarmTreeTableDataNode</a> root = <strong class="jxr_keyword">new</strong> <a name="AlarmTreeTableDataNode" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataNode.html#AlarmTreeTableDataNode">AlarmTreeTableDataNode</a>(<span class="jxr_string">"Root"</span>, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, children);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         <a name="MyAbstractTreeTableModel" href="../../../../../../edu/jiangxin/apktoolbox/swing/treetable/MyAbstractTreeTableModel.html#MyAbstractTreeTableModel">MyAbstractTreeTableModel</a> treeTableModel = <strong class="jxr_keyword">new</strong> <a name="AlarmTreeTableDataModel" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataModel.html#AlarmTreeTableDataModel">AlarmTreeTableDataModel</a>(root);
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>         <a name="MyTreeTable" href="../../../../../../edu/jiangxin/apktoolbox/swing/treetable/MyTreeTable.html#MyTreeTable">MyTreeTable</a> myTreeTable = <strong class="jxr_keyword">new</strong> <a name="MyTreeTable" href="../../../../../../edu/jiangxin/apktoolbox/swing/treetable/MyTreeTable.html#MyTreeTable">MyTreeTable</a>(treeTableModel);
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>         JScrollPane scrollPane = <strong class="jxr_keyword">new</strong> JScrollPane(myTreeTable);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>         scrollPane.setPreferredSize(<strong class="jxr_keyword">new</strong> Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         tabularFormTabPanel.add(scrollPane);
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createRawSource() {
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         editorPane = <strong class="jxr_keyword">new</strong> JEditorPane(<span class="jxr_string">"text/plain"</span>, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         editorPane.setEditable(false);
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         JScrollPane scrollPane = <strong class="jxr_keyword">new</strong> JScrollPane(editorPane);
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         scrollPane.setPreferredSize(<strong class="jxr_keyword">new</strong> Dimension(Constants.DEFAULT_SCROLL_PANEL_WIDTH, Constants.DEFAULT_SCROLL_PANEL_HEIGHT));
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         rawSourceTabPanel.add(scrollPane);
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     }
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> getAlarmInfoStringFromDevice() {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>         <strong class="jxr_keyword">final</strong> String cmd = <span class="jxr_string">"adb shell dumpsys alarm"</span>;
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>         logger.info(cmd);
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">try</strong> (ByteArrayOutputStream outStream = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>              ByteArrayOutputStream errStream = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream()
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         ) {
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>             CommandLine commandLine = CommandLine.parse(cmd);
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>             DefaultExecutor exec = <strong class="jxr_keyword">new</strong> DefaultExecutor();
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>             PumpStreamHandler streamHandler = <strong class="jxr_keyword">new</strong> PumpStreamHandler(outStream, errStream);
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>             exec.setStreamHandler(streamHandler);
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>             <strong class="jxr_keyword">int</strong> exitValue = exec.execute(commandLine);
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>             logger.info(<span class="jxr_string">"exitValue: ["</span> + exitValue + <span class="jxr_string">"]"</span>);
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>             alarmInfoString = outStream.toString(<span class="jxr_string">"UTF-8"</span>);
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>             alarmInfoValid = !StringUtils.isEmpty(alarmInfoString);
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>             <strong class="jxr_keyword">if</strong> (!alarmInfoValid) {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>                 alarmInfoString = errStream.toString(<span class="jxr_string">"UTF-8"</span>);
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>             }
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         } <strong class="jxr_keyword">catch</strong> (IOException ioe) {
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>             logger.error(<span class="jxr_string">"exec fail"</span>, ioe.getMessage());
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         }
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     }
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> 
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> getAlarmInfoStringFromFile() {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         JFileChooser jfc = <strong class="jxr_keyword">new</strong> JFileChooser();
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         jfc.setDialogTitle(<span class="jxr_string">"Select a dumpsys alarm file"</span>);
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         <strong class="jxr_keyword">int</strong> ret = jfc.showDialog(<strong class="jxr_keyword">new</strong> JLabel(), <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         File file = jfc.getSelectedFile();
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>         <strong class="jxr_keyword">switch</strong> (ret) {
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>             <strong class="jxr_keyword">case</strong> JFileChooser.APPROVE_OPTION:
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>                     alarmInfoString = FileUtils.readFileToString(file, Charset.forName(EncoderDetector.judgeFile(file.getCanonicalPath())));
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>                     alarmInfoValid = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>                 } <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>                     logger.error(<span class="jxr_string">"readFileToString failed"</span>, ex);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>                     alarmInfoValid = false;
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>                 }
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>             <strong class="jxr_keyword">default</strong>:
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     }
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> updateUIFromString() {
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         alarmInfoString = StringUtils.isEmpty(alarmInfoString) ? <span class="jxr_string">""</span> : alarmInfoString;
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         editorPane.setText(alarmInfoString);
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">if</strong> (!alarmInfoValid) {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             children.clear();
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>             <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         String tmpInputString = alarmInfoString;
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         String timeInformation = StringUtils.substringBetween(alarmInfoString, <span class="jxr_string">"nowRTC="</span>, <span class="jxr_string">"mLastTimeChangeClockTime="</span>).trim().replace(<span class="jxr_string">" "</span>, <span class="jxr_string">"="</span>);
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         String[] components = timeInformation.split(<span class="jxr_string">"="</span>);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <a name="SharedData" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/SharedData.html#SharedData">SharedData</a> sharedData = SharedData.getInstance();
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         sharedData.setTimestamp(Long.valueOf(components[0]));
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         sharedData.setDateTime(components[1] + <span class="jxr_string">" "</span> + components[2]);
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         sharedData.setUptimeMs(Long.valueOf(components[4]));
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">long</strong> uptimeSeconds = sharedData.getUptimeMs() / 1000;
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">long</strong> uptimeHours = uptimeSeconds / 3600;
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>         <strong class="jxr_keyword">long</strong> uptimeMinutes = (uptimeSeconds % 3600) / 60;
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <strong class="jxr_keyword">long</strong> uptimeSecs = uptimeSeconds % 60;
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> 
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         systemUptime1Field.setText(String.valueOf(sharedData.getUptimeMs()));
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         systemUptime2Field.setText(uptimeHours + <span class="jxr_string">":"</span> + uptimeMinutes + <span class="jxr_string">":"</span> + uptimeSecs);
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>         lastDateTimeField.setText(sharedData.getDateTime());
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> 
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>         String pendingAlarmBatchesCountStr = StringUtils.substringBetween(tmpInputString, <span class="jxr_string">"Pending alarm batches: "</span>, System.getProperty(<span class="jxr_string">"line.separator"</span>));
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         <strong class="jxr_keyword">int</strong> pendingAlarmBatches = Integer.valueOf(pendingAlarmBatchesCountStr);
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>         tmpInputString = StringUtils.substringAfter(tmpInputString, <span class="jxr_string">"Pending alarm batches: "</span>);
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>         List&lt;AlarmBatch&gt; listBatches = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>         <strong class="jxr_keyword">while</strong> (<strong class="jxr_keyword">true</strong>) {
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>             String batchDefinition = StringUtils.substringBetween(tmpInputString, <span class="jxr_string">"Batch{"</span>, <span class="jxr_string">"}:"</span> + System.getProperty(<span class="jxr_string">"line.separator"</span>));
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>             <strong class="jxr_keyword">if</strong> (StringUtils.isEmpty(batchDefinition)) {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>             <a name="AlarmBatch" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmBatch.html#AlarmBatch">AlarmBatch</a> alarmBatch = AlarmBatch.fromString(batchDefinition);
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>             <strong class="jxr_keyword">if</strong> (alarmBatch == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             }
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>             String alarmListDefinition = StringUtils.substringBetween(tmpInputString, <span class="jxr_string">"}:"</span> + System.getProperty(<span class="jxr_string">"line.separator"</span>), <span class="jxr_string">"Batch{"</span>);
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>             alarmListDefinition.replace(<span class="jxr_string">"ELAPSED_WAKEUP"</span>, <span class="jxr_string">"ELAPSED"</span>).replace(<span class="jxr_string">"RTC_WAKEUP"</span>, <span class="jxr_string">"ELAPSED"</span>).replace(<span class="jxr_string">"RTC"</span>, <span class="jxr_string">"ELAPSED"</span>);
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             String[] alarmListTmp = alarmListDefinition.split(<span class="jxr_string">"ELAPSED"</span>);
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>             List&lt;String&gt; alarmList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; alarmListTmp.length; i++) {
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>                 <strong class="jxr_keyword">if</strong> (StringUtils.isNotEmpty(alarmListTmp[i]) &amp;&amp; StringUtils.isNotBlank(alarmListTmp[i])) {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>                     alarmList.add(alarmListTmp[i]);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>                 }
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>             }
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> 
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; alarmList.size(); ++i) {
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                 <a name="Alarm" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/Alarm.html#Alarm">Alarm</a> alarm = Alarm.fromString(alarmList.get(i));
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>                 <strong class="jxr_keyword">if</strong> (StringUtils.isNotEmpty(packageField.getText()) &amp;&amp; StringUtils.equals(alarm.getOwnerPackageName(), packageField.getText())) {
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>                     <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>                 }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                 alarmBatch.appendAlarm(alarm);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>             }
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> 
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>             listBatches.add(alarmBatch);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>             <strong class="jxr_keyword">if</strong> (listBatches.size() == pendingAlarmBatches) {
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>             }
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             tmpInputString = StringUtils.substringAfter(tmpInputString, <span class="jxr_string">"Batch{"</span>);
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         children.clear();
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         children.addAll(alarmBatches2AlarmTreeTableDataNodeList(listBatches));
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     }
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <strong class="jxr_keyword">private</strong> List&lt;AlarmTreeTableDataNode&gt; alarmBatches2AlarmTreeTableDataNodeList(List&lt;AlarmBatch&gt; listBatches) {
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>         List&lt;AlarmTreeTableDataNode&gt; sonList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>         <strong class="jxr_keyword">for</strong> (<a name="AlarmBatch" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmBatch.html#AlarmBatch">AlarmBatch</a> alarmBatch : listBatches) {
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>             List&lt;AlarmTreeTableDataNode&gt; grandsonList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>             List&lt;Alarm&gt; alarmList = alarmBatch.getListAlarms();
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>             <strong class="jxr_keyword">for</strong> (<a name="Alarm" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/Alarm.html#Alarm">Alarm</a> alarm : alarmList) {
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>                 String objectId = alarm.getSignature() + <span class="jxr_string">" ["</span> + alarm.getId() + <span class="jxr_string">"]"</span>;
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>                 <a name="AlarmTreeTableDataNode" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataNode.html#AlarmTreeTableDataNode">AlarmTreeTableDataNode</a> grandson = <strong class="jxr_keyword">new</strong> <a name="AlarmTreeTableDataNode" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataNode.html#AlarmTreeTableDataNode">AlarmTreeTableDataNode</a>(objectId, alarm.getOwnerPackageName(), alarm.getAlarmType(), String.valueOf(alarm.getWhen()),String.valueOf(alarm.getWhen()), <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>                 grandsonList.add(grandson);
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>             }
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>             String objectId = alarmBatch.getSignature() + <span class="jxr_string">" ["</span> + alarmBatch.getId() + <span class="jxr_string">"] ("</span> + alarmBatch.getAlarmCount() + <span class="jxr_string">" alarms)"</span>;
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>             <a name="AlarmTreeTableDataNode" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataNode.html#AlarmTreeTableDataNode">AlarmTreeTableDataNode</a> son = <strong class="jxr_keyword">new</strong> <a name="AlarmTreeTableDataNode" href="../../../../../../edu/jiangxin/apktoolbox/android/dumpsys/alarm/AlarmTreeTableDataNode.html#AlarmTreeTableDataNode">AlarmTreeTableDataNode</a>(objectId, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, grandsonList);
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>             sonList.add(son);
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>         }
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         <strong class="jxr_keyword">return</strong> sonList;
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     }
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> 
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> LoadFromDeviceButtonActionListener <strong class="jxr_keyword">implements</strong> ActionListener {
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         @Override
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> actionPerformed(ActionEvent e) {
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>             getAlarmInfoStringFromDevice();
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>             updateUIFromString();
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         }
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     }
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> LoadFromFileButtonActionListener <strong class="jxr_keyword">implements</strong> ActionListener {
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>         @Override
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> actionPerformed(ActionEvent e) {
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>             getAlarmInfoStringFromFile();
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>             updateUIFromString();
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>         }
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     }
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> }
+</pre>
+<hr/>
+<div id="footer">© 2025</div>
+</body>
+</html>
