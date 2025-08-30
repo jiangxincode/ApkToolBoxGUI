@@ -37,7 +37,8 @@ public class ProtobufDecoder {
         List<JSONObject> result = new ArrayList<>();
         for (Map<String, Object> validItem : validItems) {
             DecoderResult protobufPart = getProtobufPart(validItem);
-            result.add(protobufPart.toJson());
+            JSONObject jsonObject = ProtobufUtils.getJsonObject(protobufPart);
+            result.add(jsonObject);
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(VALID_DATA, result);
@@ -114,8 +115,7 @@ public class ProtobufDecoder {
         switch (type) {
             case WireFormat.WIRETYPE_VARINT:
                 String valueStr = value.toString();
-                List<Map<String, Object>> varintResult = decodeVarintParts(valueStr);
-                result.setContent(JSONObject.valueToString(varintResult));
+                result.setContent(decodeVarintParts(valueStr));
                 break;
             case WireFormat.WIRETYPE_LENGTH_DELIMITED:
                 byte[] bytes = (byte[]) value;
@@ -236,22 +236,25 @@ public class ProtobufDecoder {
      * 解码为Varint格式数据
      *
      */
-    private static List<Map<String, Object>> decodeVarintParts(String value) {
+    private static String decodeVarintParts(String value) {
         List<Map<String, Object>> result = new ArrayList<>(3);
+        StringBuilder sb = new StringBuilder();
         BigInteger intVal = new BigInteger(value);
         Map<String, Object> map1 = new HashMap<>(2);
-        map1.put(KEY_TYPE, "Int");
-        map1.put(KEY_VALUE, String.valueOf(intVal));
+        sb.append("[as uint:");
+        sb.append(intVal);
+        sb.append("]");
         result.add(map1);
 
         BigInteger signedIntVal = VarintUtils.interpretAsSignedType(intVal);
         if (!signedIntVal.equals(intVal)) {
             Map<String, Object> map2 = new HashMap<>(2);
-            map2.put(KEY_TYPE, "Signed Int");
-            map2.put(KEY_VALUE, String.valueOf(signedIntVal));
+            sb.append("[as sint:");
+            sb.append(signedIntVal);
+            sb.append("]");
             result.add(map2);
         }
-        return result;
+        return sb.toString();
     }
 
 

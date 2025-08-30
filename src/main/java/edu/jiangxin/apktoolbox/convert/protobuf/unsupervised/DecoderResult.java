@@ -1,9 +1,5 @@
 package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
 
-import com.google.protobuf.WireFormat;
-import org.apache.commons.collections4.CollectionUtils;
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class DecoderResult {
@@ -23,7 +19,7 @@ public class DecoderResult {
     /**
      * 字段对应的值
      */
-    private String content;
+    private Object content;
     /**
      * 字段对应的值的解码结果
      */
@@ -53,11 +49,11 @@ public class DecoderResult {
         this.type = type;
     }
 
-    public String getContent() {
+    public Object getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Object content) {
         this.content = content;
     }
 
@@ -67,39 +63,5 @@ public class DecoderResult {
 
     public void setSubResults(List<DecoderResult> subResults) {
         this.subResults = subResults;
-    }
-
-    public JSONObject toJson() {
-        JSONObject json = new JSONObject();
-        json.put("byteRange", byteRange);
-        json.put("fieldNumber", fieldNumber);
-        json.put("type", typeToString(type));
-        if (CollectionUtils.isEmpty(subResults)) {
-            json.put("content", content);
-        } else {
-            json.put("content", subResults);
-        }
-        return json;
-    }
-
-    /**
-     * 将字段类型转成字符串
-     *
-     * @param type
-     * @return
-     */
-    private static String typeToString(int type) {
-        switch (type) {
-            case WireFormat.WIRETYPE_VARINT:
-                return "varint";
-            case WireFormat.WIRETYPE_LENGTH_DELIMITED:
-                return "length_delimited";
-            case WireFormat.WIRETYPE_FIXED32:
-                return "fixed32";
-            case WireFormat.WIRETYPE_FIXED64:
-                return "fixed64";
-            default:
-                return "unknown";
-        }
     }
 }
