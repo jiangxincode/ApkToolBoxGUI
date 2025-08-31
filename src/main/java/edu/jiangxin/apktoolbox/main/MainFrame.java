@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.main;
 
 import edu.jiangxin.apktoolbox.Version;
+import edu.jiangxin.apktoolbox.android.dumpsys.DumpsysPanel;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
@@ -315,6 +316,10 @@ public class MainFrame extends EasyFrame {
         JMenuItem dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("android.dumpsys.alarm.title"));
         dumpsysAlarmMenuItem.addActionListener(new ChangeMenuToPanelListener(DumpsysAlarmPanel.class, dumpsysAlarmMenuItem.getText()));
         androidMenu.add(dumpsysAlarmMenuItem);
+
+        JMenuItem dumpsysMenuItem = new JMenuItem(bundle.getString("android.dumpsys.title"));
+        dumpsysMenuItem.addActionListener(new ChangeMenuToPanelListener(DumpsysPanel.class, dumpsysMenuItem.getText()));
+        androidMenu.add(dumpsysMenuItem);
     }
 
     private void createReverseMenu() {
