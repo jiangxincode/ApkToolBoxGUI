@@ -274,13 +274,12 @@ public class DuplicateSearchPanel extends EasyPanel {
             String key = getComparedKey(selectedFile);
             List<File> files = duplicateFileGroupMap.get(key);
             for (File file : files) {
-                if (!selectedFile.equals(file)) {
-                    continue;
+                if (selectedFile.equals(file)) {
+                    files.remove(file);
+                    boolean isSuccessful = file.delete();
+                    logger.info("delete file: " + file.getAbsolutePath() + ", result: " + isSuccessful);
+                    break;
                 }
-                files.remove(file);
-                boolean isSuccessful = file.delete();
-                logger.info("delete file: " + file.getAbsolutePath() + ", result: " + isSuccessful);
-                break;
             }
             resultTableModel.setRowCount(0);
             showResult();
