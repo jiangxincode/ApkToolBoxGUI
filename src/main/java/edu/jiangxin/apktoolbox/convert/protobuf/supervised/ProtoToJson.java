@@ -29,9 +29,9 @@ public final class ProtoToJson {
 
     private static byte[] decompressZLib(final byte[] compressed) throws IOException {
         Objects.requireNonNull(compressed);
-        try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(compressed);
-             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             final InflaterInputStream zLibOutputStream = new InflaterInputStream(inputStream)) {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(compressed);
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             InflaterInputStream zLibOutputStream = new InflaterInputStream(inputStream)) {
             zLibOutputStream.transferTo(outputStream);
             return outputStream.toByteArray();
         }

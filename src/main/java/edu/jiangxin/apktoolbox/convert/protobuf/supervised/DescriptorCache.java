@@ -26,7 +26,7 @@ public final class DescriptorCache {
         }
 
         final DescriptorCache cache = new DescriptorCache();
-        try (final Stream<Path> walk = Files.walk(directory)) {
+        try (Stream<Path> walk = Files.walk(directory)) {
             walk.filter(Files::isRegularFile)
                     .forEach(cache::addDescriptors);
         } catch (final IOException e) {
