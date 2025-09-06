@@ -295,13 +295,6 @@ public class TimeConvertPanel extends EasyPanel {
         }
     }
 
-    private static Date getDate(final int hour, final int minute) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, minute);
-        return cal.getTime();
-    }
-
 
     private void update() {
         // Get the timezone objects:

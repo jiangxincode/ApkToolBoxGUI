@@ -5,8 +5,6 @@ import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -14,7 +12,6 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.zip.InflaterInputStream;
 
 public final class ProtoToJson {
     public static ProtoToJson fromCache(final DescriptorCache cache) {
@@ -25,16 +22,6 @@ public final class ProtoToJson {
 
     public static ProtoToJson fromEmptyCache() {
         return new ProtoToJson(DescriptorCache.emptyCache());
-    }
-
-    private static byte[] decompressZLib(final byte[] compressed) throws IOException {
-        Objects.requireNonNull(compressed);
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(compressed);
-             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             InflaterInputStream zLibOutputStream = new InflaterInputStream(inputStream)) {
-            zLibOutputStream.transferTo(outputStream);
-            return outputStream.toByteArray();
-        }
     }
 
     private final DescriptorCache cache;
