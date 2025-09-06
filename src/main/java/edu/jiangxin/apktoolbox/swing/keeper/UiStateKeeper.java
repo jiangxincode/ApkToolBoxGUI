@@ -57,7 +57,6 @@ public final class UiStateKeeper {
 
     private static String valueOf(Component c) {
         if (c instanceof JTextComponent) {
-            //TODO why run two times?
             String text = ((JTextComponent) c).getText();
             logger.info("JTextComponent name={}, text={}", c.getName(), text);
             return ((JTextComponent) c).getText();

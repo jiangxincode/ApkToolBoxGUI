@@ -48,6 +48,10 @@ public class FilePanel extends JPanel {
         this.currentDirectoryPath = currentDirectoryPath;
     }
 
+    public void setPersistentKey(String persistentKey) {
+        fileTextField.setName(persistentKey);
+    }
+
     public void setFileReadyCallback(IFileReadyCallback callback) {
         this.callback = callback;
     }
@@ -78,7 +82,6 @@ public class FilePanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         fileTextField = new JTextField();
-        fileTextField.setName(Constants.KEY_PREFIX + "FilePanel.TextField");
         fileTextField.setPreferredSize(new Dimension(600, 30));
         fileTextField.setMaximumSize(new Dimension(1200, 30));
         fileTextField.setTransferHandler(new FileTransferHandler());

@@ -405,6 +405,7 @@ public final class MainFrame extends EasyFrame {
             contentPane.revalidate();
             contentPane.repaint();
             refreshSizeAndLocation();
+            panel.afterPainted();
             UiStateKeeper.restore(panel);
             currentEasyPanel = panel;
         }

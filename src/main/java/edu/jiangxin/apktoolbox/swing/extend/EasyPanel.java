@@ -49,6 +49,10 @@ public class EasyPanel extends JPanel {
         // do nothing
     }
 
+    public void afterPainted() {
+        // do nothing
+    }
+
     protected EasyFrame getFrame() {
         //Java/Swing: Obtain Window/JFrame from inside a JPanel:
         // https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
