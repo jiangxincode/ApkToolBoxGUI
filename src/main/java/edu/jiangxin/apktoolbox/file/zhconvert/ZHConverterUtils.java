@@ -47,13 +47,10 @@ public class ZHConverterUtils {
      * @return
      */
     public String myConvertToTW(String str){
-        Iterator iterator = charMap.keySet().iterator();
-        while (iterator.hasNext()){
-            String key = (String) iterator.next();
-            if (key.length() >= 1) {
-                if (str.contains(key)){
-                    str = str.replaceAll(key,charMap.getProperty(key));
-                }
+        for (Object o : charMap.keySet()) {
+            String key = (String) o;
+            if (!key.isEmpty() && str.contains(key)) {
+                str = str.replaceAll(key, charMap.getProperty(key));
             }
         }
         return str;
@@ -65,13 +62,10 @@ public class ZHConverterUtils {
      * @return
      */
     public String myConvertToSimple(String str){
-        Iterator iterator = charMap2.keySet().iterator();
-        while (iterator.hasNext()){
-            String key = (String) iterator.next();
-            if (key.length() >= 1) {
-                if (str.contains(key)){
-                    str = str.replaceAll(key,charMap2.getProperty(key));
-                }
+        for (Object o : charMap2.keySet()) {
+            String key = (String) o;
+            if (!key.isEmpty() && str.contains(key)) {
+                str = str.replaceAll(key, charMap2.getProperty(key));
             }
         }
         return str;
