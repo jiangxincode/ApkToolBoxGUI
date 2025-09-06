@@ -34,7 +34,6 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
 
     private WorkderThread searchThread;
 
-    final private List<File> scannedFileList = new ArrayList<>();
     @Override
     public void initUI() {
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
