@@ -1,7 +1,6 @@
 package edu.jiangxin.apktoolbox.file.password.recovery.checker;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.POIDocument;
 import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
@@ -78,4 +77,3 @@ public class BinaryOfficeChecker extends FileChecker {
         return result;
     }
 }
-

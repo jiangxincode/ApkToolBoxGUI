@@ -1,6 +1,5 @@
 package edu.jiangxin.apktoolbox.android.dumpsys;
 
-import edu.jiangxin.apktoolbox.android.dumpsys.tojson.Alarm2Json;
 import edu.jiangxin.apktoolbox.android.dumpsys.tojson.IDumpsys2Json;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;

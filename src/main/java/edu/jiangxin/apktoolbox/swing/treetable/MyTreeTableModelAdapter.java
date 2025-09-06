@@ -1,7 +1,5 @@
 package edu.jiangxin.apktoolbox.swing.treetable;
 
-import java.awt.Rectangle;
-
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;

@@ -8,8 +8,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
-import org.apache.pdfbox.pdmodel.encryption.ProtectionPolicy;
-import org.apache.pdfbox.pdmodel.encryption.SecurityHandler;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;

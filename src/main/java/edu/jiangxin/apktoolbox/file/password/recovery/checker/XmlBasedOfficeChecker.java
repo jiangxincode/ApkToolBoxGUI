@@ -5,9 +5,6 @@ import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 public class XmlBasedOfficeChecker extends FileChecker {
     private static final boolean DEBUG = false;
