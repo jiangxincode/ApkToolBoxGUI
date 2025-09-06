@@ -170,11 +170,11 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
                 updateProgress();
 
                 for (File file : fileSet) {
-                    if (Thread.currentThread().isInterrupted()) {
+                    if (currentThread().isInterrupted()) {
                         return;
                     }
                     futures.add(executorService.submit(() -> {
-                        if (Thread.currentThread().isInterrupted()) {
+                        if (currentThread().isInterrupted()) {
                             return null;
                         }
                         processFile(file, targetDirPanel.getFile());
@@ -189,7 +189,7 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
                         future.get();
                     } catch (InterruptedException e) {
                         logger.error("Remove process interrupted", e);
-                        Thread.currentThread().interrupt(); // Restore interrupted status
+                        currentThread().interrupt(); // Restore interrupted status
                         return;
                     }
                 }

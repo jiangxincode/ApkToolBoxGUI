@@ -84,7 +84,7 @@ public final class DescriptorCache {
                     DescriptorProtos.FileDescriptorSet.parseFrom(descriptorsRaw);
             for (final DescriptorProtos.FileDescriptorProto descriptorFile : descriptorSet.getFileList()) {
                 final Descriptors.FileDescriptor fileDescriptor =
-                        Descriptors.FileDescriptor.buildFrom(descriptorFile, DescriptorCache.DEPENDENCIES);
+                        Descriptors.FileDescriptor.buildFrom(descriptorFile, DEPENDENCIES);
                 for (final Descriptors.Descriptor descriptor : fileDescriptor.getMessageTypes()) {
                     addDescriptor(descriptor);
                 }

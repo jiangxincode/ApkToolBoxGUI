@@ -15,8 +15,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static java.util.Calendar.*;
-
 public class TimeConvertPanel extends EasyPanel {
 
     private JSpinner timestamp2Spinner;
@@ -299,8 +297,8 @@ public class TimeConvertPanel extends EasyPanel {
 
     private static Date getDate(final int hour, final int minute) {
         Calendar cal = Calendar.getInstance();
-        cal.set(HOUR_OF_DAY, hour);
-        cal.set(MINUTE, minute);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
         return cal.getTime();
     }
 
@@ -319,11 +317,11 @@ public class TimeConvertPanel extends EasyPanel {
         Calendar localTime = Calendar.getInstance();
         localTime.setTime(sourceDate);
         Calendar sourceTime = Calendar.getInstance(sourceTimezone);
-        sourceTime.set(localTime.get(YEAR),
-                localTime.get(MONTH),
-                localTime.get(DATE),
-                localTime.get(HOUR_OF_DAY),
-                localTime.get(MINUTE));
+        sourceTime.set(localTime.get(Calendar.YEAR),
+                localTime.get(Calendar.MONTH),
+                localTime.get(Calendar.DATE),
+                localTime.get(Calendar.HOUR_OF_DAY),
+                localTime.get(Calendar.MINUTE));
 
         // Destination:
         SimpleDateFormat sdf = (SimpleDateFormat) SDF.clone();

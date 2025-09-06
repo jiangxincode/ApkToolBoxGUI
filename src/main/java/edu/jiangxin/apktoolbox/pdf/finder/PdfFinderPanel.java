@@ -377,11 +377,11 @@ public class PdfFinderPanel extends EasyPanel {
                 updateProgress();
 
                 for (File file : fileSet) {
-                    if (Thread.currentThread().isInterrupted()) {
+                    if (currentThread().isInterrupted()) {
                         return;
                     }
                     futures.add(executorService.submit(() -> {
-                        if (Thread.currentThread().isInterrupted()) {
+                        if (currentThread().isInterrupted()) {
                             return null;
                         }
                         processFile(file);
@@ -396,7 +396,7 @@ public class PdfFinderPanel extends EasyPanel {
                         future.get();
                     } catch (InterruptedException e) {
                         logger.error("Search interrupted", e);
-                        Thread.currentThread().interrupt(); // Restore interrupted status
+                        currentThread().interrupt(); // Restore interrupted status
                         return;
                     }
                 }

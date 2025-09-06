@@ -37,7 +37,7 @@ public class EncoderConvert {
      */
     public static void encodeFile(String srcFileString, String srcEncoder, String desFileString, String desEncoder) {
         if (srcFileString.equals(desFileString)) {
-            srcFileString = srcFileString + EncoderConvert.TMP_SUFFIX;
+            srcFileString = srcFileString + TMP_SUFFIX;
             FileProcess.copyFile(desFileString, srcFileString);
         }
         File srcFileFile = new File(srcFileString);
@@ -65,7 +65,7 @@ public class EncoderConvert {
             return;
         }
 
-        if (srcFileString.equals(desFileString + EncoderConvert.TMP_SUFFIX)) {
+        if (srcFileString.equals(desFileString + TMP_SUFFIX)) {
             boolean success = srcFileFile.delete();
             if (!success) {
                 logger.error("delete srcFileFile failed");

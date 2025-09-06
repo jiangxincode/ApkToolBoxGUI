@@ -110,7 +110,7 @@ public final class MainFrame extends EasyFrame {
         }
 
         setTitle(MessageFormat.format(bundle.getString("main.title"), Version.VERSION));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMenuBar();
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -132,7 +132,7 @@ public final class MainFrame extends EasyFrame {
         final MenuItem exit = new MenuItem("Close");
         ActionListener actionListener = e -> {
             if (e.getSource() == show) {
-                setExtendedState(JFrame.NORMAL);
+                setExtendedState(NORMAL);
                 setVisible(true);
             }
             if (e.getSource() == exit) {
@@ -154,7 +154,7 @@ public final class MainFrame extends EasyFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    setExtendedState(JFrame.NORMAL);
+                    setExtendedState(NORMAL);
                     setVisible(true);
                 }
             }
@@ -437,5 +437,3 @@ public final class MainFrame extends EasyFrame {
         UiStateKeeper.save(currentEasyPanel);
     }
 }
-
-

@@ -764,7 +764,7 @@ public class MonkeyPanel extends EasyPanel {
             setLocation(w, h);
 
             jbb.addActionListener(e -> dispose());
-            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         }
     }
 }

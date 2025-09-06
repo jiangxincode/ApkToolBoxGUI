@@ -8,12 +8,12 @@ public class CielabColorSpace extends ColorSpace {
     private static final long serialVersionUID = 5027741380892134289L;
 
     private static final ColorSpace CIEXYZ =
-            ColorSpace.getInstance(ColorSpace.CS_CIEXYZ);
+            getInstance(CS_CIEXYZ);
 
     private static final double N = 4.0 / 29.0;
 
     CielabColorSpace() {
-        super(ColorSpace.TYPE_Lab, 3);
+        super(TYPE_Lab, 3);
     }
 
     public static synchronized ColorSpace getInstance() {

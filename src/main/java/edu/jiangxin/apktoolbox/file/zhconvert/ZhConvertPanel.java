@@ -189,7 +189,7 @@ public class ZhConvertPanel extends EasyPanel {
     }
 
     private void refreshListData(){
-        java.util.List<String> listModel = new ArrayList<>();
+        List<String> listModel = new ArrayList<>();
         Properties properties = myZHConverterUtils.getCharMap();
         for (String key2 : properties.stringPropertyNames()) {
             listModel.add(key2 + " <===> " + properties.getProperty(key2));

@@ -94,7 +94,7 @@ public class ColorPickerPanel extends EasyPanel {
 
         initFourthColumn();
 
-        final InputMap inputMap = colorPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        final InputMap inputMap = colorPanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(KeyStroke.getKeyStroke("alt C"), "record.color");
         inputMap.put(KeyStroke.getKeyStroke("alt L"), "lock.position");
         inputMap.put(KeyStroke.getKeyStroke("alt U"), "unlock.position");

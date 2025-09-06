@@ -419,7 +419,7 @@ public class DuplicateSearchPanel extends EasyPanel {
                 // 1. Group files by size first
                 Map<Long, List<File>> sizeGroups = new HashMap<>();
                 for (File file : fileSet) {
-                    if (Thread.currentThread().isInterrupted()) {
+                    if (currentThread().isInterrupted()) {
                         return;
                     }
                     if (file.isHidden() && !isHiddenFileSearched) {
@@ -451,7 +451,7 @@ public class DuplicateSearchPanel extends EasyPanel {
                         future.get();
                     } catch (InterruptedException e) {
                         logger.error("Search interrupted", e);
-                        Thread.currentThread().interrupt(); // Restore interrupted status
+                        currentThread().interrupt(); // Restore interrupted status
                         return;
                     }
                 }
@@ -472,7 +472,7 @@ public class DuplicateSearchPanel extends EasyPanel {
         private void processFileGroup(List<File> files) {
             Map<String, List<File>> groupMap = new HashMap<>();
             for (File file : files) {
-                if (Thread.currentThread().isInterrupted()) {
+                if (currentThread().isInterrupted()) {
                     return;
                 }
                 String key = getComparedKey(file);
