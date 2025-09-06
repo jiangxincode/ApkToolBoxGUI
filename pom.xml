@@ -12,7 +12,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <pdf.version>3.0.5</pdf.version>
         <poi.version>5.4.1</poi.version>
-        <itext.version>9.2.0</itext.version>
+        <itext.version>9.3.0</itext.version>
         <log4j.version>2.25.1</log4j.version>
         <junit.minor.version>13.3</junit.minor.version>
         <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
@@ -139,7 +139,7 @@
         <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>opencc4j</artifactId>
-            <version>1.13.1</version>
+            <version>1.14.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -254,7 +254,7 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.9.4.0</version>
+                    <version>4.9.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -264,7 +264,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>11.0.0</version>
+                            <version>11.0.1</version>
                         </dependency>
                     </dependencies>
                     <configuration>
@@ -347,7 +347,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.18.0</version>
+                    <version>2.19.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.jiangxincode</groupId>
