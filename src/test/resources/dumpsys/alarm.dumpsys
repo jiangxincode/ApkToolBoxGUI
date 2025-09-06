@@ -1,0 +1,1799 @@
+Current Alarm Manager state:
+  Settings:
+    version=1 
+    min_futurity=+5s0ms
+    min_interval=+1m0s0ms
+    max_interval=+365d0h0m0s0ms
+    min_window=+10m0s0ms
+    listener_timeout=+5s0ms
+    allow_while_idle_quota=72 
+    allow_while_idle_window=+1h0m0s0ms
+    allow_while_idle_compat_quota=7 
+    allow_while_idle_compat_window=+1h0m0s0ms
+    allow_while_idle_whitelist_duration=+10s0ms
+    max_alarms_per_uid=500 
+    app_standby_window=+1h0m0s0ms
+    standby_quota_active=720 
+    standby_quota_working=10 
+    standby_quota_frequent=2 
+    standby_quota_rare=1 
+    standby_quota_never=0 
+    standby_quota_restricted=1 
+    app_standby_restricted_window=+1d0h0m0s0ms
+    time_tick_allowed_while_idle=true 
+    priority_alarm_delay=+9m0s0ms
+    min_device_idle_fuzz=+2m0s0ms
+    max_device_idle_fuzz=+15m0s0ms
+    temporary_quota_bump=0 
+    delay_nonwakeup_alarms_while_screen_off=true 
+    cached_listener_removal_delay=+10s0ms
+  
+  Feature Flags:
+    com.android.server.alarm.use_frozen_state_to_drop_listener_alarms=true 
+    com.android.server.alarm.start_user_before_scheduled_alarms=false 
+  
+  App Standby Parole: false
+  
+  Current AppStateTracker State:
+    Force all apps standby: false
+    Small Battery Device: false
+    Force all apps standby for small battery device: false
+    Plugged In: true
+    Active uids: [u0a27 u0a29 u0a36 u0a54 u0a64 u0a78 u0a88 u0a97 u0a99 u0a102 u0a113 u0a115 u0a148 u0a160 u0a161 u0a162 u0a172 u0a178]
+    Except-idle + user exemption list appids: [1000, 1001, 2000, 10010, 10012, 10014, 10018, 10020, 10023, 10025, 10027, 10029, 10032, 10035, 10040, 10043, 10044, 10047, 10064, 10067, 10071, 10075, 10077, 10088, 10094, 10097, 10114, 10115, 10116, 10117, 10128, 10151, 10175, 10178, 10182, 10185, 10196, 10204, 10213, 10216, 10219, 10266, 10267]
+    User exemption list appids: [1000, 1001, 10014, 10018, 10020, 10025, 10029, 10032, 10035, 10040, 10044, 10047, 10064, 10067, 10075, 10077, 10088, 10094, 10097, 10114, 10115, 10116, 10117, 10128, 10196, 10204, 10213, 10216, 10219, 10266, 10267]
+    Temp exemption list appids: []
+    Exempted bucket packages:
+      User 0
+        com.hihonor.searchservice
+        com.hihonor.gamecenter
+        com.android.providers.telephony
+        com.android.dynsystem
+        com.android.providers.calendar
+        com.hihonor.screenrecorder
+        com.hihonor.hiviewpush
+        com.hihonor.magicvoice
+        com.hihonor.android.clone
+        com.hihonor.android.hnaps
+        com.hihonor.detectrepair
+        com.hihonor.phone.recorder
+        com.android.mms.service
+        com.android.providers.downloads
+        com.hihonor.koBackup
+        com.hihonor.iconnect
+        com.hihonor.id
+        com.hihonor.assetsyncservice
+        com.android.vending
+        com.android.networkstack
+        com.hihonor.hiviewtunnel
+        com.hihonor.smartiot
+        androidhnext
+        com.tencent.mm
+        com.hihonor.regservice
+        com.hihonor.android.airsharing
+        android
+        com.hihonor.hnmusicplayer
+        com.hihonor.HnMultiScreenShot
+        com.hihonor.systemserver
+        com.hihonor.securityserver
+        com.android.nfc
+        com.android.ons
+        com.android.stk
+        com.hihonor.pcassistant
+        com.hihonor.hncloud
+        org.codeaurora.ims
+        com.hihonor.mmitest
+        com.hihonor.android.FloatTasks
+        com.android.providers.settings
+        com.baidu.input_hihonor
+        com.hihonor.brain
+        com.hihonor.dmsdp
+        com.hihonor.email
+        com.hihonor.hnasm
+        com.android.incallui
+        com.android.se
+        com.android.inputdevices
+        com.android.rkpdapp
+        com.hihonor.android.projectmenu
+        com.qti.dpmserviceapp
+        com.hihonor.voiceengine
+        com.hihonor.desktop.explorer
+        com.hihonor.android.instantshare
+        com.hihonor.trustspace
+        com.hihonor.android.pushagent
+        com.hihonor.android.internal.app
+        com.android.server.telecom
+        com.android.cellbroadcastservice
+        com.android.keychain
+        com.hihonor.motionservice
+        com.hihonor.cooperatedconfig
+        com.hihonor.parentcontrol
+        com.hihonor.aod
+        com.hihonor.lbs
+        com.hihonor.mms
+        com.hihonor.ouc
+        com.google.android.gms
+        com.tencent.mobileqq
+        com.android.localtransport
+        com.android.proxyhandler
+        com.hihonor.android.chr
+        com.hihonor.systemappsupdater
+        com.android.networkstack.tethering
+        com.hihonor.camera
+        com.hihonor.linktime
+        com.hihonor.cloudmusic
+        com.hihonor.health
+        com.hihonor.hiview
+        com.hihonor.iaware
+        com.hihonor.synergy
+        com.android.cellbroadcastreceiver.module
+        com.hihonor.nearby
+        com.hihonor.trustcircle
+        com.hihonor.awareness
+        com.hihonor.hndockbar
+        com.android.settings
+        com.hihonor.msdp
+        com.hihonor.game.kitserver
+        com.hihonor.deskclock
+        com.hihonor.powergenie
+        com.android.phone
+        com.android.shell
+        com.android.providers.media.module
+        com.android.emergency
+        com.hihonor.airlink
+        com.android.location.fused
+        com.hihonor.systemmanager
+        vendor.qti.imsdatachannel
+        com.android.bluetooth
+        com.android.providers.contacts
+        com.hihonor.appmarket
+        com.android.devicelockcontroller
+        com.hihonor.audioaccessorymanager
+    
+    Restricted packages:
+    Stats:
+      UID_FG_STATE_CHANGED: count=0, total=0.0ms, avg=0.000ms, max calls/s=0 max dur/s=0.0ms max time=0.0ms
+      UID_ACTIVE_STATE_CHANGED: count=1736, total=1131.4ms, avg=0.652ms, max calls/s=13 max dur/s=272.8ms max time=241.8ms
+      RUN_ANY_CHANGED: count=0, total=0.0ms, avg=0.000ms, max calls/s=0 max dur/s=0.0ms max time=0.0ms
+      ALL_UNEXEMPTED: count=58, total=86.5ms, avg=1.491ms, max calls/s=5 max dur/s=12.8ms max time=11.7ms
+      ALL_EXEMPTION_LIST_CHANGED: count=57, total=45.0ms, avg=0.790ms, max calls/s=26 max dur/s=15.7ms max time=4.0ms
+      TEMP_EXEMPTION_LIST_CHANGED: count=3060, total=2344.8ms, avg=0.766ms, max calls/s=18 max dur/s=24.7ms max time=23.8ms
+      EXEMPTED_BUCKET_CHANGED: count=112, total=34.4ms, avg=0.307ms, max calls/s=39 max dur/s=11.6ms max time=1.2ms
+      FORCE_ALL_CHANGED: count=0, total=0.0ms, avg=0.000ms, max calls/s=0 max dur/s=0.0ms max time=0.0ms
+      IS_UID_ACTIVE_CACHED: count=0, total=0.0ms, avg=0.000ms, max calls/s=0 max dur/s=0.0ms max time=0.0ms
+      IS_UID_ACTIVE_RAW: count=45, total=1.9ms, avg=0.042ms, max calls/s=4 max dur/s=0.5ms max time=0.3ms
+  
+  nowRTC=1756608847158=2025-08-31 10:54:07.158 nowELAPSED=195479076
+  mLastTimeChangeClockTime=1756413448970=2025-08-29 04:37:28.970
+  mLastTimeChangeRealtime=80889
+  mLastTickReceived=2025-08-31 10:54:00.001
+  mLastTickSet=2025-08-31 10:54:00.001
+  
+  Recent TIME_TICK history:
+    2025-08-31 10:54:00.001
+    2025-08-31 10:53:00.001
+    2025-08-31 10:52:00.001
+    2025-08-31 10:51:00.001
+    2025-08-31 10:50:00.001
+    2025-08-31 10:49:00.001
+    2025-08-31 10:48:00.001
+    2025-08-31 10:47:00.001
+    2025-08-31 10:46:00.001
+    2025-08-31 10:45:00.001
+  
+  RuntimeStarted=2025-08-29 04:36:29.624
+  Runtime uptime (elapsed): +2d6h17m37s534ms
+  Runtime uptime (uptime): +8h27m52s153ms
+  
+  Max wakeup delay: +1h0m0s0ms
+  Time since last dispatch: +7s157ms
+  Next non-wakeup delivery time: +1h17m52s843ms
+  Next non-wakeup alarm: -7s157ms = 195471919 = 2025-08-31 10:54:00.001
+    set at -17s109ms
+  Next wakeup alarm: +18s300ms = 195497376 = 2025-08-31 10:54:25.458
+    set at -7s147ms
+  Next kernel non-wakeup alarm: 0
+  Next kernel wakeup alarm: +18s298ms
+  Last wakeup: -7s157ms = 195471919
+  Last trigger: -7s157ms = 195471919
+  Num time change events: 1
+  
+  App ids requesting SCHEDULE_EXACT_ALARM: {1000, 1001, 2000, 10012, 10014, 10016, 10020, 10026, 10029, 10049, 10067, 10070, 10077, 10093, 10097, 10114, 10115, 10116, 10117, 10127, 10131, 10143, 10188, 10211, 10213, 10253, 10254, 10258, 10264, 10266, 10269, 10270, 10271, 10277}
+  
+  Last OP_SCHEDULE_EXACT_ALARM: [1000:allow, 1001:default, 2000:default, u0a12:default, u0a14:default, u0a16:default, u0a20:default, u0a26:default, u0a29:default, u0a49:default, u0a67:default, u0a70:default, u0a77:default, u0a93:default, u0a97:default, u0a114:default, u0a115:default, u0a116:default, u0a117:default, u0a127:default, u0a131:default, u0a143:default, u0a188:default, u0a211:default, u0a213:default, u0a253:default, u0a254:default, u0a258:default, u0a264:default, u0a266:default, u0a269:default, u0a270:default, u0a271:default, u0a277:default]
+  
+  Next alarm clock information: 
+  
+  119 pending alarms: 
+    ELAPSED #1: Alarm{499ddbf type 3 origWhen 195347235 whenElapsed 195347235 PendingIntent{c35e479: PendingIntentRecord{d2555be com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName com.hihonor.systemmanager:service}
+      tag=*alarm*:com.hihonor.hwsystemmanager.power.SCHEDULE_RECORD_REMAING_TIME_SCENE
+      type=ELAPSED origWhen=-2m11s841ms window=+7m30s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=-2m11s841ms app_standby=-12m11s839ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=-2m11s841ms maxWhenElapsed=+5m18s159ms
+      operation=PendingIntent{c35e479: PendingIntentRecord{d2555be com.hihonor.systemmanager broadcastIntent}}
+    ELAPSED_WAKEUP #2: Alarm{ce933ea type 2 origWhen 195369149 whenElapsed 195369149 PendingIntent{c59d753: PendingIntentRecord{f0e2890 com.hihonor.powergenie broadcastIntent}} com.hihonor.powergenie procName system}
+      tag=*walarm*:PMIC_RESET_WAKEUP_EVENT
+      type=ELAPSED_WAKEUP origWhen=-1m49s927ms window=+11m15s0ms repeatInterval=900000 count=0 flags=0x8
+      policyWhenElapsed: requester=-1m49s927ms app_standby=-17m59s28ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=-1m49s927ms maxWhenElapsed=+9m25s73ms
+      operation=PendingIntent{c59d753: PendingIntentRecord{f0e2890 com.hihonor.powergenie broadcastIntent}}
+    ELAPSED #3: Alarm{7cdcc8c type 3 origWhen 195361614 whenElapsed 195437412 PendingIntent{23f42e4: PendingIntentRecord{ba9234d com.tencent.mm broadcastIntent}} com.tencent.mm procName system}
+      tag=*alarm*:com.tencent.mm.TrafficStatsReceiver
+      type=ELAPSED origWhen=-1m57s462ms window=+3m45s0ms repeatInterval=300000 count=0 flags=0x8
+      policyWhenElapsed: requester=-1m52s461ms app_standby=-6m31s742ms device_idle=-- battery_saver=-41s664ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=-41s664ms maxWhenElapsed=+1m52s539ms
+      operation=PendingIntent{23f42e4: PendingIntentRecord{ba9234d com.tencent.mm broadcastIntent}}
+    ELAPSED #4: Alarm{338ee4c type 3 origWhen 195475575 whenElapsed 195475575 android android procName system}
+      tag=*alarm*:*job.delay*
+      type=ELAPSED origWhen=-3s501ms window=+43s581ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=-3s501ms app_standby=-1m1s609ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=-3s501ms maxWhenElapsed=+40s80ms
+      listener=android.app.AlarmManager$ListenerWrapper@61ea4b6
+    RTC #5: Alarm{6d12578 type 1 origWhen 1756608848151 whenElapsed 195480070 PendingIntent{5130b1b: PendingIntentRecord{fcce7bc com.hihonor.hiview broadcastIntent}} com.hihonor.hiview procName com.hihonor.hiview}
+      tag=*alarm*:com.hihonor.lcagent.BROADCAST_TIMER_ACTION13
+      type=RTC origWhen=2025-08-31 10:54:08.151 window=+2m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+994ms app_standby=-7m59s5ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+994ms maxWhenElapsed=+2m0s994ms
+      operation=PendingIntent{5130b1b: PendingIntentRecord{fcce7bc com.hihonor.hiview broadcastIntent}}
+    ELAPSED_WAKEUP #6: Alarm{2a0ce95 type 2 origWhen 195497376 whenElapsed 195497376 PendingIntent{d45f57b: PendingIntentRecord{fb72f98 com.tencent.mobileqq broadcastIntent}} com.tencent.mobileqq procName com.tencent.mobileqq:MSF}
+      tag=*walarm*:com.tencent.mobileqq:MSF_91545961
+      type=ELAPSED_WAKEUP origWhen=+18s300ms window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+18s300ms app_standby=-2m41s698ms device_idle=-- battery_saver=-1m31s708ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+18s300ms maxWhenElapsed=+18s300ms
+      operation=PendingIntent{d45f57b: PendingIntentRecord{fb72f98 com.tencent.mobileqq broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #7: Alarm{9a78baa type 2 origWhen 195531663 whenElapsed 195531663 PendingIntent{a698d9b: PendingIntentRecord{666ccc7 com.google.android.gms/com.google.android.gms.location_base broadcastIntent}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*walarm*:com.google.android.location.ALARM_WAKEUP_ACTIVITY_DETECTION
+      type=ELAPSED_WAKEUP origWhen=+52s587ms window=+30s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+52s587ms app_standby=-1m1s952ms device_idle=-- battery_saver=-3m7s411ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+52s587ms maxWhenElapsed=+1m22s587ms
+      operation=PendingIntent{a698d9b: PendingIntentRecord{666ccc7 com.google.android.gms/com.google.android.gms.location_base broadcastIntent}}
+    ELAPSED #8: Alarm{860739b type 3 origWhen 195531919 whenElapsed 195531919 android android procName system}
+      tag=*alarm*:TIME_TICK
+      type=ELAPSED origWhen=+52s843ms window=0 exactAllowReason=allow-listed repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+52s843ms app_standby=-7s155ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+52s843ms maxWhenElapsed=+52s843ms
+      listener=com.android.server.alarm.AlarmManagerService$2@2a19a1d
+    ELAPSED #9: Alarm{92ca338 type 3 origWhen 195601254 whenElapsed 195601254 PendingIntent{305138b: PendingIntentRecord{6b73716 com.hihonor.nearby broadcastIntent}} com.hihonor.nearby procName com.hihonor.nearby}
+      tag=*alarm*:DeviceMonitorService.AdvertiseAlarmReceiver.MonitorStrategy
+      type=ELAPSED origWhen=+2m2s178ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2m2s178ms app_standby=-2m57s819ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2m2s178ms maxWhenElapsed=+2m2s178ms
+      operation=PendingIntent{305138b: PendingIntentRecord{6b73716 com.hihonor.nearby broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #10: Alarm{70cbf11 type 2 origWhen 195604841 whenElapsed 195604841 PendingIntent{871c06: PendingIntentRecord{f938f99 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.alarm.HEARTBEAT
+      type=ELAPSED_WAKEUP origWhen=+2m5s765ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2m5s765ms app_standby=-54s232ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2m5s765ms maxWhenElapsed=+2m5s765ms
+      operation=PendingIntent{871c06: PendingIntentRecord{f938f99 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #11: Alarm{acab876 type 2 origWhen 195677421 whenElapsed 195677421 PendingIntent{d3f361f: PendingIntentRecord{161ad6c com.tencent.mm broadcastIntent}} com.tencent.mm procName com.tencent.mm:push}
+      tag=*walarm*:ALARM_ACTION(10000)
+      type=ELAPSED_WAKEUP origWhen=+3m18s345ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3m18s345ms app_standby=-1m51s653ms device_idle=-- battery_saver=-41s664ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3m18s345ms maxWhenElapsed=+3m18s345ms
+      operation=PendingIntent{d3f361f: PendingIntentRecord{161ad6c com.tencent.mm broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #12: Alarm{bffc5b7 type 1 origWhen 1756609107187 whenElapsed 195739105 PendingIntent{e8adb28: PendingIntentRecord{8d5b041 com.hihonor.ouc startService}} com.hihonor.ouc procName com.hihonor.ouc}
+      tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_POLLING_ALARM
+      type=RTC origWhen=2025-08-31 10:58:27.187 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+4m20s29ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-10m44s872ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+4m20s29ms maxWhenElapsed=+4m20s29ms
+      operation=PendingIntent{e8adb28: PendingIntentRecord{8d5b041 com.hihonor.ouc startService}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #13: Alarm{caf2124 type 0 origWhen 1756609200000 whenElapsed 195831919 PendingIntent{3822be8: PendingIntentRecord{53d9201 com.hihonor.awareness broadcastIntent}} com.hihonor.awareness procName com.hihonor.awareness}
+      tag=*walarm*:com.hihonor.awareness.action.alarm.notice
+      type=RTC_WAKEUP origWhen=2025-08-31 11:00:00.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+5m52s843ms app_standby=-7m57s800ms device_idle=-- battery_saver=-7m57s800ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5m52s843ms maxWhenElapsed=+5m52s843ms
+      operation=PendingIntent{3822be8: PendingIntentRecord{53d9201 com.hihonor.awareness broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #14: Alarm{882448d type 1 origWhen 1756609200008 whenElapsed 195831926 PendingIntent{433c54c: PendingIntentRecord{bb4174e com.hihonor.systemmanager startService}} com.hihonor.systemmanager procName com.hihonor.systemmanager:service}
+      tag=*alarm*:com.hihonor.systemmanager/com.hihonor.appbehavior.BehaviorMonitorService
+      type=RTC origWhen=2025-08-31 11:00:00.008 window=+44m8s907ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+5m52s850ms app_standby=-52m59s20ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5m52s850ms maxWhenElapsed=+50m1s757ms
+      operation=PendingIntent{433c54c: PendingIntentRecord{bb4174e com.hihonor.systemmanager startService}}
+    ELAPSED #15: Alarm{2685642 type 3 origWhen 195840055 whenElapsed 195840055 PendingIntent{f9a0793: PendingIntentRecord{3b1471d com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName com.hihonor.systemmanager:service}
+      tag=*alarm*:com.hihonor.hwsystemmanager.power.SCHEDULE_RECORD_POWER_CONSUME
+      type=ELAPSED origWhen=+6m0s979ms window=+1m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+6m0s979ms app_standby=-22m59s20ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6m0s979ms maxWhenElapsed=+7m0s979ms
+      operation=PendingIntent{f9a0793: PendingIntentRecord{3b1471d com.hihonor.systemmanager broadcastIntent}}
+    ELAPSED_WAKEUP #16: Alarm{dc8ae77 type 2 origWhen 196057154 whenElapsed 196057154 PendingIntent{37f8ce2: PendingIntentRecord{c997b98 com.google.android.gms/com.google.android.gms.gcm broadcastIntent}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*walarm*:com.google.android.intent.action.GCM_RECONNECT
+      type=ELAPSED_WAKEUP origWhen=+9m38s78ms window=0 exactAllowReason=allow-listed repeatInterval=0 count=0 flags=0x21
+      policyWhenElapsed: requester=+9m38s78ms app_standby=-1m1s921ms device_idle=-- battery_saver=-1m1s921ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+9m38s78ms maxWhenElapsed=+9m38s78ms
+      operation=PendingIntent{37f8ce2: PendingIntentRecord{c997b98 com.google.android.gms/com.google.android.gms.gcm broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=-1, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=1, android:broadcast.flags=8}]
+    ELAPSED #17: Alarm{aa4bae4 type 3 origWhen 196200052 whenElapsed 196200052 PendingIntent{2831105: PendingIntentRecord{aebfd69 com.hihonor.nearby broadcastIntent}} com.hihonor.nearby procName com.hihonor.nearby}
+      tag=*alarm*:DeviceMonitorPowerKit.AdvertiseAlarmReceiver
+      type=ELAPSED origWhen=+12m0s976ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+12m0s976ms app_standby=-2m59s22ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+12m0s976ms maxWhenElapsed=+12m0s976ms
+      operation=PendingIntent{2831105: PendingIntentRecord{aebfd69 com.hihonor.nearby broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #18: Alarm{9c10653 type 3 origWhen 196263666 whenElapsed 196263666 PendingIntent{193f3b7: PendingIntentRecord{6cab724 android broadcastIntent}} android procName system}
+      tag=*alarm*:com.android.server.action.NETWORK_STATS_POLL
+      type=ELAPSED origWhen=+13m4s590ms window=+22m30s0ms repeatInterval=1800000 count=0 flags=0x8
+      policyWhenElapsed: requester=+13m4s590ms app_standby=-12m57s857ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13m4s590ms maxWhenElapsed=+35m34s590ms
+      operation=PendingIntent{193f3b7: PendingIntentRecord{6cab724 android broadcastIntent}}
+    ELAPSED_WAKEUP #19: Alarm{96d3b4d type 2 origWhen 196365204 whenElapsed 196365204 android android procName system}
+      tag=*walarm*:*job.deadline*
+      type=ELAPSED_WAKEUP origWhen=+14m46s128ms window=+11m52s201ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+14m46s128ms app_standby=-1m3s474ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+14m46s128ms maxWhenElapsed=+26m38s329ms
+      listener=android.app.AlarmManager$ListenerWrapper@3a9948e
+    ELAPSED_WAKEUP #20: Alarm{e4f2b90 type 2 origWhen 196571171 whenElapsed 196571171 PendingIntent{e9e1e3: PendingIntentRecord{efa87e0 android broadcastIntent}} android procName system}
+      tag=*walarm*:android.appwidget.action.APPWIDGET_UPDATE
+      type=ELAPSED_WAKEUP origWhen=+18m12s95ms window=+22m30s0ms repeatInterval=1800000 count=0 flags=0x8
+      policyWhenElapsed: requester=+18m12s95ms app_standby=-11m47s904ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+18m12s95ms maxWhenElapsed=+40m42s95ms
+      operation=PendingIntent{e9e1e3: PendingIntentRecord{efa87e0 android broadcastIntent}}
+    ELAPSED #21: Alarm{e4bb4af type 3 origWhen 197295608 whenElapsed 197295608 android android procName system}
+      tag=*alarm*:*job.flexibility_check*
+      type=ELAPSED origWhen=+30m16s532ms window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+30m16s532ms app_standby=-48m30s799ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+30m16s532ms maxWhenElapsed=+30m16s532ms
+      listener=android.app.AlarmManager$ListenerWrapper@5a370bc
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #22: Alarm{587845 type 3 origWhen 197700038 whenElapsed 197700038 PendingIntent{1cfb01b: PendingIntentRecord{8e9d728 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:android.intent.action.pwrStatusTimer
+      type=ELAPSED origWhen=+37m0s962ms window=+44m59s999ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+37m0s962ms app_standby=-22m59s30ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+37m0s962ms maxWhenElapsed=+1h22m0s961ms
+      operation=PendingIntent{1cfb01b: PendingIntentRecord{8e9d728 com.hihonor.android.chr broadcastIntent}}
+    RTC_WAKEUP #23: Alarm{4ae6b9a type 0 origWhen 1756611368122 whenElapsed 198000041 PendingIntent{176ae1b: PendingIntentRecord{642b1e7 com.hihonor.nearby broadcastIntent}} com.hihonor.nearby procName com.hihonor.nearby}
+      tag=*walarm*:DeviceMonitorService.SelfFinding.AlarmSaveDeviceInfo
+      type=RTC_WAKEUP origWhen=2025-08-31 11:36:08.122 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+42m0s965ms app_standby=-17m59s31ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+42m0s965ms maxWhenElapsed=+42m0s965ms
+      operation=PendingIntent{176ae1b: PendingIntentRecord{642b1e7 com.hihonor.nearby broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #24: Alarm{628eccb type 2 origWhen 198009266 whenElapsed 198009266 com.android.networkstack com.android.networkstack procName com.android.networkstack.process}
+      tag=*walarm*:DhcpClient.wlan0.RENEW
+      type=ELAPSED_WAKEUP origWhen=+42m10s190ms window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+42m10s190ms app_standby=-17m49s805ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+42m10s190ms maxWhenElapsed=+42m10s190ms
+      listener=android.os.BinderProxy@794dca8
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #25: Alarm{78d53c1 type 3 origWhen 198275971 whenElapsed 198275971 PendingIntent{633b433: PendingIntentRecord{1e3ef14 com.google.android.gms/com.google.android.gms.chromesync startService}} com.google.android.gms procName com.google.android.gms}
+      tag=*alarm*:com.google.android.gms.chromesync.SCHEDULED_SYNC
+      type=ELAPSED origWhen=+46m36s895ms window=+43m28s718ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+46m36s895ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+46m36s895ms maxWhenElapsed=+1h30m5s613ms
+      operation=PendingIntent{633b433: PendingIntentRecord{1e3ef14 com.google.android.gms/com.google.android.gms.chromesync startService}}
+    ELAPSED #26: Alarm{ef7a766 type 3 origWhen 198377998 whenElapsed 198377998 PendingIntent{d592bca: PendingIntentRecord{4455ded com.google.android.gms/com.google.android.gms.scheduler broadcastIntent}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*alarm*:com.google.android.gms.gcm.ACTION_CHECK_QUEUE
+      type=ELAPSED origWhen=+48m18s922ms window=+44m36s561ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+48m18s922ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m9s826ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+48m18s922ms maxWhenElapsed=+1h32m55s483ms
+      operation=PendingIntent{d592bca: PendingIntentRecord{4455ded com.google.android.gms/com.google.android.gms.scheduler broadcastIntent}}
+    ELAPSED #27: Alarm{3578aa7 type 3 origWhen 200700383 whenElapsed 200700383 PendingIntent{b5ccf3e: PendingIntentRecord{983421a com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:android.intent.action.collectionTimer
+      type=ELAPSED origWhen=+1h27m1s307ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+1h27m1s307ms app_standby=-3h32m58s693ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1h27m1s307ms maxWhenElapsed=+2h27m1s307ms
+      operation=PendingIntent{b5ccf3e: PendingIntentRecord{983421a com.hihonor.android.chr broadcastIntent}}
+    ELAPSED #28: Alarm{caf1b54 type 3 origWhen 200700400 whenElapsed 200700400 PendingIntent{2d462ec: PendingIntentRecord{e8365e6 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:android.intent.action.hertzBtRptTimer
+      type=ELAPSED origWhen=+1h27m1s324ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+1h27m1s324ms app_standby=-3h32m58s676ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1h27m1s324ms maxWhenElapsed=+2h27m1s324ms
+      operation=PendingIntent{2d462ec: PendingIntentRecord{e8365e6 com.hihonor.android.chr broadcastIntent}}
+    ELAPSED_WAKEUP #29: Alarm{7da6afd type 2 origWhen 200709263 whenElapsed 200709263 com.android.networkstack com.android.networkstack procName com.android.networkstack.process}
+      tag=*walarm*:DhcpClient.wlan0.REBIND
+      type=ELAPSED_WAKEUP origWhen=+1h27m10s187ms window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1h27m10s187ms app_standby=-17m49s803ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1h27m10s187ms maxWhenElapsed=+1h27m10s187ms
+      listener=android.os.BinderProxy@146d3f2
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #30: Alarm{ee82a43 type 3 origWhen 201235068 whenElapsed 201235068 PendingIntent{eb9573c: PendingIntentRecord{ae938df com.google.android.gms/com.google.android.gms.westworld startService}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*alarm*:com.google.android.gms.westworld.action.METADATA_ALARM
+      type=ELAPSED origWhen=+1h35m55s992ms window=+3h0m0s0ms repeatInterval=14400000 count=0 flags=0x0
+      policyWhenElapsed: requester=+1h35m55s992ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1h35m55s992ms maxWhenElapsed=+4h35m55s992ms
+      operation=PendingIntent{eb9573c: PendingIntentRecord{ae938df com.google.android.gms/com.google.android.gms.westworld startService}}
+    ELAPSED_WAKEUP #31: Alarm{88c98c0 type 2 origWhen 201609263 whenElapsed 201609263 com.android.networkstack com.android.networkstack procName com.android.networkstack.process}
+      tag=*walarm*:DhcpClient.wlan0.EXPIRY
+      type=ELAPSED_WAKEUP origWhen=+1h42m10s187ms window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1h42m10s187ms app_standby=-17m49s801ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1h42m10s187ms maxWhenElapsed=+1h42m10s187ms
+      listener=android.os.BinderProxy@ee7b9f9
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #32: Alarm{2ea3d3e type 1 origWhen 1756617091749 whenElapsed 203723668 PendingIntent{a9854fe: PendingIntentRecord{5c11a81 com.hihonor.ouc broadcastIntent}} com.hihonor.ouc procName com.hihonor.ouc}
+      tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS
+      type=RTC origWhen=2025-08-31 13:11:31.749 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2h17m24s592ms app_standby=-11m20s548ms device_idle=-- battery_saver=-10m44s872ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2h17m24s592ms maxWhenElapsed=+2h17m24s592ms
+      operation=PendingIntent{a9854fe: PendingIntentRecord{5c11a81 com.hihonor.ouc broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #33: Alarm{859279f type 3 origWhen 206101344 whenElapsed 206101344 android android procName system}
+      tag=*alarm*:PowerStats
+      type=ELAPSED origWhen=+2h57m2s268ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+2h57m2s268ms app_standby=-1h2m57s731ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2h57m2s268ms maxWhenElapsed=+3h57m2s268ms
+      listener=android.app.AlarmManager$ListenerWrapper@c0280ec
+    ELAPSED_WAKEUP #34: Alarm{2e0fcb5 type 2 origWhen 207000605 whenElapsed 207000605 com.android.bluetooth com.android.bluetooth procName com.android.bluetooth}
+      tag=*walarm*:BluetoothMetricsLogger
+      type=ELAPSED_WAKEUP origWhen=+3h12m1s529ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+3h12m1s529ms app_standby=-2h47m58s470ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3h12m1s529ms maxWhenElapsed=+4h12m1s529ms
+      listener=android.os.BinderProxy@fc8ef4a
+    ELAPSED #35: Alarm{eb29ebb type 3 origWhen 209101908 whenElapsed 209101908 android android procName system}
+      tag=*alarm*:*job.cleanup*
+      type=ELAPSED origWhen=+3h47m2s832ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+3h47m2s832ms app_standby=-1h57m58s142ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3h47m2s832ms maxWhenElapsed=+4h47m2s832ms
+      listener=android.app.AlarmManager$ListenerWrapper@e0cbfd8
+    ELAPSED #36: Alarm{6f1af31 type 3 origWhen 209177685 whenElapsed 209177685 com.google.android.gms com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*alarm*:CMAlarm
+      type=ELAPSED origWhen=+3h48m18s609ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+3h48m18s609ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3h48m18s609ms maxWhenElapsed=+4h48m18s609ms
+      listener=android.os.BinderProxy@92eb616
+    RTC_WAKEUP #37: Alarm{f626b97 type 0 origWhen 1756623161874 whenElapsed 209793793 PendingIntent{bb0ad61: PendingIntentRecord{9139086 com.hihonor.magazine startService}} com.hihonor.magazine procName com.hihonor.magazine}
+      tag=*walarm*:com.hihonor.magazine/com.honor.pictorial.function.silentupdate.domain.service.TimerService
+      type=RTC_WAKEUP origWhen=2025-08-31 14:52:41.874 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+3h58m34s717ms app_standby=-11m20s441ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3h58m34s717ms maxWhenElapsed=+4h58m34s717ms
+      operation=PendingIntent{bb0ad61: PendingIntentRecord{9139086 com.hihonor.magazine startService}}
+    ELAPSED #38: Alarm{77a0184 type 3 origWhen 211097609 whenElapsed 211097609 android android procName system}
+      tag=*alarm*:*usage.launchTime*
+      type=ELAPSED origWhen=+4h20m18s533ms window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+4h20m18s533ms app_standby=-38m8s853ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+4h20m18s533ms maxWhenElapsed=+4h20m18s533ms
+      listener=android.app.AlarmManager$ListenerWrapper@b810d6d
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #39: Alarm{7581da2 type 3 origWhen 211201994 whenElapsed 211201994 PendingIntent{ef183d8: PendingIntentRecord{1ea1b63 com.google.android.gms/com.google.android.gms.auth_authzen__phone startService}} com.google.android.gms procName com.google.android.gms}
+      tag=*alarm*:com.google.android.gms.auth.authzen.CHECK_REGISTRATION
+      type=ELAPSED origWhen=+4h22m2s918ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+4h22m2s918ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+4h22m2s918ms maxWhenElapsed=+5h22m2s918ms
+      operation=PendingIntent{ef183d8: PendingIntentRecord{1ea1b63 com.google.android.gms/com.google.android.gms.auth_authzen__phone startService}}
+    ELAPSED #40: Alarm{6d82a33 type 3 origWhen 214500860 whenElapsed 214500860 PendingIntent{8fd1cf8: PendingIntentRecord{211ded2 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:com.hihonor.android.chr.timer.SIB_INFO_REPORT
+      type=ELAPSED origWhen=+5h17m1s784ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+5h17m1s784ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5h17m1s784ms maxWhenElapsed=+5h17m1s784ms
+      operation=PendingIntent{8fd1cf8: PendingIntentRecord{211ded2 com.hihonor.android.chr broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #41: Alarm{d57b1f0 type 3 origWhen 214500872 whenElapsed 214500872 PendingIntent{26915d1: PendingIntentRecord{f459cac com.hihonor.systemserver broadcastIntent}} com.hihonor.systemserver procName com.hihonor.systemserver}
+      tag=*alarm*:com.hihonor.systemserver.booster.action.daily_uniform
+      type=ELAPSED origWhen=+5h17m1s796ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+5h17m1s796ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5h17m1s796ms maxWhenElapsed=+5h17m1s796ms
+      operation=PendingIntent{26915d1: PendingIntentRecord{f459cac com.hihonor.systemserver broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #42: Alarm{62e1369 type 3 origWhen 214800841 whenElapsed 214800841 PendingIntent{ac13fcd: PendingIntentRecord{5448152 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:com.hihonor.android.chr.timer.PROTOCOL_DB_REPORT
+      type=ELAPSED origWhen=+5h22m1s765ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+5h22m1s765ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5h22m1s765ms maxWhenElapsed=+5h22m1s765ms
+      operation=PendingIntent{ac13fcd: PendingIntentRecord{5448152 com.hihonor.android.chr broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #43: Alarm{7be71ee type 2 origWhen 216000000 whenElapsed 216000000 PendingIntent{92350f7: PendingIntentRecord{cbeeb64 com.android.providers.calendar broadcastIntent}} com.android.providers.calendar procName system}
+      tag=*walarm*:com.android.providers.calendar.intent.CalendarProvider2
+      type=ELAPSED_WAKEUP origWhen=+5h42m0s924ms window=+4h30m0s0ms repeatInterval=21600000 count=0 flags=0x0
+      policyWhenElapsed: requester=+5h42m0s924ms app_standby=-11m22s426ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5h42m0s924ms maxWhenElapsed=+10h12m0s924ms
+      operation=PendingIntent{92350f7: PendingIntentRecord{cbeeb64 com.android.providers.calendar broadcastIntent}}
+    ELAPSED_WAKEUP #44: Alarm{ee1368f type 2 origWhen 216000000 whenElapsed 216000000 PendingIntent{98a2515: PendingIntentRecord{a5c602a com.android.providers.calendar broadcastIntent}} com.android.providers.calendar procName system}
+      tag=*walarm*:com.android.providers.calendar.intent.CalendarProvider2
+      type=ELAPSED_WAKEUP origWhen=+5h42m0s924ms window=+4h30m0s0ms repeatInterval=21600000 count=0 flags=0x0
+      policyWhenElapsed: requester=+5h42m0s924ms app_standby=-11m22s426ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5h42m0s924ms maxWhenElapsed=+10h12m0s924ms
+      operation=PendingIntent{98a2515: PendingIntentRecord{a5c602a com.android.providers.calendar broadcastIntent}}
+    ELAPSED #45: Alarm{61dfd1c type 3 origWhen 216077208 whenElapsed 216077208 PendingIntent{b20d14f: PendingIntentRecord{ed960dc android broadcastIntent}} android procName system}
+      tag=*alarm*:hihonor.intent.action.ROOT_DETECT_REPORTER
+      type=ELAPSED origWhen=+5h43m18s132ms window=+9h0m0s0ms repeatInterval=43200000 count=0 flags=0x8
+      policyWhenElapsed: requester=+5h43m18s132ms app_standby=-6h12m57s616ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+5h43m18s132ms maxWhenElapsed=+14h43m18s132ms
+      operation=PendingIntent{b20d14f: PendingIntentRecord{ed960dc android broadcastIntent}}
+    RTC #46: Alarm{d8b7d25 type 1 origWhen 1756630804086 whenElapsed 217436005 PendingIntent{225f39b: PendingIntentRecord{ca350eb com.baidu.input_hihonor startService}} com.baidu.input_hihonor procName com.baidu.input_hihonor}
+      tag=*alarm*:com.baidu.action.SOFIRE.VIEW
+      type=RTC origWhen=2025-08-31 17:00:04.086 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+6h5m56s929ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6h5m56s929ms maxWhenElapsed=+7h5m56s929ms
+      operation=PendingIntent{225f39b: PendingIntentRecord{ca350eb com.baidu.input_hihonor startService}}
+    RTC_WAKEUP #47: Alarm{423befa type 0 origWhen 1756630820787 whenElapsed 217452706 PendingIntent{f2d5b7b: PendingIntentRecord{9c70926 com.baidu.input_hihonor broadcastIntent}} com.baidu.input_hihonor procName com.baidu.input_hihonor}
+      tag=*walarm*:sso_action_t_m
+      type=RTC_WAKEUP origWhen=2025-08-31 17:00:20.787 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+6h6m13s630ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6h6m13s630ms maxWhenElapsed=+7h6m13s630ms
+      operation=PendingIntent{f2d5b7b: PendingIntentRecord{9c70926 com.baidu.input_hihonor broadcastIntent}}
+    ELAPSED #48: Alarm{6c4acab type 3 origWhen 217459054 whenElapsed 217459054 android android procName system}
+      tag=*alarm*:*CountQuotaTracker.cleanup*
+      type=ELAPSED origWhen=+6h6m19s978ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+6h6m19s978ms app_standby=-10h52m58s501ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6h6m19s978ms maxWhenElapsed=+7h6m19s978ms
+      listener=android.app.AlarmManager$ListenerWrapper@59bcf08
+    ELAPSED #49: Alarm{49bc6a1 type 3 origWhen 217468733 whenElapsed 217468733 PendingIntent{f28cbe8: PendingIntentRecord{8fa7c41 com.google.android.gms/com.google.android.gms.stats startService}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*alarm*:com.google.android.gms.stats.eastworld.action.EASTWORLD_ALARM
+      type=ELAPSED origWhen=+6h6m29s657ms window=+1h30m0s0ms repeatInterval=7200000 count=0 flags=0x0
+      policyWhenElapsed: requester=+6h6m29s657ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6h6m29s657ms maxWhenElapsed=+7h36m29s657ms
+      operation=PendingIntent{f28cbe8: PendingIntentRecord{8fa7c41 com.google.android.gms/com.google.android.gms.stats startService}}
+    ELAPSED #50: Alarm{e5ed0c6 type 3 origWhen 217469077 whenElapsed 217469077 PendingIntent{2a4527b: PendingIntentRecord{8fc822e com.google.android.gms/com.google.android.gms.core startService}} com.google.android.gms procName com.google.android.gms}
+      tag=*alarm*:com.google.android.gms.common.operation.LOG_CORE_ANALYTICS
+      type=ELAPSED origWhen=+6h6m30s1ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+6h6m30s1ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6h6m30s1ms maxWhenElapsed=+7h6m30s1ms
+      operation=PendingIntent{2a4527b: PendingIntentRecord{8fc822e com.google.android.gms/com.google.android.gms.core startService}}
+    RTC #51: Alarm{11f6887 type 1 origWhen 1756631169499 whenElapsed 217801418 PendingIntent{1394ee3: PendingIntentRecord{6913989 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:com.hihonor.lcagent.timer.NW_LOST_EVENT_PERIOD_REPORT
+      type=RTC origWhen=2025-08-31 17:06:09.499 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+6h12m2s342ms app_standby=-5h47m57s658ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+6h12m2s342ms maxWhenElapsed=+7h12m2s342ms
+      operation=PendingIntent{1394ee3: PendingIntentRecord{6913989 com.hihonor.android.chr broadcastIntent}}
+    RTC #52: Alarm{ba2d3b4 type 1 origWhen 1756634400000 whenElapsed 221031919 PendingIntent{d69fc7c: PendingIntentRecord{4f67905 com.hihonor.lbs broadcastIntent}} com.hihonor.lbs procName system}
+      tag=*alarm*:com.hihonor.lbs.HnNLPService.time_to_record
+      type=RTC origWhen=2025-08-31 18:00:00.000 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+7h5m52s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+7h5m52s843ms maxWhenElapsed=+1d1h5m52s843ms
+      operation=PendingIntent{d69fc7c: PendingIntentRecord{4f67905 com.hihonor.lbs broadcastIntent}}
+    RTC #53: Alarm{20d2bdd type 1 origWhen 1756636390134 whenElapsed 223022053 android android procName system}
+      tag=*alarm*:TwilightService
+      type=RTC origWhen=2025-08-31 18:33:10.134 window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+7h39m2s977ms app_standby=-11m52s852ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+7h39m2s977ms maxWhenElapsed=+7h39m2s977ms
+      listener=android.app.AlarmManager$ListenerWrapper@ce73352
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #54: Alarm{3800623 type 1 origWhen 1756639174891 whenElapsed 225806810 PendingIntent{2896656: PendingIntentRecord{e32f6d7 com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName system}
+      tag=*alarm*:com.hihonor.systemmanager.hsmmonitor.dially
+      type=RTC origWhen=2025-08-31 19:19:34.891 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+8h25m27s734ms app_standby=-15h33m39s889ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+8h25m27s734ms maxWhenElapsed=+1d2h25m27s734ms
+      operation=PendingIntent{2896656: PendingIntentRecord{e32f6d7 com.hihonor.systemmanager broadcastIntent}}
+    RTC #55: Alarm{1737720 type 1 origWhen 1756639268453 whenElapsed 225900372 PendingIntent{3e5ea8: PendingIntentRecord{df69f42 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:com.hihonor.lcagent.timer.PROTOCOL_REPORT
+      type=RTC origWhen=2025-08-31 19:21:08.453 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+8h27m1s296ms app_standby=-3h32m58s700ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+8h27m1s296ms maxWhenElapsed=+9h27m1s296ms
+      operation=PendingIntent{3e5ea8: PendingIntentRecord{df69f42 com.hihonor.android.chr broadcastIntent}}
+    RTC_WAKEUP #56: Alarm{f35a8d9 type 0 origWhen 1756641368898 whenElapsed 228000817 PendingIntent{a8dbbb2: PendingIntentRecord{7475f4b com.hihonor.appmarket broadcastIntent}} com.hihonor.appmarket procName com.hihonor.appmarket}
+      tag=*walarm*:com.hihonor.appmarket/.slientcheck.alarmwake.AlarmCheckReceiver
+      type=RTC_WAKEUP origWhen=2025-08-31 19:56:08.898 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+9h2m1s741ms app_standby=-2h24m16s258ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+9h2m1s741ms maxWhenElapsed=+9h2m1s741ms
+      operation=PendingIntent{a8dbbb2: PendingIntentRecord{7475f4b com.hihonor.appmarket broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #57: Alarm{421329e type 1 origWhen 1756642066216 whenElapsed 228698135 PendingIntent{a7f8dba: PendingIntentRecord{d5a346b com.android.providers.contacts broadcastIntent}} com.android.providers.contacts procName system}
+      tag=*alarm*:com.android.providers.contacts/.hap.DeleteContactsReportReceiver
+      type=RTC origWhen=2025-08-31 20:07:46.216 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x0
+      policyWhenElapsed: requester=+9h13m39s59ms app_standby=-14h42m58s364ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+9h13m39s59ms maxWhenElapsed=+1d3h13m39s59ms
+      operation=PendingIntent{a7f8dba: PendingIntentRecord{d5a346b com.android.providers.contacts broadcastIntent}}
+    RTC #58: Alarm{3c2e17f type 1 origWhen 1756643278023 whenElapsed 229909942 PendingIntent{1a81649: PendingIntentRecord{2d4dc5d com.baidu.input_hihonor startService}} com.baidu.input_hihonor procName com.baidu.input_hihonor}
+      tag=*alarm*:com.baidu.action.SOFIRE.VIEW
+      type=RTC origWhen=2025-08-31 20:27:58.023 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+9h33m50s866ms app_standby=-2h26m9s129ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+9h33m50s866ms maxWhenElapsed=+10h33m50s866ms
+      operation=PendingIntent{1a81649: PendingIntentRecord{2d4dc5d com.baidu.input_hihonor startService}}
+    RTC #59: Alarm{1e8e54c type 1 origWhen 1756645200000 whenElapsed 231831919 PendingIntent{4ade431: PendingIntentRecord{8774716 com.hihonor.android.totemweather broadcastIntent}} com.hihonor.android.totemweather procName com.hihonor.android.totemweather}
+      tag=*alarm*:com.hihonor.android.action.ALARM_TASK_WEATHER
+      type=RTC origWhen=2025-08-31 21:00:00.000 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+10h5m52s843ms app_standby=-2h26m5s132ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+10h5m52s843ms maxWhenElapsed=+11h5m52s843ms
+      operation=PendingIntent{4ade431: PendingIntentRecord{8774716 com.hihonor.android.totemweather broadcastIntent}}
+    RTC #60: Alarm{acef995 type 1 origWhen 1756646827052 whenElapsed 233458971 PendingIntent{3973cbf: PendingIntentRecord{6a13f8c com.hihonor.baidu.browser startService}} com.hihonor.baidu.browser procName com.hihonor.baidu.browser}
+      tag=*alarm*:com.baidu.action.SOFIRE.VIEW
+      type=RTC origWhen=2025-08-31 21:27:07.052 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+10h32m59s895ms app_standby=-11m22s426ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+10h32m59s895ms maxWhenElapsed=+11h32m59s895ms
+      operation=PendingIntent{3973cbf: PendingIntentRecord{6a13f8c com.hihonor.baidu.browser startService}}
+    RTC #61: Alarm{869daaa type 1 origWhen 1756647205799 whenElapsed 233837718 PendingIntent{ac1af0: PendingIntentRecord{a31e6b4 com.hihonor.baidu.browser broadcastIntent}} com.hihonor.baidu.browser procName com.hihonor.baidu.browser:swan0}
+      tag=*alarm*:sso_action_t_m
+      type=RTC origWhen=2025-08-31 21:33:25.799 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+10h39m18s642ms app_standby=-11m22s426ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+10h39m18s642ms maxWhenElapsed=+11h39m18s642ms
+      operation=PendingIntent{ac1af0: PendingIntentRecord{a31e6b4 com.hihonor.baidu.browser broadcastIntent}}
+    ELAPSED #62: Alarm{f2e169b type 3 origWhen 234082654 whenElapsed 234082654 PendingIntent{189fbc0: PendingIntentRecord{8f4e0f9 com.qti.qcc broadcastIntent}} com.qti.qcc procName com.qti.qcc}
+      tag=*alarm*:com.qti.qcc/com.qualcomm.qti.qdma.job.QDMAJobSchedulerReceiver
+      type=ELAPSED origWhen=+10h43m23s578ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+10h43m23s578ms app_standby=-15h37m27s629ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+10h43m23s578ms maxWhenElapsed=+11h43m23s578ms
+      operation=PendingIntent{189fbc0: PendingIntentRecord{8f4e0f9 com.qti.qcc broadcastIntent}}
+    RTC_WAKEUP #63: Alarm{8650a38 type 0 origWhen 1756648800000 whenElapsed 235431919 PendingIntent{1f76dbb: PendingIntentRecord{8c269af android broadcastIntent}} android procName system}
+      tag=*walarm*:ScheduleConditionProvider.EVALUATE
+      type=RTC_WAKEUP origWhen=2025-08-31 22:00:00.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+11h5m52s843ms app_standby=-3h52m57s746ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+11h5m52s843ms maxWhenElapsed=+11h5m52s843ms
+      operation=PendingIntent{1f76dbb: PendingIntentRecord{8c269af android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #64: Alarm{b729a11 type 1 origWhen 1756648800000 whenElapsed 235431919 PendingIntent{59fadd0: PendingIntentRecord{ad291c9 com.hihonor.lbs broadcastIntent}} com.hihonor.lbs procName system}
+      tag=*alarm*:com.hihonor.lbs.CrowdSourcingChr.time_to_record
+      type=RTC origWhen=2025-08-31 22:00:00.000 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+11h5m52s843ms app_standby=-12h52m45s990ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+11h5m52s843ms maxWhenElapsed=+1d5h5m52s843ms
+      operation=PendingIntent{59fadd0: PendingIntentRecord{ad291c9 com.hihonor.lbs broadcastIntent}}
+    ELAPSED #65: Alarm{4e2f776 type 3 origWhen 239401602 whenElapsed 239401602 android android procName system}
+      tag=*alarm*:WifiHealthMonitor Schedule Daily Detection Timer
+      type=ELAPSED origWhen=+12h12m2s526ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+12h12m2s526ms app_standby=-11h47m57s436ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+12h12m2s526ms maxWhenElapsed=+13h12m2s526ms
+      listener=android.app.AlarmManager$ListenerWrapper@74d8177
+    RTC_WAKEUP #66: Alarm{27c91e4 type 0 origWhen 1756656000000 whenElapsed 242631918 PendingIntent{b7c9d9: PendingIntentRecord{6beeaae com.google.android.gms/com.google.android.gms.reminders startService}} com.google.android.gms procName com.google.android.gms}
+      tag=*walarm*:com.google.android.gms.reminders.notification.ACTION_REFRESH_TIME_REMINDERS
+      type=RTC_WAKEUP origWhen=2025-09-01 00:00:00.000 window=0 exactAllowReason=allow-listed repeatInterval=0 count=0 flags=0x21
+      policyWhenElapsed: requester=+13h5m52s842ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13h5m52s842ms maxWhenElapsed=+13h5m52s842ms
+      operation=PendingIntent{b7c9d9: PendingIntentRecord{6beeaae com.google.android.gms/com.google.android.gms.reminders startService}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=-1, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=1, android:broadcast.flags=8}]
+    RTC #67: Alarm{dd5c64d type 1 origWhen 1756656000000 whenElapsed 242631919 PendingIntent{28bbf18: PendingIntentRecord{74ba250 com.hihonor.powergenie broadcastIntent}} com.hihonor.powergenie procName com.hihonor.iaware}
+      tag=*alarm*:com.hihonor.thermal.MSG_SAVE_DATA
+      type=RTC origWhen=2025-09-01 00:00:00.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+13h5m52s843ms app_standby=-10h53m49s432ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13h5m52s843ms maxWhenElapsed=+13h5m52s843ms
+      operation=PendingIntent{28bbf18: PendingIntentRecord{74ba250 com.hihonor.powergenie broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #68: Alarm{2ff1502 type 1 origWhen 1756656000000 whenElapsed 242631919 PendingIntent{158eef7: PendingIntentRecord{5b73164 android broadcastIntent}} android procName system}
+      tag=*alarm*:android.intent.action.DATE_CHANGED
+      type=RTC origWhen=2025-09-01 00:00:00.000 window=0 exactAllowReason=allow-listed repeatInterval=0 count=0 flags=0x1
+      policyWhenElapsed: requester=+13h5m52s843ms app_standby=-10h36m2s518ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13h5m52s843ms maxWhenElapsed=+13h5m52s843ms
+      operation=PendingIntent{158eef7: PendingIntentRecord{5b73164 android broadcastIntent}}
+    ELAPSED_WAKEUP #69: Alarm{8ebe13 type 2 origWhen 242631921 whenElapsed 242631921 PendingIntent{d196940: PendingIntentRecord{759c95a com.hihonor.systemserver broadcastIntent}} com.hihonor.systemserver procName com.hihonor.systemserver}
+      tag=*walarm*:com.hihonor.systemserver.booster.action.daily_summary
+      type=ELAPSED_WAKEUP origWhen=+13h5m52s845ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+13h5m52s845ms app_standby=-10h52m58s484ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13h5m52s845ms maxWhenElapsed=+14h5m52s845ms
+      operation=PendingIntent{d196940: PendingIntentRecord{759c95a com.hihonor.systemserver broadcastIntent}}
+    RTC_WAKEUP #70: Alarm{62e850 type 0 origWhen 1756656000528 whenElapsed 242632447 PendingIntent{1267912: PendingIntentRecord{ca77191 com.hihonor.calendar broadcastIntent}} com.hihonor.calendar procName com.hihonor.calendar}
+      tag=*walarm*:com.hihonor.calendar.APPWIDGET_SCHEDULED_UPDATE
+      type=RTC_WAKEUP origWhen=2025-09-01 00:00:00.528 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+13h5m53s371ms app_standby=-10h36m0s627ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13h5m53s371ms maxWhenElapsed=+14h5m53s371ms
+      operation=PendingIntent{1267912: PendingIntentRecord{ca77191 com.hihonor.calendar broadcastIntent}}
+    RTC_WAKEUP #71: Alarm{ac57a49 type 0 origWhen 1756657087286 whenElapsed 243719205 PendingIntent{8fae15b: PendingIntentRecord{e62ecea android broadcastIntent}} android procName system}
+      tag=*walarm*:EventConditionProvider.EVALUATE
+      type=RTC_WAKEUP origWhen=2025-09-01 00:18:07.286 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+13h24m0s129ms app_standby=-10h35m59s848ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+13h24m0s129ms maxWhenElapsed=+13h24m0s129ms
+      operation=PendingIntent{8fae15b: PendingIntentRecord{e62ecea android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #72: Alarm{ecd7f4e type 0 origWhen 1756659600000 whenElapsed 246231919 PendingIntent{8401d4f: PendingIntentRecord{ca1fc72 com.hihonor.game.kitserver broadcastIntent}} com.hihonor.game.kitserver procName com.hihonor.iaware}
+      tag=*walarm*:game.kitserver.action.predownload.notice
+      type=RTC_WAKEUP origWhen=2025-09-01 01:00:00.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+14h5m52s843ms app_standby=-9h52m57s541ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+14h5m52s843ms maxWhenElapsed=+14h5m52s843ms
+      operation=PendingIntent{8401d4f: PendingIntentRecord{ca1fc72 com.hihonor.game.kitserver broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #73: Alarm{e9d286f type 0 origWhen 1756662222000 whenElapsed 248853919 PendingIntent{285eb83: PendingIntentRecord{2bf2313 com.hihonor.systemappsupdater broadcastIntent}} com.hihonor.systemappsupdater procName com.hihonor.systemappsupdater}
+      tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver
+      type=RTC_WAKEUP origWhen=2025-09-01 01:43:42.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+14h49m34s843ms app_standby=-11m20s876ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+14h49m34s843ms maxWhenElapsed=+14h49m34s843ms
+      operation=PendingIntent{285eb83: PendingIntentRecord{2bf2313 com.hihonor.systemappsupdater broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #74: Alarm{16397c type 2 origWhen 259261331 whenElapsed 259261331 android android procName system}
+      tag=*walarm*:AutomaticOnOffKeepaliveTracker
+      type=ELAPSED_WAKEUP origWhen=+17h43m2s255ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+17h43m2s255ms app_standby=-6h17m57s636ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+17h43m2s255ms maxWhenElapsed=+18h43m2s255ms
+      listener=android.app.AlarmManager$ListenerWrapper@e27205
+    RTC #75: Alarm{406425a type 1 origWhen 259200000 whenElapsed 259533851 PendingIntent{c36034: PendingIntentRecord{6b7fe5d com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName system}
+      tag=*alarm*:com.hihonor.harassmentinterception.ALARM_DAILY_TASK
+      type=RTC origWhen=1970-01-04 08:00:00.000 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+17h47m34s775ms app_standby=-6h2m58s663ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+17h47m34s775ms maxWhenElapsed=+1d11h47m34s775ms
+      operation=PendingIntent{c36034: PendingIntentRecord{6b7fe5d com.hihonor.systemmanager broadcastIntent}}
+    ELAPSED #76: Alarm{a7ddc8b type 3 origWhen 259596818 whenElapsed 259596818 android android procName system}
+      tag=*alarm*:NetworkTimeUpdateService.POLL
+      type=ELAPSED origWhen=+17h48m37s742ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+17h48m37s742ms app_standby=-11m22s234ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+17h48m37s742ms maxWhenElapsed=+18h48m37s742ms
+      listener=android.app.AlarmManager$ListenerWrapper@f4b7168
+    RTC #77: Alarm{e1d2981 type 1 origWhen 1756684800000 whenElapsed 271431919 PendingIntent{89ad82e: PendingIntentRecord{a866d5c com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName system}
+      tag=*alarm*:com.hihonor.systemmanager.stat.dially
+      type=RTC origWhen=2025-09-01 08:00:00.000 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+21h5m52s843ms app_standby=-2h52m58s768ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h5m52s843ms maxWhenElapsed=+1d15h5m52s843ms
+      operation=PendingIntent{89ad82e: PendingIntentRecord{a866d5c com.hihonor.systemmanager broadcastIntent}}
+    RTC #78: Alarm{fd62a26 type 1 origWhen 1756684800000 whenElapsed 271431919 android android procName system}
+      tag=*alarm*:GraphicsStatsService
+      type=RTC origWhen=2025-09-01 08:00:00.000 window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+21h5m52s843ms app_standby=-2h52m58s756ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h5m52s843ms maxWhenElapsed=+21h5m52s843ms
+      listener=android.app.AlarmManager$ListenerWrapper@e6bb667
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #79: Alarm{1a3c14 type 0 origWhen 1756684800000 whenElapsed 271431919 PendingIntent{9a313fb: PendingIntentRecord{9a82c18 com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName system}
+      tag=*walarm*:com.hihonor.hwsystemmanager.power.UPDATE_USAGESTATUS_RECORD
+      type=RTC_WAKEUP origWhen=2025-09-01 08:00:00.000 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+21h5m52s843ms app_standby=-2h52m58s769ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h5m52s843ms maxWhenElapsed=+1d15h5m52s843ms
+      operation=PendingIntent{9a313fb: PendingIntentRecord{9a82c18 com.hihonor.systemmanager broadcastIntent}}
+    ELAPSED #80: Alarm{4f1dcbd type 3 origWhen 273470747 whenElapsed 273475743 PendingIntent{ed19b6d: PendingIntentRecord{fe893a2 com.huawei.hwid broadcastIntent}} com.huawei.hwid procName system}
+      tag=*alarm*:com.huawei.hms.intent.action.DAILY_24H_TASK
+      type=ELAPSED origWhen=+21h39m51s671ms window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x0
+      policyWhenElapsed: requester=+21h39m56s667ms app_standby=-11m8s525ms device_idle=-11m49s888ms battery_saver=-10m8s484ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h39m56s667ms maxWhenElapsed=+1d15h39m56s667ms
+      operation=PendingIntent{ed19b6d: PendingIntentRecord{fe893a2 com.huawei.hwid broadcastIntent}}
+    ELAPSED_WAKEUP #81: Alarm{36ac2b2 type 2 origWhen 274340541 whenElapsed 274340541 PendingIntent{cd60339: PendingIntentRecord{330ed7e android broadcastIntent}} android procName system}
+      tag=*walarm*:android.appwidget.action.APPWIDGET_UPDATE
+      type=ELAPSED_WAKEUP origWhen=+21h54m21s465ms window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+21h54m21s465ms app_standby=-2h7m59s49ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h54m21s465ms maxWhenElapsed=+1d15h54m21s465ms
+      operation=PendingIntent{cd60339: PendingIntentRecord{330ed7e android broadcastIntent}}
+    RTC #82: Alarm{3735203 type 1 origWhen 1756687715260 whenElapsed 274347180 PendingIntent{6191d8f: PendingIntentRecord{b4d581c com.android.settings startService}} com.android.settings procName system}
+      tag=*alarm*:com.android.settings/.LauncherModeReportService
+      type=RTC origWhen=2025-09-01 08:48:35.260 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+21h54m28s104ms app_standby=-2h7m59s48ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h54m28s104ms maxWhenElapsed=+1d15h54m28s104ms
+      operation=PendingIntent{6191d8f: PendingIntentRecord{b4d581c com.android.settings startService}}
+    RTC #83: Alarm{c690580 type 1 origWhen 1756687869398 whenElapsed 274501317 PendingIntent{8b9e07f: PendingIntentRecord{5fc30ce com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName com.hihonor.systemmanager:service}
+      tag=*alarm*:com.hihonor.android.ACTION_SD_TIMING_NOTIFY
+      type=RTC origWhen=2025-09-01 08:51:09.398 window=+18h0m0s0ms repeatInterval=86400000 count=0 flags=0x8
+      policyWhenElapsed: requester=+21h57m2s241ms app_standby=-1h52m57s953ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h57m2s241ms maxWhenElapsed=+1d15h57m2s241ms
+      operation=PendingIntent{8b9e07f: PendingIntentRecord{5fc30ce com.hihonor.systemmanager broadcastIntent}}
+    ELAPSED_WAKEUP #84: Alarm{96487b9 type 2 origWhen 274501458 whenElapsed 274501458 PendingIntent{f193823: PendingIntentRecord{dad1f5c com.hihonor.regservice broadcastIntent}} com.hihonor.regservice procName com.hihonor.regservice}
+      tag=*walarm*:cn.richinfo.dmyk.action.HEARTBEAT
+      type=ELAPSED_WAKEUP origWhen=+21h57m2s382ms window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+21h57m2s382ms app_standby=-2h2m57s616ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+21h57m2s382ms maxWhenElapsed=+21h57m2s382ms
+      operation=PendingIntent{f193823: PendingIntentRecord{dad1f5c com.hihonor.regservice broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #85: Alarm{33e57fe type 2 origWhen 275401275 whenElapsed 275401275 PendingIntent{e0257b0: PendingIntentRecord{d4068ed com.hihonor.regservice broadcastIntent}} com.hihonor.regservice procName com.hihonor.regservice}
+      tag=*walarm*:android.dmyk.action.ACTION_NETWORK_COLLECT
+      type=ELAPSED_WAKEUP origWhen=+22h12m2s199ms window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+22h12m2s199ms app_standby=-1h47m57s799ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+22h12m2s199ms maxWhenElapsed=+22h12m2s199ms
+      operation=PendingIntent{e0257b0: PendingIntentRecord{d4068ed com.hihonor.regservice broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #86: Alarm{ccf0b5f type 0 origWhen 1756693620000 whenElapsed 280251919 PendingIntent{6119047: PendingIntentRecord{9ce33ef com.hihonor.nearby broadcastIntent}} com.hihonor.nearby procName com.hihonor.nearby}
+      tag=*walarm*:DeviceMonitorService.SelfFinding.AlarmRegularReport
+      type=RTC_WAKEUP origWhen=2025-09-01 10:27:00.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+23h32m52s843ms app_standby=-37m59s33ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+23h32m52s843ms maxWhenElapsed=+23h32m52s843ms
+      operation=PendingIntent{6119047: PendingIntentRecord{9ce33ef com.hihonor.nearby broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #87: Alarm{418f9ac type 1 origWhen 1756694037228 whenElapsed 280669147 PendingIntent{106e5bb: PendingIntentRecord{cef7a34 com.hihonor.ouc startService}} com.hihonor.ouc procName com.hihonor.ouc}
+      tag=*alarm*:hihonor.android.intent.action.AUTO_CHECK_FOR_NEW_VERSION
+      type=RTC origWhen=2025-09-01 10:33:57.228 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+23h39m50s71ms app_standby=-11m16s885ms device_idle=-- battery_saver=-10m44s872ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+23h39m50s71ms maxWhenElapsed=+23h39m50s71ms
+      operation=PendingIntent{106e5bb: PendingIntentRecord{cef7a34 com.hihonor.ouc startService}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED #88: Alarm{1bce675 type 3 origWhen 281177689 whenElapsed 281177689 com.google.android.gms com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*alarm*:CMAlarm
+      type=ELAPSED origWhen=+23h48m18s613ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+23h48m18s613ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+23h48m18s613ms maxWhenElapsed=+1d0h48m18s613ms
+      listener=android.os.BinderProxy@f23f60a
+    ELAPSED #89: Alarm{d02fe7b type 3 origWhen 283588558 whenElapsed 283588558 PendingIntent{bec0ba3: PendingIntentRecord{21ecea0 com.hihonor.android.chr broadcastIntent}} com.hihonor.android.chr procName com.hihonor.hiview}
+      tag=*alarm*:com.hihonor.android.chr.timer.SIB_CELL_ACCESS_REPORT
+      type=ELAPSED origWhen=+1d0h28m29s482ms window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1d0h28m29s482ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1d0h28m29s482ms maxWhenElapsed=+1d0h28m29s482ms
+      operation=PendingIntent{bec0ba3: PendingIntentRecord{21ecea0 com.hihonor.android.chr broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #90: Alarm{1f20498 type 0 origWhen 1756699199999 whenElapsed 285831918 PendingIntent{b4974a0: PendingIntentRecord{38f9859 com.hihonor.systemmanager startService}} com.hihonor.systemmanager procName com.hihonor.systemmanager:service}
+      tag=*walarm*:monthly_report_month_1st_12_clock
+      type=RTC_WAKEUP origWhen=2025-09-01 11:59:59.999 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1d1h5m52s842ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1d1h5m52s842ms maxWhenElapsed=+1d1h5m52s842ms
+      operation=PendingIntent{b4974a0: PendingIntentRecord{38f9859 com.hihonor.systemmanager startService}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #91: Alarm{70274f1 type 0 origWhen 1756705328000 whenElapsed 291959919 PendingIntent{498aefb: PendingIntentRecord{cc8c955 com.hihonor.appmarket broadcastIntent}} com.hihonor.appmarket procName com.hihonor.appmarket}
+      tag=*walarm*:com.hihonor.appmarket/.slientcheck.checkupdate.au.AuCheckReceiver
+      type=RTC_WAKEUP origWhen=2025-09-01 13:42:08.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1d2h48m0s843ms app_standby=-2h25m33s534ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1d2h48m0s843ms maxWhenElapsed=+1d2h48m0s843ms
+      operation=PendingIntent{498aefb: PendingIntentRecord{cc8c955 com.hihonor.appmarket broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #92: Alarm{f1368d6 type 0 origWhen 1756776709000 whenElapsed 363340919 PendingIntent{e3b5d09: PendingIntentRecord{3958b0e android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-02 09:31:49.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1d22h37m41s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+1d22h37m41s843ms maxWhenElapsed=+1d22h37m41s843ms
+      operation=PendingIntent{e3b5d09: PendingIntentRecord{3958b0e android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #93: Alarm{b90757 type 0 origWhen 1756814016000 whenElapsed 400647919 PendingIntent{3731e8e: PendingIntentRecord{b2776af android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-02 19:53:36.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d8h59m28s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d8h59m28s843ms maxWhenElapsed=+2d8h59m28s843ms
+      operation=PendingIntent{3731e8e: PendingIntentRecord{b2776af android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #94: Alarm{34ed244 type 0 origWhen 1756818527000 whenElapsed 405158919 PendingIntent{26b4cf8: PendingIntentRecord{8f385d1 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-02 21:08:47.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d10h14m39s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d10h14m39s843ms maxWhenElapsed=+2d10h14m39s843ms
+      operation=PendingIntent{26b4cf8: PendingIntentRecord{8f385d1 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #95: Alarm{1386f2d type 1 origWhen 1756818627392 whenElapsed 405259311 PendingIntent{809dc98: PendingIntentRecord{2f96cf1 com.hihonor.systemmanager startService}} com.hihonor.systemmanager procName system}
+      tag=*alarm*:com.hihonor.systemmanager.spacecleanner.autoupdate
+      type=RTC origWhen=2025-09-02 21:10:27.392 window=+2d6h0m0s0ms repeatInterval=259200000 count=0 flags=0x8
+      policyWhenElapsed: requester=+2d10h16m20s235ms app_standby=-13h43m25s378ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d10h16m20s235ms maxWhenElapsed=+4d16h16m20s235ms
+      operation=PendingIntent{809dc98: PendingIntentRecord{2f96cf1 com.hihonor.systemmanager startService}}
+    RTC_WAKEUP #96: Alarm{b53c62 type 0 origWhen 1756822244000 whenElapsed 408875918 PendingIntent{cbc04: PendingIntentRecord{5cd75ed android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-02 22:10:44.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d11h16m36s842ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d11h16m36s842ms maxWhenElapsed=+2d11h16m36s842ms
+      operation=PendingIntent{cbc04: PendingIntentRecord{5cd75ed android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #97: Alarm{b5cc1f3 type 0 origWhen 1756835161569 whenElapsed 421793488 PendingIntent{cdf3c0c: PendingIntentRecord{ca06955 com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName system}
+      tag=*walarm*:com.hihonor.harassmentinterception.update.ALARM_TASK
+      type=RTC_WAKEUP origWhen=2025-09-03 01:46:01.569 window=+2d6h0m0s0ms repeatInterval=259200000 count=0 flags=0x8
+      policyWhenElapsed: requester=+2d14h51m54s412ms app_standby=-9h7m58s557ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d14h51m54s412ms maxWhenElapsed=+4d20h51m54s412ms
+      operation=PendingIntent{cdf3c0c: PendingIntentRecord{ca06955 com.hihonor.systemmanager broadcastIntent}}
+    RTC #98: Alarm{e88ceb0 type 1 origWhen 1756836000000 whenElapsed 422631919 android android procName system}
+      tag=*alarm*:BatteryStatsImpl
+      type=RTC origWhen=2025-09-03 02:00:00.000 window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x8
+      policyWhenElapsed: requester=+2d15h5m52s843ms app_standby=-11m21s970ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d15h5m52s843ms maxWhenElapsed=+2d16h5m52s843ms
+      listener=android.app.AlarmManager$ListenerWrapper@b59d129
+    RTC_WAKEUP #99: Alarm{1aebcae type 0 origWhen 1756855612000 whenElapsed 442243919 PendingIntent{d3699a: PendingIntentRecord{b4d12cb android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 07:26:52.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d20h32m44s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d20h32m44s843ms maxWhenElapsed=+2d20h32m44s843ms
+      operation=PendingIntent{d3699a: PendingIntentRecord{b4d12cb android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #100: Alarm{1778a4f type 0 origWhen 1756863838000 whenElapsed 450469919 PendingIntent{36a1c4b: PendingIntentRecord{5cf1628 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 09:43:58.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d22h49m50s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d22h49m50s843ms maxWhenElapsed=+2d22h49m50s843ms
+      operation=PendingIntent{36a1c4b: PendingIntentRecord{5cf1628 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #101: Alarm{42425dc type 0 origWhen 1756864434001 whenElapsed 451065920 PendingIntent{1c124e4: PendingIntentRecord{4d25d4d android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 09:53:54.001 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d22h59m46s844ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d22h59m46s844ms maxWhenElapsed=+2d22h59m46s844ms
+      operation=PendingIntent{1c124e4: PendingIntentRecord{4d25d4d android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #102: Alarm{b1556e5 type 2 origWhen 453969171 whenElapsed 453969171 android android procName system}
+      tag=*walarm*:LockSettingsStrongAuth.timeoutForUser
+      type=ELAPSED_WAKEUP origWhen=+2d23h48m10s95ms window=0 exactAllowReason=listener repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+2d23h48m10s95ms app_standby=-11m49s905ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+2d23h48m10s95ms maxWhenElapsed=+2d23h48m10s95ms
+      listener=android.app.AlarmManager$ListenerWrapper@2adf5ba
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #103: Alarm{ccc7c6b type 0 origWhen 1756871694000 whenElapsed 458325919 PendingIntent{37f5280: PendingIntentRecord{75950b9 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 11:54:54.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d1h0m46s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d1h0m46s843ms maxWhenElapsed=+3d1h0m46s843ms
+      operation=PendingIntent{37f5280: PendingIntentRecord{75950b9 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #104: Alarm{6bbc3c8 type 0 origWhen 1756872067000 whenElapsed 458698919 PendingIntent{69149f7: PendingIntentRecord{c6ff064 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 12:01:07.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d1h6m59s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d1h6m59s843ms maxWhenElapsed=+3d1h6m59s843ms
+      operation=PendingIntent{69149f7: PendingIntentRecord{c6ff064 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #105: Alarm{8497c61 type 0 origWhen 1756880298001 whenElapsed 466929920 PendingIntent{465f483: PendingIntentRecord{3b3600 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 14:18:18.001 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d3h24m10s844ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d3h24m10s844ms maxWhenElapsed=+3d3h24m10s844ms
+      operation=PendingIntent{465f483: PendingIntentRecord{3b3600 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #106: Alarm{f35b386 type 0 origWhen 1756884443000 whenElapsed 471074919 PendingIntent{73dc872: PendingIntentRecord{28d44c3 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 15:27:23.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d4h33m15s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d4h33m15s843ms maxWhenElapsed=+3d4h33m15s843ms
+      operation=PendingIntent{73dc872: PendingIntentRecord{28d44c3 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #107: Alarm{6347447 type 0 origWhen 1756888523000 whenElapsed 475154918 PendingIntent{5802ec1: PendingIntentRecord{18e666 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 16:35:23.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d5h41m15s842ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d5h41m15s842ms maxWhenElapsed=+3d5h41m15s842ms
+      operation=PendingIntent{5802ec1: PendingIntentRecord{18e666 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #108: Alarm{5ad5474 type 0 origWhen 1756890307000 whenElapsed 476938919 PendingIntent{ba45dbe: PendingIntentRecord{87ffe1f android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 17:05:07.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d6h10m59s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d6h10m59s843ms maxWhenElapsed=+3d6h10m59s843ms
+      operation=PendingIntent{ba45dbe: PendingIntentRecord{87ffe1f android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #109: Alarm{407d9d type 0 origWhen 1756896957001 whenElapsed 483588920 PendingIntent{3c46d01: PendingIntentRecord{39ee7a6 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 18:55:57.001 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d8h1m49s844ms app_standby=-15h58m8s896ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d8h1m49s844ms maxWhenElapsed=+3d8h1m49s844ms
+      operation=PendingIntent{3c46d01: PendingIntentRecord{39ee7a6 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #110: Alarm{6298212 type 0 origWhen 1756901423000 whenElapsed 488054919 PendingIntent{76e046d: PendingIntentRecord{87f48a2 android broadcastIntent}} android procName com.hihonor.android.pushagent.HiPushService}
+      tag=*walarm*:com.hihonor.push.action.CANCEL_TIMED_NOTIFICATION_FOR_AGENT
+      type=RTC_WAKEUP origWhen=2025-09-03 20:10:23.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+3d9h16m15s843ms app_standby=-14h42m58s338ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d9h16m15s843ms maxWhenElapsed=+3d9h16m15s843ms
+      operation=PendingIntent{76e046d: PendingIntentRecord{87f48a2 android broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #111: Alarm{13a0de3 type 1 origWhen 1756944000000 whenElapsed 530631919 PendingIntent{1b6babf: PendingIntentRecord{f0394d5 com.hihonor.systemmanager broadcastIntent}} com.hihonor.systemmanager procName system}
+      tag=*alarm*:com.hihonor.systemmanager.stat.weeklly
+      type=RTC origWhen=2025-09-04 08:00:00.000 window=+5d6h0m0s0ms repeatInterval=604800000 count=0 flags=0x8
+      policyWhenElapsed: requester=+3d21h5m52s843ms app_standby=-16h21m13s958ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3d21h5m52s843ms maxWhenElapsed=+9d3h5m52s843ms
+      operation=PendingIntent{1b6babf: PendingIntentRecord{f0394d5 com.hihonor.systemmanager broadcastIntent}}
+    ELAPSED #112: Alarm{68543e0 type 3 origWhen 595607835 whenElapsed 595607835 PendingIntent{356bf36: PendingIntentRecord{3f60e37 com.qti.qcc broadcastIntent}} com.qti.qcc procName com.qti.qcc}
+      tag=*alarm*:com.qti.qcc.PERIODIC_CI_REGISTRATION
+      type=ELAPSED origWhen=+4d15h8m48s759ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+4d15h8m48s759ms app_standby=-15h37m27s240ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+4d15h8m48s759ms maxWhenElapsed=+4d16h8m48s759ms
+      operation=PendingIntent{356bf36: PendingIntentRecord{3f60e37 com.qti.qcc broadcastIntent}}
+    RTC_WAKEUP #113: Alarm{ac5699 type 0 origWhen 1760414400000 whenElapsed 4001031919 PendingIntent{15a3ac8: PendingIntentRecord{42761 com.hihonor.systemmanager startService}} com.hihonor.systemmanager procName com.hihonor.systemmanager:service}
+      tag=*walarm*:monthly_report_mid_month_1st_12_clock
+      type=RTC_WAKEUP origWhen=2025-10-14 12:00:00.000 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+44d1h5m52s843ms app_standby=-16h21m13s959ms device_idle=-11m49s888ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+44d1h5m52s843ms maxWhenElapsed=+44d1h5m52s843ms
+      operation=PendingIntent{15a3ac8: PendingIntentRecord{42761 com.hihonor.systemmanager startService}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #114: Alarm{f19ad5e type 0 origWhen 1787964515629 whenElapsed 31551147548 PendingIntent{6861ff5: PendingIntentRecord{156718a com.huawei.hwid broadcastIntent}} com.huawei.hwid procName com.huawei.hwid.core}
+      tag=*walarm*:com.huawei.hms.location.Get_PENDINGINTENT
+      type=RTC_WAKEUP origWhen=2026-08-29 08:48:35.629 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x1
+      policyWhenElapsed: requester=+362d21h54m28s472ms app_standby=-11m8s525ms device_idle=-11m49s888ms battery_saver=-10m8s484ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+362d21h54m28s472ms maxWhenElapsed=+362d21h54m28s472ms
+      operation=PendingIntent{6861ff5: PendingIntentRecord{156718a com.huawei.hwid broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #115: Alarm{575a53f type 2 origWhen 315375163023 whenElapsed 315375163023 PendingIntent{ea94b9e: PendingIntentRecord{d53867f com.google.android.gms/com.google.android.gms.tapandpay startService}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*walarm*:com.google.android.gms/.tapandpay.security.StorageKeyCacheService
+      type=ELAPSED_WAKEUP origWhen=+3647d21h54m43s947ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+3647d21h54m43s947ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3647d21h54m43s947ms maxWhenElapsed=+3647d22h54m43s947ms
+      operation=PendingIntent{ea94b9e: PendingIntentRecord{d53867f com.google.android.gms/com.google.android.gms.tapandpay startService}}
+    ELAPSED_WAKEUP #116: Alarm{92abe0c type 2 origWhen 315375164570 whenElapsed 315375164570 PendingIntent{7998549: PendingIntentRecord{2702e4e com.google.android.gms/com.google.android.gms.pay startService}} com.google.android.gms procName com.google.android.gms}
+      tag=*walarm*:com.google.android.gms/.pay.security.storagekey.service.StorageKeyCacheService
+      type=ELAPSED_WAKEUP origWhen=+3647d21h54m45s494ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+3647d21h54m45s494ms app_standby=-1m1s952ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3647d21h54m45s494ms maxWhenElapsed=+3647d22h54m45s494ms
+      operation=PendingIntent{7998549: PendingIntentRecord{2702e4e com.google.android.gms/com.google.android.gms.pay startService}}
+    ELAPSED_WAKEUP #117: Alarm{662c355 type 2 origWhen 315554777643 whenElapsed 315554777643 PendingIntent{e847a60: PendingIntentRecord{de3e1f com.google.android.gms/geofencer_provider startService}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*walarm*:com.google.android.gms/com.google.android.location.internal.GoogleLocationManagerService
+      type=ELAPSED_WAKEUP origWhen=+3649d23h48m18s567ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+3649d23h48m18s567ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3649d23h48m18s567ms maxWhenElapsed=+3650d0h48m18s567ms
+      operation=PendingIntent{e847a60: PendingIntentRecord{de3e1f com.google.android.gms/geofencer_provider startService}}
+    ELAPSED_WAKEUP #118: Alarm{84f416a type 2 origWhen 315554777656 whenElapsed 315554777656 PendingIntent{b12eca8: PendingIntentRecord{3112dfa com.google.android.gms/com.google.android.gms.contextmanager startService}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*walarm*:com.google.android.gms/com.google.android.contextmanager.service.ContextManagerService
+      type=ELAPSED_WAKEUP origWhen=+3649d23h48m18s580ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+3649d23h48m18s580ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3649d23h48m18s580ms maxWhenElapsed=+3650d0h48m18s580ms
+      operation=PendingIntent{b12eca8: PendingIntentRecord{3112dfa com.google.android.gms/com.google.android.gms.contextmanager startService}}
+    ELAPSED_WAKEUP #119: Alarm{1a9565b type 2 origWhen 315554810244 whenElapsed 315554810244 PendingIntent{d500e7: PendingIntentRecord{fd46205 com.google.android.gms/com.google.android.gms.fitness startService}} com.google.android.gms procName com.google.android.gms.persistent}
+      tag=*walarm*:com.google.android.gms/.fitness.cache.DataUpdateListenerCacheService
+      type=ELAPSED_WAKEUP origWhen=+3649d23h48m51s168ms window=+1h0m0s0ms repeatInterval=0 count=0 flags=0x0
+      policyWhenElapsed: requester=+3649d23h48m51s168ms app_standby=-1m1s952ms device_idle=-- battery_saver=-11m8s831ms --unknown(4)--=-- --unknown(5)--=--
+      whenElapsed=+3649d23h48m51s168ms maxWhenElapsed=+3650d0h48m51s168ms
+      operation=PendingIntent{d500e7: PendingIntentRecord{fd46205 com.google.android.gms/com.google.android.gms.fitness startService}}
+  LazyAlarmStore stats:
+    GET_NEXT_DELIVERY_TIME: count=29678, total=44.8ms, avg=0.002ms, max calls/s=0 max dur/s=0.0ms max time=1.0ms
+    GET_NEXT_WAKEUP_DELIVERY_TIME: count=29678, total=166.0ms, avg=0.006ms, max calls/s=446 max dur/s=3.3ms max time=3.3ms
+    GET_COUNT: count=0, total=0.0ms, avg=0.000ms, max calls/s=0 max dur/s=0.0ms max time=0.0ms
+  
+  Pending user blocked background alarms: 
+    none
+  
+  Pending alarms per uid: [1000:60, 1001:2, 1002:1, 1073:3, u0a10:1, u0a12:2, u0a14:2, u0a16:1, u0a27:16, u0a54:1, u0a70:2, u0a77:1, u0a78:1, u0a88:3, u0a97:1, u0a116:3, u0a162:2, u0a195:2, u0a266:1, u0a267:2]
+  
+  App Alarm history:
+    com.android.providers.calendar, u0: -11m22s517ms, 
+    com.google.android.configupdater, u0: -1d18h22m40s187ms, 
+    com.huawei.hwid, u0: -2h17m57s840ms, 
+    com.hihonor.android.totemweather, u0: -2h26m5s175ms, 
+    com.hihonor.imedia.sws, u0: -2d2h5m28s702ms, 
+    com.google.android.gms, u0: -1m1s959ms, -3m7s536ms, -6m21s993ms, -7m11s37ms, -9m2s32ms, -10m22s60ms, -11m2s99ms, -11m22s265ms, -11m22s271ms, 
+    com.hihonor.baidu.browser, u0: -11m22s517ms, 
+    com.qti.qcc, u0: -15h37m27s650ms, 
+    com.android.providers.contacts, u0: -14h42m58s422ms, 
+  
+  Temporary Quota Reserves:
+  
+  Past-due non-wakeup alarms: (none)
+    Number of delayed alarms: 1500, total delay time: +1d6h10m56s804ms
+    Max delay time: +11m3s601ms, max non-interactive time: +17h8m19s563ms
+  
+  Broadcast ref count: 0
+  PendingIntent send count: 4748
+  PendingIntent finish count: 4748
+  Listener send count: 1892
+  Listener finish count: 1892
+  
+  Allow while idle history:
+  
+  Allow while idle compat history:
+  
+  Removal history:
+    1000:
+      #1: Reason=alarm_cancelled elapsed=-17s109ms rtc=2025-08-31 10:53:50.048
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:WificondScannerImpl Scan Timeout 
+          policyWhenElapsed: requester=-5s243ms app_standby=-20s242ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-20s798ms rtc=2025-08-31 10:53:46.359
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:WificondScannerImpl Scan Timeout 
+          policyWhenElapsed: requester=-9s23ms app_standby=-24s21ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-31s449ms rtc=2025-08-31 10:53:35.708
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:WificondScannerImpl Scan Timeout 
+          policyWhenElapsed: requester=-19s483ms app_standby=-34s482ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-54s237ms rtc=2025-08-31 10:53:12.920
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.hihonor.push.alarm.HEARTBEAT 
+          policyWhenElapsed: requester=-49s335ms app_standby=-3m49s334ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-3m49s337ms rtc=2025-08-31 10:50:17.820
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.hihonor.push.alarm.HEARTBEAT 
+          policyWhenElapsed: requester=-1m41s169ms app_standby=-4m41s167ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-4m41s182ms rtc=2025-08-31 10:49:25.975
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.android.push.intent.HEARTBEAT_RSP_TIMEOUT 
+          policyWhenElapsed: requester=-4m31s251ms app_standby=-4m41s250ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-4m45s492ms rtc=2025-08-31 10:49:21.665
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:WificondScannerImpl Scan Timeout 
+          policyWhenElapsed: requester=-4m33s562ms app_standby=-4m48s561ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-6m19s393ms rtc=2025-08-31 10:47:47.764
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:WificondScannerImpl Scan Timeout 
+          policyWhenElapsed: requester=-6m7s531ms app_standby=-6m22s531ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-7m41s304ms rtc=2025-08-31 10:46:25.854
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.android.push.intent.HEARTBEAT_RSP_TIMEOUT 
+          policyWhenElapsed: requester=-7m31s361ms app_standby=-7m41s359ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-7m50s427ms rtc=2025-08-31 10:46:16.730
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:WificondScannerImpl Scan Timeout 
+          policyWhenElapsed: requester=-7m38s472ms app_standby=-7m53s471ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+    1002:
+      #1: Reason=alarm_cancelled elapsed=-10h48m35s549ms rtc=2025-08-31 00:05:31.608
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:BluetoothMetricsLogger 
+          policyWhenElapsed: requester=-7h18m13s727ms app_standby=-13h18m13s726ms device_idle=-11h6m3s463ms battery_saver=-- --unknown(4)--=-7h17m59s76ms --unknown(5)--=--
+    1073:
+      #1: Reason=alarm_cancelled elapsed=-17m49s799ms rtc=2025-08-31 10:36:17.358
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:IpClient.wlan0.EVENT_DHCPACTION_TIMEOUT 
+          policyWhenElapsed: requester=-17m31s858ms app_standby=-17m49s855ms device_idle=-17m49s855ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-17m49s811ms rtc=2025-08-31 10:36:17.346
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:DhcpClient.wlan0.KICK 
+          policyWhenElapsed: requester=-17m48s785ms app_standby=-17m49s826ms device_idle=-17m49s826ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-1h17m50s558ms rtc=2025-08-31 09:36:16.599
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:IpClient.wlan0.EVENT_DHCPACTION_TIMEOUT 
+          policyWhenElapsed: requester=-1h17m32s625ms app_standby=-1h17m50s622ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-1h17m50s570ms rtc=2025-08-31 09:36:16.587
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:DhcpClient.wlan0.KICK 
+          policyWhenElapsed: requester=-1h17m49s608ms app_standby=-1h17m50s584ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-2h17m50s631ms rtc=2025-08-31 08:36:16.526
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:IpClient.wlan0.EVENT_DHCPACTION_TIMEOUT 
+          policyWhenElapsed: requester=-2h17m32s663ms app_standby=-2h17m50s660ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-2h17m50s638ms rtc=2025-08-31 08:36:16.519
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:DhcpClient.wlan0.KICK 
+          policyWhenElapsed: requester=-2h17m49s671ms app_standby=-2h17m50s643ms device_idle=-- battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-3h17m50s712ms rtc=2025-08-31 07:36:16.445
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:IpClient.wlan0.EVENT_DHCPACTION_TIMEOUT 
+          policyWhenElapsed: requester=-3h17m32s761ms app_standby=-3h17m50s758ms device_idle=-3h17m50s758ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-3h17m50s721ms rtc=2025-08-31 07:36:16.436
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:DhcpClient.wlan0.KICK 
+          policyWhenElapsed: requester=-3h17m49s778ms app_standby=-3h17m50s734ms device_idle=-3h17m50s734ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-4h17m51s577ms rtc=2025-08-31 06:36:15.580
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:IpClient.wlan0.EVENT_DHCPACTION_TIMEOUT 
+          policyWhenElapsed: requester=-4h17m33s640ms app_standby=-4h17m51s636ms device_idle=-4h17m51s636ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-4h17m51s588ms rtc=2025-08-31 06:36:15.569
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:DhcpClient.wlan0.KICK 
+          policyWhenElapsed: requester=-4h17m50s534ms app_standby=-4h17m51s599ms device_idle=-4h17m51s599ms battery_saver=-- --unknown(4)--=-- --unknown(5)--=--
+    u0a16:
+      #1: Reason=alarm_cancelled elapsed=-10h36m0s629ms rtc=2025-08-31 00:18:06.528
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.calendar.APPWIDGET_SCHEDULED_UPDATE 
+          policyWhenElapsed: requester=+13h5m53s817ms app_standby=-10h36m2s180ms device_idle=-- battery_saver=-10h36m2s180ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-10h36m2s182ms rtc=2025-08-31 00:18:04.975
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.calendar.APPWIDGET_SCHEDULED_UPDATE 
+          policyWhenElapsed: requester=-10h54m6s449ms app_standby=-12h27m20s443ms device_idle=-10h36m2s580ms battery_saver=-10h48m33s958ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-12h27m20s444ms rtc=2025-08-30 22:26:46.713
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.calendar.APPWIDGET_SCHEDULED_UPDATE 
+          policyWhenElapsed: requester=-10h54m7s84ms app_standby=-13h13m52s81ms device_idle=-- battery_saver=-12h27m20s631ms --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-13h13m52s83ms rtc=2025-08-30 21:40:15.074
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.calendar.APPWIDGET_SCHEDULED_UPDATE 
+          policyWhenElapsed: requester=-10h54m6s525ms app_standby=-16h21m13s958ms device_idle=-13h24m55s289ms battery_saver=-13h22m33s235ms --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-1d10h52m56s523ms rtc=2025-08-30 00:01:10.634
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.calendar.APPWIDGET_SCHEDULED_UPDATE 
+          policyWhenElapsed: requester=-10h54m6s946ms app_standby=-1d10h52m57s943ms device_idle=-- battery_saver=-1d10h52m57s943ms --unknown(4)--=-- --unknown(5)--=--
+    u0a27:
+      #1: Reason=alarm_cancelled elapsed=-3m0s387ms rtc=2025-08-31 10:51:06.770
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h56m52s593ms app_standby=-3m7s406ms device_idle=-- battery_saver=-3m7s406ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-6m53s264ms rtc=2025-08-31 10:47:13.894
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h52m59s715ms app_standby=-7m0s284ms device_idle=-- battery_saver=-7m0s284ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-7m3s895ms rtc=2025-08-31 10:47:03.262
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h52m49s88ms app_standby=-7m10s911ms device_idle=-- battery_saver=-7m10s911ms --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-11m1s693ms rtc=2025-08-31 10:43:05.464
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h48m51s176ms app_standby=-11m2s95ms device_idle=-- battery_saver=-11m8s823ms --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-11m1s701ms rtc=2025-08-31 10:43:05.456
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h48m51s115ms app_standby=-11m2s95ms device_idle=-- battery_saver=-11m8s885ms --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-11m9s827ms rtc=2025-08-31 10:42:57.330
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.gms.gcm.ACTION_CHECK_QUEUE 
+          policyWhenElapsed: requester=+48m18s922ms app_standby=-11m17s82ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-11m13s545ms rtc=2025-08-31 10:42:53.612
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h48m37s743ms app_standby=-11m22s222ms device_idle=-- battery_saver=-11m22s222ms --unknown(4)--=-- --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-11m14s177ms rtc=2025-08-31 10:42:52.980
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.chimera.container.IntentOperationService.SAVED_INTENT 
+          policyWhenElapsed: requester=+3649d23h48m37s805ms app_standby=-11m22s195ms device_idle=-- battery_saver=-11m22s195ms --unknown(4)--=-- --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-11m17s83ms rtc=2025-08-31 10:42:50.074
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.gms.gcm.ACTION_CHECK_QUEUE 
+          policyWhenElapsed: requester=+48m18s922ms app_standby=-11m17s240ms device_idle=-- battery_saver=-11m17s240ms --unknown(4)--=-- --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-11m17s284ms rtc=2025-08-31 10:42:49.874
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.google.android.gms.gcm.ACTION_CHECK_QUEUE 
+          policyWhenElapsed: requester=+48m18s922ms app_standby=-11m17s388ms device_idle=-- battery_saver=-11m17s388ms --unknown(4)--=-- --unknown(5)--=--
+    u0a77:
+      #1: Reason=alarm_cancelled elapsed=-11m20s877ms rtc=2025-08-31 10:42:46.280
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=+19h3m26s843ms app_standby=-2h26m4s703ms device_idle=-11m49s888ms battery_saver=-11m22s739ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-2h26m4s705ms rtc=2025-08-31 08:28:02.452
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=+15h5m19s843ms app_standby=-10h17m56s438ms device_idle=-2h26m5s175ms battery_saver=-10h17m56s438ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-10h17m56s441ms rtc=2025-08-31 00:36:10.716
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-5h16m11s157ms app_standby=-12h40m44s19ms device_idle=-10h35m32s474ms battery_saver=-10h48m33s958ms --unknown(4)--=-5h17m59s76ms --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-12h40m44s22ms rtc=2025-08-30 22:13:23.135
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-6h15m31s157ms app_standby=-13h4m0s103ms device_idle=-- battery_saver=-12h40m44s61ms --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-13h4m0s108ms rtc=2025-08-30 21:50:07.049
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-7h27m45s157ms app_standby=-16h21m13s958ms device_idle=-13h24m55s289ms battery_saver=-13h8m4s879ms --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-17h37m43s137ms rtc=2025-08-30 17:16:24.020
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-7h52m51s157ms app_standby=-17h37m44s54ms device_idle=-- battery_saver=-17h40m24s919ms --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-17h49m18s858ms rtc=2025-08-30 17:04:48.299
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-5h18m23s157ms app_standby=-20h12m56s995ms device_idle=-17h53m43s470ms battery_saver=-17h53m6s212ms --unknown(4)--=-- --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-20h12m57s0ms rtc=2025-08-30 14:41:10.157
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-5h56m53s157ms app_standby=-1d9h27m57s538ms device_idle=-1d2h12m7s742ms battery_saver=-1d0h42m55s354ms --unknown(4)--=-5h57m59s76ms --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-1d9h27m57s540ms rtc=2025-08-30 01:26:09.617
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-5h20m38s157ms app_standby=-1d9h27m57s544ms device_idle=-1d9h27m57s544ms battery_saver=-1d9h27m57s544ms --unknown(4)--=-5h22m59s76ms --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-1d11h7m50s997ms rtc=2025-08-29 23:46:16.160
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver 
+          policyWhenElapsed: requester=-1d9h33m0s157ms app_standby=-1d11h12m20s622ms device_idle=-- battery_saver=-1d11h8m25s803ms --unknown(4)--=-- --unknown(5)--=--
+    u0a78:
+      #1: Reason=pi_cancelled elapsed=-11m20s584ms rtc=2025-08-31 10:42:46.573
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.magazine/com.honor.pictorial.function.silentupdate.domain.service.TimerService 
+          policyWhenElapsed: requester=+8h14m59s715ms app_standby=-11m20s592ms device_idle=-- battery_saver=-11m20s592ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=pi_cancelled elapsed=-11h47m56s913ms rtc=2025-08-30 23:06:10.244
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.magazine/com.honor.pictorial.function.silentupdate.domain.service.TimerService 
+          policyWhenElapsed: requester=-10h46m58s349ms app_standby=-11h47m57s79ms device_idle=-- battery_saver=-11h47m57s79ms --unknown(4)--=+2d13h13m1s651ms --unknown(5)--=--
+      #3: Reason=pi_cancelled elapsed=-11h47m57s171ms rtc=2025-08-30 23:06:09.986
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.magazine/com.honor.pictorial.function.silentupdate.domain.service.TimerService 
+          policyWhenElapsed: requester=-11h40m23s832ms app_standby=-11h47m57s225ms device_idle=-- battery_saver=-11h47m57s225ms --unknown(4)--=+2d12h19m36s168ms --unknown(5)--=--
+      #4: Reason=pi_cancelled elapsed=-2d2h5m42s185ms rtc=2025-08-29 08:48:24.972
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.magazine/com.honor.pictorial.function.silentupdate.domain.service.TimerService 
+          policyWhenElapsed: requester=-2d1h45m52s460ms app_standby=-2d2h5m43s888ms device_idle=-- battery_saver=-2d2h5m43s888ms --unknown(4)--=-- --unknown(5)--=--
+    u0a97:
+      #1: Reason=alarm_cancelled elapsed=-10m23s516ms rtc=2025-08-31 10:43:43.641
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-7m57s812ms app_standby=-11m42s156ms device_idle=-- battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-11m47s209ms rtc=2025-08-31 10:42:19.948
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-7m57s812ms app_standby=-12m57s854ms device_idle=-11m49s888ms battery_saver=-11m48s967ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-17m58s851ms rtc=2025-08-31 10:36:08.306
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-7m57s812ms app_standby=-17m59s25ms device_idle=-17m59s25ms battery_saver=-17m59s25ms --unknown(4)--=-7m59s76ms --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-47m57s703ms rtc=2025-08-31 10:06:09.455
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-46m50s157ms app_standby=-47m57s804ms device_idle=-47m57s804ms battery_saver=-47m57s804ms --unknown(4)--=-42m59s76ms --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-47m57s811ms rtc=2025-08-31 10:06:09.346
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-42m44s336ms app_standby=-47m57s814ms device_idle=-47m57s814ms battery_saver=-47m57s814ms --unknown(4)--=-42m59s76ms --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-2h1m6s939ms rtc=2025-08-31 08:53:00.218
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-2h1m21s808ms app_standby=-2h2m57s757ms device_idle=-- battery_saver=-2h2m55s725ms --unknown(4)--=-1h57m59s76ms --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-2h11m21s835ms rtc=2025-08-31 08:42:45.322
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-2h9m7s157ms app_standby=-2h11m23s928ms device_idle=-- battery_saver=-2h11m23s928ms --unknown(4)--=-2h7m59s76ms --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-2h11m23s954ms rtc=2025-08-31 08:42:43.203
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-2h11m23s275ms app_standby=-2h11m28s247ms device_idle=-- battery_saver=-2h11m28s247ms --unknown(4)--=-- --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-2h11m28s288ms rtc=2025-08-31 08:42:38.869
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-2h9m7s157ms app_standby=-2h11m30s674ms device_idle=-- battery_saver=-2h11m30s674ms --unknown(4)--=-- --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-2h11m30s682ms rtc=2025-08-31 08:42:36.476
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:com.hihonor.awareness.action.alarm.notice 
+          policyWhenElapsed: requester=-2h10m4s115ms app_standby=-2h12m57s788ms device_idle=-- battery_saver=-2h12m52s830ms --unknown(4)--=-- --unknown(5)--=--
+    u0a116:
+      #1: Reason=alarm_cancelled elapsed=-11m16s908ms rtc=2025-08-31 10:42:50.249
+        Snapshot:
+          type=RTC tag=*alarm*:hihonor.android.intent.action.AUTO_CHECK_FOR_NEW_VERSION 
+          policyWhenElapsed: requester=+1d0h5m48s771ms app_standby=-11m20s221ms device_idle=-- battery_saver=-11m20s221ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-11m20s223ms rtc=2025-08-31 10:42:46.934
+        Snapshot:
+          type=RTC tag=*alarm*:hihonor.android.intent.action.AUTO_CHECK_FOR_NEW_VERSION 
+          policyWhenElapsed: requester=+10h27m12s937ms app_standby=-13h21m45s61ms device_idle=-11m49s888ms battery_saver=-11m22s739ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-11m20s550ms rtc=2025-08-31 10:42:46.607
+        Snapshot:
+          type=RTC tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS 
+          policyWhenElapsed: requester=+2h17m24s591ms app_standby=-11m20s639ms device_idle=-- battery_saver=-11m20s639ms --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-11m20s688ms rtc=2025-08-31 10:42:46.469
+        Snapshot:
+          type=RTC tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS 
+          policyWhenElapsed: requester=+2h17m24s592ms app_standby=-1h45m32s537ms device_idle=-11m49s888ms battery_saver=-11m22s739ms --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-1h45m32s539ms rtc=2025-08-31 09:08:34.618
+        Snapshot:
+          type=RTC tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS 
+          policyWhenElapsed: requester=+2h17m24s592ms app_standby=-1h45m32s573ms device_idle=-- battery_saver=-1h45m32s550ms --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-1h57m57s805ms rtc=2025-08-31 08:56:09.352
+        Snapshot:
+          type=RTC tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS 
+          policyWhenElapsed: requester=-1h45m42s151ms app_standby=-5h42m57s402ms device_idle=-2h26m5s175ms battery_saver=-2h2m55s725ms --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-5h42m57s405ms rtc=2025-08-31 05:11:09.752
+        Snapshot:
+          type=RTC tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS 
+          policyWhenElapsed: requester=-1h45m42s151ms app_standby=-5h42m57s441ms device_idle=-5h42m57s441ms battery_saver=-5h42m57s416ms --unknown(4)--=-- --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-13h21m45s62ms rtc=2025-08-30 21:32:22.095
+        Snapshot:
+          type=RTC tag=*alarm*:hihonor.android.intent.action.AUTO_CHECK_FOR_NEW_VERSION 
+          policyWhenElapsed: requester=+10h40m47s875ms app_standby=-13h21m58s123ms device_idle=-- battery_saver=-13h21m58s123ms --unknown(4)--=-- --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-13h21m58s125ms rtc=2025-08-30 21:32:09.033
+        Snapshot:
+          type=RTC tag=*alarm*:hihonor.android.intent.action.AUTO_CHECK_FOR_NEW_VERSION 
+          policyWhenElapsed: requester=-11h34m23s305ms app_standby=-16h21m13s958ms device_idle=-13h24m55s289ms battery_saver=-13h22m2s357ms --unknown(4)--=-- --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-13h21m59s589ms rtc=2025-08-30 21:32:07.568
+        Snapshot:
+          type=RTC tag=*alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS 
+          policyWhenElapsed: requester=-9h42m45s510ms app_standby=-13h48m14s57ms device_idle=-13h24m55s289ms battery_saver=-13h22m2s357ms --unknown(4)--=-- --unknown(5)--=--
+    u0a162:
+      #1: Reason=alarm_cancelled elapsed=-15h37m27s617ms rtc=2025-08-30 19:16:39.540
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.qti.qcc.PERIODIC_CI_REGISTRATION 
+          policyWhenElapsed: requester=+4d15h8m48s262ms app_standby=-15h37m27s629ms device_idle=-17h53m43s470ms battery_saver=-15h47m22s447ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=pi_cancelled elapsed=-15h47m30s835ms rtc=2025-08-30 19:06:36.322
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.qti.qcc/com.qualcomm.qti.qdma.job.QDMAJobSchedulerReceiver 
+          policyWhenElapsed: requester=+28d14h0m10s813ms app_standby=-16h21m13s959ms device_idle=-17h53m43s470ms battery_saver=-15h47m34s388ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-2d6h2m59s41ms rtc=2025-08-29 04:51:08.116
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.qti.qcc.PERIODIC_CI_REGISTRATION 
+          policyWhenElapsed: requester=+4d15h8m47s930ms app_standby=-2d6h2m59s55ms device_idle=-- battery_saver=-2d6h13m36s61ms --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=pi_cancelled elapsed=-2d6h16m38s452ms rtc=2025-08-29 04:37:38.384
+        Snapshot:
+          type=ELAPSED tag=*alarm*:com.qti.qcc.PERIODIC_CI_WAITING_FOR_NETWORK 
+          policyWhenElapsed: requester=-20h40m53s88ms app_standby=-2d6h16m42s85ms device_idle=-- battery_saver=-2d6h16m45s710ms --unknown(4)--=-- --unknown(5)--=--
+    u0a195:
+      #1: Reason=alarm_cancelled elapsed=-13h20m35s824ms rtc=2025-08-30 21:33:31.333
+        Snapshot:
+          type=RTC tag=*alarm*:sso_action_t_m 
+          policyWhenElapsed: requester=+10h39m18s647ms app_standby=-13h20m35s929ms device_idle=-- battery_saver=-13h20m41s351ms --unknown(4)--=-- --unknown(5)--=--
+    u0a266:
+      #1: Reason=alarm_cancelled elapsed=-5m41s733ms rtc=2025-08-31 10:48:25.425
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-3m7s16ms app_standby=-6m7s15ms device_idle=-- battery_saver=-6m7s15ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-6m7s201ms rtc=2025-08-31 10:47:59.956
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-4m13s916ms app_standby=-7m13s914ms device_idle=-- battery_saver=-7m13s914ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-7m14s173ms rtc=2025-08-31 10:46:52.984
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-5m25s11ms app_standby=-8m25s9ms device_idle=-- battery_saver=-8m25s9ms --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-8m25s226ms rtc=2025-08-31 10:45:41.931
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-6m36s4ms app_standby=-9m36s2ms device_idle=-- battery_saver=-9m36s2ms --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-9m36s190ms rtc=2025-08-31 10:44:30.968
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-7m43s104ms app_standby=-10m43s102ms device_idle=-- battery_saver=-10m43s102ms --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-10m43s267ms rtc=2025-08-31 10:43:23.890
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-8m52s493ms app_standby=-11m52s491ms device_idle=-11m49s888ms battery_saver=-11m12s605ms --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-25m38s141ms rtc=2025-08-31 10:28:29.016
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-23m48s9ms app_standby=-26m48s7ms device_idle=-26m48s7ms battery_saver=-26m48s7ms --unknown(4)--=-22m59s76ms --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-26m48s124ms rtc=2025-08-31 10:27:19.033
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-24m57s669ms app_standby=-27m57s666ms device_idle=-27m57s666ms battery_saver=-27m20s98ms --unknown(4)--=-22m59s76ms --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-28m26s120ms rtc=2025-08-31 10:25:41.037
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-26m32s706ms app_standby=-29m32s704ms device_idle=-29m32s704ms battery_saver=-29m32s704ms --unknown(4)--=-27m59s76ms --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-29m34s111ms rtc=2025-08-31 10:24:33.046
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:com.tencent.mobileqq:MSF_91545961 
+          policyWhenElapsed: requester=-27m41s865ms app_standby=-30m41s862ms device_idle=-30m41s862ms battery_saver=-30m41s862ms --unknown(4)--=-27m59s76ms --unknown(5)--=--
+    u0a267:
+      #1: Reason=alarm_cancelled elapsed=-1m51s597ms rtc=2025-08-31 10:52:15.560
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-1m43s670ms app_standby=-1m51s667ms device_idle=-- battery_saver=-1m51s667ms --unknown(4)--=-- --unknown(5)--=--
+      #2: Reason=alarm_cancelled elapsed=-1m51s655ms rtc=2025-08-31 10:52:15.502
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=+3m18s341ms app_standby=-1m51s657ms device_idle=-- battery_saver=-1m51s657ms --unknown(4)--=-- --unknown(5)--=--
+      #3: Reason=alarm_cancelled elapsed=-1m51s673ms rtc=2025-08-31 10:52:15.484
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-1m43s708ms app_standby=-1m51s701ms device_idle=-- battery_saver=-1m51s699ms --unknown(4)--=-- --unknown(5)--=--
+      #4: Reason=alarm_cancelled elapsed=-7m1s694ms rtc=2025-08-31 10:47:05.463
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-6m53s725ms app_standby=-7m1s724ms device_idle=-- battery_saver=-7m1s724ms --unknown(4)--=-- --unknown(5)--=--
+      #5: Reason=alarm_cancelled elapsed=-7m1s713ms rtc=2025-08-31 10:47:05.444
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-1m51s716ms app_standby=-7m1s715ms device_idle=-- battery_saver=-7m1s715ms --unknown(4)--=-- --unknown(5)--=--
+      #6: Reason=alarm_cancelled elapsed=-7m1s726ms rtc=2025-08-31 10:47:05.431
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-6m53s757ms app_standby=-7m1s750ms device_idle=-- battery_saver=-7m1s750ms --unknown(4)--=-- --unknown(5)--=--
+      #7: Reason=alarm_cancelled elapsed=-12m11s728ms rtc=2025-08-31 10:41:55.429
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-12m3s784ms app_standby=-12m11s781ms device_idle=-12m11s781ms battery_saver=-12m11s781ms --unknown(4)--=-- --unknown(5)--=--
+      #8: Reason=alarm_cancelled elapsed=-12m11s763ms rtc=2025-08-31 10:41:55.394
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-7m1s769ms app_standby=-12m11s766ms device_idle=-12m11s766ms battery_saver=-12m11s766ms --unknown(4)--=-- --unknown(5)--=--
+      #9: Reason=alarm_cancelled elapsed=-12m11s785ms rtc=2025-08-31 10:41:55.372
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-12m3s806ms app_standby=-12m11s801ms device_idle=-12m11s801ms battery_saver=-12m11s801ms --unknown(4)--=-- --unknown(5)--=--
+      #10: Reason=alarm_cancelled elapsed=-17m23s771ms rtc=2025-08-31 10:36:43.386
+        Snapshot:
+          type=ELAPSED_WAKEUP tag=*walarm*:ALARM_ACTION(10000) 
+          policyWhenElapsed: requester=-17m15s828ms app_standby=-17m23s824ms device_idle=-17m23s824ms battery_saver=-17m23s824ms --unknown(4)--=-- --unknown(5)--=--
+  
+  Top Alarms:
+    +45s856ms running, 0 wakeups, 1282 alarms: 1000:android
+      *alarm*:TIME_TICK
+    +36s134ms running, 0 wakeups, 630 alarms: 1000:com.hihonor.nearby
+      *alarm*:DeviceMonitorService.AdvertiseAlarmReceiver.MonitorStrategy
+    +35s916ms running, 670 wakeups, 670 alarms: 1000:android
+      *walarm*:com.hihonor.push.alarm.HEARTBEAT
+    +27s985ms running, 617 wakeups, 617 alarms: 1000:com.hihonor.nearby
+      *walarm*:DeviceMonitorService.SelfFinding.AlarmTimeOut
+    +19s562ms running, 420 wakeups, 420 alarms: u0a267:com.tencent.mm
+      *walarm*:ALARM_ACTION(10000)
+    +15s1ms running, 0 wakeups, 408 alarms: u0a267:com.tencent.mm
+      *alarm*:com.tencent.mm.TrafficStatsReceiver
+    +13s254ms running, 0 wakeups, 215 alarms: 1000:com.hihonor.nearby
+      *alarm*:DeviceMonitorPowerKit.AdvertiseAlarmReceiver
+    +11s340ms running, 244 wakeups, 244 alarms: u0a97:com.hihonor.awareness
+      *walarm*:com.hihonor.awareness.action.alarm.notice
+    +10s699ms running, 0 wakeups, 237 alarms: 1000:com.hihonor.hiview
+      *alarm*:com.hihonor.lcagent.BROADCAST_TIMER_ACTION13
+    +9s512ms running, 0 wakeups, 202 alarms: 1000:com.hihonor.systemmanager
+      *alarm*:com.hihonor.hwsystemmanager.power.SCHEDULE_RECORD_REMAING_TIME_SCENE
+  
+  Alarm Stats:
+  1000:android +1m0s818ms running, 1076 wakeups:
+    +45s856ms 0 wakes 1282 alarms, last -7s157ms:
+      *alarm*:TIME_TICK
+    +35s916ms 670 wakes 670 alarms, last -4m41s284ms:
+      *walarm*:com.hihonor.push.alarm.HEARTBEAT
+    +5s761ms 0 wakes 109 alarms, last -12m11s907ms:
+      *alarm*:com.android.server.action.NETWORK_STATS_POLL
+    +2s885ms 0 wakes 60 alarms, last -48m30s860ms:
+      *alarm*:*job.flexibility_check*
+    +2s806ms 0 wakes 57 alarms, last -38m8s895ms:
+      *alarm*:*usage.launchTime*
+    +2s259ms 0 wakes 60 alarms, last -1h57m58s202ms:
+      *alarm*:*job.cleanup*
+    +2s178ms 0 wakes 97 alarms, last -3m13s572ms:
+      *alarm*:*job.delay*
+    +2s6ms 140 wakes 140 alarms, last -2h7m59s51ms:
+      *walarm*:android.appwidget.action.APPWIDGET_UPDATE
+    +1s952ms 49 wakes 49 alarms, last -23m23s902ms:
+      *walarm*:DeviceIdleController.deep
+    +1s70ms 0 wakes 2 alarms, last -10h36m2s581ms:
+      *alarm*:android.intent.action.DATE_CHANGED
+    +999ms 51 wakes 51 alarms, last -1h17m57s827ms:
+      *walarm*:DeviceIdleController.light
+    +798ms 61 wakes 61 alarms, last -1h47m57s806ms:
+      *walarm*:*job.deadline*
+    +728ms 19 wakes 19 alarms, last -10h12m57s530ms:
+      *walarm*:WriteBufferAlarm
+    +458ms 0 wakes 13 alarms, last -1h2m57s816ms:
+      *alarm*:PowerStats
+    +370ms 0 wakes 16 alarms, last -10h52m58s511ms:
+      *alarm*:*CountQuotaTracker.cleanup*
+    +342ms 6 wakes 6 alarms, last -1d18h57m57s474ms:
+      *walarm*:com.hihonor.android.push.intent.CREATE_SOCKET_TIME_OUT
+    +317ms 7 wakes 7 alarms, last -1d18h55m23s827ms:
+      *walarm*:com.hihonor.android.push.intent.HEARTBEAT_RSP_TIMEOUT
+    +260ms 5 wakes 5 alarms, last -3h52m57s788ms:
+      *walarm*:ScheduleConditionProvider.EVALUATE
+    +242ms 0 wakes 4 alarms, last -6h12m57s622ms:
+      *alarm*:hihonor.intent.action.ROOT_DETECT_REPORTER
+    +236ms 0 wakes 5 alarms, last -5h7m57s748ms:
+      *alarm*:TwilightService
+    +221ms 0 wakes 2 alarms, last -11h47m57s517ms:
+      *alarm*:WifiHealthMonitor Schedule Daily Detection Timer
+    +206ms 0 wakes 3 alarms, last -2h52m58s822ms:
+      *alarm*:GraphicsStatsService
+    +194ms 0 wakes 3 alarms, last -11m22s517ms:
+      *alarm*:NetworkTimeUpdateService.POLL
+    +149ms 10 wakes 10 alarms, last -1h37m59s58ms:
+      *walarm*:JS idleness
+    +97ms 0 wakes 2 alarms, last -1d1h44m42s54ms:
+      *alarm*:WifiConnectivityManager Restart Scan
+    +95ms 4 wakes 4 alarms, last -1d18h57m46s245ms:
+      *walarm*:com.hihonor.action.CONNECT_PUSHSRV
+    +81ms 1 wakes 1 alarms, last -12h17m58s501ms:
+      *walarm*:$android.alarm.generated:1000:151094003
+    +76ms 1 wakes 1 alarms, last -1d10h57m57s718ms:
+      *walarm*:$android.alarm.generated:1000:69365276
+    +75ms 1 wakes 1 alarms, last -1d16h22m57s536ms:
+      *walarm*:$android.alarm.generated:1000:50035354
+    +67ms 1 wakes 1 alarms, last -1d12h7m58s677ms:
+      *walarm*:$android.alarm.generated:1000:65373435
+    +66ms 1 wakes 1 alarms, last -1d14h22m57s603ms:
+      *walarm*:$android.alarm.generated:1000:57031566
+    +64ms 1 wakes 1 alarms, last -2d0h12m57s297ms:
+      *walarm*:$android.alarm.generated:1000:21830551
+    +63ms 2 wakes 2 alarms, last -12h26m48s190ms:
+      *walarm*:com.hihonor.android.push.intent.MEMORY_BLOCKS_RECLAIM
+    +58ms 1 wakes 1 alarms, last -1d6h27m57s945ms:
+      *walarm*:$android.alarm.generated:1000:85530235
+    +58ms 1 wakes 1 alarms, last -14h52m57s418ms:
+      *walarm*:$android.alarm.generated:1000:141714130
+    +58ms 1 wakes 1 alarms, last -1d15h42m57s582ms:
+      *walarm*:$android.alarm.generated:1000:52232456
+    +56ms 1 wakes 1 alarms, last -1d15h42m57s582ms:
+      *walarm*:$android.alarm.generated:1000:52221809
+    +55ms 1 wakes 1 alarms, last -6h32m57s701ms:
+      *walarm*:$android.alarm.generated:1000:171714388
+    +54ms 1 wakes 1 alarms, last -1d16h27m58s574ms:
+      *walarm*:$android.alarm.generated:1000:49735340
+    +51ms 1 wakes 1 alarms, last -2h7m59s76ms:
+      *walarm*:$android.alarm.generated:1000:187629086
+    +50ms 1 wakes 1 alarms, last -1d6h32m58s895ms:
+      *walarm*:$android.alarm.generated:1000:85334703
+    +47ms 1 wakes 1 alarms, last -6h27m57s702ms:
+      *walarm*:$android.alarm.generated:1000:171931434
+    +43ms 1 wakes 1 alarms, last -2h12m57s841ms:
+      *walarm*:$android.alarm.generated:1000:187329054
+    +42ms 1 wakes 1 alarms, last -2d4h42m58s583ms:
+      *walarm*:$android.alarm.generated:1000:5592685
+    +41ms 0 wakes 1 alarms, last -2d6h13m36s91ms:
+      *alarm*:WifiHealthMonitor Schedule Post-Boot Detection Timer
+    +39ms 1 wakes 1 alarms, last -1d18h12m59s73ms:
+      *walarm*:$android.alarm.generated:1000:43235777
+    +37ms 2 wakes 2 alarms, last -6h17m57s648ms:
+      *walarm*:AutomaticOnOffKeepaliveTracker
+    +37ms 1 wakes 1 alarms, last -1d23h37m59s76ms:
+      *walarm*:$android.alarm.generated:1000:23971882
+    +36ms 1 wakes 1 alarms, last -2d3h7m58s177ms:
+      *walarm*:$android.alarm.generated:1000:11328473
+    +34ms 1 wakes 1 alarms, last -2d2h12m58s207ms:
+      *walarm*:$android.alarm.generated:1000:14634540
+    +33ms 1 wakes 1 alarms, last -2d2h7m59s76ms:
+      *walarm*:$android.alarm.generated:1000:14934545
+    +29ms 1 wakes 1 alarms, last -2d5h12m58s147ms:
+      *walarm*:$android.alarm.generated:1000:3840416
+    +10ms 1 wakes 1 alarms, last -12h58m30s221ms:
+      *walarm*:$android.alarm.generated:1000:148768855
+    +9ms 1 wakes 1 alarms, last -2d1h35m2s621ms:
+      *walarm*:$android.alarm.generated:1000:16976455
+    +9ms 1 wakes 1 alarms, last -17h43m28s148ms:
+      *walarm*:$android.alarm.generated:1000:131670928
+    +9ms 1 wakes 1 alarms, last -12h53m30s231ms:
+      *walarm*:$android.alarm.generated:1000:149068845
+    +8ms 2 wakes 2 alarms, last -13h9m20s549ms:
+      *walarm*:NETWORK_LINGER_COMPLETE.105
+    +7ms 1 wakes 1 alarms, last -6m35s823ms:
+      *walarm*:$android.alarm.generated:1000:195083253
+    +7ms 1 wakes 1 alarms, last -1d12h3m25s727ms:
+      *walarm*:$android.alarm.generated:1000:65673349
+    +7ms 1 wakes 1 alarms, last -12h34m45s129ms:
+      *walarm*:$android.alarm.generated:1000:150193947
+    +7ms 1 wakes 1 alarms, last -1d11h52m24s834ms:
+      *walarm*:$android.alarm.generated:1000:66334242
+    +7ms 1 wakes 1 alarms, last -1d11h47m24s829ms:
+      *walarm*:$android.alarm.generated:1000:66634247
+    +7ms 1 wakes 1 alarms, last -2d1h25m44s33ms:
+      *walarm*:$android.alarm.generated:1000:17535043
+    +6ms 1 wakes 1 alarms, last -15h8m6s25ms:
+      *walarm*:$android.alarm.generated:1000:140993051
+    +6ms 1 wakes 1 alarms, last -2h20m50s50ms:
+      *walarm*:$android.alarm.generated:1000:187029026
+    +6ms 1 wakes 1 alarms, last -1d11h37m24s837ms:
+      *walarm*:$android.alarm.generated:1000:67234239
+    +6ms 1 wakes 1 alarms, last -17h48m28s151ms:
+      *walarm*:$android.alarm.generated:1000:131370925
+    +5ms 1 wakes 1 alarms, last -1d11h16m10s703ms:
+      *walarm*:$android.alarm.generated:1000:68508373
+    +5ms 1 wakes 1 alarms, last -1d11h11m10s691ms:
+      *walarm*:$android.alarm.generated:1000:68808385
+    +5ms 1 wakes 1 alarms, last -1d18h49m36s862ms:
+      *walarm*:$android.alarm.generated:1000:41302214
+    +5ms 1 wakes 1 alarms, last -1d18h44m36s866ms:
+      *walarm*:$android.alarm.generated:1000:41602210
+    +4ms 1 wakes 1 alarms, last -12h48m30s243ms:
+      *walarm*:$android.alarm.generated:1000:149368833
+    +4ms 1 wakes 1 alarms, last -12h39m45s134ms:
+      *walarm*:$android.alarm.generated:1000:149893941
+    +4ms 1 wakes 1 alarms, last -2d1h40m2s618ms:
+      *walarm*:$android.alarm.generated:1000:16676458
+    +3ms 1 wakes 1 alarms, last -2d2h0m11s808ms:
+      *walarm*:$android.alarm.generated:1000:15467268
+    +3ms 1 wakes 1 alarms, last -1d11h42m24s834ms:
+      *walarm*:$android.alarm.generated:1000:66934242
+    +2ms 1 wakes 1 alarms, last -2d1h53m15s913ms:
+      *walarm*:$android.alarm.generated:1000:15883163
+    +2ms 1 wakes 1 alarms, last -12h25m2s369ms:
+      *walarm*:$android.alarm.generated:1000:150776707
+  1000:com.hihonor.systemserver +321ms running, 2 wakeups:
+    +244ms 2 wakes 2 alarms, last -10h52m58s511ms:
+      *walarm*:com.hihonor.systemserver.booster.action.daily_summary
+    +77ms 0 wakes 2 alarms, last -18h42m58s287ms:
+      *alarm*:com.hihonor.systemserver.booster.action.daily_uniform
+  1000:com.hihonor.lbs +166ms running, 0 wakeups:
+    +98ms 0 wakes 2 alarms, last -16h52m9s188ms:
+      *alarm*:com.hihonor.lbs.HnNLPService.time_to_record
+    +68ms 0 wakes 2 alarms, last -12h52m45s990ms:
+      *alarm*:com.hihonor.lbs.CrowdSourcingChr.time_to_record
+  1000:com.hihonor.android.chr +2s750ms running, 0 wakeups:
+    +1s773ms 0 wakes 50 alarms, last -22m59s76ms:
+      *alarm*:android.intent.action.pwrStatusTimer
+    +593ms 0 wakes 10 alarms, last -3h32m58s703ms:
+      *alarm*:android.intent.action.hertzBtRptTimer
+    +336ms 0 wakes 10 alarms, last -3h32m58s703ms:
+      *alarm*:android.intent.action.collectionTimer
+    +245ms 0 wakes 5 alarms, last -3h32m58s769ms:
+      *alarm*:com.hihonor.lcagent.timer.PROTOCOL_REPORT
+    +187ms 0 wakes 4 alarms, last -5h47m57s719ms:
+      *alarm*:com.hihonor.lcagent.timer.NW_LOST_EVENT_PERIOD_REPORT
+    +77ms 0 wakes 2 alarms, last -18h42m56s111ms:
+      *alarm*:com.hihonor.android.chr.timer.PROTOCOL_DB_REPORT
+    +61ms 0 wakes 2 alarms, last -18h42m58s287ms:
+      *alarm*:com.hihonor.android.chr.timer.SIB_INFO_REPORT
+  1000:com.hihonor.hiview +10s699ms running, 0 wakeups:
+    +10s699ms 0 wakes 237 alarms, last -7m59s25ms:
+      *alarm*:com.hihonor.lcagent.BROADCAST_TIMER_ACTION13
+  1000:com.hihonor.iaware +63ms running, 0 wakeups:
+    +63ms 0 wakes 1 alarms, last -2d3h47m58s180ms:
+      *alarm*:com.hihonor.iaware/.userhabit.predict.PredictTriggerManager
+  1000:com.hihonor.nearby +48s557ms running, 684 wakeups:
+    +36s134ms 0 wakes 630 alarms, last -2m57s832ms:
+      *alarm*:DeviceMonitorService.AdvertiseAlarmReceiver.MonitorStrategy
+    +27s985ms 617 wakes 617 alarms, last -1d0h32m58s65ms:
+      *walarm*:DeviceMonitorService.SelfFinding.AlarmTimeOut
+    +13s254ms 0 wakes 215 alarms, last -2m59s49ms:
+      *alarm*:DeviceMonitorPowerKit.AdvertiseAlarmReceiver
+    +3s468ms 54 wakes 54 alarms, last -17m59s76ms:
+      *walarm*:DeviceMonitorService.SelfFinding.AlarmSaveDeviceInfo
+    +244ms 4 wakes 4 alarms, last -9h57m58s554ms:
+      *walarm*:DeviceMonitorService.SelfFinding.AlarmNetworkIdChangeTimeout
+    +192ms 3 wakes 3 alarms, last -37m59s76ms:
+      *walarm*:DeviceMonitorService.SelfFinding.AlarmRegularReport
+    +116ms 6 wakes 6 alarms, last -12h38m50s841ms:
+      *walarm*:DeviceMonitorService.SelfFinding.AlarmMqttTimeOut
+  1000:com.android.settings +695ms running, 2 wakeups:
+    +553ms 2 wakes 2 alarms, last -2h26m8s545ms:
+      *walarm*:android.bluetooth.intent.DISCOVERABLE_TIMEOUT
+    +142ms 0 wakes 3 alarms, last -2h7m59s51ms:
+      *alarm*:com.android.settings/.LauncherModeReportService
+  1000:com.hihonor.game.kitserver +321ms running, 6 wakeups:
+    +167ms 3 wakes 3 alarms, last -4h52m58s751ms:
+      *walarm*:game.kitserver.action.predownload.stop.notice
+    +154ms 3 wakes 3 alarms, last -9h52m57s588ms:
+      *walarm*:game.kitserver.action.predownload.notice
+  1000:com.hihonor.powergenie +3s451ms running, 223 wakeups:
+    +2s771ms 216 wakes 216 alarms, last -17m59s34ms:
+      *walarm*:PMIC_RESET_WAKEUP_EVENT
+    +302ms 5 wakes 5 alarms, last -1h42m57s860ms:
+      *walarm*:android.telephony.turnoff_network
+    +146ms 0 wakes 2 alarms, last -10h53m49s548ms:
+      *alarm*:com.hihonor.thermal.MSG_SAVE_DATA
+    +140ms 0 wakes 3 alarms, last -4h27m57s768ms:
+      *alarm*:android.filter.day.clock
+    +105ms 2 wakes 2 alarms, last -10h17m57s587ms:
+      *walarm*:hihonor.intent.action.TURN_ON_NETWORK_CHECK
+    +73ms 0 wakes 1 alarms, last -11h7m57s544ms:
+      *alarm*:android.filter.night.clock
+    +56ms 0 wakes 1 alarms, last -1d13h53m43s646ms:
+      *alarm*:hihonor.intent.action.SYSTEM_UPDATE_CARD_PENDING
+  1000:com.hihonor.systemmanager +14s431ms running, 6 wakeups:
+    +9s512ms 0 wakes 202 alarms, last -12m11s907ms:
+      *alarm*:com.hihonor.hwsystemmanager.power.SCHEDULE_RECORD_REMAING_TIME_SCENE
+    +6s419ms 0 wakes 108 alarms, last -22m59s76ms:
+      *alarm*:com.hihonor.hwsystemmanager.power.SCHEDULE_RECORD_POWER_CONSUME
+    +2s695ms 0 wakes 50 alarms, last -52m59s74ms:
+      *alarm*:com.hihonor.systemmanager/com.hihonor.appbehavior.BehaviorMonitorService
+    +271ms 5 wakes 5 alarms, last -2h52m58s773ms:
+      *walarm*:com.hihonor.hwsystemmanager.power.UPDATE_USAGESTATUS_RECORD
+    +248ms 0 wakes 7 alarms, last -12h28m31s562ms:
+      *alarm*:update_all_data
+    +232ms 0 wakes 5 alarms, last -2h52m58s773ms:
+      *alarm*:com.hihonor.systemmanager.stat.dially
+    +219ms 0 wakes 4 alarms, last -1h52m57s999ms:
+      *alarm*:com.hihonor.android.ACTION_SD_TIMING_NOTIFY
+    +149ms 0 wakes 2 alarms, last -2h17m57s840ms:
+      *alarm*:com.hihonor.systemmanager_TMF_TMS-Main_action.ka.ase
+    +109ms 0 wakes 2 alarms, last -2d6h16m38s187ms:
+      *alarm*:com.hihonor.systemmanager.stat.weeklly
+    +97ms 0 wakes 2 alarms, last -15h32m58s395ms:
+      *alarm*:com.hihonor.systemmanager.hsmmonitor.dially
+    +74ms 0 wakes 3 alarms, last -6h2m58s666ms:
+      *alarm*:com.hihonor.harassmentinterception.ALARM_DAILY_TASK
+    +37ms 0 wakes 1 alarms, last -13h42m59s73ms:
+      *alarm*:com.hihonor.systemmanager.spacecleanner.autoupdate
+    +18ms 1 wakes 1 alarms, last -9h7m58s562ms:
+      *walarm*:com.hihonor.harassmentinterception.update.ALARM_TASK
+  1001:com.hihonor.regservice +595ms running, 5 wakeups:
+    +422ms 2 wakes 2 alarms, last -2h2m57s848ms:
+      *walarm*:cn.richinfo.dmyk.action.HEARTBEAT
+    +119ms 2 wakes 2 alarms, last -1h47m57s856ms:
+      *walarm*:android.dmyk.action.ACTION_NETWORK_COLLECT
+    +54ms 1 wakes 1 alarms, last -1d1h52m58s46ms:
+      *walarm*:cn.richinfo.dmyk.action.HEARTBEAT_RETRY
+  1073:com.android.networkstack +953ms running, 44 wakeups:
+    +840ms 34 wakes 34 alarms, last -17m49s904ms:
+      *walarm*:DhcpClient.wlan0.RENEW
+    +61ms 6 wakes 6 alarms, last -10h17m54s646ms:
+      *walarm*:DhcpClient.wlan0.KICK
+    +52ms 4 wakes 4 alarms, last -10h17m50s712ms:
+      *walarm*:DhcpClient.wlan0.TIMEOUT
+  u0a10:com.android.providers.contacts +160ms running, 0 wakeups:
+    +160ms 0 wakes 2 alarms, last -14h42m58s422ms:
+      *alarm*:com.android.providers.contacts/.hap.DeleteContactsReportReceiver
+  u0a12:com.android.providers.calendar +4s227ms running, 24 wakeups:
+    +4s227ms 24 wakes 24 alarms, last -11m22s517ms:
+      *walarm*:com.android.providers.calendar.intent.CalendarProvider2
+  u0a14:com.hihonor.appmarket +1s325ms running, 5 wakeups:
+    +1s201ms 4 wakes 4 alarms, last -2h25m34s257ms:
+      *walarm*:com.hihonor.appmarket/.slientcheck.checkupdate.au.AuCheckReceiver
+    +1s135ms 1 wakes 1 alarms, last -17h53m20s235ms:
+      *walarm*:com.hihonor.appmarket/.slientcheck.alarmwake.AlarmCheckReceiver
+  u0a27:com.google.android.gms +6s95ms running, 60 wakeups:
+    +5s5ms 41 wakes 41 alarms, last -1m1s959ms:
+      *walarm*:com.google.android.intent.action.GCM_RECONNECT
+    +3s153ms 0 wakes 18 alarms, last -12h46m37s129ms:
+      *alarm*:com.google.android.gms.gcm.ACTION_CHECK_QUEUE
+    +424ms 15 wakes 15 alarms, last -3m7s536ms:
+      *walarm*:com.google.android.location.ALARM_WAKEUP_ACTIVITY_DETECTION
+    +260ms 0 wakes 9 alarms, last -11m22s265ms:
+      *alarm*:com.google.android.gms.auth.authzen.cryptauth.DEVICE_STATE_CHECK_DELAY_COMPLETE
+    +228ms 0 wakes 11 alarms, last -11m22s265ms:
+      *alarm*:com.google.android.gms.chromesync.SCHEDULED_SYNC
+    +146ms 0 wakes 5 alarms, last -2h24m4s173ms:
+      *alarm*:com.google.android.gms.westworld.action.METADATA_ALARM
+    +80ms 0 wakes 1 alarms, last -2d2h5m1s690ms:
+      *alarm*:com.google.android.gms.platformconfigurator.POST_BOOT
+    +60ms 2 wakes 2 alarms, last -2h24m4s187ms:
+      *walarm*:com.google.android.gms.reminders.notification.ACTION_REFRESH_TIME_REMINDERS
+    +54ms 0 wakes 3 alarms, last -12h47m15s896ms:
+      *alarm*:FusedLocation:throttling_delivery
+    +38ms 0 wakes 2 alarms, last -17h53m30s446ms:
+      *alarm*:com.google.android.gms.common.operation.LOG_CORE_ANALYTICS
+    +35ms 2 wakes 2 alarms, last -12h44m35s428ms:
+      *walarm*:com.google.android.gms.gcm.HEARTBEAT_ALARM
+    +34ms 0 wakes 1 alarms, last -13h24m33s718ms:
+      *alarm*:CMAlarm
+    +24ms 0 wakes 1 alarms, last -17h53m30s446ms:
+      *alarm*:com.google.android.gms.stats.eastworld.action.EASTWORLD_ALARM
+    +23ms 0 wakes 1 alarms, last -17h53m30s446ms:
+      *alarm*:com.google.android.gms.auth.authzen.CHECK_REGISTRATION
+  u0a54:com.hihonor.android.totemweather +174ms running, 0 wakeups:
+    +166ms 0 wakes 1 alarms, last -2h26m5s175ms:
+      *alarm*:com.hihonor.android.totemweather.action.WIDGET_RADAR_OFF
+    +8ms 0 wakes 1 alarms, last -1d12h7m41s749ms:
+      *alarm*:com.hihonor.android.action.ALARM_TASK_WEATHER
+  u0a70:com.huawei.hwid +97ms running, 0 wakeups:
+    +97ms 0 wakes 1 alarms, last -2h17m57s840ms:
+      *alarm*:com.huawei.hms.intent.action.DAILY_24H_TASK
+  u0a77:com.hihonor.systemappsupdater +214ms running, 1 wakeups:
+    +214ms 1 wakes 1 alarms, last -1d9h27m57s766ms:
+      *walarm*:com.hihonor.systemappsupdater/com.hihonor.updater.receiver.AlarmTimerUpdateReceiver
+  u0a78:com.hihonor.magazine +199ms running, 6 wakeups:
+    +199ms 6 wakes 6 alarms, last -11m22s517ms:
+      *walarm*:com.hihonor.magazine/com.honor.pictorial.function.silentupdate.domain.service.TimerService
+  u0a78:com.android.systemui +487ms running, 2 wakeups:
+    +461ms 0 wakes 9 alarms, last -10h2m57s504ms:
+      *alarm*:com.android.keyguard.magazineunlock.SEND_CONNECTIVITY_RANDOM_DELAY
+    +26ms 2 wakes 2 alarms, last -2h45m57s350ms:
+      *walarm*:android.bluetooth.intent.DISCOVERABLE_TIMEOUT
+  u0a88:com.baidu.input_hihonor +307ms running, 2 wakeups:
+    +165ms 0 wakes 5 alarms, last -2h26m9s188ms:
+      *alarm*:com.baidu.action.SOFIRE.VIEW
+    +142ms 2 wakes 2 alarms, last -17h53m46s537ms:
+      *walarm*:sso_action_t_m
+  u0a97:com.hihonor.awareness +11s340ms running, 244 wakeups:
+    +11s340ms 244 wakes 244 alarms, last -7m57s812ms:
+      *walarm*:com.hihonor.awareness.action.alarm.notice
+  u0a116:com.hihonor.ouc +5s17ms running, 0 wakeups:
+    +4s912ms 0 wakes 12 alarms, last -1h45m32s852ms:
+      *alarm*:com.hihonor.android.hnouc.action.ACTION_PULL_UP_PROCESS
+    +82ms 0 wakes 1 alarms, last -1d14h37m58s593ms:
+      *alarm*:com.hihonor.android.hnouc.action.ACTION_UPDATE_ALARM
+    +23ms 0 wakes 1 alarms, last -2d1h35m21s48ms:
+      *alarm*:hihonor.android.intent.action.AUTO_CHECK_FOR_NEW_VERSION
+  u0a153:com.google.android.configupdater +30ms running, 0 wakeups:
+    +30ms 0 wakes 1 alarms, last -1d18h22m40s187ms:
+      *alarm*:com.google.android.configupdater.DELAYED_FLAG_COMMIT
+  u0a162:com.qti.qcc +53ms running, 0 wakeups:
+    +53ms 0 wakes 2 alarms, last -15h37m27s650ms:
+      *alarm*:com.qti.qcc/com.qualcomm.qti.qdma.app.exitReceiver
+  u0a188:com.hihonor.imedia.sws +3ms running, 1 wakeups:
+    +3ms 1 wakes 1 alarms, last -2d2h5m28s702ms:
+      *walarm*:BootUpAction
+  u0a195:com.hihonor.baidu.browser +172ms running, 0 wakeups:
+    +172ms 0 wakes 3 alarms, last -11m22s517ms:
+      *alarm*:com.baidu.action.SOFIRE.VIEW
+  u0a266:com.tencent.mobileqq +1s911ms running, 43 wakeups:
+    +1s744ms 28 wakes 28 alarms, last -2m41s729ms:
+      *walarm*:com.tencent.mobileqq:MSF_91545961
+    +135ms 9 wakes 9 alarms, last -12h31m1s32ms:
+      *walarm*:com.tencent.mobileqq:MSF_70889767
+    +52ms 6 wakes 6 alarms, last -3m7s536ms:
+      *walarm*:com.tencent.mobileqq:MSF_88838994
+  u0a267:com.tencent.mm +30s428ms running, 420 wakeups:
+    +19s562ms 420 wakes 420 alarms, last -1m51s712ms:
+      *walarm*:ALARM_ACTION(10000)
+    +15s1ms 0 wakes 408 alarms, last -6m31s744ms:
+      *alarm*:com.tencent.mm.TrafficStatsReceiver
+  
+  Alarm manager stats:
+    REORDER_ALARMS_FOR_STANDBY: count=3538, total=665.3ms, avg=0.188ms, max calls/s=209 max dur/s=17.2ms max time=17.2ms
+    HAS_SCHEDULE_EXACT_ALARM: count=14364, total=378.6ms, avg=0.026ms, max calls/s=329 max dur/s=26.0ms max time=9.3ms

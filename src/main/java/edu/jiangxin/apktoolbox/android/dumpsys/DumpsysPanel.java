@@ -1,5 +1,7 @@
 package edu.jiangxin.apktoolbox.android.dumpsys;
 
+import edu.jiangxin.apktoolbox.android.dumpsys.tojson.Alarm2Json;
+import edu.jiangxin.apktoolbox.android.dumpsys.tojson.IDumpsys2Json;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
@@ -7,7 +9,11 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,14 +28,27 @@ import java.util.Date;
 public class DumpsysPanel extends EasyPanel {
     private static final long serialVersionUID = 1L;
 
-    private FilePanel targetFilePanel;
+    private JTabbedPane tabbedPane;
 
-    private JPanel optionPanel;
+    private JPanel dumpsysPanel;
+
+    private FilePanel dumpsysTargetDirPanel;
+
+    private JPanel dumpsysOptionPanel;
     private JPanel dumpsysTypeChoosePanel;
 
-    private JPanel operationPanel;
-    private JButton startButton;
+    private JPanel dumpsysOperationPanel;
+    private JButton dumpsysStartButton;
 
+    private JPanel analysisPanel;
+    private FilePanel analysisFilePanel;
+    private RSyntaxTextArea analysisOutputTextArea;
+    private RTextScrollPane analysisOutputScrollPane;
+
+    private JPanel analysisOperationPanel;
+
+
+    private JButton analysisStartButton;
 
     public DumpsysPanel() {
         super();
@@ -37,36 +56,128 @@ public class DumpsysPanel extends EasyPanel {
 
     @Override
     public void initUI() {
-        setPreferredSize(new Dimension(Constants.DEFAULT_PANEL_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
+        setPreferredSize(new Dimension(700, 400));
 
-        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        setLayout(layout);
+        tabbedPane = new JTabbedPane();
+        add(tabbedPane);
 
-        createTargetPanel();
-        add(targetFilePanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createDumpsysPanel();
+        tabbedPane.addTab("Dumpsys", null, dumpsysPanel, "Dumpsys");
 
-        createOptionPanel();
-        add(optionPanel);
-        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
-
-        createOperationPanel();
-        add(operationPanel);
-
+        createAnalysisPanel();
+        tabbedPane.addTab("Analysis", null, analysisPanel, "Analysis");
     }
 
-    private void createTargetPanel() {
-        targetFilePanel = new FilePanel("Target Directory");
-        targetFilePanel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    @Override
+    public void afterPainted() {
+        super.afterPainted();
+        dumpsysTargetDirPanel.setPersistentKey(Constants.KEY_PREFIX + "dumpsysTargetDirPanel");
+        analysisFilePanel.setPersistentKey(Constants.KEY_PREFIX + "dumpsysAnalysisFilePanel");
     }
 
-    private void createOptionPanel() {
-        optionPanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(optionPanel, BoxLayout.Y_AXIS);
-        optionPanel.setLayout(boxLayout);
+    private void createDumpsysPanel() {
+        dumpsysPanel = new JPanel();
+        BoxLayout layout = new BoxLayout(dumpsysPanel, BoxLayout.Y_AXIS);
+        dumpsysPanel.setLayout(layout);
+        dumpsysPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createDumpsysTargetDirPanel();
+        dumpsysPanel.add(dumpsysTargetDirPanel);
+        dumpsysPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createDumpsysOptionPanel();
+        dumpsysPanel.add(dumpsysOptionPanel);
+        dumpsysPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createDumpsysOperationPanel();
+        dumpsysPanel.add(dumpsysOperationPanel);
+    }
+
+    private void createAnalysisPanel() {
+        analysisPanel = new JPanel();
+        BoxLayout layout = new BoxLayout(analysisPanel, BoxLayout.Y_AXIS);
+        analysisPanel.setLayout(layout);
+        dumpsysPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createAnalysisTargetFilePanel();
+        analysisPanel.add(analysisFilePanel);
+        analysisPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createAnalysisOutputPanel();
+        analysisPanel.add(analysisOutputScrollPane);
+        analysisPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+
+        createAnalysisOperationPanel();
+        analysisPanel.add(analysisOperationPanel);
+    }
+
+    private void createAnalysisTargetFilePanel() {
+        analysisFilePanel = new FilePanel("Analysis File");
+        analysisFilePanel.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    }
+
+    private void createAnalysisOutputPanel() {
+        analysisOutputTextArea = new RSyntaxTextArea();
+        analysisOutputTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+        analysisOutputTextArea.setCodeFoldingEnabled(true);
+        analysisOutputTextArea.setEditable(false);
+
+        analysisOutputScrollPane = new RTextScrollPane(analysisOutputTextArea);
+        analysisOutputScrollPane.setPreferredSize(new Dimension(400, 250));
+    }
+
+    private void createAnalysisOperationPanel() {
+        analysisOperationPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(analysisOperationPanel, BoxLayout.X_AXIS);
+        analysisOperationPanel.setLayout(boxLayout);
+
+        analysisStartButton = new JButton("Start");
+        analysisStartButton.setEnabled(true);
+        analysisStartButton.addActionListener(new AnalysisStartButtonActionListener());
+        analysisOperationPanel.add(analysisStartButton);
+    }
+
+    private void createDumpsysTargetDirPanel() {
+        dumpsysTargetDirPanel = new FilePanel("Target Directory");
+        dumpsysTargetDirPanel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    }
+
+    private void createDumpsysOptionPanel() {
+        dumpsysOptionPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(dumpsysOptionPanel, BoxLayout.Y_AXIS);
+        dumpsysOptionPanel.setLayout(boxLayout);
+
+        JPanel dumpsysCheckboxPanel = new JPanel();
+        dumpsysCheckboxPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 3));
+
+        JCheckBox allSelectedCheckBox = new JCheckBox("Select All");
+        allSelectedCheckBox.setSelected(false);
+        allSelectedCheckBox.addActionListener(e -> {
+            boolean selected = allSelectedCheckBox.isSelected();
+            if (selected) {
+                Component[] components = dumpsysTypeChoosePanel.getComponents();
+                for (Component component : components) {
+                    if (component instanceof JCheckBox checkBox) {
+                        checkBox.setSelected(true);
+                        checkBox.setEnabled(false);
+                    }
+                }
+            } else {
+                Component[] components = dumpsysTypeChoosePanel.getComponents();
+                for (Component component : components) {
+                    if (component instanceof JCheckBox checkBox) {
+                        checkBox.setSelected(false);
+                        checkBox.setEnabled(true);
+                    }
+                }
+            }
+
+        });
+        dumpsysCheckboxPanel.add(allSelectedCheckBox);
 
         dumpsysTypeChoosePanel = new JPanel();
         dumpsysTypeChoosePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 3));
+        dumpsysTypeChoosePanel.setPreferredSize(new Dimension(500, 200));
 
         JCheckBox inputCheckBox = new JCheckBox("input");
         inputCheckBox.setSelected(true);
@@ -95,25 +206,28 @@ public class DumpsysPanel extends EasyPanel {
         JCheckBox batteryCheckBox = new JCheckBox("battery");
         dumpsysTypeChoosePanel.add(batteryCheckBox);
 
-        optionPanel.add(dumpsysTypeChoosePanel);
+        dumpsysOptionPanel.add(dumpsysCheckboxPanel);
+        dumpsysOptionPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        dumpsysOptionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        dumpsysOptionPanel.add(dumpsysTypeChoosePanel);
     }
 
-    private void createOperationPanel() {
-        operationPanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(operationPanel, BoxLayout.X_AXIS);
-        operationPanel.setLayout(boxLayout);
+    private void createDumpsysOperationPanel() {
+        dumpsysOperationPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(dumpsysOperationPanel, BoxLayout.X_AXIS);
+        dumpsysOperationPanel.setLayout(boxLayout);
 
-        startButton = new JButton("Start");
-        startButton.setEnabled(true);
-        startButton.addActionListener(new OperationButtonActionListener());
-        operationPanel.add(startButton);
+        dumpsysStartButton = new JButton("Start");
+        dumpsysStartButton.setEnabled(true);
+        dumpsysStartButton.addActionListener(new DumpsysStartButtonActionListener());
+        dumpsysOperationPanel.add(dumpsysStartButton);
     }
 
-    class OperationButtonActionListener implements ActionListener {
+    class DumpsysStartButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            startButton.setEnabled(false);
-            File targetDirFile = targetFilePanel.getFile();
+            dumpsysStartButton.setEnabled(false);
+            File targetDirFile = dumpsysTargetDirPanel.getFile();
             if (!targetDirFile.exists()) {
                 JOptionPane.showMessageDialog(getFrame(), "Target directory does not exist!", "ERROR", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -139,7 +253,7 @@ public class DumpsysPanel extends EasyPanel {
                     }
                 }
             }
-            startButton.setEnabled(true);
+            dumpsysStartButton.setEnabled(true);
         }
 
         private void dumpsysAndSaveToFile(String dumpsysType, File targetDir) {
@@ -170,4 +284,42 @@ public class DumpsysPanel extends EasyPanel {
         }
     }
 
+    class AnalysisStartButtonActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            File analysisFile = analysisFilePanel.getFile();
+            if (!analysisFile.exists()) {
+                JOptionPane.showMessageDialog(getFrame(), "Analysis file does not exist!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String fileNameWithoutExtension = FilenameUtils.getBaseName(analysisFile.getName());
+            String className = StringUtils.capitalize(fileNameWithoutExtension) + "2Json";
+            IDumpsys2Json dumpsys2Json = getDumpsys2JsonInstance(className);
+            if (dumpsys2Json != null) {
+                String jsonResult = dumpsys2Json.dumpsys2Json(analysisFile);
+                analysisOutputTextArea.setText(jsonResult);
+                analysisOutputTextArea.setCaretPosition(0);
+            }
+        }
+
+        private IDumpsys2Json getDumpsys2JsonInstance(String className) {
+            try {
+                String fullClassName = "edu.jiangxin.apktoolbox.android.dumpsys.tojson." + className;
+                Class<?> clazz = Class.forName(fullClassName);
+                if (IDumpsys2Json.class.isAssignableFrom(clazz)) {
+                    return (IDumpsys2Json) clazz.getDeclaredConstructor().newInstance();
+                } else {
+                    JOptionPane.showMessageDialog(getFrame(), "Class " + fullClassName + " does not implement IDumpsys2Json!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+            } catch (ClassNotFoundException e) {
+                JOptionPane.showMessageDialog(getFrame(), "Class not found: " + className, "ERROR", JOptionPane.ERROR_MESSAGE);
+                return null;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(getFrame(), "Error loading class: " + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+        }
+    }
 }
