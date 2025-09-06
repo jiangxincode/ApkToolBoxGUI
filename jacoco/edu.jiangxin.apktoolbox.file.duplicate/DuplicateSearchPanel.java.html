@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DuplicateSearchPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.duplicate</a> &gt; <span class="el_source">DuplicateSearchPanel.java</span></div><h1>DuplicateSearchPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.duplicate;
+
+import edu.jiangxin.apktoolbox.utils.DateUtils;
+import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.FileUtils;
+import edu.jiangxin.apktoolbox.utils.RevealFileUtils;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+
+<span class="nc" id="L27">public class DuplicateSearchPanel extends EasyPanel {</span>
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private JTabbedPane tabbedPane;
+
+    private JPanel optionPanel;
+
+    private FileListPanel fileListPanel;
+
+    private JCheckBox isFileNameChecked;
+    private JCheckBox isMD5Checked;
+    private JCheckBox isModifiedTimeChecked;
+
+    private JCheckBox isHiddenFileSearched;
+    private JCheckBox isRecursiveSearched;
+    private JTextField suffixTextField;
+
+    private JPanel resultPanel;
+
+    private JTable resultTable;
+
+    private DefaultTableModel resultTableModel;
+
+    private JButton searchButton;
+    private JButton cancelButton;
+
+    private JProgressBar progressBar;
+
+    private JMenuItem openDirMenuItem;
+    private JMenuItem deleteFileMenuItem;
+    private JMenuItem deleteFilesInSameDirMenuItem;
+    private JMenuItem deleteFilesInSameDirRecursiveMenuItem;
+
+    private SearchThread searchThread;
+
+<span class="nc" id="L64">    final private Map&lt;String, List&lt;File&gt;&gt; duplicateFileGroupMap = new HashMap&lt;&gt;();</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L68">        tabbedPane = new JTabbedPane();</span>
+<span class="nc" id="L69">        add(tabbedPane);</span>
+
+<span class="nc" id="L71">        createOptionPanel();</span>
+<span class="nc" id="L72">        tabbedPane.addTab(&quot;Option&quot;, null, optionPanel, &quot;Show Search Options&quot;);</span>
+
+<span class="nc" id="L74">        createResultPanel();</span>
+<span class="nc" id="L75">        tabbedPane.addTab(&quot;Result&quot;, null, resultPanel, &quot;Show Search Result&quot;);</span>
+<span class="nc" id="L76">    }</span>
+
+    private void createOptionPanel() {
+<span class="nc" id="L79">        optionPanel = new JPanel();</span>
+<span class="nc" id="L80">        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L82">        fileListPanel = new FileListPanel();</span>
+
+<span class="nc" id="L84">        JPanel checkOptionPanel = new JPanel();</span>
+<span class="nc" id="L85">        checkOptionPanel.setLayout(new BoxLayout(checkOptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L86">        checkOptionPanel.setBorder(BorderFactory.createTitledBorder(&quot;Check Options&quot;));</span>
+
+<span class="nc" id="L88">        JCheckBox isSizeChecked = new JCheckBox(&quot;Size&quot;);</span>
+<span class="nc" id="L89">        isSizeChecked.setSelected(true);</span>
+<span class="nc" id="L90">        isSizeChecked.setEnabled(false);</span>
+<span class="nc" id="L91">        isFileNameChecked = new JCheckBox(&quot;Filename&quot;);</span>
+<span class="nc" id="L92">        isMD5Checked = new JCheckBox(&quot;MD5&quot;);</span>
+<span class="nc" id="L93">        isModifiedTimeChecked = new JCheckBox(&quot;Last Modified Time&quot;);</span>
+<span class="nc" id="L94">        checkOptionPanel.add(isSizeChecked);</span>
+<span class="nc" id="L95">        checkOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L96">        checkOptionPanel.add(isFileNameChecked);</span>
+<span class="nc" id="L97">        checkOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L98">        checkOptionPanel.add(isMD5Checked);</span>
+<span class="nc" id="L99">        checkOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L100">        checkOptionPanel.add(isModifiedTimeChecked);</span>
+<span class="nc" id="L101">        checkOptionPanel.add(Box.createHorizontalGlue());</span>
+
+<span class="nc" id="L103">        JPanel searchOptionPanel = new JPanel();</span>
+<span class="nc" id="L104">        searchOptionPanel.setLayout(new BoxLayout(searchOptionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L105">        searchOptionPanel.setBorder(BorderFactory.createTitledBorder(&quot;Search Options&quot;));</span>
+
+<span class="nc" id="L107">        isHiddenFileSearched = new JCheckBox(&quot;Hidden Files&quot;);</span>
+<span class="nc" id="L108">        isRecursiveSearched = new JCheckBox(&quot;Recursive&quot;);</span>
+<span class="nc" id="L109">        isRecursiveSearched.setSelected(true);</span>
+<span class="nc" id="L110">        JLabel suffixLabel = new JLabel(&quot;Suffix: &quot;);</span>
+<span class="nc" id="L111">        suffixTextField = new JTextField();</span>
+<span class="nc" id="L112">        suffixTextField.setToolTipText(&quot;an array of extensions, ex. {\&quot;java\&quot;,\&quot;xml\&quot;}. If this parameter is empty, all files are returned.&quot;);</span>
+<span class="nc" id="L113">        searchOptionPanel.add(isHiddenFileSearched);</span>
+<span class="nc" id="L114">        searchOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L115">        searchOptionPanel.add(isRecursiveSearched);</span>
+<span class="nc" id="L116">        searchOptionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L117">        searchOptionPanel.add(suffixLabel);</span>
+<span class="nc" id="L118">        searchOptionPanel.add(suffixTextField);</span>
+<span class="nc" id="L119">        searchOptionPanel.add(Box.createHorizontalGlue());</span>
+
+<span class="nc" id="L121">        JPanel operationPanel = new JPanel();</span>
+<span class="nc" id="L122">        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L123">        operationPanel.setBorder(BorderFactory.createTitledBorder(&quot;Operations&quot;));</span>
+
+<span class="nc" id="L125">        JPanel buttonPanel = new JPanel();</span>
+<span class="nc" id="L126">        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L128">        searchButton = new JButton(&quot;Search&quot;);</span>
+<span class="nc" id="L129">        cancelButton = new JButton(&quot;Cancel&quot;);</span>
+<span class="nc" id="L130">        cancelButton.setEnabled(false);</span>
+<span class="nc" id="L131">        searchButton.addActionListener(new OperationButtonActionListener());</span>
+<span class="nc" id="L132">        cancelButton.addActionListener(new OperationButtonActionListener());</span>
+<span class="nc" id="L133">        operationPanel.add(searchButton);</span>
+<span class="nc" id="L134">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L135">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L136">        operationPanel.add(cancelButton);</span>
+<span class="nc" id="L137">        operationPanel.add(Box.createHorizontalGlue());</span>
+
+<span class="nc" id="L139">        progressBar = new JProgressBar();</span>
+<span class="nc" id="L140">        progressBar.setStringPainted(true);</span>
+<span class="nc" id="L141">        progressBar.setString(&quot;Ready&quot;);</span>
+
+<span class="nc" id="L143">        optionPanel.add(fileListPanel);</span>
+<span class="nc" id="L144">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L145">        optionPanel.add(checkOptionPanel);</span>
+<span class="nc" id="L146">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L147">        optionPanel.add(searchOptionPanel);</span>
+<span class="nc" id="L148">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L149">        optionPanel.add(operationPanel);</span>
+<span class="nc" id="L150">		optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L151">        optionPanel.add(progressBar);</span>
+<span class="nc" id="L152">    }</span>
+
+    private void createResultPanel() {
+<span class="nc" id="L155">        resultPanel = new JPanel();</span>
+<span class="nc" id="L156">        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L158">        resultTableModel = new DuplicateFilesTableModel(new Vector&lt;&gt;(), DuplicateFilesConstants.COLUMN_NAMES);</span>
+<span class="nc" id="L159">        resultTable = new JTable(resultTableModel);</span>
+
+<span class="nc" id="L161">        resultTable.setDefaultRenderer(Vector.class, new DuplicateFilesTableCellRenderer());</span>
+
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        for (int i = 0; i &lt; resultTable.getColumnCount(); i++) {</span>
+<span class="nc" id="L164">            resultTable.getColumn(resultTable.getColumnName(i)).setCellRenderer(new DuplicateFilesTableCellRenderer());</span>
+        }
+
+<span class="nc" id="L167">        resultTable.addMouseListener(new MyMouseListener());</span>
+
+<span class="nc" id="L169">        resultTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);</span>
+
+<span class="nc" id="L171">        JScrollPane scrollPane = new JScrollPane(resultTable);</span>
+<span class="nc" id="L172">        resultPanel.add(scrollPane);</span>
+<span class="nc" id="L173">    }</span>
+
+    private String getComparedKey(File file) {
+<span class="nc" id="L176">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L177">        sb.append(&quot;[Size][&quot;);</span>
+<span class="nc" id="L178">        sb.append(DigestUtils.md5Hex(String.valueOf(file.length())));</span>
+<span class="nc" id="L179">        sb.append(&quot;]&quot;);</span>
+        
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (isFileNameChecked.isSelected()) {</span>
+<span class="nc" id="L182">            sb.append(&quot;[Filename][&quot;);</span>
+<span class="nc" id="L183">            sb.append(DigestUtils.md5Hex(file.getName()));</span>
+<span class="nc" id="L184">            sb.append(&quot;]&quot;);</span>
+        }
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (isMD5Checked.isSelected()) {</span>
+<span class="nc" id="L187">            sb.append(&quot;[MD5][&quot;);</span>
+<span class="nc" id="L188">            try (InputStream is = new FileInputStream(file)) {</span>
+<span class="nc" id="L189">                sb.append(DigestUtils.md5Hex(is));</span>
+<span class="nc" id="L190">            } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L191">                logger.error(&quot;getComparedKey FileNotFoundException&quot;);</span>
+<span class="nc" id="L192">            } catch (IOException e) {</span>
+<span class="nc" id="L193">                logger.error(&quot;getComparedKey IOException&quot;);</span>
+<span class="nc" id="L194">            }</span>
+<span class="nc" id="L195">            sb.append(&quot;]&quot;);</span>
+        }
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (isModifiedTimeChecked.isSelected()) {</span>
+<span class="nc" id="L198">            sb.append(&quot;[ModifiedTime][&quot;);</span>
+<span class="nc" id="L199">            sb.append(DigestUtils.md5Hex(String.valueOf(file.lastModified())));</span>
+<span class="nc" id="L200">            sb.append(&quot;]&quot;);</span>
+        }
+<span class="nc" id="L202">        logger.info(&quot;path: &quot; + file.getAbsolutePath() + &quot;, key: &quot; + sb);</span>
+<span class="nc" id="L203">        return sb.toString();</span>
+    }
+
+<span class="nc" id="L206">    class MyMouseListener extends MouseAdapter {</span>
+        @Override
+        public void mouseReleased(MouseEvent e) {
+<span class="nc" id="L209">            super.mouseReleased(e);</span>
+<span class="nc" id="L210">            int r = resultTable.rowAtPoint(e.getPoint());</span>
+<span class="nc bnc" id="L211" title="All 4 branches missed.">            if (r &gt;= 0 &amp;&amp; r &lt; resultTable.getRowCount()) {</span>
+<span class="nc" id="L212">                resultTable.setRowSelectionInterval(r, r);</span>
+            } else {
+<span class="nc" id="L214">                resultTable.clearSelection();</span>
+            }
+<span class="nc" id="L216">            int rowIndex = resultTable.getSelectedRow();</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (rowIndex &lt; 0) {</span>
+<span class="nc" id="L218">                return;</span>
+            }
+<span class="nc bnc" id="L220" title="All 4 branches missed.">            if (e.isPopupTrigger() &amp;&amp; e.getComponent() instanceof JTable) {</span>
+<span class="nc" id="L221">                JPopupMenu popupmenu = new JPopupMenu();</span>
+<span class="nc" id="L222">                MyMenuActionListener menuActionListener = new MyMenuActionListener();</span>
+
+<span class="nc" id="L224">                openDirMenuItem = new JMenuItem(&quot;Open parent folder of this file&quot;);</span>
+<span class="nc" id="L225">                openDirMenuItem.addActionListener(menuActionListener);</span>
+<span class="nc" id="L226">                popupmenu.add(openDirMenuItem);</span>
+
+<span class="nc" id="L228">                deleteFileMenuItem = new JMenuItem(&quot;Delete this duplicate file&quot;);</span>
+<span class="nc" id="L229">                deleteFileMenuItem.addActionListener(menuActionListener);</span>
+<span class="nc" id="L230">                popupmenu.add(deleteFileMenuItem);</span>
+
+<span class="nc" id="L232">                deleteFilesInSameDirMenuItem = new JMenuItem(&quot;Delete these duplicate files in the same directory&quot;);</span>
+<span class="nc" id="L233">                deleteFilesInSameDirMenuItem.addActionListener(menuActionListener);</span>
+<span class="nc" id="L234">                popupmenu.add(deleteFilesInSameDirMenuItem);</span>
+
+<span class="nc" id="L236">                deleteFilesInSameDirRecursiveMenuItem = new JMenuItem(&quot;Delete these duplicate files in the same directory(Recursive)&quot;);</span>
+<span class="nc" id="L237">                deleteFilesInSameDirRecursiveMenuItem.addActionListener(menuActionListener);</span>
+<span class="nc" id="L238">                popupmenu.add(deleteFilesInSameDirRecursiveMenuItem);</span>
+
+<span class="nc" id="L240">                popupmenu.show(e.getComponent(), e.getX(), e.getY());</span>
+            }
+<span class="nc" id="L242">        }</span>
+    }
+
+<span class="nc" id="L245">    class MyMenuActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+<span class="nc" id="L248">            Object source = actionEvent.getSource();</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">            if (source.equals(openDirMenuItem)) {</span>
+<span class="nc" id="L250">                onOpenDir();</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">            } else if (source.equals(deleteFileMenuItem)) {</span>
+<span class="nc" id="L252">                onDeleteFile();</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">            } else if (source.equals(deleteFilesInSameDirMenuItem)) {</span>
+<span class="nc" id="L254">                onDeleteFilesInSameDir();</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            } else if (source.equals(deleteFilesInSameDirRecursiveMenuItem)) {</span>
+<span class="nc" id="L256">                onDeleteFilesInSameDirRecursive();</span>
+            } else {
+<span class="nc" id="L258">                logger.error(&quot;invalid source&quot;);</span>
+            }
+<span class="nc" id="L260">        }</span>
+
+        private void onOpenDir() {
+<span class="nc" id="L263">            int rowIndex = resultTable.getSelectedRow();</span>
+<span class="nc" id="L264">            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();</span>
+<span class="nc" id="L265">            File parent = new File(parentPath);</span>
+<span class="nc" id="L266">            RevealFileUtils.revealDirectory(parent);</span>
+<span class="nc" id="L267">        }</span>
+
+        private void onDeleteFile() {
+<span class="nc" id="L270">            int rowIndex = resultTable.getSelectedRow();</span>
+<span class="nc" id="L271">            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();</span>
+<span class="nc" id="L272">            String name = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_NAME).getModelIndex()).toString();</span>
+<span class="nc" id="L273">            File selectedFile = new File(parentPath, name);</span>
+<span class="nc" id="L274">            String key = getComparedKey(selectedFile);</span>
+<span class="nc" id="L275">            List&lt;File&gt; files = duplicateFileGroupMap.get(key);</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">            for (File file : files) {</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">                if (selectedFile.equals(file)) {</span>
+<span class="nc" id="L278">                    files.remove(file);</span>
+<span class="nc" id="L279">                    boolean isSuccessful = file.delete();</span>
+<span class="nc" id="L280">                    logger.info(&quot;delete file: &quot; + file.getAbsolutePath() + &quot;, result: &quot; + isSuccessful);</span>
+<span class="nc" id="L281">                    break;</span>
+                }
+<span class="nc" id="L283">            }</span>
+<span class="nc" id="L284">            resultTableModel.setRowCount(0);</span>
+<span class="nc" id="L285">            showResult();</span>
+<span class="nc" id="L286">        }</span>
+
+        private void onDeleteFilesInSameDir() {
+<span class="nc" id="L289">            int rowIndex = resultTable.getSelectedRow();</span>
+<span class="nc" id="L290">            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;File&gt;&gt; entry : duplicateFileGroupMap.entrySet()) {</span>
+<span class="nc" id="L292">                List&lt;File&gt; duplicateFileGroup = entry.getValue();</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                for (File duplicateFile : duplicateFileGroup) {</span>
+<span class="nc" id="L294">                    String parentPathTmp = duplicateFile.getParent();</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">                    if (Objects.equals(parentPath, parentPathTmp)) {</span>
+<span class="nc" id="L296">                        duplicateFileGroup.remove(duplicateFile);</span>
+<span class="nc" id="L297">                        boolean isSuccessful = duplicateFile.delete();</span>
+<span class="nc" id="L298">                        logger.info(&quot;delete file: &quot; + duplicateFile.getAbsolutePath() + &quot;, result: &quot; + isSuccessful);</span>
+<span class="nc" id="L299">                        break;</span>
+                    }
+<span class="nc" id="L301">                }</span>
+<span class="nc" id="L302">            }</span>
+<span class="nc" id="L303">            resultTableModel.setRowCount(0);</span>
+<span class="nc" id="L304">            showResult();</span>
+<span class="nc" id="L305">        }</span>
+
+        private void onDeleteFilesInSameDirRecursive() {
+<span class="nc" id="L308">            int rowIndex = resultTable.getSelectedRow();</span>
+<span class="nc" id="L309">            String parentPath = resultTableModel.getValueAt(rowIndex, resultTable.getColumn(DuplicateFilesConstants.COLUMN_NAME_FILE_PARENT).getModelIndex()).toString();</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;File&gt;&gt; entry : duplicateFileGroupMap.entrySet()) {</span>
+<span class="nc" id="L311">                List&lt;File&gt; duplicateFileGroup = entry.getValue();</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                for (File duplicateFile : duplicateFileGroup) {</span>
+<span class="nc" id="L313">                    String parentPathTmp = duplicateFile.getParent();</span>
+<span class="nc bnc" id="L314" title="All 4 branches missed.">                    if (Objects.equals(parentPath, parentPathTmp) || FilenameUtils.directoryContains(parentPath, parentPathTmp)) {</span>
+<span class="nc" id="L315">                        duplicateFileGroup.remove(duplicateFile);</span>
+<span class="nc" id="L316">                        boolean isSuccessful = duplicateFile.delete();</span>
+<span class="nc" id="L317">                        logger.info(&quot;delete file: &quot; + duplicateFile.getAbsolutePath() + &quot;, result: &quot; + isSuccessful);</span>
+<span class="nc" id="L318">                        break;</span>
+                    }
+<span class="nc" id="L320">                }</span>
+<span class="nc" id="L321">            }</span>
+<span class="nc" id="L322">            resultTableModel.setRowCount(0);</span>
+<span class="nc" id="L323">            showResult();</span>
+<span class="nc" id="L324">        }</span>
+    }
+
+<span class="nc" id="L327">    class OperationButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L330">            Object source = e.getSource();</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">            if (source.equals(searchButton)) {</span>
+<span class="nc" id="L332">                searchButton.setEnabled(false);</span>
+<span class="nc" id="L333">                cancelButton.setEnabled(true);</span>
+<span class="nc" id="L334">                String[] extensions = null;</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">                if (StringUtils.isNotEmpty(suffixTextField.getText())) {</span>
+<span class="nc" id="L336">                    extensions = suffixTextField.getText().split(&quot;,&quot;);</span>
+                }
+<span class="nc" id="L338">                searchThread = new SearchThread(extensions, isRecursiveSearched.isSelected(), isHiddenFileSearched.isSelected(), duplicateFileGroupMap);</span>
+<span class="nc" id="L339">                searchThread.start();</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">            } else if (source.equals(cancelButton)) {</span>
+<span class="nc" id="L341">                searchButton.setEnabled(true);</span>
+<span class="nc" id="L342">                cancelButton.setEnabled(false);</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">                if (searchThread.isAlive()) {</span>
+<span class="nc" id="L344">                    searchThread.interrupt();</span>
+<span class="nc" id="L345">                    searchThread.executorService.shutdownNow();</span>
+                }
+            }
+
+<span class="nc" id="L349">        }</span>
+    }
+
+    private void showResult() {
+<span class="nc" id="L353">        SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L354">            int groupIndex = 0;</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;File&gt;&gt; entry : duplicateFileGroupMap.entrySet()) {</span>
+<span class="nc" id="L356">                List&lt;File&gt; duplicateFileGroup = entry.getValue();</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">                if (duplicateFileGroup.size() &lt; 2) {</span>
+<span class="nc" id="L358">                    continue;</span>
+                }
+<span class="nc" id="L360">                groupIndex++;</span>
+<span class="nc bnc" id="L361" title="All 2 branches missed.">                for (File duplicateFile : duplicateFileGroup) {</span>
+<span class="nc" id="L362">                    Vector&lt;Object&gt; rowData = getRowVector(groupIndex, duplicateFile);</span>
+<span class="nc" id="L363">                    resultTableModel.addRow(rowData);</span>
+<span class="nc" id="L364">                }</span>
+<span class="nc" id="L365">            }</span>
+<span class="nc" id="L366">            tabbedPane.setSelectedIndex(1);</span>
+<span class="nc" id="L367">        });</span>
+<span class="nc" id="L368">    }</span>
+
+    private Vector&lt;Object&gt; getRowVector(int groupIndex, File file) {
+<span class="nc" id="L371">        Vector&lt;Object&gt; rowData = new Vector&lt;&gt;();</span>
+<span class="nc" id="L372">        rowData.add(groupIndex);</span>
+<span class="nc" id="L373">        rowData.add(file.getParent());</span>
+<span class="nc" id="L374">        rowData.add(file.getName());</span>
+<span class="nc" id="L375">        rowData.add(FilenameUtils.getExtension(file.getName()));</span>
+<span class="nc" id="L376">        rowData.add(FileUtils.sizeOfInHumanFormat(file));</span>
+<span class="nc" id="L377">        rowData.add(DateUtils.millisecondToHumanFormat(file.lastModified()));</span>
+<span class="nc" id="L378">        return rowData;</span>
+    }
+
+    class SearchThread extends Thread {
+        private final ExecutorService executorService;
+<span class="nc" id="L383">        private final AtomicInteger processedFiles = new AtomicInteger(0);</span>
+<span class="nc" id="L384">        private int totalFiles = 0;</span>
+        private final String[] extensions;
+        private final boolean isRecursiveSearched;
+        private final boolean isHiddenFileSearched;
+        private final Map&lt;String, List&lt;File&gt;&gt; duplicateFileGroupMap;
+
+<span class="nc" id="L390">        public SearchThread(String[] extensions, boolean isRecursiveSearched, boolean isHiddenFileSearched, Map&lt;String, List&lt;File&gt;&gt; duplicateFileGroupMap) {</span>
+<span class="nc" id="L391">            super();</span>
+<span class="nc" id="L392">            this.extensions = extensions;</span>
+<span class="nc" id="L393">            this.isRecursiveSearched = isRecursiveSearched;</span>
+<span class="nc" id="L394">            this.isHiddenFileSearched = isHiddenFileSearched;</span>
+<span class="nc" id="L395">            this.duplicateFileGroupMap = duplicateFileGroupMap;</span>
+<span class="nc" id="L396">            this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());</span>
+
+<span class="nc" id="L398">            SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L399">                progressBar.setValue(0);</span>
+<span class="nc" id="L400">                progressBar.setString(&quot;Starting search...&quot;);</span>
+<span class="nc" id="L401">            });</span>
+<span class="nc" id="L402">        }</span>
+
+        @Override
+        public void run() {
+            try {
+<span class="nc" id="L407">                duplicateFileGroupMap.clear();</span>
+<span class="nc" id="L408">                SwingUtilities.invokeLater(() -&gt; resultTableModel.setRowCount(0));</span>
+
+<span class="nc" id="L410">                List&lt;File&gt; fileList = fileListPanel.getFileList();</span>
+<span class="nc" id="L411">                Set&lt;File&gt; fileSet = new TreeSet&lt;&gt;(fileList);</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">                for (File file : fileList) {</span>
+<span class="nc" id="L413">                    fileSet.addAll(org.apache.commons.io.FileUtils.listFiles(file, extensions, isRecursiveSearched));</span>
+<span class="nc" id="L414">                }</span>
+
+                // 1. Group files by size first
+<span class="nc" id="L417">                Map&lt;Long, List&lt;File&gt;&gt; sizeGroups = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L418" title="All 2 branches missed.">                for (File file : fileSet) {</span>
+<span class="nc bnc" id="L419" title="All 2 branches missed.">                    if (currentThread().isInterrupted()) {</span>
+<span class="nc" id="L420">                        return;</span>
+                    }
+<span class="nc bnc" id="L422" title="All 4 branches missed.">                    if (file.isHidden() &amp;&amp; !isHiddenFileSearched) {</span>
+<span class="nc" id="L423">                        continue;</span>
+                    }
+<span class="nc" id="L425">                    sizeGroups.computeIfAbsent(file.length(), k -&gt; new ArrayList&lt;&gt;()).add(file);</span>
+<span class="nc" id="L426">                }</span>
+
+                // 2. Only process groups with duplicate sizes
+<span class="nc" id="L429">                List&lt;Future&lt;?&gt;&gt; futures = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L430">                totalFiles = fileSet.size();</span>
+<span class="nc" id="L431">                updateProgress();</span>
+
+<span class="nc bnc" id="L433" title="All 2 branches missed.">                for (Map.Entry&lt;Long, List&lt;File&gt;&gt; entry : sizeGroups.entrySet()) {</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">                    if (entry.getValue().size() &gt; 1) { // Only process groups with duplicates</span>
+<span class="nc" id="L435">                        futures.add(executorService.submit(() -&gt; {</span>
+<span class="nc" id="L436">                            processFileGroup(entry.getValue());</span>
+<span class="nc" id="L437">                            return null;</span>
+                        }));
+                    } else {
+                        // Count single files directly
+<span class="nc" id="L441">                        incrementProcessedFiles();</span>
+                    }
+<span class="nc" id="L443">                }</span>
+
+                // Wait for all tasks to complete
+<span class="nc bnc" id="L446" title="All 2 branches missed.">                for (Future&lt;?&gt; future : futures) {</span>
+                    try {
+<span class="nc" id="L448">                        future.get();</span>
+<span class="nc" id="L449">                    } catch (InterruptedException e) {</span>
+<span class="nc" id="L450">                        logger.error(&quot;Search interrupted&quot;, e);</span>
+<span class="nc" id="L451">                        currentThread().interrupt(); // Restore interrupted status</span>
+<span class="nc" id="L452">                        return;</span>
+<span class="nc" id="L453">                    }</span>
+<span class="nc" id="L454">                }</span>
+
+<span class="nc" id="L456">                showResult();</span>
+<span class="nc" id="L457">            } catch (Exception e) {</span>
+<span class="nc" id="L458">                logger.error(&quot;Search failed&quot;, e);</span>
+<span class="nc" id="L459">                SwingUtilities.invokeLater(() -&gt; progressBar.setString(&quot;Search failed&quot;));</span>
+            } finally {
+<span class="nc" id="L461">                executorService.shutdown();</span>
+<span class="nc" id="L462">                SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L463">                    searchButton.setEnabled(true);</span>
+<span class="nc" id="L464">                    cancelButton.setEnabled(false);</span>
+<span class="nc" id="L465">                });</span>
+            }
+<span class="nc" id="L467">        }</span>
+
+        private void processFileGroup(List&lt;File&gt; files) {
+<span class="nc" id="L470">            Map&lt;String, List&lt;File&gt;&gt; groupMap = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L471" title="All 2 branches missed.">            for (File file : files) {</span>
+<span class="nc bnc" id="L472" title="All 2 branches missed.">                if (currentThread().isInterrupted()) {</span>
+<span class="nc" id="L473">                    return;</span>
+                }
+<span class="nc" id="L475">                String key = getComparedKey(file);</span>
+<span class="nc" id="L476">                groupMap.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;()).add(file);</span>
+<span class="nc" id="L477">                incrementProcessedFiles();</span>
+<span class="nc" id="L478">            }</span>
+
+            // Merge results to main map
+<span class="nc" id="L481">            synchronized (duplicateFileGroupMap) {</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">                for (Map.Entry&lt;String, List&lt;File&gt;&gt; entry : groupMap.entrySet()) {</span>
+<span class="nc bnc" id="L483" title="All 2 branches missed.">                    if (entry.getValue().size() &gt; 1) {</span>
+<span class="nc" id="L484">                        duplicateFileGroupMap.put(entry.getKey(), entry.getValue());</span>
+                    }
+<span class="nc" id="L486">                }</span>
+<span class="nc" id="L487">            }</span>
+<span class="nc" id="L488">        }</span>
+
+        private void incrementProcessedFiles() {
+<span class="nc" id="L491">            processedFiles.incrementAndGet();</span>
+<span class="nc" id="L492">            updateProgress();</span>
+<span class="nc" id="L493">        }</span>
+
+        private void updateProgress() {
+<span class="nc bnc" id="L496" title="All 2 branches missed.">            if (totalFiles &gt; 0) {</span>
+<span class="nc" id="L497">                SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L498">                    int processed = processedFiles.get();</span>
+<span class="nc" id="L499">                    int percentage = (int) (processed * 100.0 / totalFiles);</span>
+<span class="nc" id="L500">                    progressBar.setValue(percentage);</span>
+<span class="nc" id="L501">                    progressBar.setString(String.format(&quot;Processing: %d/%d files (%d%%)&quot;, </span>
+<span class="nc" id="L502">                        processed, totalFiles, percentage));</span>
+<span class="nc" id="L503">                });</span>
+            }
+<span class="nc" id="L505">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

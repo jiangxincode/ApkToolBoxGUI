@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.time</a> &gt; <span class="el_source">TimeConvertPanel.java</span></div><h1>TimeConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.time;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.DateUtils;
+
+import javax.swing.*;
+import javax.swing.text.DateFormatter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+public class TimeConvertPanel extends EasyPanel {
+
+    private JSpinner timestamp2Spinner;
+
+    private JComboBox&lt;Object&gt; timestampComboBox;
+
+    private JTextField timeTextField;
+
+    private JTextField currentTimestampTextField;
+
+    private JTextField currentTimeTextField;
+
+    private JButton pauseButton;
+
+    private boolean isPaused;
+
+    private JFormattedTextField inTimeTextField;
+    private JComboBox inTimezoneComboBox;
+    private JComboBox outTimezoneComboBox;
+    private JTextField outTimeTextField;
+
+    private static final String SDF_PATTERN = &quot;yyyy-MM-dd HH:mm&quot;;
+<span class="nc" id="L40">    private final SimpleDateFormat SDF = new SimpleDateFormat(SDF_PATTERN);</span>
+<span class="nc" id="L41">    private final DateFormatter dtFormatter = new DateFormatter(SDF);</span>
+
+    final static String[] sortedTimeZones;
+
+    static {
+<span class="nc" id="L46">        String[] t = TimeZone.getAvailableIDs();</span>
+<span class="nc" id="L47">        sortedTimeZones = Arrays.copyOf(t, t.length);</span>
+<span class="nc" id="L48">        Arrays.sort(sortedTimeZones, String.CASE_INSENSITIVE_ORDER);</span>
+<span class="nc" id="L49">    }</span>
+
+    public TimeConvertPanel() throws HeadlessException {
+<span class="nc" id="L52">        super();</span>
+<span class="nc" id="L53">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L57">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L58">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L60">        createConvertPanel();</span>
+<span class="nc" id="L61">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L63">        createConvertButtonsPanel();</span>
+<span class="nc" id="L64">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));</span>
+
+<span class="nc" id="L66">        createCurrentPanel();</span>
+<span class="nc" id="L67">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));</span>
+
+<span class="nc" id="L69">        createCommentPanel();</span>
+<span class="nc" id="L70">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER * 3));</span>
+
+<span class="nc" id="L72">        createTimezonePanel();</span>
+<span class="nc" id="L73">    }</span>
+
+    private void createConvertPanel() {
+<span class="nc" id="L76">        JPanel convertPanel = new JPanel();</span>
+<span class="nc" id="L77">        convertPanel.setLayout(new BoxLayout(convertPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L78">        add(convertPanel);</span>
+
+<span class="nc" id="L80">        JPanel timestampPanel = new JPanel();</span>
+<span class="nc" id="L81">        timestampPanel.setLayout(new BoxLayout(timestampPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L83">        JPanel timePanel = new JPanel();</span>
+<span class="nc" id="L84">        timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L86">        convertPanel.add(timestampPanel);</span>
+<span class="nc" id="L87">        convertPanel.add(Box.createHorizontalStrut(40));</span>
+<span class="nc" id="L88">        convertPanel.add(timePanel);</span>
+
+<span class="nc" id="L90">        JLabel timestampLabel = new JLabel(&quot;TimeStamp: &quot;);</span>
+
+<span class="nc" id="L92">        timestamp2Spinner = new JSpinner();</span>
+<span class="nc" id="L93">        timestamp2Spinner.setPreferredSize(new Dimension(150, 25));</span>
+<span class="nc" id="L94">        timestamp2Spinner.setModel(new SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));</span>
+
+<span class="nc" id="L96">        timestampComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L97">        timestampComboBox.addItem(&quot;Second(s)&quot;);</span>
+<span class="nc" id="L98">        timestampComboBox.addItem(&quot;Millisecond(ms)&quot;);</span>
+
+<span class="nc" id="L100">        timestampPanel.add(timestampLabel);</span>
+<span class="nc" id="L101">        timestampPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L102">        timestampPanel.add(timestamp2Spinner);</span>
+<span class="nc" id="L103">        timestampPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L104">        timestampPanel.add(timestampComboBox);</span>
+
+<span class="nc" id="L106">        JLabel timeLabel = new JLabel(&quot;Time: &quot;);</span>
+
+<span class="nc" id="L108">        timeTextField = new JTextField(20);</span>
+
+<span class="nc" id="L110">        timePanel.add(timeLabel);</span>
+<span class="nc" id="L111">        timePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L112">        timePanel.add(timeTextField);</span>
+<span class="nc" id="L113">    }</span>
+
+    private void createConvertButtonsPanel() {
+<span class="nc" id="L116">        JPanel convertButtonsPanel = new JPanel();</span>
+<span class="nc" id="L117">        BoxLayout boxLayout = new BoxLayout(convertButtonsPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L118">        convertButtonsPanel.setLayout(boxLayout);</span>
+<span class="nc" id="L119">        add(convertButtonsPanel);</span>
+
+<span class="nc" id="L121">        JButton timestamp2TimeButton = new JButton();</span>
+<span class="nc" id="L122">        timestamp2TimeButton.setText(&quot;Timestamp-&gt;Time&quot;);</span>
+<span class="nc" id="L123">        timestamp2TimeButton.addActionListener(new Timestamp2TimeButtonActionListener());</span>
+<span class="nc" id="L124">        convertButtonsPanel.add(timestamp2TimeButton);</span>
+
+<span class="nc" id="L126">        convertButtonsPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L128">        JButton time2TimestampButton = new JButton();</span>
+<span class="nc" id="L129">        time2TimestampButton.setText(&quot;Time-&gt;Timestamp&quot;);</span>
+<span class="nc" id="L130">        time2TimestampButton.addActionListener(new Time2TimestampButtonActionListener());</span>
+<span class="nc" id="L131">        convertButtonsPanel.add(time2TimestampButton);</span>
+
+<span class="nc" id="L133">        convertButtonsPanel.add(Box.createHorizontalGlue());</span>
+<span class="nc" id="L134">    }</span>
+
+    private void createCurrentPanel() {
+<span class="nc" id="L137">        JPanel currentPanel = new JPanel();</span>
+<span class="nc" id="L138">        BoxLayout boxLayout = new BoxLayout(currentPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L139">        currentPanel.setLayout(boxLayout);</span>
+<span class="nc" id="L140">        add(currentPanel);</span>
+
+<span class="nc" id="L142">        JLabel currentTimestampLabel = new JLabel(&quot;Current timestamp: &quot;);</span>
+<span class="nc" id="L143">        currentPanel.add(currentTimestampLabel);</span>
+<span class="nc" id="L144">        currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L146">        currentTimestampTextField = new JTextField();</span>
+<span class="nc" id="L147">        currentPanel.add(currentTimestampTextField);</span>
+<span class="nc" id="L148">        currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L150">        JLabel currentTimeTitleLabel = new JLabel(&quot;Current time: &quot;);</span>
+<span class="nc" id="L151">        currentPanel.add(currentTimeTitleLabel);</span>
+<span class="nc" id="L152">        currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L154">        currentTimeTextField = new JTextField();</span>
+<span class="nc" id="L155">        currentPanel.add(currentTimeTextField);</span>
+<span class="nc" id="L156">        currentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L158">        pauseButton = new JButton(&quot;Pause&quot;);</span>
+<span class="nc" id="L159">        currentPanel.add(pauseButton);</span>
+<span class="nc" id="L160">        pauseButton.addActionListener(e -&gt; {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (isPaused) {</span>
+<span class="nc" id="L162">                pauseButton.setText(&quot;Pause&quot;);</span>
+<span class="nc" id="L163">                isPaused = false;</span>
+            } else {
+<span class="nc" id="L165">                pauseButton.setText(&quot;Resume&quot;);</span>
+<span class="nc" id="L166">                isPaused = true;</span>
+            }
+<span class="nc" id="L168">        });</span>
+
+<span class="nc" id="L170">        new Thread(() -&gt; {</span>
+            while (true) {
+<span class="nc" id="L172">                long currentTimeStamp = System.currentTimeMillis() / 1000;</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                if (!isPaused) {</span>
+<span class="nc" id="L174">                    currentTimestampTextField.setText(String.valueOf(currentTimeStamp));</span>
+<span class="nc" id="L175">                    currentTimeTextField.setText(DateUtils.secondToHumanFormat(currentTimeStamp));</span>
+                }
+                try {
+<span class="nc" id="L178">                    Thread.sleep(1000);</span>
+<span class="nc" id="L179">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L180">                    logger.error(&quot;sleep InterruptedException&quot;);</span>
+<span class="nc" id="L181">                    Thread.currentThread().interrupt();</span>
+<span class="nc" id="L182">                }</span>
+<span class="nc" id="L183">            }</span>
+<span class="nc" id="L184">        }).start();</span>
+<span class="nc" id="L185">    }</span>
+
+    private void createCommentPanel() {
+<span class="nc" id="L188">        JPanel commentPanel = new JPanel();</span>
+<span class="nc" id="L189">        BoxLayout boxLayout = new BoxLayout(commentPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L190">        commentPanel.setLayout(boxLayout);</span>
+<span class="nc" id="L191">        add(commentPanel);</span>
+
+<span class="nc" id="L193">        JTextArea textArea1 = new JTextArea(&quot;1s = 1000ms&quot;);</span>
+<span class="nc" id="L194">        textArea1.setEditable(false);</span>
+<span class="nc" id="L195">        JTextArea textArea2 = new JTextArea(&quot;1ms = 1000μs&quot;);</span>
+<span class="nc" id="L196">        textArea2.setEditable(false);</span>
+<span class="nc" id="L197">        JTextArea textArea3 = new JTextArea(&quot;1μs = 1000ns&quot;);</span>
+<span class="nc" id="L198">        textArea3.setEditable(false);</span>
+<span class="nc" id="L199">        JTextArea textArea4 = new JTextArea(&quot;1ns = 1000ps&quot;);</span>
+<span class="nc" id="L200">        textArea4.setEditable(false);</span>
+
+<span class="nc" id="L202">        commentPanel.add(textArea1);</span>
+<span class="nc" id="L203">        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L205">        commentPanel.add(textArea2);</span>
+<span class="nc" id="L206">        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L208">        commentPanel.add(textArea3);</span>
+<span class="nc" id="L209">        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+
+<span class="nc" id="L211">        commentPanel.add(textArea4);</span>
+<span class="nc" id="L212">        commentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L213">    }</span>
+
+    private void createTimezonePanel() {
+<span class="nc" id="L216">        JPanel timezonePanel = new JPanel();</span>
+<span class="nc" id="L217">        BoxLayout boxLayout = new BoxLayout(timezonePanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L218">        timezonePanel.setLayout(boxLayout);</span>
+<span class="nc" id="L219">        add(timezonePanel);</span>
+
+<span class="nc" id="L221">        JLabel label1 = new JLabel(&quot;From Time: &quot;);</span>
+<span class="nc" id="L222">        label1.setLabelFor(inTimeTextField);</span>
+<span class="nc" id="L223">        timezonePanel.add(label1);</span>
+
+<span class="nc" id="L225">        inTimeTextField = new JFormattedTextField(dtFormatter);</span>
+<span class="nc" id="L226">        inTimeTextField.setToolTipText(&quot;Enter time (&quot; + SDF_PATTERN + &quot;): &quot;);</span>
+<span class="nc" id="L227">        inTimeTextField.setValue(new Date());</span>
+<span class="nc" id="L228">        inTimeTextField.addPropertyChangeListener(&quot;value&quot;, event -&gt; update());</span>
+
+<span class="nc" id="L230">        JLabel label2 = new JLabel(&quot;From Timezone: &quot;);</span>
+<span class="nc" id="L231">        label2.setLabelFor(inTimezoneComboBox);</span>
+<span class="nc" id="L232">        inTimezoneComboBox = new JComboBox(sortedTimeZones);</span>
+<span class="nc" id="L233">        inTimezoneComboBox.setPreferredSize(new Dimension(70, 0));</span>
+<span class="nc" id="L234">        inTimezoneComboBox.addActionListener(e -&gt; update());</span>
+
+<span class="nc" id="L236">        JLabel label3 = new JLabel(&quot;To Timezone: &quot;);</span>
+<span class="nc" id="L237">        label3.setLabelFor(outTimezoneComboBox);</span>
+<span class="nc" id="L238">        outTimezoneComboBox = new JComboBox(sortedTimeZones);</span>
+<span class="nc" id="L239">        outTimezoneComboBox.setPreferredSize(new Dimension(70, 0));</span>
+<span class="nc" id="L240">        outTimezoneComboBox.addActionListener(e -&gt; update());</span>
+
+<span class="nc" id="L242">        JLabel label4 = new JLabel(&quot;To Time: &quot;);</span>
+<span class="nc" id="L243">        label4.setLabelFor(outTimeTextField);</span>
+<span class="nc" id="L244">        outTimeTextField = new JTextField(10);</span>
+
+<span class="nc" id="L246">        JButton swapButton = new JButton(&quot;Swap&quot;);</span>
+<span class="nc" id="L247">        swapButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L248">            final String src = (String) inTimezoneComboBox.getSelectedItem();</span>
+<span class="nc" id="L249">            inTimezoneComboBox.setSelectedItem(outTimezoneComboBox.getSelectedItem());</span>
+<span class="nc" id="L250">            outTimezoneComboBox.setSelectedItem(src);</span>
+<span class="nc" id="L251">        });</span>
+
+<span class="nc" id="L253">        timezonePanel.add(label1);</span>
+<span class="nc" id="L254">        timezonePanel.add(inTimeTextField);</span>
+<span class="nc" id="L255">        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L256">        timezonePanel.add(label2);</span>
+<span class="nc" id="L257">        timezonePanel.add(inTimezoneComboBox);</span>
+<span class="nc" id="L258">        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L259">        timezonePanel.add(label3);</span>
+<span class="nc" id="L260">        timezonePanel.add(outTimezoneComboBox);</span>
+<span class="nc" id="L261">        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L262">        timezonePanel.add(label4);</span>
+<span class="nc" id="L263">        timezonePanel.add(outTimeTextField);</span>
+<span class="nc" id="L264">        timezonePanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L265">        timezonePanel.add(swapButton);</span>
+<span class="nc" id="L266">    }</span>
+
+<span class="nc" id="L268">    private final class Timestamp2TimeButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L271">            Long timestamp = (Long) timestamp2Spinner.getValue();</span>
+<span class="nc" id="L272">            Integer index = timestampComboBox.getSelectedIndex();</span>
+<span class="nc" id="L273">            String result = &quot;&quot;;</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            if (index.equals(0)) {</span>
+<span class="nc" id="L275">                result = DateUtils.secondToHumanFormat(timestamp);</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">            } else if (index.equals(1)) {</span>
+<span class="nc" id="L277">                result = DateUtils.millisecondToHumanFormat(timestamp);</span>
+            }
+<span class="nc" id="L279">            timeTextField.setText(result);</span>
+<span class="nc" id="L280">        }</span>
+    }
+
+<span class="nc" id="L283">    private final class Time2TimestampButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L286">            String string = timeTextField.getText();</span>
+<span class="nc" id="L287">            Integer index = timestampComboBox.getSelectedIndex();</span>
+<span class="nc" id="L288">            Long result = 0L;</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">            if (index.equals(0)) {</span>
+<span class="nc" id="L290">                result = DateUtils.humanFormatToSecond(string);</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            } else if (index.equals(1)) {</span>
+<span class="nc" id="L292">                result = DateUtils.humanFormatToMillisecond(string);</span>
+            }
+<span class="nc" id="L294">            timestamp2Spinner.setValue(result);</span>
+<span class="nc" id="L295">        }</span>
+    }
+
+
+    private void update() {
+        // Get the timezone objects:
+<span class="nc" id="L301">        final TimeZone sourceTimezone = TimeZone.getTimeZone(</span>
+<span class="nc" id="L302">                (String) inTimezoneComboBox.getSelectedItem());</span>
+<span class="nc" id="L303">        final TimeZone destTimezone = TimeZone.getTimeZone(</span>
+<span class="nc" id="L304">                (String) outTimezoneComboBox.getSelectedItem());</span>
+
+        // Get the entered date:
+<span class="nc" id="L307">        Date sourceDate = (Date) inTimeTextField.getValue();</span>
+
+        // Compute the source:
+<span class="nc" id="L310">        Calendar localTime = Calendar.getInstance();</span>
+<span class="nc" id="L311">        localTime.setTime(sourceDate);</span>
+<span class="nc" id="L312">        Calendar sourceTime = Calendar.getInstance(sourceTimezone);</span>
+<span class="nc" id="L313">        sourceTime.set(localTime.get(Calendar.YEAR),</span>
+<span class="nc" id="L314">                localTime.get(Calendar.MONTH),</span>
+<span class="nc" id="L315">                localTime.get(Calendar.DATE),</span>
+<span class="nc" id="L316">                localTime.get(Calendar.HOUR_OF_DAY),</span>
+<span class="nc" id="L317">                localTime.get(Calendar.MINUTE));</span>
+
+        // Destination:
+<span class="nc" id="L320">        SimpleDateFormat sdf = (SimpleDateFormat) SDF.clone();</span>
+<span class="nc" id="L321">        sdf.setTimeZone(destTimezone);</span>
+<span class="nc" id="L322">        outTimeTextField.setText(sdf.format(sourceTime.getTime()));</span>
+<span class="nc" id="L323">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

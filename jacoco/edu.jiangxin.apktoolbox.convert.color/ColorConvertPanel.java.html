@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColorConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color</a> &gt; <span class="el_source">ColorConvertPanel.java</span></div><h1>ColorConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color;
+
+import edu.jiangxin.apktoolbox.convert.color.colortable.IColorTable;
+import edu.jiangxin.apktoolbox.convert.color.colortable.OrdinaryColorTable;
+import edu.jiangxin.apktoolbox.convert.color.colortable.RalColorTable;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
+public class ColorConvertPanel extends EasyPanel {
+    private Color color;
+
+    private JSpinner redSpinner;
+
+    private JSpinner greenInRgbSpinner;
+
+    private JSpinner blueInRgbSpinner;
+
+    private JTextField hexInRgbTextField;
+
+    private JSpinner hueInHsbSpinner;
+
+    private JSpinner saturationInHsbSpinner;
+
+    private JSpinner brightnessInHsbSpinner;
+
+    private JSpinner hueInHslSpinner;
+
+    private JSpinner saturationInHslSpinner;
+
+    private JSpinner lightnessInHslSpinner;
+
+    private JSpinner cyanInCmykSpinner;
+
+    private JSpinner magentaInCmykSpinner;
+
+    private JSpinner yellowInCmykSpinner;
+
+    private JSpinner blackInCmykSpinner;
+
+    private JSpinner lInCielabSpinner;
+
+    private JSpinner aInCielabSpinner;
+
+    private JSpinner bInCielabSpinner;
+
+    private JTextField colorBoxTextField;
+
+    private JComboBox&lt;IColorTable&gt; colorTableTypeComboBox;
+
+    private JTable colorTable;
+
+<span class="nc" id="L61">    private boolean isChangedByUser = true;</span>
+
+    public ColorConvertPanel() throws HeadlessException {
+<span class="nc" id="L64">        super();</span>
+<span class="nc" id="L65">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L69">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L70">        createColorBoxPanel();</span>
+
+<span class="nc" id="L72">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L73">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L75">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L76">        createRgbPanel();</span>
+
+<span class="nc" id="L78">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L79">        createHsbPanel();</span>
+
+<span class="nc" id="L81">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L82">        createHslPanel();</span>
+
+<span class="nc" id="L84">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L85">        createCmykPanel();</span>
+
+<span class="nc" id="L87">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L88">        createCielabPanel();</span>
+
+<span class="nc" id="L90">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L91">        createColorTablePanel();</span>
+<span class="nc" id="L92">    }</span>
+
+    public void createColorBoxPanel() {
+<span class="nc" id="L95">        JPanel colorBoxPanel = new JPanel();</span>
+<span class="nc" id="L96">        add(colorBoxPanel);</span>
+<span class="nc" id="L97">        colorBoxPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L98">        colorBoxPanel.setBorder(BorderFactory.createTitledBorder(&quot;Color Box&quot;));</span>
+
+<span class="nc" id="L100">        JPanel xPanel = new JPanel();</span>
+<span class="nc" id="L101">        colorBoxPanel.add(xPanel);</span>
+<span class="nc" id="L102">        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L104">        colorBoxTextField = new JTextField();</span>
+<span class="nc" id="L105">        colorBoxTextField.setEditable(false);</span>
+<span class="nc" id="L106">        colorBoxTextField.setOpaque(false);</span>
+
+<span class="nc" id="L108">        xPanel.add(colorBoxTextField);</span>
+<span class="nc" id="L109">    }</span>
+
+    private void createRgbPanel() {
+<span class="nc" id="L112">        JPanel rgbPanel = new JPanel();</span>
+<span class="nc" id="L113">        add(rgbPanel);</span>
+<span class="nc" id="L114">        rgbPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L115">        rgbPanel.setBorder(BorderFactory.createTitledBorder(&quot;RGB&quot;));</span>
+
+<span class="nc" id="L117">        JPanel xPanel = new JPanel();</span>
+<span class="nc" id="L118">        rgbPanel.add(xPanel);</span>
+<span class="nc" id="L119">        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L121">        JLabel rebLabel = new JLabel(&quot;R(Red, [0-255])&quot;);</span>
+<span class="nc" id="L122">        redSpinner = new JSpinner();</span>
+<span class="nc" id="L123">        redSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));</span>
+<span class="nc" id="L124">        redSpinner.addChangeListener(new RgbChangeListener());</span>
+
+<span class="nc" id="L126">        JLabel greenLabel = new JLabel(&quot;G(Green, [0-255])&quot;);</span>
+<span class="nc" id="L127">        greenInRgbSpinner = new JSpinner();</span>
+<span class="nc" id="L128">        greenInRgbSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));</span>
+<span class="nc" id="L129">        greenInRgbSpinner.addChangeListener(new RgbChangeListener());</span>
+
+<span class="nc" id="L131">        JLabel blueLabel = new JLabel(&quot;B(Blue, [0-255])&quot;);</span>
+<span class="nc" id="L132">        blueInRgbSpinner = new JSpinner();</span>
+<span class="nc" id="L133">        blueInRgbSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));</span>
+<span class="nc" id="L134">        blueInRgbSpinner.addChangeListener(new RgbChangeListener());</span>
+
+<span class="nc" id="L136">        JLabel hexLabel = new JLabel(&quot;Hex&quot;);</span>
+<span class="nc" id="L137">        hexInRgbTextField = new JTextField();</span>
+<span class="nc" id="L138">        hexInRgbTextField.setToolTipText(&quot;0xFFFFFF格式常用在通用语言中(Java/C++等), #FFFFFF格式常用在标记语言中(XML/HTML等)&quot;);</span>
+<span class="nc" id="L139">        hexInRgbTextField.setEditable(true);</span>
+<span class="nc" id="L140">        hexInRgbTextField.getDocument().addDocumentListener(new HexDocumentListener());</span>
+
+<span class="nc" id="L142">        xPanel.add(rebLabel);</span>
+<span class="nc" id="L143">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L144">        xPanel.add(redSpinner);</span>
+<span class="nc" id="L145">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L146">        xPanel.add(greenLabel);</span>
+<span class="nc" id="L147">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L148">        xPanel.add(greenInRgbSpinner);</span>
+<span class="nc" id="L149">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L150">        xPanel.add(blueLabel);</span>
+<span class="nc" id="L151">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L152">        xPanel.add(blueInRgbSpinner);</span>
+<span class="nc" id="L153">        xPanel.add(Box.createHorizontalBox().createHorizontalStrut(3 * Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L154">        xPanel.add(hexLabel);</span>
+<span class="nc" id="L155">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L156">        xPanel.add(hexInRgbTextField);</span>
+<span class="nc" id="L157">    }</span>
+
+    private void createHsbPanel() {
+<span class="nc" id="L160">        JPanel hsbPanel = new JPanel();</span>
+<span class="nc" id="L161">        add(hsbPanel);</span>
+<span class="nc" id="L162">        hsbPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L163">        hsbPanel.setBorder(BorderFactory.createTitledBorder(&quot;HSB/HSV&quot;));</span>
+
+<span class="nc" id="L165">        JPanel xPanel = new JPanel();</span>
+<span class="nc" id="L166">        hsbPanel.add(xPanel);</span>
+<span class="nc" id="L167">        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L169">        JLabel hueLabel = new JLabel(&quot;H(Hue, [0-360])&quot;);</span>
+<span class="nc" id="L170">        hueInHsbSpinner = new JSpinner();</span>
+<span class="nc" id="L171">        hueInHsbSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 1));</span>
+<span class="nc" id="L172">        hueInHsbSpinner.addChangeListener(new HsbChangeListener());</span>
+
+<span class="nc" id="L174">        JLabel saturationLabel = new JLabel(&quot;S(Saturation, [0-100])&quot;);</span>
+<span class="nc" id="L175">        saturationInHsbSpinner = new JSpinner();</span>
+<span class="nc" id="L176">        saturationInHsbSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));</span>
+<span class="nc" id="L177">        saturationInHsbSpinner.addChangeListener(new HsbChangeListener());</span>
+
+
+<span class="nc" id="L180">        JLabel brightnessLabel = new JLabel(&quot;B/V(Brightness/Value, [0-100])&quot;);</span>
+<span class="nc" id="L181">        brightnessInHsbSpinner = new JSpinner();</span>
+<span class="nc" id="L182">        brightnessInHsbSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));</span>
+<span class="nc" id="L183">        brightnessInHsbSpinner.addChangeListener(new HsbChangeListener());</span>
+
+<span class="nc" id="L185">        xPanel.add(hueLabel);</span>
+<span class="nc" id="L186">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L187">        xPanel.add(hueInHsbSpinner);</span>
+<span class="nc" id="L188">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L189">        xPanel.add(saturationLabel);</span>
+<span class="nc" id="L190">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L191">        xPanel.add(saturationInHsbSpinner);</span>
+<span class="nc" id="L192">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L193">        xPanel.add(brightnessLabel);</span>
+<span class="nc" id="L194">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L195">        xPanel.add(brightnessInHsbSpinner);</span>
+<span class="nc" id="L196">    }</span>
+
+    private void createHslPanel() {
+<span class="nc" id="L199">        JPanel hslPanel = new JPanel();</span>
+<span class="nc" id="L200">        add(hslPanel);</span>
+<span class="nc" id="L201">        hslPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L202">        hslPanel.setBorder(BorderFactory.createTitledBorder(&quot;HSL&quot;));</span>
+
+<span class="nc" id="L204">        JPanel xPanel = new JPanel();</span>
+<span class="nc" id="L205">        hslPanel.add(xPanel);</span>
+<span class="nc" id="L206">        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L208">        JLabel hueLabel = new JLabel(&quot;H(Hue, [0-360])&quot;);</span>
+<span class="nc" id="L209">        hueInHslSpinner = new JSpinner();</span>
+<span class="nc" id="L210">        hueInHslSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 1));</span>
+<span class="nc" id="L211">        hueInHslSpinner.addChangeListener(new HslChangeListener());</span>
+
+<span class="nc" id="L213">        JLabel saturationLabel = new JLabel(&quot;S(Saturation, [0-100])&quot;);</span>
+<span class="nc" id="L214">        saturationInHslSpinner = new JSpinner();</span>
+<span class="nc" id="L215">        saturationInHslSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));</span>
+<span class="nc" id="L216">        saturationInHslSpinner.addChangeListener(new HslChangeListener());</span>
+
+
+<span class="nc" id="L219">        JLabel lightnessLabel = new JLabel(&quot;L(Lightness, [0-100])&quot;);</span>
+<span class="nc" id="L220">        lightnessInHslSpinner = new JSpinner();</span>
+<span class="nc" id="L221">        lightnessInHslSpinner.setModel(new SpinnerNumberModel(50, 0, 100, 1));</span>
+<span class="nc" id="L222">        lightnessInHslSpinner.addChangeListener(new HslChangeListener());</span>
+
+<span class="nc" id="L224">        xPanel.add(hueLabel);</span>
+<span class="nc" id="L225">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L226">        xPanel.add(hueInHslSpinner);</span>
+<span class="nc" id="L227">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L228">        xPanel.add(saturationLabel);</span>
+<span class="nc" id="L229">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L230">        xPanel.add(saturationInHslSpinner);</span>
+<span class="nc" id="L231">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L232">        xPanel.add(lightnessLabel);</span>
+<span class="nc" id="L233">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L234">        xPanel.add(lightnessInHslSpinner);</span>
+<span class="nc" id="L235">    }</span>
+
+    private void createCmykPanel() {
+<span class="nc" id="L238">        JPanel cmykPanel = new JPanel();</span>
+<span class="nc" id="L239">        add(cmykPanel);</span>
+<span class="nc" id="L240">        cmykPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L241">        cmykPanel.setBorder(BorderFactory.createTitledBorder(&quot;CMYK&quot;));</span>
+
+<span class="nc" id="L243">        JPanel xPanel = new JPanel();</span>
+<span class="nc" id="L244">        cmykPanel.add(xPanel);</span>
+<span class="nc" id="L245">        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L247">        JLabel cyanLabel = new JLabel(&quot;C(Cyan, [0-100])&quot;);</span>
+<span class="nc" id="L248">        cyanInCmykSpinner = new JSpinner();</span>
+<span class="nc" id="L249">        cyanInCmykSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));</span>
+<span class="nc" id="L250">        cyanInCmykSpinner.addChangeListener(new CmykChangeListener());</span>
+
+<span class="nc" id="L252">        JLabel magentaLabel = new JLabel(&quot;M(Magenta, [0-100])&quot;);</span>
+<span class="nc" id="L253">        magentaInCmykSpinner = new JSpinner();</span>
+<span class="nc" id="L254">        magentaInCmykSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));</span>
+<span class="nc" id="L255">        magentaInCmykSpinner.addChangeListener(new CmykChangeListener());</span>
+
+
+<span class="nc" id="L258">        JLabel yellowLabel = new JLabel(&quot;Y(Yellow, [0-100])&quot;);</span>
+<span class="nc" id="L259">        yellowInCmykSpinner = new JSpinner();</span>
+<span class="nc" id="L260">        yellowInCmykSpinner.setModel(new SpinnerNumberModel(100, 0, 100, 1));</span>
+<span class="nc" id="L261">        yellowInCmykSpinner.addChangeListener(new CmykChangeListener());</span>
+
+<span class="nc" id="L263">        JLabel blackLabel = new JLabel(&quot;K(Black, [0-100])&quot;);</span>
+<span class="nc" id="L264">        blackInCmykSpinner = new JSpinner();</span>
+<span class="nc" id="L265">        blackInCmykSpinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));</span>
+<span class="nc" id="L266">        blackInCmykSpinner.addChangeListener(new CmykChangeListener());</span>
+
+<span class="nc" id="L268">        xPanel.add(cyanLabel);</span>
+<span class="nc" id="L269">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L270">        xPanel.add(cyanInCmykSpinner);</span>
+<span class="nc" id="L271">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L272">        xPanel.add(magentaLabel);</span>
+<span class="nc" id="L273">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L274">        xPanel.add(magentaInCmykSpinner);</span>
+<span class="nc" id="L275">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L276">        xPanel.add(yellowLabel);</span>
+<span class="nc" id="L277">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L278">        xPanel.add(yellowInCmykSpinner);</span>
+<span class="nc" id="L279">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L280">        xPanel.add(blackLabel);</span>
+<span class="nc" id="L281">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L282">        xPanel.add(blackInCmykSpinner);</span>
+<span class="nc" id="L283">    }</span>
+
+    private void createCielabPanel() {
+<span class="nc" id="L286">        JPanel cielabPanel = new JPanel();</span>
+<span class="nc" id="L287">        add(cielabPanel);</span>
+<span class="nc" id="L288">        cielabPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L289">        cielabPanel.setBorder(BorderFactory.createTitledBorder(&quot;CIELAB&quot;));</span>
+
+<span class="nc" id="L291">        JPanel xPanel = new JPanel();</span>
+<span class="nc" id="L292">        cielabPanel.add(xPanel);</span>
+<span class="nc" id="L293">        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L295">        JLabel lLabel = new JLabel(&quot;L([0-100])&quot;);</span>
+<span class="nc" id="L296">        lInCielabSpinner = new JSpinner();</span>
+<span class="nc" id="L297">        lInCielabSpinner.setModel(new SpinnerNumberModel(50, 0, 100, 1));</span>
+<span class="nc" id="L298">        lInCielabSpinner.addChangeListener(new CielabChangeListener());</span>
+
+<span class="nc" id="L300">        JLabel magentaLabel = new JLabel(&quot;A([-128-127])&quot;);</span>
+<span class="nc" id="L301">        aInCielabSpinner = new JSpinner();</span>
+<span class="nc" id="L302">        aInCielabSpinner.setModel(new SpinnerNumberModel(0, -128, 127, 1));</span>
+<span class="nc" id="L303">        aInCielabSpinner.addChangeListener(new CielabChangeListener());</span>
+
+
+<span class="nc" id="L306">        JLabel yellowLabel = new JLabel(&quot;B([-128-127])&quot;);</span>
+<span class="nc" id="L307">        bInCielabSpinner = new JSpinner();</span>
+<span class="nc" id="L308">        bInCielabSpinner.setModel(new SpinnerNumberModel(0, -128, 127, 1));</span>
+<span class="nc" id="L309">        bInCielabSpinner.addChangeListener(new CielabChangeListener());</span>
+
+<span class="nc" id="L311">        xPanel.add(lLabel);</span>
+<span class="nc" id="L312">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L313">        xPanel.add(lInCielabSpinner);</span>
+<span class="nc" id="L314">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L315">        xPanel.add(magentaLabel);</span>
+<span class="nc" id="L316">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L317">        xPanel.add(aInCielabSpinner);</span>
+<span class="nc" id="L318">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L319">        xPanel.add(yellowLabel);</span>
+<span class="nc" id="L320">        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L321">        xPanel.add(bInCielabSpinner);</span>
+<span class="nc" id="L322">    }</span>
+
+    private void createColorTablePanel() {
+<span class="nc" id="L325">        JPanel colorTablePanel = new JPanel();</span>
+<span class="nc" id="L326">        add(colorTablePanel);</span>
+<span class="nc" id="L327">        colorTablePanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L328">        colorTablePanel.setBorder(BorderFactory.createTitledBorder(&quot;Color Table&quot;));</span>
+
+<span class="nc" id="L330">        JPanel yPanel = new JPanel();</span>
+<span class="nc" id="L331">        colorTablePanel.add(yPanel);</span>
+<span class="nc" id="L332">        yPanel.setLayout(new BoxLayout(yPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L334">        colorTableTypeComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L335">        IColorTable ordinaryColorTable = new OrdinaryColorTable();</span>
+<span class="nc" id="L336">        IColorTable ralColorTable = new RalColorTable();</span>
+<span class="nc" id="L337">        colorTableTypeComboBox.addItem(ordinaryColorTable);</span>
+<span class="nc" id="L338">        colorTableTypeComboBox.addItem(ralColorTable);</span>
+<span class="nc" id="L339">        colorTableTypeComboBox.setSelectedItem(ordinaryColorTable);</span>
+<span class="nc" id="L340">        colorTableTypeComboBox.addItemListener(itemEvent -&gt; {</span>
+<span class="nc" id="L341">            ColorDefaultTableModel model = (ColorDefaultTableModel) colorTable.getModel();</span>
+<span class="nc" id="L342">            IColorTable selectedColorTable = (IColorTable) itemEvent.getItem();</span>
+<span class="nc" id="L343">            model.setDataVector(selectedColorTable.getTableRowData(), selectedColorTable.getColumnNames());</span>
+<span class="nc" id="L344">            onColorTableChanged();</span>
+<span class="nc" id="L345">        });</span>
+
+<span class="nc" id="L347">        IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();</span>
+<span class="nc" id="L348">        colorTable = new JTable(new ColorDefaultTableModel(selectedColorTable.getTableRowData(), selectedColorTable.getColumnNames()));</span>
+<span class="nc" id="L349">        JScrollPane colorTableScrollPane = new JScrollPane(colorTable);</span>
+<span class="nc" id="L350">        onColorTableChanged();</span>
+
+<span class="nc" id="L352">        yPanel.add(colorTableTypeComboBox);</span>
+<span class="nc" id="L353">        yPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L354">        yPanel.add(colorTableScrollPane);</span>
+<span class="nc" id="L355">    }</span>
+
+    private void onColorTableChanged() {
+<span class="nc" id="L358">        IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();</span>
+<span class="nc" id="L359">        int labelIndex = selectedColorTable.getLabelIndex();</span>
+<span class="nc" id="L360">        String labelName = colorTable.getColumnName(labelIndex);</span>
+<span class="nc" id="L361">        colorTable.getColumn(labelName).setCellRenderer(new ColorTableCellRenderer());</span>
+<span class="nc" id="L362">    }</span>
+
+    private class ColorDefaultTableModel extends DefaultTableModel {
+<span class="nc" id="L365">        public ColorDefaultTableModel(Object[][] data, Object[] columnNames) {</span>
+<span class="nc" id="L366">            super(data, columnNames);</span>
+<span class="nc" id="L367">        }</span>
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+<span class="nc" id="L371">            return true;</span>
+        }
+    }
+
+<span class="nc" id="L375">    private class ColorTableCellRenderer extends DefaultTableCellRenderer {</span>
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+<span class="nc" id="L378">            Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);</span>
+<span class="nc" id="L379">            IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            if (selectedColorTable == null) {</span>
+<span class="nc" id="L381">                return renderer;</span>
+            }
+<span class="nc" id="L383">            String hex = (String) colorTable.getValueAt(row, selectedColorTable.getHexIndex());</span>
+<span class="nc" id="L384">            Color color = ColorUtils.hex2Color(hex);</span>
+<span class="nc" id="L385">            renderer.setBackground(color);</span>
+<span class="nc" id="L386">            return renderer;</span>
+        }
+    }
+
+    private void syncToOthersFormat(String colorMode) {
+<span class="nc bnc" id="L391" title="All 2 branches missed.">        if (!colorMode.equalsIgnoreCase(&quot;RGB&quot;)) {</span>
+<span class="nc" id="L392">            redSpinner.setValue(color.getRed());</span>
+<span class="nc" id="L393">            greenInRgbSpinner.setValue(color.getGreen());</span>
+<span class="nc" id="L394">            blueInRgbSpinner.setValue(color.getBlue());</span>
+        }
+<span class="nc bnc" id="L396" title="All 2 branches missed.">        if (!colorMode.equalsIgnoreCase(&quot;HEX&quot;)) {</span>
+<span class="nc" id="L397">            hexInRgbTextField.setText(ColorUtils.color2Hex(color));</span>
+        }
+<span class="nc bnc" id="L399" title="All 2 branches missed.">        if (!colorMode.equalsIgnoreCase(&quot;HSB&quot;)) {</span>
+<span class="nc" id="L400">            int[] hsbArray = ColorUtils.color2Hsb(color);</span>
+<span class="nc" id="L401">            hueInHsbSpinner.setValue(hsbArray[0]);</span>
+<span class="nc" id="L402">            saturationInHsbSpinner.setValue(hsbArray[1]);</span>
+<span class="nc" id="L403">            brightnessInHsbSpinner.setValue(hsbArray[2]);</span>
+        }
+<span class="nc bnc" id="L405" title="All 2 branches missed.">        if (!colorMode.equalsIgnoreCase(&quot;HSL&quot;)) {</span>
+<span class="nc" id="L406">            int[] hsbArray = ColorUtils.color2Hsl(color);</span>
+<span class="nc" id="L407">            hueInHslSpinner.setValue(hsbArray[0]);</span>
+<span class="nc" id="L408">            saturationInHslSpinner.setValue(hsbArray[1]);</span>
+<span class="nc" id="L409">            lightnessInHslSpinner.setValue(hsbArray[2]);</span>
+        }
+<span class="nc bnc" id="L411" title="All 2 branches missed.">        if (!colorMode.equalsIgnoreCase(&quot;CMYK&quot;)) {</span>
+<span class="nc" id="L412">            int[] cmykArray = ColorUtils.color2Cmyk(color);</span>
+<span class="nc" id="L413">            cyanInCmykSpinner.setValue(cmykArray[0]);</span>
+<span class="nc" id="L414">            magentaInCmykSpinner.setValue(cmykArray[1]);</span>
+<span class="nc" id="L415">            yellowInCmykSpinner.setValue(cmykArray[2]);</span>
+<span class="nc" id="L416">            blackInCmykSpinner.setValue(cmykArray[3]);</span>
+        }
+<span class="nc bnc" id="L418" title="All 2 branches missed.">        if (!colorMode.equalsIgnoreCase(&quot;CIELAB&quot;)) {</span>
+<span class="nc" id="L419">            int[] cielabArray = ColorUtils.color2Cielab(color);</span>
+<span class="nc" id="L420">            lInCielabSpinner.setValue(cielabArray[0]);</span>
+<span class="nc" id="L421">            aInCielabSpinner.setValue(cielabArray[1]);</span>
+<span class="nc" id="L422">            bInCielabSpinner.setValue(cielabArray[2]);</span>
+        }
+<span class="nc" id="L424">        colorBoxTextField.setBackground(color);</span>
+        //paint the color box with the converted output color
+<span class="nc" id="L426">        colorBoxTextField.setOpaque(true);</span>
+<span class="nc" id="L427">    }</span>
+
+<span class="nc" id="L429">    class RgbChangeListener implements ChangeListener {</span>
+        @Override
+        public void stateChanged(ChangeEvent e) {
+<span class="nc bnc" id="L432" title="All 2 branches missed.">            if (!isChangedByUser) {</span>
+<span class="nc" id="L433">                return;</span>
+            }
+<span class="nc" id="L435">            isChangedByUser = false;</span>
+<span class="nc" id="L436">            int red = (Integer) redSpinner.getValue();</span>
+<span class="nc" id="L437">            int green = (Integer) greenInRgbSpinner.getValue();</span>
+<span class="nc" id="L438">            int blue = (Integer) blueInRgbSpinner.getValue();</span>
+<span class="nc" id="L439">            color = new Color(red, green, blue);</span>
+<span class="nc" id="L440">            syncToOthersFormat(&quot;RGB&quot;);</span>
+<span class="nc" id="L441">            isChangedByUser = true;</span>
+<span class="nc" id="L442">        }</span>
+    }
+
+<span class="nc" id="L445">    class HsbChangeListener implements ChangeListener {</span>
+        @Override
+        public void stateChanged(ChangeEvent e) {
+<span class="nc bnc" id="L448" title="All 2 branches missed.">            if (!isChangedByUser) {</span>
+<span class="nc" id="L449">                return;</span>
+            }
+<span class="nc" id="L451">            isChangedByUser = false;</span>
+<span class="nc" id="L452">            int hue = (Integer) hueInHsbSpinner.getValue();</span>
+<span class="nc" id="L453">            int saturation = (Integer) saturationInHsbSpinner.getValue();</span>
+<span class="nc" id="L454">            int brightness = (Integer) brightnessInHsbSpinner.getValue();</span>
+<span class="nc" id="L455">            color = ColorUtils.hsb2Color(hue, saturation, brightness);</span>
+<span class="nc" id="L456">            syncToOthersFormat(&quot;HSB&quot;);</span>
+<span class="nc" id="L457">            isChangedByUser = true;</span>
+<span class="nc" id="L458">        }</span>
+    }
+
+<span class="nc" id="L461">    class HslChangeListener implements ChangeListener {</span>
+        @Override
+        public void stateChanged(ChangeEvent e) {
+<span class="nc bnc" id="L464" title="All 2 branches missed.">            if (!isChangedByUser) {</span>
+<span class="nc" id="L465">                return;</span>
+            }
+<span class="nc" id="L467">            isChangedByUser = false;</span>
+<span class="nc" id="L468">            int hue = (Integer) hueInHslSpinner.getValue();</span>
+<span class="nc" id="L469">            int saturation = (Integer) saturationInHslSpinner.getValue();</span>
+<span class="nc" id="L470">            int lightness = (Integer) lightnessInHslSpinner.getValue();</span>
+<span class="nc" id="L471">            color = ColorUtils.hsl2Color(hue, saturation, lightness);</span>
+<span class="nc" id="L472">            syncToOthersFormat(&quot;HSL&quot;);</span>
+<span class="nc" id="L473">            isChangedByUser = true;</span>
+<span class="nc" id="L474">        }</span>
+    }
+
+<span class="nc" id="L477">    class CmykChangeListener implements ChangeListener {</span>
+        @Override
+        public void stateChanged(ChangeEvent e) {
+<span class="nc bnc" id="L480" title="All 2 branches missed.">            if (!isChangedByUser) {</span>
+<span class="nc" id="L481">                return;</span>
+            }
+<span class="nc" id="L483">            isChangedByUser = false;</span>
+<span class="nc" id="L484">            int cyan = (Integer) cyanInCmykSpinner.getValue();</span>
+<span class="nc" id="L485">            int magenta = (Integer) magentaInCmykSpinner.getValue();</span>
+<span class="nc" id="L486">            int yellow = (Integer) yellowInCmykSpinner.getValue();</span>
+<span class="nc" id="L487">            int black = (Integer) blackInCmykSpinner.getValue();</span>
+<span class="nc" id="L488">            color = ColorUtils.cmyk2Color(cyan, magenta, yellow, black);</span>
+<span class="nc" id="L489">            syncToOthersFormat(&quot;CMYK&quot;);</span>
+<span class="nc" id="L490">            isChangedByUser = true;</span>
+<span class="nc" id="L491">        }</span>
+    }
+
+<span class="nc" id="L494">    class CielabChangeListener implements ChangeListener {</span>
+        @Override
+        public void stateChanged(ChangeEvent e) {
+<span class="nc bnc" id="L497" title="All 2 branches missed.">            if (!isChangedByUser) {</span>
+<span class="nc" id="L498">                return;</span>
+            }
+<span class="nc" id="L500">            isChangedByUser = false;</span>
+<span class="nc" id="L501">            int l = (Integer) lInCielabSpinner.getValue();</span>
+<span class="nc" id="L502">            int a = (Integer) aInCielabSpinner.getValue();</span>
+<span class="nc" id="L503">            int b = (Integer) bInCielabSpinner.getValue();</span>
+<span class="nc" id="L504">            color = ColorUtils.cielab2Color(l, a, b);</span>
+<span class="nc" id="L505">            syncToOthersFormat(&quot;CIELAB&quot;);</span>
+<span class="nc" id="L506">            isChangedByUser = true;</span>
+<span class="nc" id="L507">        }</span>
+    }
+
+<span class="nc" id="L510">    class HexDocumentListener implements DocumentListener {</span>
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+<span class="nc" id="L513">            onValueUpdate();</span>
+<span class="nc" id="L514">        }</span>
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+<span class="nc" id="L518">            onValueUpdate();</span>
+<span class="nc" id="L519">        }</span>
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+<span class="nc" id="L523">            onValueUpdate();</span>
+<span class="nc" id="L524">        }</span>
+
+        private void onValueUpdate() {
+<span class="nc bnc" id="L527" title="All 2 branches missed.">            if (!isChangedByUser) {</span>
+<span class="nc" id="L528">                return;</span>
+            }
+<span class="nc" id="L530">            isChangedByUser = false;</span>
+<span class="nc" id="L531">            String hex = hexInRgbTextField.getText();</span>
+            try {
+<span class="nc" id="L533">                color = ColorUtils.hex2Color(hex);</span>
+<span class="nc" id="L534">                syncToOthersFormat(&quot;HEX&quot;);</span>
+<span class="nc" id="L535">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L536">                logger.error(&quot;Invalid hex value: {}&quot;, hex);</span>
+<span class="nc" id="L537">            }</span>
+<span class="nc" id="L538">            isChangedByUser = true;</span>
+<span class="nc" id="L539">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

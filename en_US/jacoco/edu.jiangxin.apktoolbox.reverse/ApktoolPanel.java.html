@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApktoolPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.reverse</a> &gt; <span class="el_source">ApktoolPanel.java</span></div><h1>ApktoolPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.reverse;
+
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.SelectFileListener;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+public class ApktoolPanel extends PluginPanel {
+    public ApktoolPanel() throws HeadlessException {
+<span class="nc" id="L19">        super();</span>
+<span class="nc" id="L20">    }</span>
+
+    @Override
+    public String getPluginFilename() {
+<span class="nc" id="L24">        return &quot;apktool_2.12.0.jar&quot;;</span>
+    }
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L29">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L30">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L32">        JTabbedPane categoryTabbedPane = new JTabbedPane();</span>
+<span class="nc" id="L33">        add(categoryTabbedPane);</span>
+
+<span class="nc" id="L35">        JPanel decodeCategoryPanel = new ApktoolDecodePanel();</span>
+<span class="nc" id="L36">        JPanel rebuildCategoryPanel = new ApktoolRebuildPanel();</span>
+
+<span class="nc" id="L38">        categoryTabbedPane.addTab(&quot;Decode&quot;, null, decodeCategoryPanel, &quot;Decode the APK file&quot;);</span>
+<span class="nc" id="L39">        categoryTabbedPane.setSelectedIndex(0);</span>
+<span class="nc" id="L40">        categoryTabbedPane.addTab(&quot;Rebuild&quot;, null, rebuildCategoryPanel, &quot;Rebuild the APK file&quot;);</span>
+<span class="nc" id="L41">    }</span>
+
+    abstract class ApktoolPanelBase extends JPanel {
+        protected JPanel srcPanel;
+
+        protected JPanel targetPanel;
+
+        protected JPanel optionPanel;
+
+        protected JPanel operationPanel;
+
+<span class="nc" id="L52">        protected ApktoolPanelBase() throws HeadlessException {</span>
+<span class="nc" id="L53">            super();</span>
+<span class="nc" id="L54">            initUI();</span>
+<span class="nc" id="L55">        }</span>
+
+        private void initUI() {
+<span class="nc" id="L58">            BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L59">            setLayout(boxLayout);</span>
+
+<span class="nc" id="L61">            createSrcPanel();</span>
+<span class="nc" id="L62">            add(srcPanel);</span>
+<span class="nc" id="L63">            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L65">            createTargetPanel();</span>
+<span class="nc" id="L66">            add(targetPanel);</span>
+<span class="nc" id="L67">            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L69">            createOptionPanel();</span>
+<span class="nc" id="L70">            add(optionPanel);</span>
+<span class="nc" id="L71">            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L73">            createOperationPanel();</span>
+<span class="nc" id="L74">            add(operationPanel);</span>
+<span class="nc" id="L75">        }</span>
+
+        protected void createSrcPanel() {
+<span class="nc" id="L78">            srcPanel = new JPanel();</span>
+<span class="nc" id="L79">            srcPanel.setLayout(new BoxLayout(srcPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L80">        }</span>
+
+        protected void createTargetPanel() {
+<span class="nc" id="L83">            targetPanel = new JPanel();</span>
+<span class="nc" id="L84">            targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L85">        }</span>
+
+        protected void createOptionPanel() {
+<span class="nc" id="L88">            optionPanel = new JPanel();</span>
+<span class="nc" id="L89">            optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L90">        }</span>
+
+        protected void createOperationPanel() {
+<span class="nc" id="L93">            operationPanel = new JPanel();</span>
+<span class="nc" id="L94">            operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L95">        }</span>
+    }
+
+    class ApktoolDecodePanel extends ApktoolPanelBase {
+        private JTextField srcTextField;
+
+        private JTextField targetTextField;
+
+        private JCheckBox resourceIgnoreCheckBox;
+
+        private JCheckBox overrideCheckBox;
+
+<span class="nc" id="L107">        public ApktoolDecodePanel() throws HeadlessException {</span>
+<span class="nc" id="L108">            super();</span>
+<span class="nc" id="L109">        }</span>
+
+        @Override
+        public void createSrcPanel() {
+<span class="nc" id="L113">            super.createSrcPanel();</span>
+
+<span class="nc" id="L115">            srcTextField = new JTextField();</span>
+<span class="nc" id="L116">            srcTextField.setText(conf.getString(&quot;apktool.decode.src.file&quot;));</span>
+
+<span class="nc" id="L118">            JButton srcButton = new JButton(bundle.getString(&quot;choose.file.button&quot;));</span>
+<span class="nc" id="L119">            srcButton.addActionListener(new SelectFileListener(&quot;select a file&quot;, srcTextField));</span>
+
+<span class="nc" id="L121">            srcPanel.add(srcTextField);</span>
+<span class="nc" id="L122">            srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L123">            srcPanel.add(srcButton);</span>
+<span class="nc" id="L124">        }</span>
+
+        @Override
+        public void createTargetPanel() {
+<span class="nc" id="L128">            super.createTargetPanel();</span>
+
+<span class="nc" id="L130">            targetTextField = new JTextField();</span>
+<span class="nc" id="L131">            targetTextField.setText(conf.getString(&quot;apktool.decode.target.dir&quot;));</span>
+
+<span class="nc" id="L133">            JButton targetButton = new JButton(bundle.getString(&quot;save.dir.button&quot;));</span>
+<span class="nc" id="L134">            targetButton.addActionListener(new SelectDirectoryListener(&quot;Save To&quot;, targetTextField));</span>
+
+<span class="nc" id="L136">            targetPanel.add(targetTextField);</span>
+<span class="nc" id="L137">            targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L138">            targetPanel.add(targetButton);</span>
+<span class="nc" id="L139">        }</span>
+
+        @Override
+        public void createOptionPanel() {
+<span class="nc" id="L143">            super.createOptionPanel();</span>
+
+<span class="nc" id="L145">            resourceIgnoreCheckBox = new JCheckBox(&quot;Ignore res&quot;);</span>
+<span class="nc" id="L146">            resourceIgnoreCheckBox.setSelected(false);</span>
+<span class="nc" id="L147">            optionPanel.add(resourceIgnoreCheckBox);</span>
+
+<span class="nc" id="L149">            overrideCheckBox = new JCheckBox(&quot;Override&quot;);</span>
+<span class="nc" id="L150">            overrideCheckBox.setSelected(true);</span>
+<span class="nc" id="L151">            optionPanel.add(overrideCheckBox);</span>
+<span class="nc" id="L152">        }</span>
+
+        @Override
+        public void createOperationPanel() {
+<span class="nc" id="L156">            super.createOperationPanel();</span>
+
+<span class="nc" id="L158">            JButton decodeButton = new JButton(&quot;Decode&quot;);</span>
+<span class="nc" id="L159">            decodeButton.addActionListener(new ApktoolDecodePanel.DecodeButtonActionListener());</span>
+
+<span class="nc" id="L161">            operationPanel.add(decodeButton);</span>
+<span class="nc" id="L162">        }</span>
+
+<span class="nc" id="L164">        private final class DecodeButtonActionListener implements ActionListener {</span>
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L167">                String srcPath = checkAndGetFileContent(srcTextField, &quot;apktool.decode.src.file&quot;, &quot;Source file is invalid&quot;);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">                if (srcPath == null) {</span>
+<span class="nc" id="L169">                    return;</span>
+                }
+
+<span class="nc" id="L172">                String targetPath = checkAndGetDirContent(targetTextField, &quot;apktool.decode.target.dir&quot;, &quot;Target directory is invalid&quot;);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                if (targetPath == null) {</span>
+<span class="nc" id="L174">                    return;</span>
+                }
+
+<span class="nc" id="L177">                String srcBaseName = FilenameUtils.getBaseName(srcPath);</span>
+<span class="nc" id="L178">                StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L179">                sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(&quot; d &quot;)</span>
+<span class="nc" id="L180">                        .append(srcPath).append(&quot; -o &quot;).append(targetPath).append(File.separator).append(srcBaseName);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                if (resourceIgnoreCheckBox.isSelected()) {</span>
+<span class="nc" id="L182">                    sb.append(&quot; -r&quot;);</span>
+                }
+<span class="nc bnc" id="L184" title="All 2 branches missed.">                if (overrideCheckBox.isSelected()) {</span>
+<span class="nc" id="L185">                    sb.append(&quot; -f&quot;);</span>
+                }
+<span class="nc" id="L187">                Utils.executor(sb.toString(), true);</span>
+<span class="nc" id="L188">            }</span>
+        }
+    }
+
+    class ApktoolRebuildPanel extends ApktoolPanelBase {
+        private JTextField srcTextField;
+
+        private JTextField targetTextField;
+
+        private JCheckBox signAPK;
+
+<span class="nc" id="L199">        public ApktoolRebuildPanel() throws HeadlessException {</span>
+<span class="nc" id="L200">            super();</span>
+<span class="nc" id="L201">        }</span>
+
+        @Override
+        public void createSrcPanel() {
+<span class="nc" id="L205">            super.createSrcPanel();</span>
+
+<span class="nc" id="L207">            srcTextField = new JTextField();</span>
+<span class="nc" id="L208">            srcTextField.setText(conf.getString(&quot;apktool.rebuild.src.dir&quot;));</span>
+
+<span class="nc" id="L210">            JButton srcButton = new JButton(bundle.getString(&quot;choose.dir.button&quot;));</span>
+<span class="nc" id="L211">            srcButton.addActionListener(new SelectDirectoryListener(&quot;Select Directory&quot;, srcTextField));</span>
+
+<span class="nc" id="L213">            srcPanel.add(srcTextField);</span>
+<span class="nc" id="L214">            srcPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L215">            srcPanel.add(srcButton);</span>
+<span class="nc" id="L216">        }</span>
+
+        @Override
+        public void createTargetPanel() {
+<span class="nc" id="L220">            super.createTargetPanel();</span>
+
+<span class="nc" id="L222">            targetTextField = new JTextField();</span>
+<span class="nc" id="L223">            targetTextField.setText(conf.getString(&quot;apktool.rebuild.target.file&quot;));</span>
+
+<span class="nc" id="L225">            JButton targetButton = new JButton(bundle.getString(&quot;save.file.button&quot;));</span>
+<span class="nc" id="L226">            targetButton.addActionListener(new SelectFileListener(&quot;save to&quot;, targetTextField, new ApktoolRebuildPanel.ApkFileFilter()));</span>
+
+<span class="nc" id="L228">            targetPanel.add(targetTextField);</span>
+<span class="nc" id="L229">            targetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L230">            targetPanel.add(targetButton);</span>
+<span class="nc" id="L231">        }</span>
+
+        @Override
+        public void createOptionPanel() {
+<span class="nc" id="L235">            super.createOptionPanel();</span>
+
+<span class="nc" id="L237">            signAPK = new JCheckBox(&quot;sign APK&quot;);</span>
+<span class="nc" id="L238">            signAPK.setSelected(false);</span>
+<span class="nc" id="L239">            optionPanel.add(signAPK);</span>
+<span class="nc" id="L240">        }</span>
+
+        @Override
+        public void createOperationPanel() {
+<span class="nc" id="L244">            super.createOperationPanel();</span>
+
+<span class="nc" id="L246">            JButton rebuildButton = new JButton(&quot;Rebuild&quot;);</span>
+<span class="nc" id="L247">            rebuildButton.addActionListener(new ApktoolRebuildPanel.RebuildButtonActionListener());</span>
+<span class="nc" id="L248">            operationPanel.add(rebuildButton);</span>
+<span class="nc" id="L249">        }</span>
+
+<span class="nc" id="L251">        private final class RebuildButtonActionListener implements ActionListener {</span>
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L254">                String srcPath = checkAndGetDirContent(srcTextField, &quot;apktool.rebuild.src.dir&quot;, &quot;Source directory is invalid&quot;);</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">                if (srcPath == null) {</span>
+<span class="nc" id="L256">                    return;</span>
+                }
+
+<span class="nc" id="L259">                String targetPath = checkAndGetNewFileContent(targetTextField, &quot;apktool.rebuild.target.file&quot;, &quot;Target file is invalid&quot;);</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                if (targetPath == null) {</span>
+<span class="nc" id="L261">                    return;</span>
+                }
+
+<span class="nc" id="L264">                StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L265">                sb.append(ApktoolPanel.this.getPluginStartupCmd()).append(&quot; b &quot;)</span>
+<span class="nc" id="L266">                        .append(srcPath).append(&quot; -o &quot;).append(targetPath);</span>
+<span class="nc" id="L267">                Utils.executor(sb.toString(), true);</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                if (signAPK.isSelected()) {</span>
+<span class="nc" id="L269">                    sb = new StringBuilder();</span>
+<span class="nc" id="L270">                    sb.append(ApktoolPanel.this.getPluginStartupCmd())</span>
+<span class="nc" id="L271">                            .append(&quot; -keystore &quot;).append(Utils.getToolsPath()).append(File.separator)</span>
+<span class="nc" id="L272">                            .append(&quot;debug.keystore&quot;).append(&quot; -alias androiddebugkey -pswd android &quot;)</span>
+<span class="nc" id="L273">                            .append(targetPath);</span>
+<span class="nc" id="L274">                    Utils.executor(sb.toString(), true);</span>
+                }
+<span class="nc" id="L276">            }</span>
+        }
+
+<span class="nc" id="L279">        private final class ApkFileFilter extends FileFilter {</span>
+
+            @Override
+            public boolean accept(File f) {
+<span class="nc" id="L283">                String nameString = f.getName();</span>
+<span class="nc" id="L284">                return nameString.toLowerCase().endsWith(&quot;.apk&quot;);</span>
+            }
+
+            @Override
+            public String getDescription() {
+<span class="nc" id="L289">                return &quot;*.apk&quot;;</span>
+            }
+        }
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
