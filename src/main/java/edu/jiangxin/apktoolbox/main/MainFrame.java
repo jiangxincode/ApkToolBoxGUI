@@ -36,6 +36,7 @@ import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuToUrlListener;
 import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
 import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.keeper.UiStateKeeper;
 import edu.jiangxin.apktoolbox.utils.Utils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -56,12 +57,13 @@ import java.util.Objects;
  * @author jiangxin
  * @author 2018-08-19
  */
-public class MainFrame extends EasyFrame {
+public final class MainFrame extends EasyFrame {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private JPanel contentPane;
+    private EasyPanel currentEasyPanel = null;
     private JMenuBar menuBar;
 
     public static void main(String[] args) {
@@ -392,6 +394,7 @@ public class MainFrame extends EasyFrame {
 
         @Override
         public void onChangeMenu() {
+            UiStateKeeper.save(currentEasyPanel);
             contentPane.removeAll();
             contentPane.add(Box.createVerticalGlue());
             panel.init();
@@ -402,6 +405,8 @@ public class MainFrame extends EasyFrame {
             contentPane.revalidate();
             contentPane.repaint();
             refreshSizeAndLocation();
+            UiStateKeeper.restore(panel);
+            currentEasyPanel = panel;
         }
 
         private EasyPanel createEasyPanel() {
@@ -417,6 +422,18 @@ public class MainFrame extends EasyFrame {
             }
             return Objects.requireNonNullElseGet(retEasyPanel, EasyPanel::new);
         }
+    }
+
+    @Override
+    protected void onWindowClosing(WindowEvent e) {
+        super.onWindowClosing(e);
+        UiStateKeeper.save(currentEasyPanel);
+    }
+
+    @Override
+    protected void onWindowIconified(WindowEvent e) {
+        super.onWindowIconified(e);
+        UiStateKeeper.save(currentEasyPanel);
     }
 }
 

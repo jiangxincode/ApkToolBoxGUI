@@ -39,4 +39,6 @@ public class Constants {
 
     public static final String MESSAGE_DIALOG_TITLE = "ERROR";
 
+    public static final String KEY_PREFIX = "ApkToolBoxGUI.";
+
 }

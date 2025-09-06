@@ -34,12 +34,14 @@ public class EasyFrame extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+                onWindowClosing(e);
                 Utils.saveConfiguration();
                 logger.info("windowClosing: " + EasyFrame.this.getClass().getSimpleName());
             }
             @Override
             public void windowIconified(WindowEvent e) {
                 super.windowIconified(e);
+                onWindowIconified(e);
                 setVisible(false);
                 dispose();
                 Utils.saveConfiguration();
@@ -75,4 +77,8 @@ public class EasyFrame extends JFrame {
         int screenHeight = screenSize.height;
         setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
     }
+
+    protected void onWindowClosing(WindowEvent e) {}
+
+    protected void onWindowIconified(WindowEvent e) {}
 }
