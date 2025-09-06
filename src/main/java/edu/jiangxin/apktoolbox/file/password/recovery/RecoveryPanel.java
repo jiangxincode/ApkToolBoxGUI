@@ -362,11 +362,11 @@ public final class RecoveryPanel extends EasyPanel {
     public void showResultWithDialog(String password) {
         if (password == null) {
             logger.error("Can not find password");
-            JOptionPane.showMessageDialog(RecoveryPanel.this, "Can not find password");
+            JOptionPane.showMessageDialog(this, "Can not find password");
         } else {
             logger.info("Find out the password: {}", password);
             JPanel panel = createPasswordShowPanel(password);
-            JOptionPane.showMessageDialog(RecoveryPanel.this, panel, "Find out the password", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, panel, "Find out the password", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -499,4 +499,3 @@ public final class RecoveryPanel extends EasyPanel {
         return currentFileChecker;
     }
 }
-

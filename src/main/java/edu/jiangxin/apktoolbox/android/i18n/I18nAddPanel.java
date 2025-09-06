@@ -100,13 +100,13 @@ public class I18nAddPanel extends EasyPanel {
                 int ret = innerProcessor(srcPath, targetPath, item);
                 if (ret != 0) {
                     Toolkit.getDefaultToolkit().beep();
-                    JOptionPane.showMessageDialog(I18nAddPanel.this, "Failed, please see the log", "ERROR",
+                    JOptionPane.showMessageDialog(this, "Failed, please see the log", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
             String message = String.format("Success: items: %d", operationCount);
-            JOptionPane.showMessageDialog(I18nAddPanel.this, message, "INFO", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, message, "INFO", JOptionPane.INFORMATION_MESSAGE);
         });
 
         operationPanel.add(addButton);

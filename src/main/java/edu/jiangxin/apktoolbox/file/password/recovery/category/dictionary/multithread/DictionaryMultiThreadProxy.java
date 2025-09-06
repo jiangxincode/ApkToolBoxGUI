@@ -32,7 +32,7 @@ public class DictionaryMultiThreadProxy implements ICategory {
     private String startAndGet(RecoveryPanel panel) {
         CompleteCallback callback = password -> {
             synchronized (lock) {
-                DictionaryMultiThreadProxy.this.password = password;
+                this.password = password;
                 lock.notifyAll();
             }
         };
