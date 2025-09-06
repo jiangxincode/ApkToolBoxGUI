@@ -214,7 +214,7 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
             if (totalFiles > 0) {
                 SwingUtilities.invokeLater(() -> {
                     int processed = processedFiles.get();
-                    int percentage = (int) ((processed * 100.0) / totalFiles);
+                    int percentage = (int) (processed * 100.0 / totalFiles);
                     progressBar.setValue(percentage);
                     progressBar.setString(String.format("Processing: %d/%d files (%d%%)", processed, totalFiles, percentage));
                 });

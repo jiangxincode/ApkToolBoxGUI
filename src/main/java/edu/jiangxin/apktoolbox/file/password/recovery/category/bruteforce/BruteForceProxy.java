@@ -82,7 +82,7 @@ public class BruteForceProxy implements ICategory {
             logger.info("[{}]Current attempt length: {}, thread number: {}", fileChecker, length, numThreads);
             password = startAndGet(numThreads, length, fileChecker, charset, panel);
             long endTime = System.currentTimeMillis();
-            logger.info("Current attempt length: {}, Cost time: {}ms", length, (endTime - startTime));
+            logger.info("Current attempt length: {}, Cost time: {}ms", length, endTime - startTime);
             if (password != null || panel.getCurrentState() != State.WORKING) {
                 logger.info("Break state: {}", panel.getCurrentState());
                 break;

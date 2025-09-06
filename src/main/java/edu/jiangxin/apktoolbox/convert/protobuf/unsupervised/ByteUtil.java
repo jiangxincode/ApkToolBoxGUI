@@ -39,7 +39,7 @@ public class ByteUtil {
     public static long bytesToLong(byte[] bytes, int start, ByteOrder byteOrder) {
         long values = 0;
         if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-            for (int i = (Long.BYTES - 1); i >= 0; i--) {
+            for (int i = Long.BYTES - 1; i >= 0; i--) {
                 values <<= Byte.SIZE;
                 values |= (bytes[i + start] & 0xff);
             }

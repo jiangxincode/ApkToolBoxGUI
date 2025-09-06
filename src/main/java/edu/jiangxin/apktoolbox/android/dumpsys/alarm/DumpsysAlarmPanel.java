@@ -252,7 +252,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
 
         long uptimeSeconds = sharedData.getUptimeMs() / 1000;
         long uptimeHours = uptimeSeconds / 3600;
-        long uptimeMinutes = (uptimeSeconds % 3600) / 60;
+        long uptimeMinutes = uptimeSeconds % 3600 / 60;
         long uptimeSecs = uptimeSeconds % 60;
 
         systemUptime1Field.setText(String.valueOf(sharedData.getUptimeMs()));

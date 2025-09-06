@@ -32,7 +32,7 @@ public class DictionarySingleThreadProxy implements ICategory {
 
     private String startAndGet(String charsetName, RecoveryPanel panel) {
         isCancelled = false;
-        Predicate<String> isRecoveringPredicate = password -> (!isCancelled);
+        Predicate<String> isRecoveringPredicate = password -> !isCancelled;
         Function<String, Stream<String>> generator = password -> {
             panel.setCurrentPassword(password);
             panel.increaseProgressBarValue();

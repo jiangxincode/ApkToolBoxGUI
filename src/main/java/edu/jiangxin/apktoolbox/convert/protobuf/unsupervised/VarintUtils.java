@@ -17,7 +17,7 @@ public class VarintUtils {
         if (i.equals(new BigInteger("0"))) {
             return bigInteger.divide(new BigInteger("2"));
         }
-        return new BigInteger("-1").multiply(bigInteger.add((new BigInteger("1")).divide(new BigInteger("2"))));
+        return new BigInteger("-1").multiply(bigInteger.add(new BigInteger("1").divide(new BigInteger("2"))));
     }
 
 
@@ -42,14 +42,14 @@ public class VarintUtils {
             bytes = buffer[offset++];
 
             BigInteger multiplier =  new BigInteger("2").pow(shift);
-            BigInteger thisByteValue = (new BigInteger(Long.toString(bytes & 0x7f))).multiply(multiplier);
+            BigInteger thisByteValue = new BigInteger(Long.toString(bytes & 0x7f)).multiply(multiplier);
             shift += 7;
             res = res.add(thisByteValue);
         } while ((bytes & 0xff) >= 128 && count < 8);
 
         Map<String, Object> result = new HashMap<>(2);
         result.put("value", res);
-        result.put("length", (shift / 7));
+        result.put("length", shift / 7);
         return result;
     }
 

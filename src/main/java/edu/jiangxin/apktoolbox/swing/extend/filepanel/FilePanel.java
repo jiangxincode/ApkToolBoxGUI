@@ -63,7 +63,7 @@ public class FilePanel extends JPanel {
     public void setDescriptionAndFileExtensions(String description, String[] extensions) {
         this.description = description;
         this.extensions = extensions;
-        if (StringUtils.isNotEmpty(description) || (ArrayUtils.isNotEmpty(extensions))) {
+        if (StringUtils.isNotEmpty(description) || ArrayUtils.isNotEmpty(extensions)) {
             FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
             if (fileChooser != null) {
                 fileChooser.resetChoosableFileFilters();
@@ -104,7 +104,7 @@ public class FilePanel extends JPanel {
             fileChooser.setCurrentDirectory(new File(currentDirectoryPath));
             fileChooser.setFileSelectionMode(fileSelectionMode);
             fileChooser.setMultiSelectionEnabled(false);
-            if (StringUtils.isNotEmpty(description) || (ArrayUtils.isNotEmpty(extensions))) {
+            if (StringUtils.isNotEmpty(description) || ArrayUtils.isNotEmpty(extensions)) {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(description, extensions);
                 fileChooser.addChoosableFileFilter(filter);
                 fileChooser.setAcceptAllFileFilterUsed(false);
