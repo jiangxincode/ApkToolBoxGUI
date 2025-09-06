@@ -13,11 +13,11 @@ public class VarintUtils {
      * @return
      */
     protected static BigInteger interpretAsSignedType(BigInteger bigInteger){
-        BigInteger i = bigInteger.and(new BigInteger("1"));
-        if (i.equals(new BigInteger("0"))) {
-            return bigInteger.divide(new BigInteger("2"));
+        BigInteger i = bigInteger.and(BigInteger.ONE);
+        if (i.equals(BigInteger.ZERO)) {
+            return bigInteger.divide(BigInteger.TWO);
         }
-        return new BigInteger("-1").multiply(bigInteger.add(new BigInteger("1").divide(new BigInteger("2"))));
+        return new BigInteger("-1").multiply(bigInteger.add(BigInteger.ONE).divide(BigInteger.TWO));
     }
 
 
@@ -29,7 +29,7 @@ public class VarintUtils {
      * @return
      */
     protected static Map<String, Object> decodeVarint(byte[] buffer, int offset) {
-        BigInteger res = new BigInteger("0");
+        BigInteger res = BigInteger.ZERO;
         int shift = 0;
         byte bytes;
 
@@ -41,7 +41,7 @@ public class VarintUtils {
             count++;
             bytes = buffer[offset++];
 
-            BigInteger multiplier =  new BigInteger("2").pow(shift);
+            BigInteger multiplier =  BigInteger.TWO.pow(shift);
             BigInteger thisByteValue = new BigInteger(Long.toString(bytes & 0x7f)).multiply(multiplier);
             shift += 7;
             res = res.add(thisByteValue);
