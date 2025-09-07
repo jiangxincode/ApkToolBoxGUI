@@ -13,7 +13,8 @@ target/
 # Others
 *.db
 *.log
-*.properties
+/zhSimple2zhTw.properties
+/zhTw2zhSimple.properties
 /dependency-reduced-pom.xml
 
 tmp/

@@ -276,6 +276,10 @@
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>3.27.0</version>
                     <configuration>
+                        <excludeFromFailureFile>${basedir}/tools/pmd/pmd-exclude.properties</excludeFromFailureFile>
+                        <rulesets>
+                            <ruleset>${basedir}/tools/pmd/pmd-custom-ruleset.xml</ruleset>
+                        </rulesets>
                         <excludeRoots>
                             <excludeRoot>target/generated-sources</excludeRoot>
                         </excludeRoots>

@@ -45,6 +45,7 @@ public final class ZipChecker extends FileChecker {
         try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file), password.toCharArray(), StandardCharsets.UTF_8)) {
             while (zipInputStream.getNextEntry() != null) {
                 while (zipInputStream.read(readBuffer) != -1) {
+                    // do nothing
                 }
             }
             result = true;
