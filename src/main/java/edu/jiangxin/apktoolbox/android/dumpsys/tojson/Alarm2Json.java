@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,6 +32,9 @@ public class Alarm2Json implements IDumpsys2Json {
             if (title != null) {
                 Object value = parseSectionContent(title, section);
                 result.put(title, value);
+            } else if (section.trim().startsWith("nowRTC=")) {
+                Object value = parseSectionContent("TimeInfo", section);
+                result.put("TimeInfo", value);
             }
         }
     }
@@ -49,6 +54,8 @@ public class Alarm2Json implements IDumpsys2Json {
             return parseAppStateSection(section);
         } else if (title.contains("pending alarms")) {
             return parsePendingAlarms(section);
+        } else if (title.contains("TimeInfo")) {
+            return parseTimeInfoSection(section);
         } else {
             return section.trim();
         }
@@ -96,7 +103,6 @@ public class Alarm2Json implements IDumpsys2Json {
 
     private JSONArray parsePendingAlarms(String section) {
         JSONArray alarms = new JSONArray();
-        // 修正正则，支持前面有空格，且允许行首不是严格的alarm类型
         Pattern alarmStartPattern = Pattern.compile("^\s*(ELAPSED|ELAPSED_WAKEUP|RTC|RTC_WAKEUP) #(\\d+): (Alarm\\{.*?)(?=(^\\s*(ELAPSED|ELAPSED_WAKEUP|RTC|RTC_WAKEUP) #(\\d+):)|(\\s{2}))", Pattern.MULTILINE | Pattern.DOTALL);
         Matcher m = alarmStartPattern.matcher(section);
         while (m.find()) {
@@ -107,10 +113,9 @@ public class Alarm2Json implements IDumpsys2Json {
             String[] tmpArray = details.split("\\n", 2);
             alarm.put("alarmInfo", tmpArray[0]);
             details = details.replace(tmpArray[0], "");
-            // 提取 tag、type、origWhen、window、repeatInterval、count、flags、operation、listener、idle-options 等字段
             Pattern fieldPattern = Pattern.compile(
-                "tag=([^\n]+)|type=([^\\s]+)|origWhen=([^\\s]+)|window=([^\\s]+)|repeatInterval=([^\\s]+)|count=([^\\s]+)|flags=([^\\s]+)|operation=([^\n]+)|listener=([^\n]+)|idle-options=([^\n]+)",
-                Pattern.MULTILINE);
+                    "tag=([^\n]+)|type=([^\\s]+)|origWhen=([^\\s]+)|window=([^\\s]+)|repeatInterval=([^\\s]+)|count=([^\\s]+)|flags=([^\\s]+)|operation=([^\n]+)|listener=([^\n]+)|idle-options=([^\n]+)",
+                    Pattern.MULTILINE);
             Matcher fieldMatcher = fieldPattern.matcher(details);
             while (fieldMatcher.find()) {
                 if (fieldMatcher.group(1) != null) alarm.put("tag", fieldMatcher.group(1).trim());
@@ -124,10 +129,9 @@ public class Alarm2Json implements IDumpsys2Json {
                 if (fieldMatcher.group(9) != null) alarm.put("listener", fieldMatcher.group(9).trim());
                 if (fieldMatcher.group(10) != null) alarm.put("idleOptions", fieldMatcher.group(10).trim());
             }
-            // 额外提取 policyWhenElapsed、whenElapsed、maxWhenElapsed、exactAllowReason、procName、PendingIntent、等
             Pattern extraPattern = Pattern.compile(
-                "policyWhenElapsed: ([^\n]+)|whenElapsed=([^\\s]+)|maxWhenElapsed=([^\\s]+)|exactAllowReason=([^\\s]+)|procName ([^\\s]+)|PendingIntent\\{([^:]+): ([^}]+)\\}",
-                Pattern.MULTILINE);
+                    "policyWhenElapsed: ([^\n]+)|whenElapsed=([^\\s]+)|maxWhenElapsed=([^\\s]+)|exactAllowReason=([^\\s]+)|procName ([^\\s]+)|PendingIntent\\{([^:]+): ([^}]+)\\}",
+                    Pattern.MULTILINE);
             Matcher extraMatcher = extraPattern.matcher(details);
             while (extraMatcher.find()) {
                 if (extraMatcher.group(1) != null) alarm.put("policyWhenElapsed", extraMatcher.group(1).trim());
@@ -143,5 +147,25 @@ public class Alarm2Json implements IDumpsys2Json {
             alarms.put(alarm);
         }
         return alarms;
+    }
+
+    private JSONObject parseTimeInfoSection(String section) {
+        JSONObject obj = new JSONObject();
+
+        String timeInformation = StringUtils.substringBetween(section, "nowRTC=", "mLastTimeChangeClockTime=").trim().replace(" ", "=");
+        String[] components = timeInformation.split("=");
+
+        String dateTime = components[1] + " " + components[2];
+        Long uptimeMs = Long.valueOf(components[4]);
+
+        long uptimeSeconds = uptimeMs / 1000;
+        long uptimeHours = uptimeSeconds / 3600;
+        long uptimeMinutes = uptimeSeconds % 3600 / 60;
+        long uptimeSecs = uptimeSeconds % 60;
+
+        obj.put("System Uptime(ms)", uptimeMs);
+        obj.put("System Uptime", uptimeHours + ":" + uptimeMinutes + ":" + uptimeSecs);
+        obj.put("Last DateTime", dateTime);
+        return obj;
     }
 }

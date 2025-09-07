@@ -10,7 +10,6 @@ import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobu
 import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
 import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
 import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
-import edu.jiangxin.apktoolbox.android.dumpsys.alarm.DumpsysAlarmPanel;
 import edu.jiangxin.apktoolbox.file.batchrename.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
@@ -314,10 +313,6 @@ public final class MainFrame extends EasyFrame {
         JMenuItem monkeyMenuItem = new JMenuItem(bundle.getString("android.monkey.title"));
         monkeyMenuItem.addActionListener(new ChangeMenuToPanelListener(MonkeyPanel.class, monkeyMenuItem.getText()));
         androidMenu.add(monkeyMenuItem);
-
-        JMenuItem dumpsysAlarmMenuItem = new JMenuItem(bundle.getString("android.dumpsys.alarm.title"));
-        dumpsysAlarmMenuItem.addActionListener(new ChangeMenuToPanelListener(DumpsysAlarmPanel.class, dumpsysAlarmMenuItem.getText()));
-        androidMenu.add(dumpsysAlarmMenuItem);
 
         JMenuItem dumpsysMenuItem = new JMenuItem(bundle.getString("android.dumpsys.title"));
         dumpsysMenuItem.addActionListener(new ChangeMenuToPanelListener(DumpsysPanel.class, dumpsysMenuItem.getText()));

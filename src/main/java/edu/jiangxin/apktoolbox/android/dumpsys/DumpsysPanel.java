@@ -21,13 +21,13 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DumpsysPanel extends EasyPanel {
+    @Serial
     private static final long serialVersionUID = 1L;
-
-    private JTabbedPane tabbedPane;
 
     private JPanel dumpsysPanel;
 
@@ -46,9 +46,6 @@ public class DumpsysPanel extends EasyPanel {
 
     private JPanel analysisOperationPanel;
 
-
-    private JButton analysisStartButton;
-
     public DumpsysPanel() {
         super();
     }
@@ -57,7 +54,7 @@ public class DumpsysPanel extends EasyPanel {
     public void initUI() {
         setPreferredSize(new Dimension(700, 400));
 
-        tabbedPane = new JTabbedPane();
+        JTabbedPane tabbedPane = new JTabbedPane();
         add(tabbedPane);
 
         createDumpsysPanel();
@@ -130,7 +127,7 @@ public class DumpsysPanel extends EasyPanel {
         BoxLayout boxLayout = new BoxLayout(analysisOperationPanel, BoxLayout.X_AXIS);
         analysisOperationPanel.setLayout(boxLayout);
 
-        analysisStartButton = new JButton("Start");
+        JButton analysisStartButton = new JButton("Start");
         analysisStartButton.setEnabled(true);
         analysisStartButton.addActionListener(new AnalysisStartButtonActionListener());
         analysisOperationPanel.add(analysisStartButton);
