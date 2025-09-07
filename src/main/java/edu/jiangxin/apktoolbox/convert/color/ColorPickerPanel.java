@@ -355,7 +355,7 @@ public class ColorPickerPanel extends EasyPanel {
         g2.draw(crossVertical);
 
         // 右侧颜色历史记录
-        paintColorRecord(g2);
+        paintColorRecord();
 
         // 绘制各组件的边框
         paintBorder(g2);
@@ -365,7 +365,7 @@ public class ColorPickerPanel extends EasyPanel {
 
     }
 
-    private void paintColorRecord(final Graphics2D g2) {
+    private void paintColorRecord() {
         int i = 0;
 
         for (Color c : colorQueue) {

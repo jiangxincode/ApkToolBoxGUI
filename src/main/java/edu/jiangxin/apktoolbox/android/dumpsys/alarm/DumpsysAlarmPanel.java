@@ -274,7 +274,7 @@ public class DumpsysAlarmPanel extends EasyPanel {
                 break;
             }
             String alarmListDefinition = StringUtils.substringBetween(tmpInputString, "}:" + System.getProperty("line.separator"), "Batch{");
-            alarmListDefinition.replace("ELAPSED_WAKEUP", "ELAPSED").replace("RTC_WAKEUP", "ELAPSED").replace("RTC", "ELAPSED");
+            alarmListDefinition = alarmListDefinition.replace("ELAPSED_WAKEUP", "ELAPSED").replace("RTC_WAKEUP", "ELAPSED").replace("RTC", "ELAPSED");
             String[] alarmListTmp = alarmListDefinition.split("ELAPSED");
             List<String> alarmList = new ArrayList<>();
             for (int i = 0; i < alarmListTmp.length; i++) {
