@@ -6,8 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 class AutoCompleter<E> implements KeyListener {
     private JComboBox<E> comboBox;
@@ -54,24 +53,23 @@ class AutoCompleter<E> implements KeyListener {
     }
 
     protected void autoComplete(String text) {
-        E[] opts = getMatchingOptions(text);
+        Vector<E> opts = getMatchingOptions(text);
         comboBox.setModel(new DefaultComboBoxModel<>(opts));
         if (comboBox.getItemCount() > 0) {
             comboBox.showPopup();
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private E[] getMatchingOptions(String text) {
-        List<E> list = new ArrayList<>();
+    private Vector<E> getMatchingOptions(String text) {
+        Vector<E> vector = new Vector<>();
         ComboBoxModel<E> tmp = this.comboBoxModel;
         for (int i = 0; i < tmp.getSize(); i++) {
             E itemObj = tmp.getElementAt(i);
             if (StringUtils.isEmpty(text) || StringUtils.containsIgnoreCase(itemObj.toString(), text)) {
-                list.add(itemObj);
+                vector.add(itemObj);
             }
         }
-        return (E[]) list.toArray();
+        return vector;
     }
 
 }
