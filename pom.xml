@@ -268,7 +268,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                        <suppressionsLocation>${basedir}/tools/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                     </configuration>
                 </plugin>
                 <plugin>
