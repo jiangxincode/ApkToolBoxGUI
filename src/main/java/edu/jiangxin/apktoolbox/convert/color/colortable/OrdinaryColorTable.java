@@ -27,11 +27,11 @@ public class OrdinaryColorTable implements IColorTable {
         return 3;
     }
 
-    public static final String[] COLUMN_NAMES = {
+    static final String[] COLUMN_NAMES = {
             "颜色", "英文", "中文", "RGB代码"
     };
 
-    public static final String[][] TABLE_ROW_DATA = {
+    static final String[][] TABLE_ROW_DATA = {
             {"", "LightPink", "浅粉红", "#FFB6C1"},
             {"", "Pink", "粉红", "#FFC0CB"},
             {"", "Crimson", "猩红", "#DC143C"},

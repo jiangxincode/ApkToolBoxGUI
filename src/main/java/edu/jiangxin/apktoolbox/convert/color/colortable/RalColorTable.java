@@ -27,11 +27,11 @@ public class RalColorTable  implements IColorTable {
         return 3;
     }
 
-    public static final String[] COLUMN_NAMES = {
+    static final String[] COLUMN_NAMES = {
             "颜色", "英文", "中文", "RGB代码"
     };
 
-    public static final String[][] TABLE_ROW_DATA = {
+    static final String[][] TABLE_ROW_DATA = {
             {"RAL 1000", "Green beige", "米绿色", "#BEBD7F"},
             {"RAL 1001", "Beige", "米色", "#C2B078"},
             {"RAL 1002", "Sand yellow", "沙黄色", "#C6A664"},
@@ -246,4 +246,3 @@ public class RalColorTable  implements IColorTable {
             {"RAL 9023", "Pearl dark grey", "珍珠深灰", "#828282"}
     };
 }
-
