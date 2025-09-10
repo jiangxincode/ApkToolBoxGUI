@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.android.dumpsys.DumpsysPanel;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
+import edu.jiangxin.apktoolbox.convert.encoding.GarbledTextRecoveryPanel;
 import edu.jiangxin.apktoolbox.convert.protobuf.supervised.SupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
@@ -275,6 +276,10 @@ public final class MainFrame extends EasyFrame {
         JMenuItem unicodeConvertMenuItem = new JMenuItem(bundle.getString("convert.unicode.title"));
         unicodeConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(Zh2UnicodeConvertPanel.class, unicodeConvertMenuItem.getText()));
         convertMenu.add(unicodeConvertMenuItem);
+
+        JMenuItem encodingRecoveryMenuItem = new JMenuItem(bundle.getString("garbled.text.recovery.title"));
+        encodingRecoveryMenuItem.addActionListener(new ChangeMenuToPanelListener(GarbledTextRecoveryPanel.class, encodingRecoveryMenuItem.getText()));
+        convertMenu.add(encodingRecoveryMenuItem);
 
         JMenuItem relationShipConvertMenuItem = new JMenuItem(bundle.getString("convert.relationship.title"));
         relationShipConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(RelationShipConvertPanel.class, relationShipConvertMenuItem.getText()));
