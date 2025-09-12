@@ -1,0 +1,86 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # 北京时间 04:00（UTC 20:00）
+    - cron: "0 20 * * *"
+  workflow_dispatch:  # 手动按钮
+  push:
+    branches: [ master ]
+
+jobs:
+  nightly:
+    name: Daily Build
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Generate version
+        id: ver
+        shell: bash
+        run: |
+          echo "DATE=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
+          echo "DATETIME=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v5
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Maven
+        run: |
+          mvn clean package
+
+      - name: Package in Windows
+        run: |
+          ./PackageWindows.ps1
+        if: runner.os == 'Windows'
+      - name: Package in Linux
+        run: |
+          chmod u+x ./PackageLinux.sh
+          ./PackageLinux.sh
+        if: runner.os == 'Linux'
+      - name: Package in macOS
+        run: |
+          chmod u+x ./PackageMacos.sh
+          ./PackageMacos.sh
+        if: runner.os == 'macOS'
+
+      - name: Rename Artifacts
+        shell: bash
+        run: |
+          for file in target/ApkToolBoxGUI-*-with*-JRE-*.zip; do mv "$file" "target/ApkToolBoxGUI-${{ steps.ver.outputs.DATE }}-${file#target/ApkToolBoxGUI-*-}"; done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ApkToolBoxGUI-${{ runner.os }}
+          path: target/ApkToolBoxGUI-*-with*-JRE-*.zip
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            target/ApkToolBoxGUI-*-with*-JRE-*.zip
+          name: Nightly Build ${{ steps.ver.outputs.DATE }}
+          tag_name: nightly-build
+          prerelease: true
+          generate_release_notes: false
+          body: |
+            Auto nightly build version, based on commit ${{ github.sha }}。
