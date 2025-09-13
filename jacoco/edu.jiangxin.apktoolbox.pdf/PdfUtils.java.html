@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PdfUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.pdf</a> &gt; <span class="el_source">PdfUtils.java</span></div><h1>PdfUtils.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.pdf;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import java.io.File;
+import java.io.IOException;
+
+<span class="nc" id="L18">public class PdfUtils {</span>
+<span class="nc" id="L19">    private static final Logger LOGGER = LogManager.getLogger(PdfUtils.class.getSimpleName());</span>
+    public static boolean isScannedPdf(File file, int threshold) {
+<span class="nc" id="L21">        int length = 0;</span>
+
+<span class="nc" id="L23">        try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L24">            boolean isEncrypted = document.isEncrypted();</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">            if (isEncrypted) {</span>
+<span class="nc" id="L26">                document.setAllSecurityToBeRemoved(true);</span>
+            }
+
+<span class="nc" id="L29">            PDFTextStripper stripper = new PDFTextStripper();</span>
+<span class="nc" id="L30">            String text = stripper.getText(document).trim();</span>
+<span class="nc" id="L31">            length = text.length();</span>
+<span class="nc" id="L32">        } catch (IOException e) {</span>
+<span class="nc" id="L33">            LOGGER.error(&quot;Error reading PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L34">            return false;</span>
+<span class="nc" id="L35">        }</span>
+<span class="nc" id="L36">        LOGGER.info(&quot;Processing file: {}, text size: {}&quot;, file.getPath(), length);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        return length &lt; threshold;</span>
+    }
+
+    public static boolean isEncryptedPdf(File file) {
+        boolean isEncrypted;
+
+<span class="nc" id="L43">        try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L44">            isEncrypted = document.isEncrypted();</span>
+<span class="nc" id="L45">        } catch (IOException e) {</span>
+<span class="nc" id="L46">            LOGGER.error(&quot;Error reading PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L47">            return false;</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">        LOGGER.info(&quot;Processing file: {}, is encrypted: {}&quot;, file.getPath(), isEncrypted);</span>
+<span class="nc" id="L50">        return isEncrypted;</span>
+    }
+
+    public static boolean isNonOutlinePdf(File file) {
+<span class="nc" id="L54">        boolean hasOutline = false;</span>
+
+<span class="nc" id="L56">        try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L57">            boolean isEncrypted = document.isEncrypted();</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (isEncrypted) {</span>
+<span class="nc" id="L59">                document.setAllSecurityToBeRemoved(true);</span>
+            }
+
+<span class="nc bnc" id="L62" title="All 4 branches missed.">            if (document.getDocumentCatalog() != null &amp;&amp; document.getDocumentCatalog().getDocumentOutline() != null) {</span>
+<span class="nc" id="L63">                hasOutline = true;</span>
+            }
+<span class="nc" id="L65">        } catch (IOException e) {</span>
+<span class="nc" id="L66">            LOGGER.error(&quot;Error reading PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L67">            return false;</span>
+<span class="nc" id="L68">        }</span>
+<span class="nc" id="L69">        LOGGER.info(&quot;Processing file: {}, has outline: {}&quot;, file.getPath(), hasOutline);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        return !hasOutline;</span>
+    }
+
+    public static boolean hasAnnotations(File file) {
+<span class="nc" id="L74">        boolean hasAnnotations = false;</span>
+
+<span class="nc" id="L76">        try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L77">            boolean isEncrypted = document.isEncrypted();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (isEncrypted) {</span>
+<span class="nc" id="L79">                document.setAllSecurityToBeRemoved(true);</span>
+            }
+<span class="nc" id="L81">            PDDocumentCatalog catalog = document.getDocumentCatalog();</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (catalog == null) {</span>
+<span class="nc" id="L83">                return false;</span>
+            }
+<span class="nc" id="L85">            PDPageTree pages = document.getDocumentCatalog().getPages();</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">            if (pages == null || pages.getCount() == 0) {</span>
+<span class="nc" id="L87">                return false;</span>
+            }
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            for (PDPage page : pages) {</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">                if (page.getAnnotations() != null &amp;&amp; !page.getAnnotations().isEmpty()) {</span>
+<span class="nc" id="L92">                    int pageNumber = page.getCOSObject().getInt(&quot;PageNumber&quot;, 0);</span>
+<span class="nc" id="L93">                    String subType = page.getAnnotations().get(0).getSubtype();</span>
+<span class="nc" id="L94">                    LOGGER.info(&quot;Found annotations on page: {}, subType: {}&quot;, pageNumber, subType);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                    if (!subType.equals(&quot;Link&quot;)) {</span>
+<span class="nc" id="L96">                        hasAnnotations = true;</span>
+<span class="nc" id="L97">                        break; // No need to check further if we found annotations</span>
+                    }
+                }
+<span class="nc" id="L100">            }</span>
+<span class="nc bnc" id="L101" title="All 4 branches missed.">        } catch (IOException e) {</span>
+<span class="nc" id="L102">            LOGGER.error(&quot;Error reading PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L103">            return hasAnnotations;</span>
+<span class="nc" id="L104">        }</span>
+<span class="nc" id="L105">        LOGGER.info(&quot;Processing file: {}, has annotations: {}&quot;, file.getPath(), hasAnnotations);</span>
+<span class="nc" id="L106">        return hasAnnotations;</span>
+    }
+
+    public static void removePassword(File encryptedFile, File targetDir) {
+<span class="nc" id="L110">        try (PDDocument document = Loader.loadPDF(encryptedFile)) {</span>
+<span class="nc" id="L111">            boolean isEncrypted = document.isEncrypted();</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (isEncrypted) {</span>
+<span class="nc" id="L113">                document.setAllSecurityToBeRemoved(true);</span>
+            }
+<span class="nc" id="L115">            String targetFilePath = targetDir.getAbsolutePath() + File.separator + encryptedFile.getName();</span>
+<span class="nc" id="L116">            document.save(targetFilePath);</span>
+<span class="nc" id="L117">            LOGGER.info(&quot;Remove password success: {}&quot;, targetFilePath);</span>
+<span class="nc" id="L118">        } catch (IOException e) {</span>
+<span class="nc" id="L119">            LOGGER.error(&quot;Error processing PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L120">        }</span>
+<span class="nc" id="L121">    }</span>
+
+    public static void removePasswordWithIText(File encryptedFile, File targetDir) {
+        PdfReader reader;
+        try {
+<span class="nc" id="L126">            reader = new PdfReader(encryptedFile).setUnethicalReading(true);</span>
+<span class="nc" id="L127">        } catch (IOException e) {</span>
+<span class="nc" id="L128">            LOGGER.error(&quot;Error reading PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L129">            return;</span>
+<span class="nc" id="L130">        }</span>
+<span class="nc" id="L131">        String targetFilePath = targetDir.getAbsolutePath() + File.separator + encryptedFile.getName();</span>
+
+<span class="nc" id="L133">        try (PdfDocument pdfDoc = new PdfDocument(reader,</span>
+                new PdfWriter(targetFilePath))) {
+<span class="nc" id="L135">            LOGGER.info(&quot;Remove password success: {}&quot;, targetFilePath);</span>
+<span class="nc" id="L136">        } catch (IOException e) {</span>
+<span class="nc" id="L137">            LOGGER.error(&quot;Error writing PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L138">        }</span>
+<span class="nc" id="L139">    }</span>
+
+    public static int getPageCount(File file) {
+<span class="nc" id="L142">        int pageCount = 0;</span>
+
+<span class="nc" id="L144">        try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L145">            boolean isEncrypted = document.isEncrypted();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            if (isEncrypted) {</span>
+<span class="nc" id="L147">                document.setAllSecurityToBeRemoved(true);</span>
+            }
+<span class="nc" id="L149">            pageCount = document.getNumberOfPages();</span>
+<span class="nc" id="L150">        } catch (IOException e) {</span>
+<span class="nc" id="L151">            LOGGER.error(&quot;Error reading PDF file: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L152">            return 0;</span>
+<span class="nc" id="L153">        }</span>
+<span class="nc" id="L154">        LOGGER.info(&quot;Processing file: {}, page count: {}&quot;, file.getPath(), pageCount);</span>
+<span class="nc" id="L155">        return pageCount;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

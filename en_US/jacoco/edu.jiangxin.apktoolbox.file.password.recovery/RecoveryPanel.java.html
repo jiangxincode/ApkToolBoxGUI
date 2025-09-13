@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecoveryPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.file.password.recovery</a> &gt; <span class="el_source">RecoveryPanel.java</span></div><h1>RecoveryPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.file.password.recovery;
+
+import edu.jiangxin.apktoolbox.file.password.recovery.category.CategoryFactory;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.CategoryType;
+import edu.jiangxin.apktoolbox.file.password.recovery.category.ICategory;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.*;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.thirdparty.ThirdParty7ZipChecker;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.thirdparty.ThirdPartyRarChecker;
+import edu.jiangxin.apktoolbox.file.password.recovery.checker.thirdparty.ThirdPartyWinRarChecker;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.Serial;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public final class RecoveryPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private JPanel optionPanel;
+
+    private FilePanel recoveryFilePanel;
+
+    private JTabbedPane categoryTabbedPane;
+
+    private JPanel bruteForceCategoryPanel;
+
+    private JPanel dictionaryCategoryPanel;
+
+    private FilePanel dictionaryFilePanel;
+
+<span class="nc" id="L49">    private CategoryType currentCategoryType = CategoryType.UNKNOWN;</span>
+
+    private JPanel operationPanel;
+
+    private JCheckBox numberCheckBox;
+    private JCheckBox lowercaseLetterCheckBox;
+    private JCheckBox uppercaseLetterCheckBox;
+
+    private JCheckBox userIncludedCheckBox;
+
+    private JTextField userIncludedTextField;
+
+    private JCheckBox userExcludedCheckBox;
+
+    private JTextField userExcludedTextField;
+
+    private JSpinner minSpinner;
+    private JSpinner maxSpinner;
+
+    private JCheckBox isUseMultiThreadCheckBox;
+
+    private JProgressBar progressBar;
+
+    private JComboBox&lt;FileChecker&gt; checkerTypeComboBox;
+
+    private transient FileChecker currentFileChecker;
+
+    private JButton startButton;
+    private JButton stopButton;
+
+    private JLabel currentStateLabel;
+
+    private JLabel currentPasswordLabel;
+
+    private JLabel currentSpeedLabel;
+
+<span class="nc" id="L85">    private int passwordTryCount = 0;</span>
+
+    private NumberFormat numberFormat;
+
+<span class="nc" id="L89">    private State currentState = State.IDLE;</span>
+
+    private Timer timer;
+
+<span class="nc" id="L93">    private final transient ExecutorService startExecutorService = Executors.newFixedThreadPool(1);</span>
+
+<span class="nc" id="L95">    private final transient ExecutorService stopExecutorService = Executors.newFixedThreadPool(1);</span>
+
+    public RecoveryPanel() {
+<span class="nc" id="L98">        super();</span>
+<span class="nc" id="L99">        initBase();</span>
+<span class="nc" id="L100">    }</span>
+
+    private void initBase() {
+<span class="nc" id="L103">        numberFormat = NumberFormat.getPercentInstance();</span>
+<span class="nc" id="L104">        numberFormat.setMinimumFractionDigits(3);</span>
+<span class="nc" id="L105">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L109">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L110">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L112">        createOptionPanel();</span>
+<span class="nc" id="L113">        add(optionPanel);</span>
+<span class="nc" id="L114">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L116">        createOperationPanel();</span>
+<span class="nc" id="L117">        add(operationPanel);</span>
+
+<span class="nc" id="L119">        timer = new Timer(1000, e -&gt; {</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (currentState == State.WORKING) {</span>
+<span class="nc" id="L121">                int currentValue = progressBar.getValue();</span>
+<span class="nc" id="L122">                int speed = currentValue - passwordTryCount;</span>
+<span class="nc" id="L123">                passwordTryCount = currentValue;</span>
+<span class="nc" id="L124">                currentSpeedLabel.setText(&quot;Speed: &quot; + speed + &quot; passwords/s&quot;);</span>
+            }
+<span class="nc" id="L126">        });</span>
+<span class="nc" id="L127">    }</span>
+
+    private void createOptionPanel() {
+<span class="nc" id="L130">        optionPanel = new JPanel();</span>
+<span class="nc" id="L131">        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L133">        checkerTypeComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L134">        checkerTypeComboBox.addItem(new ThirdParty7ZipChecker());</span>
+<span class="nc" id="L135">        checkerTypeComboBox.addItem(new ThirdPartyWinRarChecker());</span>
+<span class="nc" id="L136">        checkerTypeComboBox.addItem(new ThirdPartyRarChecker());</span>
+<span class="nc" id="L137">        checkerTypeComboBox.addItem(new ZipChecker());</span>
+<span class="nc" id="L138">        checkerTypeComboBox.addItem(new RarChecker());</span>
+<span class="nc" id="L139">        checkerTypeComboBox.addItem(new SevenZipChecker());</span>
+<span class="nc" id="L140">        checkerTypeComboBox.addItem(new PdfChecker());</span>
+<span class="nc" id="L141">        checkerTypeComboBox.addItem(new XmlBasedOfficeChecker());</span>
+<span class="nc" id="L142">        checkerTypeComboBox.addItem(new BinaryOfficeChecker());</span>
+<span class="nc" id="L143">        checkerTypeComboBox.setSelectedIndex(0);</span>
+<span class="nc" id="L144">        checkerTypeComboBox.addItemListener(e -&gt; {</span>
+<span class="nc" id="L145">            FileChecker fileChecker = (FileChecker) e.getItem();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            if (fileChecker == null) {</span>
+<span class="nc" id="L147">                logger.error(&quot;fileChecker is null&quot;);</span>
+<span class="nc" id="L148">                return;</span>
+            }
+<span class="nc" id="L150">            recoveryFilePanel.setDescriptionAndFileExtensions(</span>
+<span class="nc" id="L151">                    fileChecker.getFileDescription(), fileChecker.getFileExtensions());</span>
+<span class="nc" id="L152">        });</span>
+
+<span class="nc" id="L154">        FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (fileChecker == null) {</span>
+<span class="nc" id="L156">            logger.error(&quot;fileChecker is null&quot;);</span>
+<span class="nc" id="L157">            return;</span>
+        }
+
+<span class="nc" id="L160">        recoveryFilePanel = new FilePanel(&quot;Choose Recovery File&quot;);</span>
+<span class="nc" id="L161">        recoveryFilePanel.setDescriptionAndFileExtensions(fileChecker.getFileDescription(), fileChecker.getFileExtensions());</span>
+
+<span class="nc" id="L163">        categoryTabbedPane = new JTabbedPane();</span>
+
+<span class="nc" id="L165">        createBruteForcePanel();</span>
+<span class="nc" id="L166">        categoryTabbedPane.addTab(&quot;Brute Force&quot;, null, bruteForceCategoryPanel, &quot;Brute Force&quot;);</span>
+<span class="nc" id="L167">        categoryTabbedPane.setSelectedIndex(0);</span>
+
+<span class="nc" id="L169">        createDictionaryPanel();</span>
+<span class="nc" id="L170">        categoryTabbedPane.addTab(&quot;Dictionary&quot;, null, dictionaryCategoryPanel, &quot;Dictionary&quot;);</span>
+
+<span class="nc" id="L172">        progressBar = new JProgressBar();</span>
+<span class="nc" id="L173">        progressBar.setStringPainted(true);</span>
+<span class="nc" id="L174">        String text = numberFormat.format(0);</span>
+<span class="nc" id="L175">        progressBar.setString(text);</span>
+
+<span class="nc" id="L177">        optionPanel.add(checkerTypeComboBox);</span>
+<span class="nc" id="L178">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L179">        optionPanel.add(recoveryFilePanel);</span>
+<span class="nc" id="L180">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L181">        optionPanel.add(categoryTabbedPane);</span>
+<span class="nc" id="L182">        optionPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L183">        optionPanel.add(progressBar);</span>
+<span class="nc" id="L184">    }</span>
+
+    private void createBruteForcePanel() {
+<span class="nc" id="L187">        bruteForceCategoryPanel = new JPanel();</span>
+
+<span class="nc" id="L189">        JPanel topLevelPanel = new JPanel();</span>
+<span class="nc" id="L190">        topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L191">        bruteForceCategoryPanel.add(topLevelPanel);</span>
+
+<span class="nc" id="L193">        JPanel charsetPanel = new JPanel();</span>
+<span class="nc" id="L194">        charsetPanel.setLayout(new BoxLayout(charsetPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L196">        JPanel passwordLengthPanel = new JPanel();</span>
+<span class="nc" id="L197">        passwordLengthPanel.setLayout(new BoxLayout(passwordLengthPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L199">        topLevelPanel.add(charsetPanel);</span>
+<span class="nc" id="L200">        topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L201">        topLevelPanel.add(passwordLengthPanel);</span>
+
+<span class="nc" id="L203">        numberCheckBox = new JCheckBox(&quot;Number&quot;);</span>
+<span class="nc" id="L204">        numberCheckBox.setSelected(true);</span>
+<span class="nc" id="L205">        lowercaseLetterCheckBox = new JCheckBox(&quot;Lowercase Letter&quot;);</span>
+<span class="nc" id="L206">        uppercaseLetterCheckBox = new JCheckBox(&quot;Uppercase Letter&quot;);</span>
+<span class="nc" id="L207">        userIncludedCheckBox = new JCheckBox(&quot;User-defined&quot;);</span>
+<span class="nc" id="L208">        userIncludedTextField = new JTextField(10);</span>
+<span class="nc" id="L209">        userExcludedCheckBox = new JCheckBox(&quot;User-excluded&quot;);</span>
+<span class="nc" id="L210">        userExcludedTextField = new JTextField(10);</span>
+
+
+<span class="nc" id="L213">        charsetPanel.add(numberCheckBox);</span>
+<span class="nc" id="L214">        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L215">        charsetPanel.add(lowercaseLetterCheckBox);</span>
+<span class="nc" id="L216">        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L217">        charsetPanel.add(uppercaseLetterCheckBox);</span>
+<span class="nc" id="L218">        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L219">        charsetPanel.add(userIncludedCheckBox);</span>
+<span class="nc" id="L220">        charsetPanel.add(userIncludedTextField);</span>
+<span class="nc" id="L221">        charsetPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L222">        charsetPanel.add(userExcludedCheckBox);</span>
+<span class="nc" id="L223">        charsetPanel.add(userExcludedTextField);</span>
+
+<span class="nc" id="L225">        JLabel minLabel = new JLabel(&quot;Minimum Length: &quot;);</span>
+<span class="nc" id="L226">        JLabel maxLabel = new JLabel(&quot;Maximum Length: &quot;);</span>
+
+<span class="nc" id="L228">        minSpinner = new JSpinner();</span>
+<span class="nc" id="L229">        minSpinner.setModel(new SpinnerNumberModel(1, 1, 9, 1));</span>
+<span class="nc" id="L230">        minSpinner.setToolTipText(&quot;Minimum Length&quot;);</span>
+
+<span class="nc" id="L232">        maxSpinner = new JSpinner();</span>
+<span class="nc" id="L233">        maxSpinner.setModel(new SpinnerNumberModel(6, 1, 9, 1));</span>
+<span class="nc" id="L234">        maxSpinner.setToolTipText(&quot;Maximum Length&quot;);</span>
+
+<span class="nc" id="L236">        passwordLengthPanel.add(minLabel);</span>
+<span class="nc" id="L237">        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L238">        passwordLengthPanel.add(minSpinner);</span>
+<span class="nc" id="L239">        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L240">        passwordLengthPanel.add(maxLabel);</span>
+<span class="nc" id="L241">        passwordLengthPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L242">        passwordLengthPanel.add(maxSpinner);</span>
+<span class="nc" id="L243">    }</span>
+
+    private void createDictionaryPanel() {
+<span class="nc" id="L246">        dictionaryCategoryPanel = new JPanel();</span>
+
+<span class="nc" id="L248">        JPanel topLevelPanel = new JPanel();</span>
+<span class="nc" id="L249">        topLevelPanel.setLayout(new BoxLayout(topLevelPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L250">        dictionaryCategoryPanel.add(topLevelPanel);</span>
+
+<span class="nc" id="L252">        dictionaryFilePanel = new FilePanel(&quot;Choose Dictionary File&quot;);</span>
+<span class="nc" id="L253">        dictionaryFilePanel.setDescriptionAndFileExtensions(&quot;*.dic;*.txt&quot;, new String[]{&quot;dic&quot;, &quot;txt&quot;});</span>
+
+<span class="nc" id="L255">        JPanel threadPanel = new JPanel();</span>
+<span class="nc" id="L256">        threadPanel.setLayout(new BoxLayout(threadPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L258">        topLevelPanel.add(dictionaryFilePanel);</span>
+<span class="nc" id="L259">        topLevelPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L260">        topLevelPanel.add(threadPanel);</span>
+
+<span class="nc" id="L262">        isUseMultiThreadCheckBox = new JCheckBox(&quot;Use Multi-thread&quot;);</span>
+<span class="nc" id="L263">        isUseMultiThreadCheckBox.setSelected(true);</span>
+
+<span class="nc" id="L265">        threadPanel.add(isUseMultiThreadCheckBox);</span>
+<span class="nc" id="L266">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L269">        operationPanel = new JPanel();</span>
+<span class="nc" id="L270">        operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L272">        startButton = new JButton(&quot;Start&quot;);</span>
+<span class="nc" id="L273">        stopButton = new JButton(&quot;Stop&quot;);</span>
+<span class="nc" id="L274">        currentStateLabel = new JLabel(&quot;State: IDLE&quot;);</span>
+<span class="nc" id="L275">        currentPasswordLabel = new JLabel(&quot;Trying: &quot;);</span>
+<span class="nc" id="L276">        currentSpeedLabel = new JLabel(&quot;Speed: 0 passwords/s&quot;);</span>
+
+<span class="nc" id="L278">        operationPanel.add(startButton);</span>
+<span class="nc" id="L279">        operationPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L280">        operationPanel.add(stopButton);</span>
+<span class="nc" id="L281">        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L282">        operationPanel.add(currentStateLabel);</span>
+<span class="nc" id="L283">        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L284">        operationPanel.add(currentPasswordLabel);</span>
+<span class="nc" id="L285">        operationPanel.add(Box.createHorizontalStrut(2 * Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L286">        operationPanel.add(currentSpeedLabel);</span>
+<span class="nc" id="L287">        operationPanel.add(Box.createHorizontalGlue());</span>
+
+<span class="nc" id="L289">        startButton.addActionListener(e -&gt; startExecutorService.submit(this::onStart));</span>
+<span class="nc" id="L290">        stopButton.addActionListener(e -&gt; stopExecutorService.submit(this::onStop));</span>
+
+<span class="nc" id="L292">        setCurrentState(State.IDLE);</span>
+<span class="nc" id="L293">    }</span>
+
+    private void onStart() {
+<span class="nc" id="L296">        FileChecker fileChecker = (FileChecker) checkerTypeComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (fileChecker == null) {</span>
+<span class="nc" id="L298">            JOptionPane.showMessageDialog(this, &quot;fileChecker is null!&quot;);</span>
+<span class="nc" id="L299">            return;</span>
+        }
+<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (!fileChecker.prepareChecker()) {</span>
+<span class="nc" id="L302">            JOptionPane.showMessageDialog(this, &quot;onStart failed: Checker condition does not been prepared!&quot;);</span>
+<span class="nc" id="L303">            return;</span>
+        }
+
+<span class="nc" id="L306">        File selectedFile = recoveryFilePanel.getFile();</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        if (!selectedFile.isFile()) {</span>
+<span class="nc" id="L308">            JOptionPane.showMessageDialog(this, &quot;file is not a file!&quot;);</span>
+<span class="nc" id="L309">            return;</span>
+        }
+
+<span class="nc" id="L312">        String extension = FilenameUtils.getExtension(recoveryFilePanel.getFile().getName());</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (!ArrayUtils.contains(fileChecker.getFileExtensions(), StringUtils.toRootLowerCase(extension))) {</span>
+<span class="nc" id="L314">            JOptionPane.showMessageDialog(this, &quot;invalid file!&quot;);</span>
+<span class="nc" id="L315">            return;</span>
+        }
+
+<span class="nc" id="L318">        fileChecker.attachFile(selectedFile);</span>
+<span class="nc" id="L319">        currentFileChecker = fileChecker;</span>
+
+<span class="nc" id="L321">        Component selectedPanel = categoryTabbedPane.getSelectedComponent();</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (selectedPanel.equals(bruteForceCategoryPanel)) {</span>
+<span class="nc" id="L323">            currentCategoryType = CategoryType.BRUTE_FORCE;</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">        } else if (selectedPanel.equals(dictionaryCategoryPanel)) {</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">            if (isUseMultiThreadCheckBox.isSelected()) {</span>
+<span class="nc" id="L326">                currentCategoryType = CategoryType.DICTIONARY_MULTI_THREAD;</span>
+            } else {
+<span class="nc" id="L328">                currentCategoryType = CategoryType.DICTIONARY_SINGLE_THREAD;</span>
+            }
+        } else {
+<span class="nc" id="L331">            currentCategoryType = CategoryType.UNKNOWN;</span>
+        }
+<span class="nc" id="L333">        logger.info(&quot;onStart: {}&quot;, currentCategoryType);</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (currentCategoryType == CategoryType.UNKNOWN) {</span>
+<span class="nc" id="L335">            JOptionPane.showMessageDialog(this, &quot;onStart failed: Invalid category!&quot;);</span>
+<span class="nc" id="L336">            return;</span>
+        }
+<span class="nc" id="L338">        setCurrentState(State.WORKING);</span>
+<span class="nc" id="L339">        passwordTryCount = 0;</span>
+<span class="nc" id="L340">        timer.start();</span>
+<span class="nc" id="L341">        ICategory category = CategoryFactory.getCategoryInstance(currentCategoryType);</span>
+<span class="nc" id="L342">        category.start(this);</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">        if (currentState == State.WORKING) {</span>
+<span class="nc" id="L344">            onStop();</span>
+        }
+<span class="nc" id="L346">    }</span>
+
+    private void onStop() {
+<span class="nc" id="L349">        logger.info(&quot;onStop: currentState: {}, currentCategoryType: {}&quot;, currentState, currentCategoryType);</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">        if (currentState != State.WORKING) {</span>
+<span class="nc" id="L351">            logger.error(&quot;onStop failed: Not in working state!&quot;);</span>
+<span class="nc" id="L352">            return;</span>
+        }
+<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (currentCategoryType == CategoryType.UNKNOWN) {</span>
+<span class="nc" id="L355">            logger.error(&quot;onStop failed: Invalid category!&quot;);</span>
+<span class="nc" id="L356">            return;</span>
+        }
+<span class="nc" id="L358">        timer.stop();</span>
+<span class="nc" id="L359">        setCurrentState(State.STOPPING);</span>
+<span class="nc" id="L360">        ICategory category = CategoryFactory.getCategoryInstance(currentCategoryType);</span>
+<span class="nc" id="L361">        category.cancel();</span>
+<span class="nc" id="L362">        setCurrentState(State.IDLE);</span>
+<span class="nc" id="L363">        currentCategoryType = CategoryType.UNKNOWN;</span>
+<span class="nc" id="L364">    }</span>
+
+    public void showResultWithDialog(String password) {
+<span class="nc bnc" id="L367" title="All 2 branches missed.">        if (password == null) {</span>
+<span class="nc" id="L368">            logger.error(&quot;Can not find password&quot;);</span>
+<span class="nc" id="L369">            JOptionPane.showMessageDialog(this, &quot;Can not find password&quot;);</span>
+        } else {
+<span class="nc" id="L371">            logger.info(&quot;Find out the password: {}&quot;, password);</span>
+<span class="nc" id="L372">            JPanel panel = createPasswordShowPanel(password);</span>
+<span class="nc" id="L373">            JOptionPane.showMessageDialog(this, panel, &quot;Find out the password&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+        }
+<span class="nc" id="L375">    }</span>
+
+    private static JPanel createPasswordShowPanel(String password) {
+<span class="nc" id="L378">        JPanel panel = new JPanel();</span>
+<span class="nc" id="L379">        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));</span>
+<span class="nc" id="L380">        JTextField textField = new JTextField(password);</span>
+<span class="nc" id="L381">        textField.setEditable(false);</span>
+<span class="nc" id="L382">        textField.setColumns(20);</span>
+<span class="nc" id="L383">        JButton button = new JButton(&quot;Copy&quot;);</span>
+<span class="nc" id="L384">        button.addActionListener(e -&gt; {</span>
+<span class="nc" id="L385">            StringSelection stringSelection = new StringSelection(password);</span>
+<span class="nc" id="L386">            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();</span>
+<span class="nc" id="L387">            clipboard.setContents(stringSelection, null);</span>
+<span class="nc" id="L388">        });</span>
+<span class="nc" id="L389">        panel.add(textField);</span>
+<span class="nc" id="L390">        panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L391">        panel.add(button);</span>
+<span class="nc" id="L392">        return panel;</span>
+    }
+
+    public void setCurrentState(State currentState) {
+<span class="nc" id="L396">        SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L397">            this.currentState = currentState;</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">            if (currentStateLabel != null) {</span>
+<span class="nc" id="L399">                currentStateLabel.setText(&quot;State: &quot; + currentState.toString());</span>
+            }
+<span class="nc bnc" id="L401" title="All 2 branches missed.">            if (currentState == State.WORKING) {</span>
+<span class="nc" id="L402">                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));</span>
+<span class="nc" id="L403">                startButton.setEnabled(false);</span>
+<span class="nc" id="L404">                stopButton.setEnabled(true);</span>
+<span class="nc" id="L405">                updateUiComponent(false);</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">            } else if (currentState == State.STOPPING) {</span>
+<span class="nc" id="L407">                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));</span>
+<span class="nc" id="L408">                startButton.setEnabled(false);</span>
+<span class="nc" id="L409">                stopButton.setEnabled(false);</span>
+<span class="nc" id="L410">                updateUiComponent(false);</span>
+<span class="nc bnc" id="L411" title="All 2 branches missed.">            } else if (currentState == State.IDLE) {</span>
+<span class="nc" id="L412">                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));</span>
+<span class="nc" id="L413">                startButton.setEnabled(true);</span>
+<span class="nc" id="L414">                stopButton.setEnabled(false);</span>
+<span class="nc" id="L415">                updateUiComponent(true);</span>
+            }
+<span class="nc" id="L417">        });</span>
+<span class="nc" id="L418">    }</span>
+
+    private void updateUiComponent(boolean enable) {
+<span class="nc bnc" id="L421" title="All 2 branches missed.">        for (Component component : getComponents(optionPanel)) {</span>
+<span class="nc" id="L422">            component.setEnabled(enable);</span>
+        }
+<span class="nc" id="L424">    }</span>
+
+    private Component[] getComponents(Component container) {
+        List&lt;Component&gt; list;
+
+        try {
+<span class="nc" id="L430">            list = new ArrayList&lt;&gt;(Arrays.asList(</span>
+<span class="nc" id="L431">                    ((Container) container).getComponents()));</span>
+<span class="nc bnc" id="L432" title="All 2 branches missed.">            for (int index = 0; index &lt; list.size(); index++) {</span>
+<span class="nc" id="L433">                list.addAll(Arrays.asList(getComponents(list.get(index))));</span>
+            }
+<span class="nc" id="L435">        } catch (ClassCastException e) {</span>
+<span class="nc" id="L436">            list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L437">        }</span>
+
+<span class="nc" id="L439">        return list.toArray(new Component[0]);</span>
+    }
+
+    public State getCurrentState() {
+<span class="nc" id="L443">        return currentState;</span>
+    }
+
+    public void resetProgressMaxValue(int maxValue) {
+<span class="nc" id="L447">        SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L448">            progressBar.setMaximum(maxValue);</span>
+<span class="nc" id="L449">            setProgressBarValue(0);</span>
+<span class="nc" id="L450">        });</span>
+<span class="nc" id="L451">    }</span>
+
+    public void increaseProgressBarValue() {
+<span class="nc" id="L454">        SwingUtilities.invokeLater(() -&gt; setProgressBarValue(progressBar.getValue() + 1));</span>
+<span class="nc" id="L455">    }</span>
+
+    private void setProgressBarValue(int value) {
+<span class="nc" id="L458">        int properValue = Math.min(value, progressBar.getMaximum());</span>
+<span class="nc" id="L459">        progressBar.setValue(properValue);</span>
+<span class="nc" id="L460">        String text = numberFormat.format(((double) properValue) / progressBar.getMaximum());</span>
+<span class="nc" id="L461">        progressBar.setString(text);</span>
+<span class="nc" id="L462">    }</span>
+
+    public void setCurrentPassword(String password) {
+<span class="nc" id="L465">        SwingUtilities.invokeLater(() -&gt; currentPasswordLabel.setText(&quot;Trying: &quot; + password));</span>
+<span class="nc" id="L466">    }</span>
+
+    public String getCharset() {
+<span class="nc" id="L469">        Set&lt;Character&gt; charsetSet = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L470" title="All 2 branches missed.">        if (numberCheckBox.isSelected()) {</span>
+<span class="nc" id="L471">            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject(&quot;0123456789&quot;.toCharArray()));</span>
+        }
+<span class="nc bnc" id="L473" title="All 2 branches missed.">        if (lowercaseLetterCheckBox.isSelected()) {</span>
+<span class="nc" id="L474">            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject(&quot;abcdefghijklmnopqrstuvwxyz&quot;.toCharArray()));</span>
+        }
+<span class="nc bnc" id="L476" title="All 2 branches missed.">        if (uppercaseLetterCheckBox.isSelected()) {</span>
+<span class="nc" id="L477">            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject(&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;.toCharArray()));</span>
+        }
+<span class="nc bnc" id="L479" title="All 2 branches missed.">        if (userIncludedCheckBox.isSelected()) {</span>
+<span class="nc" id="L480">            CollectionUtils.addAll(charsetSet, ArrayUtils.toObject(userIncludedTextField.getText().toCharArray()));</span>
+        }
+<span class="nc bnc" id="L482" title="All 2 branches missed.">        if (userExcludedCheckBox.isSelected()) {</span>
+<span class="nc bnc" id="L483" title="All 2 branches missed.">            for (char ch : userExcludedTextField.getText().toCharArray()) {</span>
+<span class="nc" id="L484">                charsetSet.remove(ch);</span>
+            }
+        }
+<span class="nc" id="L487">        return String.valueOf(ArrayUtils.toPrimitive(charsetSet.toArray(new Character[0])));</span>
+    }
+
+    public File getDictionaryFile() {
+<span class="nc" id="L491">        return dictionaryFilePanel.getFile();</span>
+    }
+
+    public int getMinLength() {
+<span class="nc" id="L495">        return (Integer) minSpinner.getValue();</span>
+    }
+
+    public int getMaxLength() {
+<span class="nc" id="L499">        return (Integer) maxSpinner.getValue();</span>
+    }
+
+    public FileChecker getCurrentFileChecker() {
+<span class="nc" id="L503">        return currentFileChecker;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
