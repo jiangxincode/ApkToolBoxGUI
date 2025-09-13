@@ -9,6 +9,7 @@ import javax.swing.text.DateFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -16,6 +17,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class TimeConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private JSpinner timestamp2Spinner;
 

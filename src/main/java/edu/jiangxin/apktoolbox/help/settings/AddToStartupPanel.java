@@ -8,11 +8,14 @@ import org.apache.commons.io.FileUtils;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Collection;
 
 public class AddToStartupPanel extends EasyChildTabbedPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private static final String STARTUP_FILE;
 

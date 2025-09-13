@@ -13,10 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileListPanel extends JPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = LogManager.getLogger(FileListPanel.class.getSimpleName());
 
@@ -112,6 +115,9 @@ public class FileListPanel extends JPanel {
     }
 
     private final class FileListTransferHandler extends TransferHandler {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         @Override
         public boolean importData(JComponent comp, Transferable t) {
             try {

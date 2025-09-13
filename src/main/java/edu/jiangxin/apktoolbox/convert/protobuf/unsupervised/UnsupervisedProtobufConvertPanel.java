@@ -8,8 +8,11 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 
 public class UnsupervisedProtobufConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private JPanel contentPanel;
 

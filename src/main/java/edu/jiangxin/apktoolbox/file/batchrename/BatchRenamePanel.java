@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -21,6 +22,9 @@ import java.util.TreeSet;
 
 //https://www.zhihu.com/question/50890909
 public class BatchRenamePanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final String STRING_TYPE_PARENT_NAME = "使用父目录名";
 
     private static final String STRING_TYPE_PARENT_PATH = "使用目录路径";

@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 public class CompareFilesPanel extends EasyChildTabbedPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private FilePanel firstFilePanel;
     private FilePanel secondFilePanel;
 

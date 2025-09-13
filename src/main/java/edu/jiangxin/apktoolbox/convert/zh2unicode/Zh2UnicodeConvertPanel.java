@@ -5,9 +5,13 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 import java.io.UnsupportedEncodingException;
 
 public class Zh2UnicodeConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private JPanel zhPanel;
 
     private JTextArea zhTextArea;

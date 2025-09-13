@@ -2,6 +2,7 @@ package edu.jiangxin.apktoolbox.swing.treetable;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.io.Serial;
 
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -10,6 +11,9 @@ import javax.swing.tree.TreeModel;
 
 
 public class MyTreeTableCellRenderer extends JTree implements TableCellRenderer {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /** Die letzte Zeile, die gerendert wurde. */
     protected int visibleRow;
 

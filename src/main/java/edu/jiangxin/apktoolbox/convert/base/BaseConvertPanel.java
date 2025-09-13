@@ -11,11 +11,15 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BaseConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final String PROPERTY_KEY = "name";
 
     private static final String DECIMAL = "Decimal";

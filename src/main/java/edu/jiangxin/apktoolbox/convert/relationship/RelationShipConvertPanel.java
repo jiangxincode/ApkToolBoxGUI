@@ -7,11 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
 public class RelationShipConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final Map<String, Map<String, String>> dataMap = new HashMap<>();
 
     private String now = "你";
@@ -160,6 +164,9 @@ public class RelationShipConvertPanel extends EasyPanel {
     }
 
     static class MyTextField extends JTextField {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         public MyTextField() {
             super();
             Font font = new Font("宋体", Font.BOLD, 15);
@@ -169,6 +176,9 @@ public class RelationShipConvertPanel extends EasyPanel {
     }
 
     static class MyButton extends JButton {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         public MyButton(String text) {
             super(text);
             Font font = new Font("宋体", Font.BOLD, 30);

@@ -12,10 +12,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.io.StringWriter;
 import java.nio.file.Path;
 
 public class SupervisedProtobufConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private FilePanel descriptorCachePanel;
 

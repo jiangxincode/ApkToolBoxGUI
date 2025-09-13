@@ -4,8 +4,12 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Utils;
 
 import java.io.File;
+import java.io.Serial;
 
 public abstract class PluginPanel extends EasyPanel implements IPlugin {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Override
     public boolean isNeedPreChangeMenu() {
         return true;

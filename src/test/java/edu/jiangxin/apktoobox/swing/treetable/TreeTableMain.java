@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.swing.treetable.MyTreeTable;
 
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,8 @@ import javax.swing.UIManager;
 
 // see http://www.hameister.org/JavaSwingTreeTable.html for details
 public class TreeTableMain extends JFrame {
-
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public TreeTableMain() {
         super("Tree Table Demo");

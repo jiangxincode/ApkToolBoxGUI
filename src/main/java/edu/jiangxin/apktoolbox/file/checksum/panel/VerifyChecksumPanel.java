@@ -6,8 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 
 public class VerifyChecksumPanel extends EasyChildTabbedPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private JPanel fileSumPanel;
     private JTextArea fileSumTextArea;
 

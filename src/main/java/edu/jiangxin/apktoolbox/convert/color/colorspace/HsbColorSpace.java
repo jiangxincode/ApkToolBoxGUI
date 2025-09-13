@@ -2,8 +2,11 @@ package edu.jiangxin.apktoolbox.convert.color.colorspace;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
+import java.io.Serial;
 
 public class HsbColorSpace extends ColorSpace {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     protected HsbColorSpace(int type, int numComponents) {
         super(type, numComponents);

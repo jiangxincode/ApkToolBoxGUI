@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PdfPasswordRemoverPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private FileListPanel fileListPanel;
 
     private JCheckBox isRecursiveSearched;

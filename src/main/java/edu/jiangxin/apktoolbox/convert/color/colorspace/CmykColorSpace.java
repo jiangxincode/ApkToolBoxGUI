@@ -1,8 +1,11 @@
 package edu.jiangxin.apktoolbox.convert.color.colorspace;
 
 import java.awt.color.ColorSpace;
+import java.io.Serial;
 
 public class CmykColorSpace extends ColorSpace {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     protected CmykColorSpace(int type, int numComponents) {
         super(type, numComponents);

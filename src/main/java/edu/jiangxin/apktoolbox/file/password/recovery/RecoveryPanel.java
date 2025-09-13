@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.Serial;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class RecoveryPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private JPanel optionPanel;
 
     private FilePanel recoveryFilePanel;

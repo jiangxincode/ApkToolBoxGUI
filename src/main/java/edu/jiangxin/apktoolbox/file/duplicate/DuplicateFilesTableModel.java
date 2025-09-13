@@ -1,9 +1,13 @@
 package edu.jiangxin.apktoolbox.file.duplicate;
 
 import javax.swing.table.DefaultTableModel;
+import java.io.Serial;
 import java.util.Vector;
 
 public class DuplicateFilesTableModel extends DefaultTableModel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     public DuplicateFilesTableModel(Vector data, Vector columnNames) {
         super(data, columnNames);
     }

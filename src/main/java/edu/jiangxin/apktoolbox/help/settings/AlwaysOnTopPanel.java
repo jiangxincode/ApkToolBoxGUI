@@ -4,8 +4,12 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 
 import javax.swing.*;
+import java.io.Serial;
 
 public class AlwaysOnTopPanel extends EasyChildTabbedPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private JPanel optionPanel;
 
     @Override

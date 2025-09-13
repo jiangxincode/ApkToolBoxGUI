@@ -1,11 +1,13 @@
 package edu.jiangxin.apktoolbox.swing.treetable;
 
 import java.awt.Dimension;
+import java.io.Serial;
 
 import javax.swing.JTable;
 
 public class MyTreeTable extends JTable {
-
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public MyTreeTable(MyAbstractTreeTableModel treeTableModel) {
         super();

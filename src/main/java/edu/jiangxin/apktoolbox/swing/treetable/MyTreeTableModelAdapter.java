@@ -5,8 +5,11 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.TreePath;
+import java.io.Serial;
 
 public class MyTreeTableModelAdapter extends AbstractTableModel {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     JTree tree;
     MyAbstractTreeTableModel treeTableModel;

@@ -2,6 +2,7 @@ package edu.jiangxin.apktoolbox.swing.treetable;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
@@ -10,6 +11,8 @@ import javax.swing.JTree;
 import javax.swing.table.TableCellEditor;
 
 public class MyTreeTableCellEditor extends AbstractCellEditor implements TableCellEditor {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private JTree tree;
     private JTable table;

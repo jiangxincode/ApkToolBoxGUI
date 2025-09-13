@@ -14,8 +14,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.Serial;
 
 public class ColorConvertPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private Color color;
 
     private JSpinner redSpinner;
@@ -362,6 +366,9 @@ public class ColorConvertPanel extends EasyPanel {
     }
 
     private class ColorDefaultTableModel extends DefaultTableModel {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         public ColorDefaultTableModel(Object[][] data, Object[] columnNames) {
             super(data, columnNames);
         }
@@ -373,6 +380,9 @@ public class ColorConvertPanel extends EasyPanel {
     }
 
     private class ColorTableCellRenderer extends DefaultTableCellRenderer {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

@@ -13,8 +13,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.Serial;
 
 public class ApktoolPanel extends PluginPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     public ApktoolPanel() throws HeadlessException {
         super();
     }
@@ -41,6 +45,9 @@ public class ApktoolPanel extends PluginPanel {
     }
 
     abstract class ApktoolPanelBase extends JPanel {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         protected JPanel srcPanel;
 
         protected JPanel targetPanel;
@@ -96,6 +103,9 @@ public class ApktoolPanel extends PluginPanel {
     }
 
     class ApktoolDecodePanel extends ApktoolPanelBase {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         private JTextField srcTextField;
 
         private JTextField targetTextField;
@@ -190,6 +200,9 @@ public class ApktoolPanel extends PluginPanel {
     }
 
     class ApktoolRebuildPanel extends ApktoolPanelBase {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         private JTextField srcTextField;
 
         private JTextField targetTextField;
