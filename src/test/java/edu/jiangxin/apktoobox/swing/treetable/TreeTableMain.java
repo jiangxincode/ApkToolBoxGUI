@@ -22,14 +22,18 @@ public class TreeTableMain extends JFrame {
 
     public TreeTableMain() {
         super("Tree Table Demo");
+    }
 
+    // in case of escape of "this"
+    public void initialize() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setLayout(new GridLayout(0, 1));
 
         MyAbstractTreeTableModel treeTableModel = new MyDataModel(createDataStructure());
 
-        MyTreeTable myTreeTable = new MyTreeTable(treeTableModel);
+        MyTreeTable myTreeTable = new MyTreeTable();
+        myTreeTable.initialize(treeTableModel);
 
         Container cPane = getContentPane();
 
@@ -37,8 +41,6 @@ public class TreeTableMain extends JFrame {
 
         setSize(1000, 800);
         setLocationRelativeTo(null);
-
-
     }
 
 
@@ -86,7 +88,9 @@ public class TreeTableMain extends JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                new TreeTableMain().setVisible(true);
+                TreeTableMain treeTableMain = new TreeTableMain();
+                treeTableMain.initialize();
+                treeTableMain.setVisible(true);
             }
         };
         SwingUtilities.invokeLater(gui);

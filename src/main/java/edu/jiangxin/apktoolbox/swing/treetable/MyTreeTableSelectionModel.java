@@ -12,7 +12,10 @@ public class MyTreeTableSelectionModel extends DefaultTreeSelectionModel {
 
     public MyTreeTableSelectionModel() {
         super();
+    }
 
+    // in case of escape of "this"
+    public void initialize() {
         getListSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {

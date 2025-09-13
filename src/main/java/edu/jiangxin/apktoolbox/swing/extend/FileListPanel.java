@@ -33,6 +33,10 @@ public class FileListPanel extends JPanel {
 
     public FileListPanel() {
         super();
+    }
+
+    // in case of escape of "this"
+    public void initialize() {
         initUI();
     }
 

@@ -17,26 +17,11 @@ public class AutoCompleteComboBox<E> extends JComboBox<E> {
 
     public AutoCompleteComboBox() {
         super();
+    }
+
+    // in case of escape of "this"
+    public void initialize() {
         setUI(new ScrollBasicComboBoxUI());
-        addCompleter();
-    }
-
-    public AutoCompleteComboBox(ComboBoxModel<E> cm) {
-        super(cm);
-        addCompleter();
-    }
-
-    public AutoCompleteComboBox(E[] items) {
-        super(items);
-        addCompleter();
-    }
-
-    public AutoCompleteComboBox(Vector<E> v) {
-        super(v);
-        addCompleter();
-    }
-
-    private void addCompleter() {
         setEditable(true);
         completer = new AutoCompleter<>(this);
     }

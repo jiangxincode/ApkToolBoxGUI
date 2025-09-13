@@ -99,6 +99,7 @@ public class OsConvertPanel extends EasyPanel {
 
     private void createSrcPanel() {
         srcPanel = new FileListPanel();
+        srcPanel.initialize();
     }
 
     private final class ConvertButtonActionListener implements ActionListener {

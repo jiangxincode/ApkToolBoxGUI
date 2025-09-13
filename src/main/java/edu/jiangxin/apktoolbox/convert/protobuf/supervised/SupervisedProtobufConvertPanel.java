@@ -48,6 +48,7 @@ public class SupervisedProtobufConvertPanel extends EasyPanel {
 
     private void createDescriptorCachePanel() {
         descriptorCachePanel = new FilePanel("Descriptor Cache Directory");
+        descriptorCachePanel.initialize();
         descriptorCachePanel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     }
 

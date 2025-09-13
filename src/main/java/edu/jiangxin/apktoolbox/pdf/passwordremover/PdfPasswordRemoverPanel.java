@@ -60,11 +60,13 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
 
     private void createInputPanel() {
         fileListPanel = new FileListPanel();
+        fileListPanel.initialize();
         add(fileListPanel);
     }
 
     private void createOutputPanel() {
         targetDirPanel = new FilePanel("Target Directory");
+        targetDirPanel.initialize();
         targetDirPanel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         add(targetDirPanel);
     }

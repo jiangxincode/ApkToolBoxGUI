@@ -67,6 +67,7 @@ public class ZhConvertPanel extends EasyPanel {
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
         fileListPanel = new FileListPanel();
+        fileListPanel.initialize();
         northPanel.add(fileListPanel);
         northPanel.add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
 

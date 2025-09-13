@@ -58,6 +58,7 @@ public class FileChecksumPanel extends EasyChildTabbedPanel {
 
     private void createFileNamePanel() {
         filePanel = new FilePanel("Choose File");
+        filePanel.initialize();
         filePanel.setFileReadyCallback(file -> {
             if (file == null) {
                 logger.error("file is null");

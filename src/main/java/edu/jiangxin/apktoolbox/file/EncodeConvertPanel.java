@@ -66,6 +66,7 @@ public class EncodeConvertPanel extends EasyPanel {
 
     private void createSrcPanel() {
         srcPanel = new FileListPanel();
+        srcPanel.initialize();
     }
 
     private void createOptionPanel() {
@@ -92,6 +93,7 @@ public class EncodeConvertPanel extends EasyPanel {
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         fromComboBox = new AutoCompleteComboBox<String>();
+        fromComboBox.initialize();
         fromComboBox.setEnabled(false);
         optionPanel.add(fromComboBox);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
@@ -107,6 +109,7 @@ public class EncodeConvertPanel extends EasyPanel {
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
         toComboBox = new AutoCompleteComboBox<String>();
+        toComboBox.initialize();
         toComboBox.setSelectedItem(conf.getString("encodeconvert.to"));
         optionPanel.add(toComboBox);
 

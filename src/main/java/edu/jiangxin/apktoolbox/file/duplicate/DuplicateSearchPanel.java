@@ -80,6 +80,7 @@ public class DuplicateSearchPanel extends EasyPanel {
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
         fileListPanel = new FileListPanel();
+        fileListPanel.initialize();
 
         JPanel checkOptionPanel = new JPanel();
         checkOptionPanel.setLayout(new BoxLayout(checkOptionPanel, BoxLayout.X_AXIS));

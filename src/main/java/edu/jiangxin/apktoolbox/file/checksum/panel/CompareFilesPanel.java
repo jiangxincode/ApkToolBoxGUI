@@ -41,7 +41,9 @@ public class CompareFilesPanel extends EasyChildTabbedPanel {
 
     private void createFilePanel() {
         firstFilePanel = new FilePanel("First File");
+        firstFilePanel.initialize();
         secondFilePanel = new FilePanel("Second File");
+        secondFilePanel.initialize();
     }
 
     private void createOperationPanel() {

@@ -75,6 +75,7 @@ public class PdfStatPanel extends EasyPanel {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         fileListPanel = new FileListPanel();
+        fileListPanel.initialize();
 
         JPanel checkOptionPanel = new JPanel();
         checkOptionPanel.setLayout(new BoxLayout(checkOptionPanel, BoxLayout.X_AXIS));

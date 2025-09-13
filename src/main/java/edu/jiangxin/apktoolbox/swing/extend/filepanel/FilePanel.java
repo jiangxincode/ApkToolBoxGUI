@@ -45,6 +45,10 @@ public class FilePanel extends JPanel {
         super();
         fileChooser = new JFileChooser();
         this.buttonText = buttonText;
+    }
+
+    // in case of escape of "this"
+    public void initialize() {
         initUI();
     }
 

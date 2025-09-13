@@ -158,6 +158,7 @@ public final class RecoveryPanel extends EasyPanel {
         }
 
         recoveryFilePanel = new FilePanel("Choose Recovery File");
+        recoveryFilePanel.initialize();
         recoveryFilePanel.setDescriptionAndFileExtensions(fileChecker.getFileDescription(), fileChecker.getFileExtensions());
 
         categoryTabbedPane = new JTabbedPane();
@@ -250,6 +251,7 @@ public final class RecoveryPanel extends EasyPanel {
         dictionaryCategoryPanel.add(topLevelPanel);
 
         dictionaryFilePanel = new FilePanel("Choose Dictionary File");
+        dictionaryFilePanel.initialize();
         dictionaryFilePanel.setDescriptionAndFileExtensions("*.dic;*.txt", new String[]{"dic", "txt"});
 
         JPanel threadPanel = new JPanel();

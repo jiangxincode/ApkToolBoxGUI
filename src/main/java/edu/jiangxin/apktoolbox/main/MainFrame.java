@@ -106,6 +106,7 @@ public final class MainFrame extends EasyFrame {
 
     public MainFrame() {
         super();
+        initialize();
         if (SystemTray.isSupported()) {
             configSystemTray();
         }

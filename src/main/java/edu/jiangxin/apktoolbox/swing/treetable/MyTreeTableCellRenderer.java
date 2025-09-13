@@ -22,7 +22,10 @@ public class MyTreeTableCellRenderer extends JTree implements TableCellRenderer 
     public MyTreeTableCellRenderer(MyTreeTable treeTable, TreeModel model) {
         super(model);
         this.treeTable = treeTable;
+    }
 
+    // in case of escape of "this"
+    public void initialize() {
         // Setzen der Zeilenhoehe fuer die JTable
         // Muss explizit aufgerufen werden, weil treeTable noch
         // null ist, wenn super(model) setRowHeight aufruft!

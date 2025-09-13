@@ -12,7 +12,11 @@ public class ProgressBarDialog extends JDialog {
     final JProgressBar progressBar = new JProgressBar();
     final JLabel progressLabel = new JLabel("");
 
-    public ProgressBarDialog(String title) {
+    public ProgressBarDialog() {
+    }
+
+    // in case of escape of "this"
+    public void initialize(String title) {
         setTitle(title);
         setSize(400, 100);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

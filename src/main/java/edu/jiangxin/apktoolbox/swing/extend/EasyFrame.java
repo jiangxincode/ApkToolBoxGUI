@@ -30,6 +30,10 @@ public class EasyFrame extends JFrame {
         logger = LogManager.getLogger(this.getClass().getSimpleName());
         conf = Utils.getConfiguration();
         bundle = ResourceBundle.getBundle("apktoolbox");
+    }
+
+    // in case of escape of "this"
+    public void initialize() {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

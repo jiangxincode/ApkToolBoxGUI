@@ -109,6 +109,7 @@ public class DumpsysPanel extends EasyPanel {
 
     private void createAnalysisTargetFilePanel() {
         analysisFilePanel = new FilePanel("Analysis File");
+        analysisFilePanel.initialize();
         analysisFilePanel.setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 
@@ -135,6 +136,7 @@ public class DumpsysPanel extends EasyPanel {
 
     private void createDumpsysTargetDirPanel() {
         dumpsysTargetDirPanel = new FilePanel("Target Directory");
+        dumpsysTargetDirPanel.initialize();
         dumpsysTargetDirPanel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     }
 

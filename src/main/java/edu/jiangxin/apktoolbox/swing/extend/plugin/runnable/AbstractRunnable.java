@@ -14,7 +14,8 @@ public abstract class AbstractRunnable implements Runnable {
 
     protected AbstractRunnable(String dialogTitle, IPreparePluginCallback callback) {
         this.callback = callback;
-        this.progressBarDialog = new ProgressBarDialog(dialogTitle);
+        this.progressBarDialog = new ProgressBarDialog();
+        this.progressBarDialog.initialize(dialogTitle);
         progressBarDialog.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
