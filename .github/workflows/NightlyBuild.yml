@@ -82,7 +82,7 @@ jobs:
                           --jq '.object.sha' 2>/dev/null || echo "")
           if [[ -n "$EXISTING_SHA" && "$EXISTING_SHA" != "$CURRENT_SHA" ]]; then
             echo "Commit changed \($EXISTING_SHA → $CURRENT_SHA\), deleting old nightly"
-            gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag
+            gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag 2>/dev/null || echo "Tag already deleted"
           else
             echo "Same commit or tag does not exist, no need to delete"
           fi
