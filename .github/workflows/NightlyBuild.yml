@@ -71,6 +71,22 @@ jobs:
           name: ApkToolBoxGUI-${{ runner.os }}
           path: target/ApkToolBoxGUI-*-with*-JRE-*.zip
 
+      - name: Delete old nightly build tag only if commit changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -e
+          CURRENT_SHA="${{ github.sha }}"
+          EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/refs/tags/nightly-build \
+                          --jq '.object.sha' 2>/dev/null || echo "")
+          if [[ -n "$EXISTING_SHA" && "$EXISTING_SHA" != "$CURRENT_SHA" ]]; then
+            echo "Commit changed \($EXISTING_SHA → $CURRENT_SHA\), deleting old nightly"
+            gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag
+          else
+            echo "Same commit or tag does not exist, no need to delete"
+          fi
+
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         env:
