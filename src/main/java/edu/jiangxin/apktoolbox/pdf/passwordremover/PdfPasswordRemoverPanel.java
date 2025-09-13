@@ -36,7 +36,7 @@ public class PdfPasswordRemoverPanel extends EasyPanel {
 
     private JProgressBar progressBar;
 
-    private WorkderThread searchThread;
+    private transient WorkderThread searchThread;
 
     @Override
     public void initUI() {

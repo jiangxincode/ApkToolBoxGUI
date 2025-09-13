@@ -30,13 +30,13 @@ public class BaseConvertPanel extends EasyPanel {
 
     private static final String HEX = "Hex";
 
-    private DocumentListener documentListener;
+    private transient DocumentListener documentListener;
 
-    private DocumentFilter documentFilter;
+    private transient DocumentFilter documentFilter;
 
     private boolean isChangedByUser;
 
-    private final List<BaseUiObject> baseUiObjects = new ArrayList<>();
+    private transient final List<BaseUiObject> baseUiObjects = new ArrayList<>();
 
     @Override
     public void initUI() {

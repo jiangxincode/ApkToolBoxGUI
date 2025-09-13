@@ -12,7 +12,7 @@ public class MyTreeTableModelAdapter extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
 
     JTree tree;
-    MyAbstractTreeTableModel treeTableModel;
+    transient MyAbstractTreeTableModel treeTableModel;
 
     public MyTreeTableModelAdapter(MyAbstractTreeTableModel treeTableModel, JTree tree) {
         this.tree = tree;

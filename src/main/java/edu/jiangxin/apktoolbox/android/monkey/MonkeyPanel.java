@@ -61,8 +61,8 @@ public class MonkeyPanel extends EasyPanel {
      */
     private static final String MSG6 = "日志保存路径不能为空！";
 
-    Thread threadTimeType = null;
-    Process monkeyProcess = null;
+    transient Thread threadTimeType = null;
+    transient Process monkeyProcess = null;
 
     JComboBox<String> comboBoxDevices = new JComboBox<>();
     JButton refreshButton = new JButton("刷新");

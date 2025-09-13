@@ -59,9 +59,9 @@ public class PdfFinderPanel extends EasyPanel {
 
     private JMenuItem copyFilesMenuItem;
 
-    private SearchThread searchThread;
+    private transient SearchThread searchThread;
 
-    final private List<File> resultFileList = new ArrayList<>();
+    private transient final List<File> resultFileList = new ArrayList<>();
 
 
     @Override

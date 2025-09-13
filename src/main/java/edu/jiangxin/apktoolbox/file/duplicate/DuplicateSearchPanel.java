@@ -59,9 +59,9 @@ public class DuplicateSearchPanel extends EasyPanel {
     private JMenuItem deleteFilesInSameDirMenuItem;
     private JMenuItem deleteFilesInSameDirRecursiveMenuItem;
 
-    private SearchThread searchThread;
+    private transient SearchThread searchThread;
 
-    final private Map<String, List<File>> duplicateFileGroupMap = new HashMap<>();
+    private transient final Map<String, List<File>> duplicateFileGroupMap = new HashMap<>();
 
     @Override
     public void initUI() {

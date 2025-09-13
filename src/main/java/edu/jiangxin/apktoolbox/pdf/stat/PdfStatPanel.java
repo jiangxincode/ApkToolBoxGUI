@@ -49,13 +49,13 @@ public class PdfStatPanel extends EasyPanel {
 
     private JProgressBar progressBar;
 
-    private SearchThread searchThread;
+    private transient SearchThread searchThread;
 
     private long totalFileSize = 0;
 
     private int totalPageCount = 0;
 
-    final private List<Vector<Object>> resultFileList = new ArrayList<>();
+    private transient final List<Vector<Object>> resultFileList = new ArrayList<>();
 
 
     @Override

@@ -51,9 +51,9 @@ public class ColorPickerPanel extends EasyPanel {
     private JLabel coordinateLabel;
     private JLabel colorLabel;
 
-    private Robot robot;
+    private transient Robot robot;
     private Point mousePoint; // 光标点
-    private Image areaImage; // 待放大的图片
+    private transient Image areaImage; // 待放大的图片
 
     private int zoomFactor = 2;
 
@@ -63,8 +63,8 @@ public class ColorPickerPanel extends EasyPanel {
 
     private static ColorMode currentColorMode = ColorMode.RGB; // 当前颜色模式
 
-    private Line2D crossHorizontal; // 交叉线
-    private Line2D crossVertical;
+    private transient Line2D crossHorizontal; // 交叉线
+    private transient Line2D crossVertical;
 
     private int colorRecordMax = 5; // 记录的color record个数
     private LinkedList<Color> colorQueue = new LinkedList<>();
@@ -72,9 +72,9 @@ public class ColorPickerPanel extends EasyPanel {
     private JTextField colorCopyTextField;
 
     // 边框
-    private final Rectangle2D colorRect = new Rectangle2D.Double();
-    private final Rectangle2D zoomRect = new Rectangle2D.Double();
-    private final Rectangle2D recordRect = new Rectangle2D.Double();
+    private transient final Rectangle2D colorRect = new Rectangle2D.Double();
+    private transient final Rectangle2D zoomRect = new Rectangle2D.Double();
+    private transient final Rectangle2D recordRect = new Rectangle2D.Double();
     // 颜色记录JLabel数组
     private JLabel colorRecordValue[] = new JLabel[colorRecordMax];
     // hsb 数组

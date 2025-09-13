@@ -20,9 +20,9 @@ import java.util.ResourceBundle;
 public class EasyPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    protected Logger logger;
-    protected Configuration conf;
-    protected ResourceBundle bundle;
+    protected transient Logger logger;
+    protected transient Configuration conf;
+    protected transient ResourceBundle bundle;
 
     protected boolean isInited = false;
     

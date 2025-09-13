@@ -35,7 +35,7 @@ public class I18nRemovePanel extends EasyPanel {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    List<I18nFindLongestPanel.I18nInfo> infos = new ArrayList<>();
+    private transient List<I18nFindLongestPanel.I18nInfo> infos = new ArrayList<>();
 
     private static final String CHARSET = "UTF-8";
 

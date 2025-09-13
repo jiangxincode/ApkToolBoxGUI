@@ -20,10 +20,10 @@ import edu.jiangxin.apktoolbox.utils.Utils;
  */
 public class EasyFrame extends JFrame {
     private static final long serialVersionUID = 1L;
-    protected Logger logger;
-    protected Configuration conf;
-    protected ResourceBundle bundle;
-    protected Image image;
+    protected transient Logger logger;
+    protected transient Configuration conf;
+    protected transient ResourceBundle bundle;
+    protected transient Image image;
 
     public EasyFrame() throws HeadlessException {
         super();

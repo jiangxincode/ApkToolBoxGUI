@@ -39,7 +39,7 @@ public class FilePanel extends JPanel {
 
     private JFileChooser fileChooser;
 
-    private IFileReadyCallback callback;
+    private transient IFileReadyCallback callback;
 
     public FilePanel(String buttonText) {
         super();

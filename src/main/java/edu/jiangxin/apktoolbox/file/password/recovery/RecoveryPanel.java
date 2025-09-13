@@ -71,7 +71,7 @@ public final class RecoveryPanel extends EasyPanel {
 
     private JComboBox<FileChecker> checkerTypeComboBox;
 
-    private FileChecker currentFileChecker;
+    private transient FileChecker currentFileChecker;
 
     private JButton startButton;
     private JButton stopButton;
