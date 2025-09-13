@@ -162,7 +162,7 @@ public class PdfStatPanel extends EasyPanel {
 
     private void processFile(File file) {
         if (pageCountRadioButton.isSelected()) {
-            Vector<Object> fileVector = getRowVector(resultFileList.size() + 1, file);
+            Vector<Object> fileVector = getRowVector(file);
             resultFileList.add(fileVector);
         } else {
             logger.error("Invalid option selected");
@@ -192,7 +192,9 @@ public class PdfStatPanel extends EasyPanel {
 
     private void showResult() {
         SwingUtilities.invokeLater(() -> {
+            int index = 0;
             for (Vector<Object> file : resultFileList) {
+                file.add(0, ++index);
                 resultTableModel.addRow(file);
             }
             tabbedPane.setSelectedIndex(1);
@@ -200,9 +202,8 @@ public class PdfStatPanel extends EasyPanel {
         });
     }
 
-    private Vector<Object> getRowVector(int index, File file) {
+    private Vector<Object> getRowVector(File file) {
         Vector<Object> rowData = new Vector<>();
-        rowData.add(index);
         rowData.add(file.getParent());
         rowData.add(file.getName());
         totalFileSize += file.length();
