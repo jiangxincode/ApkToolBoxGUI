@@ -99,4 +99,4 @@ jobs:
           prerelease: true
           generate_release_notes: false
           body: |
-            Auto nightly build version, based on commit ${{ github.sha }}。
+            Auto nightly build version, based on commit ${{ github.sha }}. This is only for developer or alpha/beta test users。
