@@ -1,6 +1,8 @@
 package edu.jiangxin.apktoolbox.pdf;
 
-import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.Loader;
@@ -134,5 +136,22 @@ public class PdfUtils {
         } catch (IOException e) {
             LOGGER.error("Error writing PDF file: {}", e.getMessage());
         }
+    }
+
+    public static int getPageCount(File file) {
+        int pageCount = 0;
+
+        try (PDDocument document = Loader.loadPDF(file)) {
+            boolean isEncrypted = document.isEncrypted();
+            if (isEncrypted) {
+                document.setAllSecurityToBeRemoved(true);
+            }
+            pageCount = document.getNumberOfPages();
+        } catch (IOException e) {
+            LOGGER.error("Error reading PDF file: {}", e.getMessage());
+            return 0;
+        }
+        LOGGER.info("Processing file: {}, page count: {}", file.getPath(), pageCount);
+        return pageCount;
     }
 }

@@ -30,7 +30,11 @@ public class FileUtils {
     public static final BigInteger ONE_EB_BI = ONE_KB_BI.multiply(ONE_PB_BI);
 
     public static String sizeOfInHumanFormat(final File file) {
-        BigInteger size = BigInteger.valueOf(file.length());
+        return sizeOfInHumanFormat(file.length());
+    }
+
+    public static String sizeOfInHumanFormat(final long length) {
+        BigInteger size = BigInteger.valueOf(length);
         String displaySize;
 
         if (size.divide(ONE_EB_BI).compareTo(BigInteger.ZERO) > 0) {

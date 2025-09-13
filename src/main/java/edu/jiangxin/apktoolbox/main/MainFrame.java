@@ -26,6 +26,7 @@ import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
 import edu.jiangxin.apktoolbox.help.settings.SettingsPanel;
 import edu.jiangxin.apktoolbox.pdf.finder.PdfFinderPanel;
 import edu.jiangxin.apktoolbox.pdf.passwordremover.PdfPasswordRemoverPanel;
+import edu.jiangxin.apktoolbox.pdf.stat.PdfStatPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolPanel;
@@ -210,6 +211,10 @@ public final class MainFrame extends EasyFrame {
     private void createPdfMenu() {
         JMenu pdfMenu = new JMenu(bundle.getString("pdf.title"));
         menuBar.add(pdfMenu);
+
+        JMenuItem pdfStatMenuItem = new JMenuItem(bundle.getString("pdf.stat.title"));
+        pdfStatMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfStatPanel.class, pdfStatMenuItem.getText()));
+        pdfMenu.add(pdfStatMenuItem);
 
         JMenuItem pdfFinderMenuItem = new JMenuItem(bundle.getString("pdf.finder.title"));
         pdfFinderMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfFinderPanel.class, pdfFinderMenuItem.getText()));
