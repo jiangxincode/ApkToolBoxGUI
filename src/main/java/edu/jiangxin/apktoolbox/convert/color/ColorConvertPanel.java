@@ -154,7 +154,7 @@ public class ColorConvertPanel extends EasyPanel {
         xPanel.add(blueLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(blueInRgbSpinner);
-        xPanel.add(Box.createHorizontalBox().createHorizontalStrut(3 * Constants.DEFAULT_X_BORDER));
+        xPanel.add(Box.createHorizontalStrut(3 * Constants.DEFAULT_X_BORDER));
         xPanel.add(hexLabel);
         xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
         xPanel.add(hexInRgbTextField);

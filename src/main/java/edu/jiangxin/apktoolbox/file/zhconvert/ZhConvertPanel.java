@@ -164,11 +164,11 @@ public class ZhConvertPanel extends EasyPanel {
                 textArea.setCaretPosition(textArea.getText().length());
                 try {
                     scanFolderAndConver(fileList, converType, textArea);
-                    JOptionPane.showMessageDialog(getFrame().getFrames()[0], "转换成功" , "提示",JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(getFrame(), "转换成功" , "提示",JOptionPane.WARNING_MESSAGE);
                     textArea.append("done..." + "\n");
                     textArea.setCaretPosition(textArea.getText().length());
                 } catch (IOException e1) {
-                    JOptionPane.showMessageDialog(getFrame().getFrames()[0], "异常：" + e1.getMessage(), "异常",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(getFrame(), "异常：" + e1.getMessage(), "异常",JOptionPane.ERROR_MESSAGE);
                     textArea.append("转换异常..." + "\n");
                     textArea.setCaretPosition(textArea.getText().length());
                 }
