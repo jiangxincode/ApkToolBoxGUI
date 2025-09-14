@@ -395,6 +395,7 @@
                     <target>17</target>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
+                        <arg>-proc:none</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
