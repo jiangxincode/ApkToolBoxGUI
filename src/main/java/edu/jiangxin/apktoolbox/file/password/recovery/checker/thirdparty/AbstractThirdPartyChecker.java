@@ -21,7 +21,8 @@ public abstract class AbstractThirdPartyChecker extends FileChecker {
             return false;
         }
         try {
-            Runtime.getRuntime().exec(toolPath);
+            ProcessBuilder builder = new ProcessBuilder(toolPath.split(" "));
+            Process process = builder.start();
         } catch (IOException e) {
             return false;
         }

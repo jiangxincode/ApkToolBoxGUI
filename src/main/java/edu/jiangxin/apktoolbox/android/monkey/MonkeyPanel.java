@@ -510,7 +510,8 @@ public class MonkeyPanel extends EasyPanel {
         logger.info("get device list start");
         Process process = null;
         try {
-            process = Runtime.getRuntime().exec("adb devices");
+            ProcessBuilder builder = new ProcessBuilder("adb", "devices");
+            process = builder.start();
         } catch (IOException e) {
             logger.error("exec command failed: " + e.getMessage());
         }

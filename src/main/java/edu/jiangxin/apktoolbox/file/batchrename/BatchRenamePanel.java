@@ -6,6 +6,7 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -454,6 +455,6 @@ public class BatchRenamePanel extends EasyPanel {
     }
 
     private String getNewFileNameWhen6Selected(String oldFileName) {
-        return StringUtils.replace(oldFileName, textField61.getText(), textField62.getText());
+        return Strings.CS.replace(oldFileName, textField61.getText(), textField62.getText());
     }
 }

@@ -119,7 +119,8 @@ public class AddToStartupPanel extends EasyChildTabbedPanel {
         File tempVbs = Files.createTempFile("createShortcut", ".vbs").toFile();
         Files.writeString(tempVbs.toPath(), vbsScript);
 
-        Runtime.getRuntime().exec("wscript " + tempVbs.getAbsolutePath());
+        ProcessBuilder builder = new ProcessBuilder("wscript", tempVbs.getAbsolutePath());
+        builder.start();
         tempVbs.deleteOnExit();
     }
 }

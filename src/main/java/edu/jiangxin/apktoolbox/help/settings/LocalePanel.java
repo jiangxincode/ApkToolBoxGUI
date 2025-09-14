@@ -3,6 +3,7 @@ package edu.jiangxin.apktoolbox.help.settings;
 import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +56,7 @@ public class LocalePanel extends EasyChildTabbedPanel {
 
         for (String language : SUPPORTED_LANGUAGES) {
             typeComboBox.addItem(language);
-            if (StringUtils.equals(currentLocaleLanguage, language)) {
+            if (Strings.CS.equals(currentLocaleLanguage, language)) {
                 typeComboBox.setSelectedItem(language);
             }
         }

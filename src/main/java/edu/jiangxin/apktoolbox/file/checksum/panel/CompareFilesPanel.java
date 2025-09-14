@@ -4,7 +4,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +66,7 @@ public class CompareFilesPanel extends EasyChildTabbedPanel {
                  FileInputStream secondFis = new FileInputStream(secondFile)) {
                 String firstSha512 = DigestUtils.sha512Hex(firstFis);
                 String secondSha512 = DigestUtils.sha512Hex(secondFis);
-                isChecksumSame = StringUtils.equalsIgnoreCase(firstSha512, secondSha512);
+                isChecksumSame = Strings.CI.equals(firstSha512, secondSha512);
             } catch (FileNotFoundException e) {
                 logger.error("calculate, FileNotFoundException");
             } catch (IOException e) {

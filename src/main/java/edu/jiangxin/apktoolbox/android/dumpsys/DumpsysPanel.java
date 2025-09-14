@@ -257,7 +257,7 @@ public class DumpsysPanel extends EasyPanel {
         private void dumpsysAndSaveToFile(String dumpsysType, File targetDir) {
             String command = "adb shell dumpsys " + dumpsysType;
             CommandLine cmdLine = CommandLine.parse(command);
-            DefaultExecutor executor = new DefaultExecutor();
+            DefaultExecutor executor = DefaultExecutor.builder().get();
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                  ByteArrayOutputStream errorStream = new ByteArrayOutputStream();) {
                 PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);

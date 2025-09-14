@@ -3,7 +3,7 @@ package edu.jiangxin.apktoolbox.help.settings;
 import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,7 @@ public class LookAndFeelPanel extends EasyChildTabbedPanel {
             String className = conf.getString("look.and.feel.class.name");
             for (UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
                 typeComboBox.addItem(info.getName());
-                if (StringUtils.equals(className, info.getClassName())) {
+                if (Strings.CS.equals(className, info.getClassName())) {
                     typeComboBox.setSelectedItem(info.getName());
                 }
             }
@@ -105,7 +105,7 @@ public class LookAndFeelPanel extends EasyChildTabbedPanel {
     private String getLookAndFeelClassNameFromName(String name) {
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
         for (UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
-            if (StringUtils.equals(name, info.getName())) {
+            if (Strings.CS.equals(name, info.getName())) {
                 return info.getClassName();
             }
         }

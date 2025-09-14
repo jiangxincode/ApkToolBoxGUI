@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +42,7 @@ public class PluginUtils {
         String downloadUrlStr = URL_PREFIX + DOWNLOAD_VERSION + "/" + pluginFilename;
         URL url;
         try {
-            url = new URL(downloadUrlStr);
+            url = URI.create(downloadUrlStr).toURL();
         } catch (MalformedURLException e) {
             logger.error("MalformedURLException: {}", e.getMessage());
             return;

@@ -1,6 +1,7 @@
 package edu.jiangxin.apktoolbox.swing.extend.autocomplete;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +66,7 @@ class AutoCompleter<E> implements KeyListener {
         ComboBoxModel<E> tmp = this.comboBoxModel;
         for (int i = 0; i < tmp.getSize(); i++) {
             E itemObj = tmp.getElementAt(i);
-            if (StringUtils.isEmpty(text) || StringUtils.containsIgnoreCase(itemObj.toString(), text)) {
+            if (StringUtils.isEmpty(text) || Strings.CI.contains(itemObj.toString(), text)) {
                 vector.add(itemObj);
             }
         }

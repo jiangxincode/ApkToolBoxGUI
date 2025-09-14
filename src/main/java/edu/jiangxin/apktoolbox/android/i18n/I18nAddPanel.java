@@ -9,6 +9,7 @@ import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -308,7 +309,7 @@ public class I18nAddPanel extends EasyPanel {
             content = content.replaceAll(entry.getValue(), entry.getKey());
         }
         if (REMOVE_LAST_LF_OPEN) {
-            content = StringUtils.removeEnd(content, "\n");
+            content = Strings.CS.removeEnd(content, "\n");
         }
         FileUtils.writeStringToFile(file, content, CHARSET);
     }

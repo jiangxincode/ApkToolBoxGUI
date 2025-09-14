@@ -3,6 +3,7 @@ package edu.jiangxin.apktoolbox.file.checksum.panel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyChildTabbedPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,7 +95,7 @@ public class VerifyChecksumPanel extends EasyChildTabbedPanel {
                 return;
             }
 
-            if (StringUtils.equalsIgnoreCase(fileSum, compareSum)) {
+            if (Strings.CI.equals(fileSum, compareSum)) {
                 resultTextField.setText("File summary is same with compared summary");
                 resultTextField.setForeground(Color.GREEN);
                 return;

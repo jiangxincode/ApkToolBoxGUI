@@ -177,7 +177,7 @@ public class Utils {
              ProcessLogOutputStream errStream = new ProcessLogOutputStream(logger, Level.ERROR)
         ) {
             CommandLine commandLine = CommandLine.parse(cmd);
-            DefaultExecutor exec = new DefaultExecutor();
+            DefaultExecutor exec = DefaultExecutor.builder().get();
             PumpStreamHandler streamHandler = new PumpStreamHandler(outStream, errStream);
             exec.setStreamHandler(streamHandler);
             if (isBlocked) {

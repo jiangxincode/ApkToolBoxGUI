@@ -92,7 +92,7 @@ public final class MainFrame extends EasyFrame {
                 currentLocaleLanguage = Locale.ENGLISH.getLanguage();
                 conf.setProperty("locale.language", currentLocaleLanguage);
             }
-            Locale.setDefault(new Locale(currentLocaleLanguage));
+            Locale.setDefault(Locale.forLanguageTag(currentLocaleLanguage));
 
             MainFrame frame = new MainFrame();
 

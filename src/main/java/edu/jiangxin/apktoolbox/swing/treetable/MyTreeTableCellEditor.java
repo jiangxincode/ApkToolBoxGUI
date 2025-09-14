@@ -31,7 +31,7 @@ public class MyTreeTableCellEditor extends AbstractCellEditor implements TableCe
             int colunm1 = 0;
             MouseEvent me = (MouseEvent) e;
             int doubleClick = 2;
-            MouseEvent newME = new MouseEvent(tree, me.getID(), me.getWhen(), me.getModifiers(), me.getX() - table.getCellRect(0, colunm1, true).x, me.getY(), doubleClick, me.isPopupTrigger());
+            MouseEvent newME = new MouseEvent(tree, me.getID(), me.getWhen(), me.getModifiersEx(), me.getX() - table.getCellRect(0, colunm1, true).x, me.getY(), doubleClick, me.isPopupTrigger());
             tree.dispatchEvent(newME);
         }
         return false;

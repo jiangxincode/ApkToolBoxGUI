@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -62,7 +63,7 @@ public class FileUtils {
 
     public static double divide(BigInteger size, BigInteger one_bi) {
         BigDecimal decimalSize = BigDecimal.valueOf(size.doubleValue())
-                .divide(BigDecimal.valueOf(one_bi.doubleValue()), 2, BigDecimal.ROUND_HALF_UP);
+                .divide(BigDecimal.valueOf(one_bi.doubleValue()), 2, RoundingMode.HALF_UP);
         return decimalSize.doubleValue();
     }
 
