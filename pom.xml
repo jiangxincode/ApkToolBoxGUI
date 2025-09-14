@@ -433,6 +433,8 @@
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
+                                        <!-- https://stackoverflow.com/questions/56063566/how-can-i-remove-module-info-class-warning-for-a-shaded-jar -->
+                                        <exclude>module-info.class</exclude>
                                         <exclude>META-INF/DEPENDENCIES</exclude>
                                         <exclude>META-INF/LICENSE*</exclude>
                                         <exclude>META-INF/NOTICE*</exclude>
