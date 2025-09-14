@@ -33,6 +33,7 @@ public class ProtobufDecoder {
      */
     public static String bytesDecoder(byte[] bytes) {
         Map<String, Object> map = decodeProto(bytes);
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> validItems = (List<Map<String, Object>>) map.get(VALID_DATA);
         List<JSONObject> result = new ArrayList<>();
         for (Map<String, Object> validItem : validItems) {
@@ -108,7 +109,9 @@ public class ProtobufDecoder {
      */
     private static DecoderResult getProtobufPart(Map<String, Object> part) {
         DecoderResult result = new DecoderResult();
-        result.setByteRange((List<Integer>) part.get(KEY_BYTE_RANGE));
+        @SuppressWarnings("unchecked")
+        List<Integer> byteRange = (List<Integer>) part.get(KEY_BYTE_RANGE);
+        result.setByteRange(byteRange);
         result.setFieldNumber((int) part.get(KEY_FIELD_NUMBER));
         int type = (int) part.get(KEY_TYPE);
         Object value = part.get(KEY_VALUE);
@@ -122,6 +125,7 @@ public class ProtobufDecoder {
                 Map<String, Object> decoded = decodeProto(bytes);
                 String leftOverData = (String) decoded.get(LEFT_OVER_DATA);
                 if (bytes != null && bytes.length > 0 && leftOverData != null && leftOverData.length() == 0) {
+                    @SuppressWarnings("unchecked")
                     List<Map<String, Object>> decodedParts = (List<Map<String, Object>>) decoded.get(VALID_DATA);
                     List<DecoderResult> subResults = new ArrayList<>();
                     for (Map<String, Object> decodedPart : decodedParts) {

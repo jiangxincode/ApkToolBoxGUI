@@ -125,8 +125,9 @@ public class FileListPanel extends JPanel {
         @Override
         public boolean importData(JComponent comp, Transferable t) {
             try {
-                Object object = t.getTransferData(DataFlavor.javaFileListFlavor);
-                for (File file : (List<File>)object) {
+                @SuppressWarnings("unchecked")
+                List<File> files = (List<File>) (t.getTransferData(DataFlavor.javaFileListFlavor));
+                for (File file : files) {
                     fileListModel.addElement(file);
                 }
                 return true;

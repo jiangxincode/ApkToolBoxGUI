@@ -142,7 +142,9 @@ public class FilePanel extends JPanel {
         public boolean importData(JComponent comp, Transferable t) {
             List<File> files = null;
             try {
-                files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+                @SuppressWarnings("unchecked")
+                List<File> tmp = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+                files = tmp;
             } catch (IOException e) {
                 LOGGER.error("importData failed: IOException");
             } catch (UnsupportedFlavorException e) {
