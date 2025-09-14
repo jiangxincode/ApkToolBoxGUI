@@ -35,8 +35,8 @@ public class TimeConvertPanel extends EasyPanel {
     private boolean isPaused;
 
     private JFormattedTextField inTimeTextField;
-    private JComboBox inTimezoneComboBox;
-    private JComboBox outTimezoneComboBox;
+    private JComboBox<String> inTimezoneComboBox;
+    private JComboBox<String> outTimezoneComboBox;
     private JTextField outTimeTextField;
 
     private static final String SDF_PATTERN = "yyyy-MM-dd HH:mm";
@@ -232,13 +232,13 @@ public class TimeConvertPanel extends EasyPanel {
 
         JLabel label2 = new JLabel("From Timezone: ");
         label2.setLabelFor(inTimezoneComboBox);
-        inTimezoneComboBox = new JComboBox(sortedTimeZones);
+        inTimezoneComboBox = new JComboBox<>(sortedTimeZones);
         inTimezoneComboBox.setPreferredSize(new Dimension(70, 0));
         inTimezoneComboBox.addActionListener(e -> update());
 
         JLabel label3 = new JLabel("To Timezone: ");
         label3.setLabelFor(outTimezoneComboBox);
-        outTimezoneComboBox = new JComboBox(sortedTimeZones);
+        outTimezoneComboBox = new JComboBox<>(sortedTimeZones);
         outTimezoneComboBox.setPreferredSize(new Dimension(70, 0));
         outTimezoneComboBox.addActionListener(e -> update());
 

@@ -31,7 +31,7 @@ public class ZhConvertPanel extends EasyPanel {
 
     private JCheckBox recursiveCheckBox;
 
-    private JComboBox comboBox;
+    private JComboBox<String> comboBox;
 
     private JTextField keyText;
 
@@ -39,7 +39,7 @@ public class ZhConvertPanel extends EasyPanel {
 
     private JTextArea textArea;
 
-    private JList transformList;
+    private JList<Object> transformList;
 
     private static ZHConverterUtils myZHConverterUtils = new ZHConverterUtils();
 
@@ -89,7 +89,7 @@ public class ZhConvertPanel extends EasyPanel {
         optionPanel.add(recursiveCheckBox);
         optionPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
 
-        comboBox = new JComboBox();
+        comboBox = new JComboBox<>();
         comboBox.addItem(Constants.zhSimple2zhTw);
         comboBox.addItem(Constants.zhTw2zhSimple);
         optionPanel.add(comboBox);
@@ -132,7 +132,7 @@ public class ZhConvertPanel extends EasyPanel {
         centerLeftBottomPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         JSplitPane centerLeftSplitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, centerLeftTopPanel, centerLeftBottomPanel);
 
-        transformList = new JList();
+        transformList = new JList<>();
         refreshListData();
         transformList.setFont(new Font("Dialog", 1, 18));
         transformList.setBorder(BorderFactory.createTitledBorder("词组转换定义"));

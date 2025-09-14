@@ -8,7 +8,7 @@ public class DuplicateFilesTableModel extends DefaultTableModel {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public DuplicateFilesTableModel(Vector data, Vector columnNames) {
+    public DuplicateFilesTableModel(Vector<? extends Vector<Object>> data, Vector<String> columnNames) {
         super(data, columnNames);
     }
 
