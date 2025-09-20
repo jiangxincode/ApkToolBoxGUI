@@ -78,13 +78,22 @@ jobs:
         run: |
           set -e
           CURRENT_SHA="${{ github.sha }}"
-          EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/refs/tags/nightly-build \
-                          --jq '.object.sha' 2>/dev/null || echo "")
-          if [[ -n "$EXISTING_SHA" && "$EXISTING_SHA" != "$CURRENT_SHA" ]]; then
-            echo "Commit changed \($EXISTING_SHA → $CURRENT_SHA\), deleting old nightly"
-            gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag 2>/dev/null || echo "Tag already deleted"
+          EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/refs/tags/nightly-build --jq '.object.sha')
+          echo "Current commit: $CURRENT_SHA"
+          echo "Existing nightly-build tag commit: $EXISTING_SHA"
+          CURRENT_DATE="${{ steps.ver.outputs.DATE }}"
+          EXISTING_DATE=$(date -d "$(gh api repos/${{ github.repository }}/releases/tags/nightly-build --jq '.published_at')" +%Y%m%d)
+          echo "Current date: $CURRENT_DATE"
+          echo "Existing nightly-build date: $EXISTING_DATE"
+          if [[ -n "$EXISTING_SHA" ]]; then
+            if [[ "$EXISTING_SHA" != "$CURRENT_SHA" || "$CURRENT_DATE" != "$EXISTING_DATE" ]]; then
+              echo "Commit or date is different，delete old nightly-build"
+              gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag
+            else
+              echo "Same commit and date, no need to delete"
+            fi
           else
-            echo "Same commit or tag does not exist, no need to delete"
+            echo "No existing nightly-build tag, no need to delete"
           fi
 
       - name: Upload Release Asset
