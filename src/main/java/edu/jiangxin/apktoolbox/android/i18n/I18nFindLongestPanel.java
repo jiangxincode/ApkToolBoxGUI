@@ -3,6 +3,7 @@ package edu.jiangxin.apktoolbox.android.i18n;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.SAXBuilderHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
@@ -154,6 +155,7 @@ public class I18nFindLongestPanel extends EasyPanel {
             File sourceFile = new File(sourceParentFile, "strings.xml");
             if (sourceFile.exists()) {
                 SAXBuilder builder = new SAXBuilder();
+                SAXBuilderHelper.setSecurityFeatures(builder);
                 Document sourceDoc;
                 try {
                     sourceDoc = builder.build(sourceFile);

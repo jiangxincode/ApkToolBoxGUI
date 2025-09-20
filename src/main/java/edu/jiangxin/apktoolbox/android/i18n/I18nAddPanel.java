@@ -6,6 +6,7 @@ package edu.jiangxin.apktoolbox.android.i18n;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.listener.SelectDirectoryListener;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.SAXBuilderHelper;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -223,6 +224,7 @@ public class I18nAddPanel extends EasyPanel {
             return null;
         }
         SAXBuilder builder = new SAXBuilder();
+        SAXBuilderHelper.setSecurityFeatures(builder);
         Document sourceDoc = null;
         try (InputStream in = new FileInputStream(sourceFile)) {
             sourceDoc = builder.build(in);
@@ -248,6 +250,7 @@ public class I18nAddPanel extends EasyPanel {
 
     private boolean setTargetElement(File targetFile, Element sourceElement, String itemName) {
         SAXBuilder builder = new SAXBuilder();
+        SAXBuilderHelper.setSecurityFeatures(builder);
         Document targetDoc;
         try {
             targetDoc = builder.build(targetFile);
