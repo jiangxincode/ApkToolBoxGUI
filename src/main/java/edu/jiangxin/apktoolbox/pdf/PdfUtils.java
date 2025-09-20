@@ -125,14 +125,16 @@ public class PdfUtils {
         String targetFilePath = targetDir.getAbsolutePath() + File.separator + encryptedFile.getName();
         PdfReader reader = null;
         PdfDocument pdfDoc = null;
+        PdfWriter writer = null;
         try {
             reader = new PdfReader(encryptedFile);
             reader.setUnethicalReading(true);
-            PdfWriter writer = new PdfWriter(targetFilePath);
+            writer = new PdfWriter(targetFilePath);
             pdfDoc = new PdfDocument(reader, writer);
         } catch (IOException e) {
             LOGGER.error("Error processing PDF file: {}", e.getMessage());
         } finally {
+            IOUtils.closeQuietly(writer);
             IOUtils.closeQuietly(pdfDoc);
             IOUtils.closeQuietly(reader);
         }
