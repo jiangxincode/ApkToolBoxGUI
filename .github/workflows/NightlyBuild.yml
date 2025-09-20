@@ -10,7 +10,7 @@ on:
 
 jobs:
   nightly:
-    name: Daily Build
+    name: Nightly Build
     strategy:
       fail-fast: false
       matrix:

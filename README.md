@@ -48,6 +48,12 @@ It's a collection of common tools, password recovery, encoding convert, timestam
 * [Android Develop](https://jiangxincode.github.io/ApkToolBoxGUI/features/android_i18n_operation.html)
 * ...
 
+## Download
+
+[![Release](https://img.shields.io/badge/Download-Latest-green.svg)](https://github.com/jiangxincode/ApkToolBoxGUI/releases/latest)
+
+If download speed is slow, you can speed up by using: <https://gh.jasonzeng.dev/>
+
 ## Contribute
 
 [![Documentation](https://img.shields.io/badge/Contribute-共同参与-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/contribute/how_to_contribute.html)
