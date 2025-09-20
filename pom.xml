@@ -17,7 +17,7 @@
         <junit.minor.version>13.3</junit.minor.version>
         <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
-        <surefire.version>3.5.3</surefire.version>
+        <surefire.version>3.5.4</surefire.version>
         <protobuf.version>4.32.1</protobuf.version>
     </properties>
     <dependencies>
@@ -94,7 +94,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
-            <version>1.81</version>
+            <version>1.82</version>
         </dependency>
         <dependency>
             <groupId>com.github.junrar</groupId>
@@ -254,7 +254,7 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.9.4.2</version>
+                    <version>4.9.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -413,7 +413,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

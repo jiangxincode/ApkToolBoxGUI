@@ -77,14 +77,22 @@ jobs:
         shell: bash
         run: |
           set -e
+          
           CURRENT_SHA="${{ github.sha }}"
           EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/refs/tags/nightly-build --jq '.object.sha')
           echo "Current commit: $CURRENT_SHA"
           echo "Existing nightly-build tag commit: $EXISTING_SHA"
+          
           CURRENT_DATE="${{ steps.ver.outputs.DATE }}"
-          EXISTING_DATE=$(date -d "$(gh api repos/${{ github.repository }}/releases/tags/nightly-build --jq '.published_at')" +%Y%m%d)
+          EXISTING_DATE_ORIGINAL=$(gh api repos/${{ github.repository }}/releases/tags/nightly-build --jq '.published_at')
+          if [[ "$OSTYPE" == "darwin"* ]]; then
+            EXISTING_DATE=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$(EXISTING_DATE_ORIGINAL)" "+%Y%m%d")
+          else
+            EXISTING_DATE=$(date -d "$(EXISTING_DATE_ORIGINAL)" +%Y%m%d)
+          fi
           echo "Current date: $CURRENT_DATE"
           echo "Existing nightly-build date: $EXISTING_DATE"
+          
           if [[ -n "$EXISTING_SHA" ]]; then
             if [[ "$EXISTING_SHA" != "$CURRENT_SHA" || "$CURRENT_DATE" != "$EXISTING_DATE" ]]; then
               echo "Commit or date is different，delete old nightly-build"
