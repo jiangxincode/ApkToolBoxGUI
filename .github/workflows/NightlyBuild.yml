@@ -71,7 +71,7 @@ jobs:
           name: ApkToolBoxGUI-${{ runner.os }}
           path: target/ApkToolBoxGUI-*-with*-JRE-*.zip
 
-      - name: Delete old nightly build tag only if commit changed
+      - name: Delete old nightly build tag only if changed
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -85,10 +85,11 @@ jobs:
           
           CURRENT_DATE="${{ steps.ver.outputs.DATE }}"
           EXISTING_DATE_ORIGINAL=$(gh api repos/${{ github.repository }}/releases/tags/nightly-build --jq '.published_at')
+          echo "EXISTING_DATE_ORIGINAL: $EXISTING_DATE_ORIGINAL"
           if [[ "$OSTYPE" == "darwin"* ]]; then
-            EXISTING_DATE=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$(EXISTING_DATE_ORIGINAL)" "+%Y%m%d")
+            EXISTING_DATE=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$EXISTING_DATE_ORIGINAL" "+%Y%m%d")
           else
-            EXISTING_DATE=$(date -d "$(EXISTING_DATE_ORIGINAL)" +%Y%m%d)
+            EXISTING_DATE=$(date -d "$EXISTING_DATE_ORIGINAL" +%Y%m%d)
           fi
           echo "Current date: $CURRENT_DATE"
           echo "Existing nightly-build date: $EXISTING_DATE"
