@@ -10,6 +10,9 @@ target/
 .idea/
 *.iml
 
+# VS Code
+.vscode/
+
 # Others
 *.db
 *.log
