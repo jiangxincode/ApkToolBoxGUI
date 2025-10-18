@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrdinaryColorTable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color.colortable</a> &gt; <span class="el_source">OrdinaryColorTable.java</span></div><h1>OrdinaryColorTable.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color.colortable;
+
+<span class="nc" id="L3">public class OrdinaryColorTable implements IColorTable {</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L7">        return &quot;Ordinary Colors&quot;;</span>
+    }
+
+    @Override
+    public String[] getColumnNames() {
+<span class="nc" id="L12">        return COLUMN_NAMES;</span>
+    }
+
+    @Override
+    public String[][] getTableRowData() {
+<span class="nc" id="L17">        return TABLE_ROW_DATA;</span>
+    }
+
+    @Override
+    public int getLabelIndex() {
+<span class="nc" id="L22">        return 0;</span>
+    }
+
+    @Override
+    public int getHexIndex() {
+<span class="nc" id="L27">        return 3;</span>
+    }
+
+<span class="nc" id="L30">    static final String[] COLUMN_NAMES = {</span>
+            &quot;颜色&quot;, &quot;英文&quot;, &quot;中文&quot;, &quot;RGB代码&quot;
+    };
+
+<span class="nc" id="L34">    static final String[][] TABLE_ROW_DATA = {</span>
+            {&quot;&quot;, &quot;LightPink&quot;, &quot;浅粉红&quot;, &quot;#FFB6C1&quot;},
+            {&quot;&quot;, &quot;Pink&quot;, &quot;粉红&quot;, &quot;#FFC0CB&quot;},
+            {&quot;&quot;, &quot;Crimson&quot;, &quot;猩红&quot;, &quot;#DC143C&quot;},
+            {&quot;&quot;, &quot;LavenderBlush&quot;, &quot;脸红的淡紫色&quot;, &quot;#FFF0F5&quot;},
+            {&quot;&quot;, &quot;PaleVioletRed&quot;, &quot;苍白的紫罗兰红色&quot;, &quot;#DB7093&quot;},
+            {&quot;&quot;, &quot;HotPink&quot;, &quot;热情的粉红&quot;, &quot;#FF69B4&quot;},
+            {&quot;&quot;, &quot;DeepPink&quot;, &quot;深粉色&quot;, &quot;#FF1493&quot;},
+            {&quot;&quot;, &quot;MediumVioletRed&quot;, &quot;适中的紫罗兰红色&quot;, &quot;#C71585&quot;},
+            {&quot;&quot;, &quot;Orchid&quot;, &quot;兰花的紫色&quot;, &quot;#DA70D6&quot;},
+            {&quot;&quot;, &quot;Thistle&quot;, &quot;蓟&quot;, &quot;#D8BFD8&quot;},
+            {&quot;&quot;, &quot;plum&quot;, &quot;李子&quot;, &quot;#DDA0DD&quot;},
+            {&quot;&quot;, &quot;Violet&quot;, &quot;紫罗兰&quot;, &quot;#EE82EE&quot;},
+            {&quot;&quot;, &quot;Magenta&quot;, &quot;洋红&quot;, &quot;#FF00FF&quot;},
+            {&quot;&quot;, &quot;Fuchsia&quot;, &quot;灯笼海棠(紫红色)&quot;, &quot;#FF00FF&quot;},
+            {&quot;&quot;, &quot;DarkMagenta&quot;, &quot;深洋红色&quot;, &quot;#8B008B&quot;},
+            {&quot;&quot;, &quot;Purple&quot;, &quot;紫色&quot;, &quot;#800080&quot;},
+            {&quot;&quot;, &quot;MediumOrchid&quot;, &quot;适中的兰花紫&quot;, &quot;#BA55D3&quot;},
+            {&quot;&quot;, &quot;DarkVoilet&quot;, &quot;深紫罗兰色&quot;, &quot;#9400D3&quot;},
+            {&quot;&quot;, &quot;DarkOrchid&quot;, &quot;深兰花紫&quot;, &quot;#9932CC&quot;},
+            {&quot;&quot;, &quot;Indigo&quot;, &quot;靛青&quot;, &quot;#4B0082&quot;},
+            {&quot;&quot;, &quot;BlueViolet&quot;, &quot;深紫罗兰的蓝色&quot;, &quot;#8A2BE2&quot;},
+            {&quot;&quot;, &quot;MediumPurple&quot;, &quot;适中的紫色&quot;, &quot;#9370DB&quot;},
+            {&quot;&quot;, &quot;MediumSlateBlue&quot;, &quot;适中的板岩暗蓝灰色&quot;, &quot;#7B68EE&quot;},
+            {&quot;&quot;, &quot;SlateBlue&quot;, &quot;板岩暗蓝灰色&quot;, &quot;#6A5ACD&quot;},
+            {&quot;&quot;, &quot;DarkSlateBlue&quot;, &quot;深岩暗蓝灰色&quot;, &quot;#483D8B&quot;},
+            {&quot;&quot;, &quot;Lavender&quot;, &quot;熏衣草花的淡紫色&quot;, &quot;#E6E6FA&quot;},
+            {&quot;&quot;, &quot;GhostWhite&quot;, &quot;幽灵的白色&quot;, &quot;#F8F8FF&quot;},
+            {&quot;&quot;, &quot;Blue&quot;, &quot;纯蓝&quot;, &quot;#0000FF&quot;},
+            {&quot;&quot;, &quot;MediumBlue&quot;, &quot;适中的蓝色&quot;, &quot;#0000CD&quot;},
+            {&quot;&quot;, &quot;MidnightBlue&quot;, &quot;午夜的蓝色&quot;, &quot;#191970&quot;},
+            {&quot;&quot;, &quot;DarkBlue&quot;, &quot;深蓝色&quot;, &quot;#00008B&quot;},
+            {&quot;&quot;, &quot;Navy&quot;, &quot;海军蓝&quot;, &quot;#000080&quot;},
+            {&quot;&quot;, &quot;RoyalBlue&quot;, &quot;皇家蓝&quot;, &quot;#4169E1&quot;},
+            {&quot;&quot;, &quot;CornflowerBlue&quot;, &quot;矢车菊的蓝色&quot;, &quot;#6495ED&quot;},
+            {&quot;&quot;, &quot;LightSteelBlue&quot;, &quot;淡钢蓝&quot;, &quot;#B0C4DE&quot;},
+            {&quot;&quot;, &quot;LightSlateGray&quot;, &quot;浅石板灰&quot;, &quot;#778899&quot;},
+            {&quot;&quot;, &quot;SlateGray&quot;, &quot;石板灰&quot;, &quot;#708090&quot;},
+            {&quot;&quot;, &quot;DoderBlue&quot;, &quot;道奇蓝&quot;, &quot;#1E90FF&quot;},
+            {&quot;&quot;, &quot;AliceBlue&quot;, &quot;爱丽丝蓝&quot;, &quot;#F0F8FF&quot;},
+            {&quot;&quot;, &quot;SteelBlue&quot;, &quot;钢蓝&quot;, &quot;#4682B4&quot;},
+            {&quot;&quot;, &quot;LightSkyBlue&quot;, &quot;淡蓝色&quot;, &quot;#87CEFA&quot;},
+            {&quot;&quot;, &quot;SkyBlue&quot;, &quot;天蓝色&quot;, &quot;#87CEEB&quot;},
+            {&quot;&quot;, &quot;DeepSkyBlue&quot;, &quot;深天蓝&quot;, &quot;#00BFFF&quot;},
+            {&quot;&quot;, &quot;LightBLue&quot;, &quot;淡蓝&quot;, &quot;#ADD8E6&quot;},
+            {&quot;&quot;, &quot;PowDerBlue&quot;, &quot;火药蓝&quot;, &quot;#B0E0E6&quot;},
+            {&quot;&quot;, &quot;CadetBlue&quot;, &quot;军校蓝&quot;, &quot;#5F9EA0&quot;},
+            {&quot;&quot;, &quot;Azure&quot;, &quot;蔚蓝色&quot;, &quot;#F0FFFF&quot;},
+            {&quot;&quot;, &quot;LightCyan&quot;, &quot;淡青色&quot;, &quot;#E1FFFF&quot;},
+            {&quot;&quot;, &quot;PaleTurquoise&quot;, &quot;苍白的绿宝石&quot;, &quot;#AFEEEE&quot;},
+            {&quot;&quot;, &quot;Cyan&quot;, &quot;青色&quot;, &quot;#00FFFF&quot;},
+            {&quot;&quot;, &quot;Aqua&quot;, &quot;水绿色&quot;, &quot;#D4F2E7&quot;},
+            {&quot;&quot;, &quot;DarkTurquoise&quot;, &quot;深绿宝石&quot;, &quot;#00CED1&quot;},
+            {&quot;&quot;, &quot;DarkSlateGray&quot;, &quot;深石板灰&quot;, &quot;#2F4F4F&quot;},
+            {&quot;&quot;, &quot;DarkCyan&quot;, &quot;深青色&quot;, &quot;#008B8B&quot;},
+            {&quot;&quot;, &quot;Teal&quot;, &quot;水鸭色&quot;, &quot;#008080&quot;},
+            {&quot;&quot;, &quot;MediumTurquoise&quot;, &quot;适中的绿宝石&quot;, &quot;#48D1CC&quot;},
+            {&quot;&quot;, &quot;LightSeaGreen&quot;, &quot;浅海洋绿&quot;, &quot;#20B2AA&quot;},
+            {&quot;&quot;, &quot;Turquoise&quot;, &quot;绿宝石&quot;, &quot;#40E0D0&quot;},
+            {&quot;&quot;, &quot;Auqamarin&quot;, &quot;绿玉/碧绿色&quot;, &quot;#7FFFAA&quot;},
+            {&quot;&quot;, &quot;MediumAquamarine&quot;, &quot;适中的碧绿色&quot;, &quot;#00FA9A&quot;},
+            {&quot;&quot;, &quot;MediumSpringGreen&quot;, &quot;适中的春天的绿色&quot;, &quot;#00FF7F&quot;},
+            {&quot;&quot;, &quot;MintCream&quot;, &quot;薄荷奶油&quot;, &quot;#F5FFFA&quot;},
+            {&quot;&quot;, &quot;SpringGreen&quot;, &quot;春天的绿色&quot;, &quot;#3CB371&quot;},
+            {&quot;&quot;, &quot;SeaGreen&quot;, &quot;海洋绿&quot;, &quot;#2E8B57&quot;},
+            {&quot;&quot;, &quot;Honeydew&quot;, &quot;蜂蜜&quot;, &quot;#F0FFF0&quot;},
+            {&quot;&quot;, &quot;LightGreen&quot;, &quot;淡绿色&quot;, &quot;#90EE90&quot;},
+            {&quot;&quot;, &quot;PaleGreen&quot;, &quot;苍白的绿色&quot;, &quot;#98FB98&quot;},
+            {&quot;&quot;, &quot;DarkSeaGreen&quot;, &quot;深海洋绿&quot;, &quot;#8FBC8F&quot;},
+            {&quot;&quot;, &quot;LimeGreen&quot;, &quot;酸橙绿&quot;, &quot;#32CD32&quot;},
+            {&quot;&quot;, &quot;Lime&quot;, &quot;酸橙色&quot;, &quot;#00FF00&quot;},
+            {&quot;&quot;, &quot;ForestGreen&quot;, &quot;森林绿&quot;, &quot;#228B22&quot;},
+            {&quot;&quot;, &quot;Green&quot;, &quot;纯绿&quot;, &quot;#008000&quot;},
+            {&quot;&quot;, &quot;DarkGreen&quot;, &quot;深绿色&quot;, &quot;#006400&quot;},
+            {&quot;&quot;, &quot;Chartreuse&quot;, &quot;查特酒绿&quot;, &quot;#7FFF00&quot;},
+            {&quot;&quot;, &quot;LawnGreen&quot;, &quot;草坪绿&quot;, &quot;#7CFC00&quot;},
+            {&quot;&quot;, &quot;GreenYellow&quot;, &quot;绿黄色&quot;, &quot;#ADFF2F&quot;},
+            {&quot;&quot;, &quot;OliveDrab&quot;, &quot;橄榄土褐色&quot;, &quot;#556B2F&quot;},
+            {&quot;&quot;, &quot;Beige&quot;, &quot;米色(浅褐色)&quot;, &quot;#F5F5DC&quot;},
+            {&quot;&quot;, &quot;LightGoldenrodYellow&quot;, &quot;浅秋麒麟黄&quot;, &quot;#FAFAD2&quot;},
+            {&quot;&quot;, &quot;Ivory&quot;, &quot;象牙&quot;, &quot;#FFFFF0&quot;},
+            {&quot;&quot;, &quot;LightYellow&quot;, &quot;浅黄色&quot;, &quot;#FFFFE0&quot;},
+            {&quot;&quot;, &quot;Yellow&quot;, &quot;纯黄&quot;, &quot;#FFFF00&quot;},
+            {&quot;&quot;, &quot;Olive&quot;, &quot;橄榄&quot;, &quot;#808000&quot;},
+            {&quot;&quot;, &quot;DarkKhaki&quot;, &quot;深卡其布&quot;, &quot;#BDB76B&quot;},
+            {&quot;&quot;, &quot;LemonChiffon&quot;, &quot;柠檬薄纱&quot;, &quot;#FFFACD&quot;},
+            {&quot;&quot;, &quot;PaleGodenrod&quot;, &quot;灰秋麒麟&quot;, &quot;#EEE8AA&quot;},
+            {&quot;&quot;, &quot;Khaki&quot;, &quot;卡其布&quot;, &quot;#F0E68C&quot;},
+            {&quot;&quot;, &quot;Gold&quot;, &quot;金&quot;, &quot;#FFD700&quot;},
+            {&quot;&quot;, &quot;Cornislk&quot;, &quot;玉米色&quot;, &quot;#FFF8DC&quot;},
+            {&quot;&quot;, &quot;GoldEnrod&quot;, &quot;秋麒麟&quot;, &quot;#DAA520&quot;},
+            {&quot;&quot;, &quot;FloralWhite&quot;, &quot;花的白色&quot;, &quot;#FFFAF0&quot;},
+            {&quot;&quot;, &quot;OldLace&quot;, &quot;老饰带&quot;, &quot;#FDF5E6&quot;},
+            {&quot;&quot;, &quot;Wheat&quot;, &quot;小麦色&quot;, &quot;#F5DEB3&quot;},
+            {&quot;&quot;, &quot;Moccasin&quot;, &quot;鹿皮鞋&quot;, &quot;#FFE4B5&quot;},
+            {&quot;&quot;, &quot;Orange&quot;, &quot;橙色&quot;, &quot;#FFA500&quot;},
+            {&quot;&quot;, &quot;PapayaWhip&quot;, &quot;番木瓜&quot;, &quot;#FFEFD5&quot;},
+            {&quot;&quot;, &quot;BlanchedAlmond&quot;, &quot;漂白的杏仁&quot;, &quot;#FFEBCD&quot;},
+            {&quot;&quot;, &quot;NavajoWhite&quot;, &quot;纳瓦霍白&quot;, &quot;#FFDEAD&quot;},
+            {&quot;&quot;, &quot;AntiqueWhite&quot;, &quot;古代的白色&quot;, &quot;#FAEBD7&quot;},
+            {&quot;&quot;, &quot;Tan&quot;, &quot;晒黑&quot;, &quot;#D2B48C&quot;},
+            {&quot;&quot;, &quot;BrulyWood&quot;, &quot;结实的树&quot;, &quot;#DEB887&quot;},
+            {&quot;&quot;, &quot;Bisque&quot;, &quot;(浓汤)乳脂,番茄等&quot;, &quot;#FFE4C4&quot;},
+            {&quot;&quot;, &quot;DarkOrange&quot;, &quot;深橙色&quot;, &quot;#FF8C00&quot;},
+            {&quot;&quot;, &quot;Linen&quot;, &quot;亚麻布&quot;, &quot;#FAF0E6&quot;},
+            {&quot;&quot;, &quot;Peru&quot;, &quot;秘鲁&quot;, &quot;#CD853F&quot;},
+            {&quot;&quot;, &quot;PeachPuff&quot;, &quot;桃色&quot;, &quot;#FFDAB9&quot;},
+            {&quot;&quot;, &quot;SandyBrown&quot;, &quot;沙棕色&quot;, &quot;#F4A460&quot;},
+            {&quot;&quot;, &quot;Chocolate&quot;, &quot;巧克力&quot;, &quot;#D2691E&quot;},
+            {&quot;&quot;, &quot;SaddleBrown&quot;, &quot;马鞍棕色&quot;, &quot;#8B4513&quot;},
+            {&quot;&quot;, &quot;SeaShell&quot;, &quot;海贝壳&quot;, &quot;#FFF5EE&quot;},
+            {&quot;&quot;, &quot;Sienna&quot;, &quot;黄土赭色&quot;, &quot;#A0522D&quot;},
+            {&quot;&quot;, &quot;LightSalmon&quot;, &quot;浅鲜肉(鲑鱼)色&quot;, &quot;#FFA07A&quot;},
+            {&quot;&quot;, &quot;Coral&quot;, &quot;珊瑚&quot;, &quot;#FF7F50&quot;},
+            {&quot;&quot;, &quot;OrangeRed&quot;, &quot;橙红色&quot;, &quot;#FF4500&quot;},
+            {&quot;&quot;, &quot;DarkSalmon&quot;, &quot;深鲜肉(鲑鱼)色&quot;, &quot;#E9967A&quot;},
+            {&quot;&quot;, &quot;Tomato&quot;, &quot;番茄&quot;, &quot;#FF6347&quot;},
+            {&quot;&quot;, &quot;MistyRose&quot;, &quot;薄雾玫瑰&quot;, &quot;#FFE4E1&quot;},
+            {&quot;&quot;, &quot;Salmon&quot;, &quot;鲜肉(鲑鱼)色&quot;, &quot;#FA8072&quot;},
+            {&quot;&quot;, &quot;Snow&quot;, &quot;雪&quot;, &quot;#FFFAFA&quot;},
+            {&quot;&quot;, &quot;LightCoral&quot;, &quot;淡珊瑚色&quot;, &quot;#F08080&quot;},
+            {&quot;&quot;, &quot;RosyBrown&quot;, &quot;玫瑰棕色&quot;, &quot;#BC8F8F&quot;},
+            {&quot;&quot;, &quot;IndianRed&quot;, &quot;印度红&quot;, &quot;#CD5C5C&quot;},
+            {&quot;&quot;, &quot;Red&quot;, &quot;纯红&quot;, &quot;#FF0000&quot;},
+            {&quot;&quot;, &quot;Brown&quot;, &quot;棕色&quot;, &quot;#A52A2A&quot;},
+            {&quot;&quot;, &quot;FireBrick&quot;, &quot;耐火砖&quot;, &quot;#B22222&quot;},
+            {&quot;&quot;, &quot;DarkRed&quot;, &quot;深红色&quot;, &quot;#8B0000&quot;},
+            {&quot;&quot;, &quot;Maroon&quot;, &quot;栗色&quot;, &quot;#800000&quot;},
+            {&quot;&quot;, &quot;White&quot;, &quot;纯白&quot;, &quot;#FFFFFF&quot;},
+            {&quot;&quot;, &quot;WhiteSmoke&quot;, &quot;白烟&quot;, &quot;#F5F5F5&quot;},
+            {&quot;&quot;, &quot;Gainsboro&quot;, &quot;亮灰色&quot;, &quot;#DCDCDC&quot;},
+            {&quot;&quot;, &quot;LightGrey&quot;, &quot;浅灰色&quot;, &quot;#D3D3D3&quot;},
+            {&quot;&quot;, &quot;Silver&quot;, &quot;银白色&quot;, &quot;#C0C0C0&quot;},
+            {&quot;&quot;, &quot;DarkGray&quot;, &quot;深灰色&quot;, &quot;#A9A9A9&quot;},
+            {&quot;&quot;, &quot;Gray&quot;, &quot;灰色&quot;, &quot;#808080&quot;},
+            {&quot;&quot;, &quot;DimGray&quot;, &quot;暗淡的灰色&quot;, &quot;#696969&quot;},
+            {&quot;&quot;, &quot;Black&quot;, &quot;纯黑&quot;, &quot;#000000&quot;}
+    };
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
