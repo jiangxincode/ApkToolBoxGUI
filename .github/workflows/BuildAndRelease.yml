@@ -51,7 +51,7 @@ jobs:
           ./PackageMacos.sh
         if: runner.os == 'macOS'
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ApkToolBoxGUI-${{ runner.os }}
           path: target/ApkToolBoxGUI-*-with*-JRE-*.zip
