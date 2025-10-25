@@ -1,8 +1,14 @@
 package edu.jiangxin.apktoolbox.pdf;
 
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.properties.HorizontalAlignment;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,8 +19,12 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 public class PdfUtils {
     private static final Logger LOGGER = LogManager.getLogger(PdfUtils.class.getSimpleName());
@@ -155,5 +165,37 @@ public class PdfUtils {
         }
         LOGGER.info("Processing file: {}, page count: {}", file.getPath(), pageCount);
         return pageCount;
+    }
+
+    public static void imagesToPdf(Set<File> images, File targetFile) {
+        PdfDocument pdfDoc = null;
+        PdfWriter writer = null;
+        Document doc = null;
+        try {
+            writer = new PdfWriter(new FileOutputStream(targetFile));
+            pdfDoc = new PdfDocument(writer);
+            doc = new Document(pdfDoc);
+
+            for (File img : images) {
+                BufferedImage bufferedImage = ImageIO.read(img);
+                float width = bufferedImage.getWidth();
+                float height = bufferedImage.getHeight();
+
+                PageSize pageSize = new PageSize(width, height);
+                pdfDoc.addNewPage(pageSize);
+
+                Image image = new Image(ImageDataFactory.create(img.getAbsolutePath()));
+                image.setFixedPosition(pdfDoc.getNumberOfPages(), 0, 0, width);
+
+                doc.setMargins(0, 0, 0, 0);
+                doc.add(image);
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error processing PDF file: {}", e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(doc);
+            IOUtils.closeQuietly(pdfDoc);
+            IOUtils.closeQuietly(writer);
+        }
     }
 }
