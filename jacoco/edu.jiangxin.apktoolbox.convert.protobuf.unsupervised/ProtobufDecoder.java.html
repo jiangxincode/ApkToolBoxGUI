@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProtobufDecoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.unsupervised</a> &gt; <span class="el_source">ProtobufDecoder.java</span></div><h1>ProtobufDecoder.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
+
+import com.google.protobuf.WireFormat;
+import org.apache.commons.lang3.ArrayUtils;
+import org.json.JSONObject;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+<span class="nc" id="L14">public class ProtobufDecoder {</span>
+
+    private static final String VALID_DATA = &quot;valid_data&quot;;
+
+    private static final String LEFT_OVER_DATA = &quot;left_over_data&quot;;
+
+    private static final String KEY_BYTE_RANGE = &quot;byteRange&quot;;
+
+    private static final String KEY_FIELD_NUMBER = &quot;fieldNumber&quot;;
+
+    private static final String KEY_TYPE = &quot;type&quot;;
+
+    private static final String KEY_VALUE = &quot;value&quot;;
+
+    /**
+     * 解码字节数组
+     *
+     * @param bytes
+     * @return
+     */
+    public static String bytesDecoder(byte[] bytes) {
+<span class="nc" id="L35">        Map&lt;String, Object&gt; map = decodeProto(bytes);</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L37">        List&lt;Map&lt;String, Object&gt;&gt; validItems = (List&lt;Map&lt;String, Object&gt;&gt;) map.get(VALID_DATA);</span>
+<span class="nc" id="L38">        List&lt;JSONObject&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        for (Map&lt;String, Object&gt; validItem : validItems) {</span>
+<span class="nc" id="L40">            DecoderResult protobufPart = getProtobufPart(validItem);</span>
+<span class="nc" id="L41">            JSONObject jsonObject = ProtobufUtils.getJsonObject(protobufPart);</span>
+<span class="nc" id="L42">            result.add(jsonObject);</span>
+<span class="nc" id="L43">        }</span>
+<span class="nc" id="L44">        JSONObject jsonObject = new JSONObject();</span>
+<span class="nc" id="L45">        jsonObject.put(VALID_DATA, result);</span>
+<span class="nc" id="L46">        jsonObject.put(LEFT_OVER_DATA, map.get(LEFT_OVER_DATA));</span>
+<span class="nc" id="L47">        return jsonObject.toString(2);</span>
+    }
+
+    /**
+     * 解码Proto数据结构
+     *
+     * @param buffer
+     * @return
+     */
+    private static Map&lt;String, Object&gt; decodeProto(byte[] buffer) {
+<span class="nc" id="L57">        BufferReader reader = new BufferReader(buffer);</span>
+<span class="nc" id="L58">        List&lt;Object&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L59">        reader.trySkipGrpcHeader();</span>
+
+        try {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            while (reader.leftBytes() &gt; 0) {</span>
+<span class="nc" id="L63">                reader.checkpoint();</span>
+
+<span class="nc" id="L65">                List&lt;Integer&gt; byteRange = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L66">                byteRange.add(reader.getOffset());</span>
+<span class="nc" id="L67">                int indexType = reader.readVarInt().intValue();</span>
+<span class="nc" id="L68">                int type = indexType &amp; 0b111;</span>
+<span class="nc" id="L69">                int fieldNumber = indexType &gt;&gt; 3;</span>
+
+                Object value;
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                if (type == WireFormat.WIRETYPE_VARINT) {</span>
+<span class="nc" id="L73">                    value = reader.readVarInt();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                } else if (type == WireFormat.WIRETYPE_LENGTH_DELIMITED) {</span>
+<span class="nc" id="L75">                    int length = reader.readVarInt().intValue();</span>
+<span class="nc" id="L76">                    value = reader.readBuffer(length);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                } else if (type == WireFormat.WIRETYPE_FIXED32) {</span>
+<span class="nc" id="L78">                    value = reader.readBuffer(4);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                } else if (type == WireFormat.WIRETYPE_FIXED64) {</span>
+<span class="nc" id="L80">                    value = reader.readBuffer(8);</span>
+                } else {
+<span class="nc" id="L82">                    throw new RuntimeException(&quot;Unknown type: &quot; + type);</span>
+                }
+<span class="nc" id="L84">                byteRange.add(reader.getOffset());</span>
+
+<span class="nc" id="L86">                Map&lt;String, Object&gt; part = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L87">                part.put(KEY_BYTE_RANGE, byteRange);</span>
+<span class="nc" id="L88">                part.put(KEY_FIELD_NUMBER, fieldNumber);</span>
+<span class="nc" id="L89">                part.put(KEY_TYPE, type);</span>
+<span class="nc" id="L90">                part.put(KEY_VALUE, value);</span>
+<span class="nc" id="L91">                parts.add(part);</span>
+<span class="nc" id="L92">            }</span>
+<span class="nc" id="L93">        } catch (Exception e) {</span>
+<span class="nc" id="L94">            reader.resetToCheckpoint();</span>
+<span class="nc" id="L95">        }</span>
+
+<span class="nc" id="L97">        Map&lt;String, Object&gt; result = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L98">        result.put(VALID_DATA, parts);</span>
+<span class="nc" id="L99">        result.put(LEFT_OVER_DATA, ByteUtil.bytesToHex(reader.readBuffer(reader.leftBytes())));</span>
+
+<span class="nc" id="L101">        return result;</span>
+    }
+
+    /**
+     * 解码protobuf格式的数据
+     *
+     * @param part
+     * @return
+     */
+    private static DecoderResult getProtobufPart(Map&lt;String, Object&gt; part) {
+<span class="nc" id="L111">        DecoderResult result = new DecoderResult();</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L113">        List&lt;Integer&gt; byteRange = (List&lt;Integer&gt;) part.get(KEY_BYTE_RANGE);</span>
+<span class="nc" id="L114">        result.setByteRange(byteRange);</span>
+<span class="nc" id="L115">        result.setFieldNumber((int) part.get(KEY_FIELD_NUMBER));</span>
+<span class="nc" id="L116">        int type = (int) part.get(KEY_TYPE);</span>
+<span class="nc" id="L117">        Object value = part.get(KEY_VALUE);</span>
+<span class="nc bnc" id="L118" title="All 5 branches missed.">        switch (type) {</span>
+            case WireFormat.WIRETYPE_VARINT:
+<span class="nc" id="L120">                String valueStr = value.toString();</span>
+<span class="nc" id="L121">                result.setContent(decodeVarintParts(valueStr));</span>
+<span class="nc" id="L122">                break;</span>
+            case WireFormat.WIRETYPE_LENGTH_DELIMITED:
+<span class="nc" id="L124">                byte[] bytes = (byte[]) value;</span>
+<span class="nc" id="L125">                Map&lt;String, Object&gt; decoded = decodeProto(bytes);</span>
+<span class="nc" id="L126">                String leftOverData = (String) decoded.get(LEFT_OVER_DATA);</span>
+<span class="nc bnc" id="L127" title="All 8 branches missed.">                if (bytes != null &amp;&amp; bytes.length &gt; 0 &amp;&amp; leftOverData != null &amp;&amp; leftOverData.length() == 0) {</span>
+                    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L129">                    List&lt;Map&lt;String, Object&gt;&gt; decodedParts = (List&lt;Map&lt;String, Object&gt;&gt;) decoded.get(VALID_DATA);</span>
+<span class="nc" id="L130">                    List&lt;DecoderResult&gt; subResults = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                    for (Map&lt;String, Object&gt; decodedPart : decodedParts) {</span>
+<span class="nc" id="L132">                        DecoderResult protobufPart = getProtobufPart(decodedPart);</span>
+<span class="nc" id="L133">                        subResults.add(protobufPart);</span>
+<span class="nc" id="L134">                    }</span>
+<span class="nc" id="L135">                    result.setSubResults(subResults);</span>
+<span class="nc" id="L136">                } else {</span>
+<span class="nc" id="L137">                    Map&lt;String, Object&gt; map = decodeStringOrBytes(bytes);</span>
+<span class="nc" id="L138">                    result.setContent((String) map.get(KEY_VALUE));</span>
+                }
+<span class="nc" id="L140">                break;</span>
+            case WireFormat.WIRETYPE_FIXED64:
+<span class="nc" id="L142">                bytes = (byte[]) value;</span>
+<span class="nc" id="L143">                List&lt;Map&lt;String, Object&gt;&gt; fixed64Result = decodeFixed64(bytes);</span>
+<span class="nc" id="L144">                result.setContent(JSONObject.valueToString(fixed64Result));</span>
+<span class="nc" id="L145">                break;</span>
+            case WireFormat.WIRETYPE_FIXED32:
+<span class="nc" id="L147">                bytes = (byte[]) value;</span>
+<span class="nc" id="L148">                List&lt;Map&lt;String, Object&gt;&gt; fixed32Result = decodeFixed32(bytes);</span>
+<span class="nc" id="L149">                result.setContent(JSONObject.valueToString(fixed32Result));</span>
+<span class="nc" id="L150">                break;</span>
+            default:
+                break;
+        }
+<span class="nc" id="L154">        result.setType(type);</span>
+<span class="nc" id="L155">        return result;</span>
+    }
+
+
+    /**
+     * 解码为Fixed32格式数据
+     *
+     */
+    private static List&lt;Map&lt;String, Object&gt;&gt; decodeFixed32(byte[] value) {
+<span class="nc" id="L164">        float floatValue = ByteUtil.bytesToFloat(value);</span>
+<span class="nc" id="L165">        int intValue = ByteUtil.bytesToInt(value);</span>
+<span class="nc" id="L166">        int uintValue = ByteUtil.bytesToInt(value);</span>
+
+<span class="nc" id="L168">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;(3);</span>
+<span class="nc" id="L169">        Map&lt;String, Object&gt; map1 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L170">        map1.put(KEY_TYPE, &quot;Int&quot;);</span>
+<span class="nc" id="L171">        map1.put(KEY_VALUE, intValue);</span>
+<span class="nc" id="L172">        result.add(map1);</span>
+
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (intValue != uintValue) {</span>
+<span class="nc" id="L175">            Map&lt;String, Object&gt; map2 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L176">            map2.put(KEY_TYPE, &quot;Unsigned Int&quot;);</span>
+<span class="nc" id="L177">            map2.put(KEY_VALUE, uintValue);</span>
+<span class="nc" id="L178">            result.add(map2);</span>
+        }
+<span class="nc" id="L180">        Map&lt;String, Object&gt; map3 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L181">        map3.put(KEY_TYPE, &quot;Float&quot;);</span>
+<span class="nc" id="L182">        map3.put(KEY_VALUE, floatValue);</span>
+<span class="nc" id="L183">        result.add(map3);</span>
+<span class="nc" id="L184">        return result;</span>
+    }
+
+
+    /**
+     * 解码为Fixed64格式数据
+     *
+     */
+    private static List&lt;Map&lt;String, Object&gt;&gt; decodeFixed64(byte[] value) {
+<span class="nc" id="L193">        double floatValue = ByteUtil.bytesToDouble(value);</span>
+<span class="nc" id="L194">        BigInteger intValue = new BigInteger(ByteUtil.bytesToHex(value), 16);</span>
+<span class="nc" id="L195">        BigInteger uintValue = twoComplements(intValue);</span>
+
+<span class="nc" id="L197">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;(3);</span>
+<span class="nc" id="L198">        Map&lt;String, Object&gt; map1 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L199">        map1.put(KEY_TYPE, &quot;Int&quot;);</span>
+<span class="nc" id="L200">        map1.put(KEY_VALUE, intValue.toString());</span>
+<span class="nc" id="L201">        result.add(map1);</span>
+
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (!intValue.equals(uintValue)) {</span>
+<span class="nc" id="L204">            Map&lt;String, Object&gt; map2 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L205">            map2.put(KEY_TYPE, &quot;Unsigned Int&quot;);</span>
+<span class="nc" id="L206">            map2.put(KEY_VALUE, uintValue.toString());</span>
+<span class="nc" id="L207">            result.add(map2);</span>
+        }
+<span class="nc" id="L209">        Map&lt;String, Object&gt; map3 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L210">        map3.put(KEY_TYPE, &quot;Double&quot;);</span>
+<span class="nc" id="L211">        map3.put(KEY_VALUE, floatValue);</span>
+<span class="nc" id="L212">        result.add(map3);</span>
+<span class="nc" id="L213">        return result;</span>
+    }
+
+
+    /**
+     * 解码为字符串或16进制字符串
+     *
+     */
+    private static Map&lt;String, Object&gt; decodeStringOrBytes(byte[] value) {
+<span class="nc" id="L222">        Map&lt;String, Object&gt; result = new HashMap&lt;&gt;(2);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (ArrayUtils.isEmpty(value)) {</span>
+<span class="nc" id="L224">            result.put(KEY_TYPE, &quot;string|bytes&quot;);</span>
+<span class="nc" id="L225">            result.put(KEY_VALUE, &quot;&quot;);</span>
+<span class="nc" id="L226">            return result;</span>
+        }
+        try {
+<span class="nc" id="L229">            result.put(KEY_TYPE, &quot;string&quot;);</span>
+<span class="nc" id="L230">            result.put(KEY_VALUE, hexStrToStr(ByteUtil.bytesToHex(value), &quot;utf-8&quot;));</span>
+<span class="nc" id="L231">        } catch (Exception e) {</span>
+<span class="nc" id="L232">            result.put(KEY_TYPE, &quot;bytes&quot;);</span>
+<span class="nc" id="L233">            result.put(KEY_VALUE, ByteUtil.bytesToHex(value));</span>
+<span class="nc" id="L234">        }</span>
+<span class="nc" id="L235">        return result;</span>
+    }
+
+
+    /**
+     * 解码为Varint格式数据
+     *
+     */
+    private static String decodeVarintParts(String value) {
+<span class="nc" id="L244">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;(3);</span>
+<span class="nc" id="L245">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L246">        BigInteger intVal = new BigInteger(value);</span>
+<span class="nc" id="L247">        Map&lt;String, Object&gt; map1 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L248">        sb.append(&quot;[as uint:&quot;);</span>
+<span class="nc" id="L249">        sb.append(intVal);</span>
+<span class="nc" id="L250">        sb.append(&quot;]&quot;);</span>
+<span class="nc" id="L251">        result.add(map1);</span>
+
+<span class="nc" id="L253">        BigInteger signedIntVal = VarintUtils.interpretAsSignedType(intVal);</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (!signedIntVal.equals(intVal)) {</span>
+<span class="nc" id="L255">            Map&lt;String, Object&gt; map2 = new HashMap&lt;&gt;(2);</span>
+<span class="nc" id="L256">            sb.append(&quot;[as sint:&quot;);</span>
+<span class="nc" id="L257">            sb.append(signedIntVal);</span>
+<span class="nc" id="L258">            sb.append(&quot;]&quot;);</span>
+<span class="nc" id="L259">            result.add(map2);</span>
+        }
+<span class="nc" id="L261">        return sb.toString();</span>
+    }
+
+
+    /**
+     * 补码
+     *
+     * @param uintValue
+     * @return
+     */
+    private static BigInteger twoComplements(BigInteger uintValue) {
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (uintValue.compareTo(new BigInteger(&quot;7fffffffffffffff&quot;, 16)) &gt; 0) {</span>
+<span class="nc" id="L273">            return uintValue.subtract(new BigInteger(&quot;10000000000000000&quot;, 16));</span>
+        } else {
+<span class="nc" id="L275">            return uintValue;</span>
+        }
+    }
+
+    /**
+     * 将16进制字符串转字符串
+     *
+     * @param string
+     * @param charsetName
+     * @return
+     */
+    private static String hexStrToStr(String string, String charsetName) {
+<span class="nc bnc" id="L287" title="All 4 branches missed.">        if (string == null || string.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L288">            return null;</span>
+        }
+<span class="nc" id="L290">        byte[] baKeyword = new byte[string.length() / 2];</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">        for (int i = 0; i &lt; baKeyword.length; i++) {</span>
+            try {
+<span class="nc" id="L293">                baKeyword[i] = (byte) (0xff &amp; Integer.parseInt(string.substring(i * 2, i * 2 + 2), 16));</span>
+<span class="nc" id="L294">            } catch (Exception e) {</span>
+<span class="nc" id="L295">                e.printStackTrace();</span>
+<span class="nc" id="L296">            }</span>
+        }
+        try {
+<span class="nc" id="L299">            string = new String(baKeyword, charsetName);</span>
+<span class="nc" id="L300">        } catch (Exception e1) {</span>
+<span class="nc" id="L301">            e1.printStackTrace();</span>
+<span class="nc" id="L302">        }</span>
+<span class="nc" id="L303">        return string;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
