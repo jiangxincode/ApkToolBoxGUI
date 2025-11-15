@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GarbledTextRecoveryPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.encoding</a> &gt; <span class="el_source">GarbledTextRecoveryPanel.java</span></div><h1>GarbledTextRecoveryPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.encoding;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.io.Serial;
+
+public class GarbledTextRecoveryPanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private JPanel inputPanel;
+
+    private JTextArea inputArea;
+
+    private JPanel resultPanel;
+
+    private DefaultTableModel tableModel;
+
+    private JPanel operationPanel;
+
+<span class="nc" id="L25">    private static final String[] CHARSETS = {</span>
+            &quot;UTF-8&quot;, &quot;GBK&quot;, &quot;ISO-8859-1&quot;, &quot;Big5&quot;, &quot;Shift_JIS&quot;, &quot;EUC-KR&quot;, &quot;Windows-1252&quot;
+    };
+
+    public GarbledTextRecoveryPanel() throws HeadlessException {
+<span class="nc" id="L30">        super();</span>
+<span class="nc" id="L31">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L35">        setPreferredSize(new Dimension(900, 600));</span>
+<span class="nc" id="L36">        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L38">        createInputPanel();</span>
+<span class="nc" id="L39">        add(inputPanel);</span>
+<span class="nc" id="L40">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L42">        createResultPanel();</span>
+<span class="nc" id="L43">        add(resultPanel);</span>
+<span class="nc" id="L44">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L46">        createOperationPanel();</span>
+<span class="nc" id="L47">        add(operationPanel);</span>
+<span class="nc" id="L48">    }</span>
+
+    private void createInputPanel() {
+<span class="nc" id="L51">        inputPanel = new JPanel();</span>
+<span class="nc" id="L52">        BoxLayout layout = new BoxLayout(inputPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L53">        inputPanel.setLayout(layout);</span>
+
+<span class="nc" id="L55">        inputArea = new JTextArea(4, 60);</span>
+<span class="nc" id="L56">        inputArea.setText(&quot;鐢变簬鍦ㄧ被璺\uE21A緞涓\uE15E彂鐜颁簡涓€涓\uE045垨澶氫釜澶勭悊绋嬪簭锛屽洜姝ゅ惎鐢ㄤ簡&quot;);</span>
+<span class="nc" id="L57">        JScrollPane inputScroll = new JScrollPane(inputArea);</span>
+<span class="nc" id="L58">        inputScroll.setBorder(BorderFactory.createTitledBorder(&quot;Please enter the garbled text:&quot;));</span>
+<span class="nc" id="L59">        inputScroll.setPreferredSize(new Dimension(700, 200));</span>
+
+<span class="nc" id="L61">        inputPanel.add(inputScroll);</span>
+<span class="nc" id="L62">    }</span>
+
+    private void createResultPanel() {
+<span class="nc" id="L65">        resultPanel = new JPanel();</span>
+<span class="nc" id="L66">        BoxLayout layout = new BoxLayout(resultPanel, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L67">        resultPanel.setLayout(layout);</span>
+
+
+<span class="nc" id="L70">        String[] columns = {&quot;Current Encoding&quot;, &quot;Original Encoding&quot;, &quot;Recovered Result&quot;};</span>
+<span class="nc" id="L71">        tableModel = new DefaultTableModel(columns, 0);</span>
+<span class="nc" id="L72">        JTable resultTable = new JTable(tableModel);</span>
+<span class="nc" id="L73">        resultTable.setRowHeight(30);</span>
+<span class="nc" id="L74">        resultTable.getColumnModel().getColumn(2).setPreferredWidth(400);</span>
+<span class="nc" id="L75">        JScrollPane tableScroll = new JScrollPane(resultTable);</span>
+<span class="nc" id="L76">        tableScroll.setPreferredSize(new Dimension(700, 300));</span>
+
+<span class="nc" id="L78">        resultPanel.add(tableScroll);</span>
+<span class="nc" id="L79">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L82">        operationPanel = new JPanel();</span>
+<span class="nc" id="L83">        BoxLayout layout = new BoxLayout(operationPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L84">        operationPanel.setLayout(layout);</span>
+
+<span class="nc" id="L86">        JButton recoverButton = new JButton(&quot;Try All Encoding Combinations&quot;);</span>
+<span class="nc" id="L87">        recoverButton.addActionListener(e -&gt; recoverAll());</span>
+
+<span class="nc" id="L89">        operationPanel.add(recoverButton);</span>
+<span class="nc" id="L90">    }</span>
+
+    private void recoverAll() {
+<span class="nc" id="L93">        tableModel.setRowCount(0);</span>
+<span class="nc" id="L94">        String input = inputArea.getText().trim();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (input.isEmpty()) return;</span>
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        for (String now : CHARSETS) {</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            for (String orig : CHARSETS) {</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">                if (!now.equals(orig)) {</span>
+                    try {
+<span class="nc" id="L101">                        byte[] bytes = input.getBytes(now);</span>
+<span class="nc" id="L102">                        String recovered = new String(bytes, orig);</span>
+
+<span class="nc" id="L104">                        tableModel.addRow(new Object[]{now, orig, recovered});</span>
+<span class="nc" id="L105">                    } catch (Exception ex) {</span>
+<span class="nc" id="L106">                        tableModel.addRow(new Object[]{now, orig, &quot;Conversion Failed&quot;});</span>
+<span class="nc" id="L107">                    }</span>
+                }
+
+            }
+        }
+<span class="nc" id="L112">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

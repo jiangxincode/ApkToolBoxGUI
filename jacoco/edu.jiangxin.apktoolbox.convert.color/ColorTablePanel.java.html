@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColorTablePanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color</a> &gt; <span class="el_source">ColorTablePanel.java</span></div><h1>ColorTablePanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color;
+
+import edu.jiangxin.apktoolbox.convert.color.colortable.IColorTable;
+import edu.jiangxin.apktoolbox.convert.color.colortable.OrdinaryColorTable;
+import edu.jiangxin.apktoolbox.convert.color.colortable.RalColorTable;
+import edu.jiangxin.apktoolbox.convert.color.utils.ColorUtils;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.io.Serial;
+
+public class ColorTablePanel extends EasyPanel {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private JComboBox&lt;IColorTable&gt; colorTableTypeComboBox;
+
+    private JTable colorTable;
+
+    public ColorTablePanel() throws HeadlessException {
+<span class="nc" id="L25">        super();</span>
+<span class="nc" id="L26">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L30">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L31">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L33">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L34">        createColorTablePanel();</span>
+<span class="nc" id="L35">    }</span>
+
+    private void createColorTablePanel() {
+<span class="nc" id="L38">        JPanel colorTablePanel = new JPanel();</span>
+<span class="nc" id="L39">        add(colorTablePanel);</span>
+<span class="nc" id="L40">        setLayout(new BorderLayout());</span>
+<span class="nc" id="L41">        setBorder(BorderFactory.createTitledBorder(&quot;Color Table&quot;));</span>
+
+<span class="nc" id="L43">        JPanel yPanel = new JPanel();</span>
+<span class="nc" id="L44">        add(yPanel);</span>
+<span class="nc" id="L45">        yPanel.setLayout(new BoxLayout(yPanel, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L47">        colorTableTypeComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L48">        IColorTable ordinaryColorTable = new OrdinaryColorTable();</span>
+<span class="nc" id="L49">        IColorTable ralColorTable = new RalColorTable();</span>
+<span class="nc" id="L50">        colorTableTypeComboBox.addItem(ordinaryColorTable);</span>
+<span class="nc" id="L51">        colorTableTypeComboBox.addItem(ralColorTable);</span>
+<span class="nc" id="L52">        colorTableTypeComboBox.setSelectedItem(ordinaryColorTable);</span>
+<span class="nc" id="L53">        colorTableTypeComboBox.addItemListener(itemEvent -&gt; {</span>
+<span class="nc" id="L54">            ColorDefaultTableModel model = (ColorDefaultTableModel) colorTable.getModel();</span>
+<span class="nc" id="L55">            IColorTable selectedColorTable = (IColorTable) itemEvent.getItem();</span>
+<span class="nc" id="L56">            model.setDataVector(selectedColorTable.getTableRowData(), selectedColorTable.getColumnNames());</span>
+<span class="nc" id="L57">            onColorTableChanged();</span>
+<span class="nc" id="L58">        });</span>
+
+<span class="nc" id="L60">        IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();</span>
+<span class="nc" id="L61">        colorTable = new JTable(new ColorDefaultTableModel(selectedColorTable.getTableRowData(), selectedColorTable.getColumnNames()));</span>
+<span class="nc" id="L62">        JScrollPane colorTableScrollPane = new JScrollPane(colorTable);</span>
+<span class="nc" id="L63">        onColorTableChanged();</span>
+
+<span class="nc" id="L65">        yPanel.add(colorTableTypeComboBox);</span>
+<span class="nc" id="L66">        yPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L67">        yPanel.add(colorTableScrollPane);</span>
+<span class="nc" id="L68">    }</span>
+
+    private void onColorTableChanged() {
+<span class="nc" id="L71">        IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();</span>
+<span class="nc" id="L72">        int labelIndex = selectedColorTable.getLabelIndex();</span>
+<span class="nc" id="L73">        String labelName = colorTable.getColumnName(labelIndex);</span>
+<span class="nc" id="L74">        colorTable.getColumn(labelName).setCellRenderer(new ColorTableCellRenderer());</span>
+<span class="nc" id="L75">    }</span>
+
+    private class ColorDefaultTableModel extends DefaultTableModel {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
+<span class="nc" id="L81">        public ColorDefaultTableModel(Object[][] data, Object[] columnNames) {</span>
+<span class="nc" id="L82">            super(data, columnNames);</span>
+<span class="nc" id="L83">        }</span>
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+<span class="nc" id="L87">            return true;</span>
+        }
+    }
+
+<span class="nc" id="L91">    private class ColorTableCellRenderer extends DefaultTableCellRenderer {</span>
+        @Serial
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+<span class="nc" id="L97">            Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);</span>
+<span class="nc" id="L98">            IColorTable selectedColorTable = (IColorTable) colorTableTypeComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (selectedColorTable == null) {</span>
+<span class="nc" id="L100">                return renderer;</span>
+            }
+<span class="nc" id="L102">            String hex = (String) colorTable.getValueAt(row, selectedColorTable.getHexIndex());</span>
+<span class="nc" id="L103">            Color color = ColorUtils.hex2Color(hex);</span>
+<span class="nc" id="L104">            renderer.setBackground(color);</span>
+<span class="nc" id="L105">            return renderer;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

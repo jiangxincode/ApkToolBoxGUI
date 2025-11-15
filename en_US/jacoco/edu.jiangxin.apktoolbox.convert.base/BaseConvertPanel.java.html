@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.base</a> &gt; <span class="el_source">BaseConvertPanel.java</span></div><h1>BaseConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.base;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.Serial;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L19">public class BaseConvertPanel extends EasyPanel {</span>
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private static final String PROPERTY_KEY = &quot;name&quot;;
+
+    private static final String DECIMAL = &quot;Decimal&quot;;
+
+    private static final String BINARY = &quot;Binary&quot;;
+
+    private static final String OCTAL = &quot;Octal&quot;;
+
+    private static final String HEX = &quot;Hex&quot;;
+
+    private transient DocumentListener documentListener;
+
+    private transient DocumentFilter documentFilter;
+
+    private boolean isChangedByUser;
+
+<span class="nc" id="L39">    private transient final List&lt;BaseUiObject&gt; baseUiObjects = new ArrayList&lt;&gt;();</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L43">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L44">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L46">        documentListener = new TextFieldDocumentListener();</span>
+<span class="nc" id="L47">        documentFilter = new TextFieldDocumentFilter();</span>
+
+<span class="nc" id="L49">        isChangedByUser = true;</span>
+
+<span class="nc" id="L51">        baseUiObjects.add(new BaseUiObject(2));</span>
+<span class="nc" id="L52">        baseUiObjects.add(new BaseUiObject(8));</span>
+<span class="nc" id="L53">        baseUiObjects.add(new BaseUiObject(10));</span>
+<span class="nc" id="L54">        baseUiObjects.add(new BaseUiObject(16));</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        for (BaseUiObject baseUiObject : baseUiObjects) {</span>
+<span class="nc" id="L57">            add(baseUiObject.panel);</span>
+<span class="nc" id="L58">            add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+<span class="nc" id="L59">        }</span>
+
+<span class="nc" id="L61">        JButton clearBtn = new JButton(&quot;Clear&quot;);</span>
+<span class="nc" id="L62">        clearBtn.addActionListener(new ClearButtonActionListener());</span>
+<span class="nc" id="L63">        add(clearBtn);</span>
+<span class="nc" id="L64">    }</span>
+
+
+<span class="nc" id="L67">    class ClearButtonActionListener implements ActionListener {</span>
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+<span class="nc" id="L70">            isChangedByUser = false;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            for (BaseUiObject baseUiObject : baseUiObjects) {</span>
+<span class="nc" id="L72">                baseUiObject.textField.setText(&quot;&quot;);</span>
+<span class="nc" id="L73">            }</span>
+<span class="nc" id="L74">            isChangedByUser = true;</span>
+<span class="nc" id="L75">        }</span>
+    }
+
+<span class="nc" id="L78">    class TextFieldDocumentListener implements DocumentListener {</span>
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+<span class="nc" id="L81">        }</span>
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+<span class="nc" id="L85">            detect(e);</span>
+<span class="nc" id="L86">        }</span>
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+<span class="nc" id="L90">            detect(e);</span>
+<span class="nc" id="L91">        }</span>
+    }
+
+<span class="nc" id="L94">    class TextFieldDocumentFilter extends DocumentFilter {</span>
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+<span class="nc" id="L97">            Document doc = fb.getDocument();</span>
+<span class="nc" id="L98">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L99">            sb.append(doc.getText(0, doc.getLength()));</span>
+<span class="nc" id="L100">            sb.insert(offset, string);</span>
+
+<span class="nc" id="L102">            Object propertyObj = doc.getProperty(PROPERTY_KEY);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (propertyObj == null) {</span>
+<span class="nc" id="L104">                Toolkit.getDefaultToolkit().beep();</span>
+<span class="nc" id="L105">                return;</span>
+            }
+<span class="nc" id="L107">            Integer radix = (Integer) doc.getProperty(PROPERTY_KEY);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (isValidText(radix, sb.toString())) {</span>
+<span class="nc" id="L109">                super.insertString(fb, offset, string, attr);</span>
+            } else {
+<span class="nc" id="L111">                Toolkit.getDefaultToolkit().beep();</span>
+            }
+<span class="nc" id="L113">        }</span>
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+<span class="nc" id="L117">            Document doc = fb.getDocument();</span>
+<span class="nc" id="L118">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L119">            sb.append(doc.getText(0, doc.getLength()));</span>
+<span class="nc" id="L120">            sb.replace(offset, offset + length, text);</span>
+
+<span class="nc" id="L122">            Object propertyObj = doc.getProperty(PROPERTY_KEY);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            if (propertyObj == null) {</span>
+<span class="nc" id="L124">                Toolkit.getDefaultToolkit().beep();</span>
+<span class="nc" id="L125">                return;</span>
+            }
+<span class="nc" id="L127">            Integer radix = (Integer) doc.getProperty(PROPERTY_KEY);</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (isValidText(radix, sb.toString())) {</span>
+<span class="nc" id="L129">                super.replace(fb, offset, length, text, attrs);</span>
+            } else {
+<span class="nc" id="L131">                Toolkit.getDefaultToolkit().beep();</span>
+            }
+<span class="nc" id="L133">        }</span>
+    }
+
+    private void detect(DocumentEvent documentEvent) {
+<span class="nc" id="L137">        Document doc = documentEvent.getDocument();</span>
+<span class="nc" id="L138">        Integer radix = (Integer) doc.getProperty(PROPERTY_KEY);</span>
+<span class="nc" id="L139">        convertMe(radix);</span>
+<span class="nc" id="L140">    }</span>
+
+    private void convertMe(int radix) {
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (!isChangedByUser) {</span>
+<span class="nc" id="L144">            return;</span>
+        }
+
+<span class="nc" id="L147">        BigInteger value = null;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (BaseUiObject baseUiObject : baseUiObjects) {</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (baseUiObject.radix == radix) {</span>
+<span class="nc" id="L150">                String text = baseUiObject.textField.getText();</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                if (StringUtils.isEmpty(text)) {</span>
+<span class="nc" id="L152">                    value = null;</span>
+                } else {
+<span class="nc" id="L154">                    value = new BigInteger(text, radix);</span>
+                }
+            }
+<span class="nc" id="L157">        }</span>
+<span class="nc" id="L158">        isChangedByUser = false;</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        for (BaseUiObject baseUiObject : baseUiObjects) {</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (baseUiObject.radix != radix) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L162">                    baseUiObject.textField.setText(&quot;&quot;);</span>
+                } else {
+<span class="nc" id="L164">                    baseUiObject.textField.setText(value.toString(baseUiObject.radix));</span>
+                }
+            }
+<span class="nc" id="L167">        }</span>
+<span class="nc" id="L168">        isChangedByUser = true;</span>
+<span class="nc" id="L169">    }</span>
+
+    private boolean isBinStr(String str) {
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (str == null) {</span>
+<span class="nc" id="L173">            return false;</span>
+        }
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="nc bnc" id="L176" title="All 4 branches missed.">            if ((str.charAt(i) != '1') &amp;&amp; (str.charAt(i) != '0')) {</span>
+<span class="nc" id="L177">                return false;</span>
+            }
+        }
+<span class="nc" id="L180">        return true;</span>
+    }
+
+    private boolean isDecStr(String str) {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (str == null) {</span>
+<span class="nc" id="L185">            return false;</span>
+        }
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="nc bnc" id="L188" title="All 4 branches missed.">            if ((str.charAt(i) &lt; '0') || (str.charAt(i) &gt; '9')) {</span>
+<span class="nc" id="L189">                return false;</span>
+            }
+        }
+<span class="nc" id="L192">        return true;</span>
+    }
+
+    private boolean isOctStr(String str) {
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (str == null) {</span>
+<span class="nc" id="L197">            return false;</span>
+        }
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="nc bnc" id="L200" title="All 4 branches missed.">            if ((str.charAt(i) &lt; '0') || (str.charAt(i) &gt; '7')) {</span>
+<span class="nc" id="L201">                return false;</span>
+            }
+        }
+<span class="nc" id="L204">        return true;</span>
+    }
+
+    private boolean isHexStr(String str) {
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (str == null) {</span>
+<span class="nc" id="L209">            return false;</span>
+        }
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="nc" id="L212">            char c = str.charAt(i);</span>
+<span class="nc bnc" id="L213" title="All 12 branches missed.">            if ((c &lt; '0' || c &gt; '9') &amp;&amp; (c &lt; 'A' || c &gt; 'F') &amp;&amp; (c &lt; 'a' || c &gt; 'f')) {</span>
+<span class="nc" id="L214">                return false;</span>
+            }
+        }
+<span class="nc" id="L217">        return true;</span>
+    }
+
+    private boolean isValidText(int radix, String text) {
+<span class="nc bnc" id="L221" title="All 5 branches missed.">        switch (radix) {</span>
+            case 2 -&gt; {
+<span class="nc" id="L223">                return isBinStr(text);</span>
+            }
+            case 8 -&gt; {
+<span class="nc" id="L226">                return isOctStr(text);</span>
+            }
+            case 10 -&gt; {
+<span class="nc" id="L229">                return isDecStr(text);</span>
+            }
+            case 16 -&gt; {
+<span class="nc" id="L232">                return isHexStr(text);</span>
+            }
+            default -&gt; {
+<span class="nc" id="L235">                return false;</span>
+            }
+        }
+    }
+
+    class BaseUiObject {
+        int radix;
+
+        JPanel panel;
+
+        JLabel label;
+
+        JTextField textField;
+
+<span class="nc" id="L249">        BaseUiObject(int radix) {</span>
+<span class="nc" id="L250">            this.radix = radix;</span>
+<span class="nc" id="L251">            panel = new JPanel();</span>
+<span class="nc" id="L252">            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));</span>
+
+<span class="nc" id="L254">            label = new JLabel(this + &quot;:&quot;);</span>
+<span class="nc" id="L255">            label.setPreferredSize(new Dimension(50, 25));</span>
+
+<span class="nc" id="L257">            textField = new JTextField();</span>
+<span class="nc" id="L258">            textField.getDocument().addDocumentListener(documentListener);</span>
+<span class="nc" id="L259">            ((PlainDocument) textField.getDocument()).setDocumentFilter(documentFilter);</span>
+<span class="nc" id="L260">            textField.getDocument().putProperty(PROPERTY_KEY, radix);</span>
+
+<span class="nc" id="L262">            panel.add(label);</span>
+<span class="nc" id="L263">            panel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L264">            panel.add(textField);</span>
+<span class="nc" id="L265">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc bnc" id="L269" title="All 5 branches missed.">            switch (radix) {</span>
+                case 2 -&gt; {
+<span class="nc" id="L271">                    return BINARY;</span>
+                }
+                case 8 -&gt; {
+<span class="nc" id="L274">                    return OCTAL;</span>
+                }
+                case 10 -&gt; {
+<span class="nc" id="L277">                    return DECIMAL;</span>
+                }
+                case 16 -&gt; {
+<span class="nc" id="L280">                    return HEX;</span>
+                }
+                default -&gt; {
+<span class="nc" id="L283">                    return String.valueOf(radix);</span>
+                }
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

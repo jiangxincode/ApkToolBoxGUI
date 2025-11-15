@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DescriptorCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.supervised</a> &gt; <span class="el_source">DescriptorCache.java</span></div><h1>DescriptorCache.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.supervised;
+
+import com.google.protobuf.DescriptorProtos;
+import com.google.protobuf.Descriptors;
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Stream;
+
+public final class DescriptorCache {
+<span class="nc" id="L15">    private static final Descriptors.FileDescriptor[] DEPENDENCIES = new Descriptors.FileDescriptor[0];</span>
+
+    public static DescriptorCache emptyCache() {
+<span class="nc" id="L18">        return new DescriptorCache();</span>
+    }
+
+    public static DescriptorCache fromDirectory(final Path directory) {
+<span class="nc" id="L22">        Objects.requireNonNull(directory);</span>
+
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (!Files.isDirectory(directory)) {</span>
+<span class="nc" id="L25">            throw new IllegalArgumentException(&quot;Path must be a directory: &quot; + directory);</span>
+        }
+
+<span class="nc" id="L28">        final DescriptorCache cache = new DescriptorCache();</span>
+<span class="nc" id="L29">        try (Stream&lt;Path&gt; walk = Files.walk(directory)) {</span>
+<span class="nc" id="L30">            walk.filter(Files::isRegularFile)</span>
+<span class="nc" id="L31">                    .forEach(cache::addDescriptors);</span>
+<span class="nc" id="L32">        } catch (final IOException e) {</span>
+<span class="nc" id="L33">            throw new UncheckedIOException(e);</span>
+<span class="nc" id="L34">        }</span>
+<span class="nc" id="L35">        return cache;</span>
+    }
+
+    public static DescriptorCache fromFile(final Path descriptorsFile) {
+<span class="nc" id="L39">        Objects.requireNonNull(descriptorsFile);</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (!Files.isRegularFile(descriptorsFile)) {</span>
+<span class="nc" id="L42">            throw new IllegalArgumentException(&quot;Path must be a regular file: &quot; + descriptorsFile);</span>
+        }
+<span class="nc" id="L44">        final DescriptorCache cache = new DescriptorCache();</span>
+<span class="nc" id="L45">        cache.addDescriptors(descriptorsFile);</span>
+<span class="nc" id="L46">        return cache;</span>
+    }
+
+<span class="nc" id="L49">    private final Map&lt;String, Descriptors.Descriptor&gt; typeNameToDescriptor = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L51">    private DescriptorCache() {</span>
+
+<span class="nc" id="L53">    }</span>
+
+    @SuppressWarnings({&quot;WeakerAccess&quot;, &quot;UnusedReturnValue&quot;})
+    public Optional&lt;Descriptors.Descriptor&gt; addDescriptor(final Descriptors.Descriptor descriptor) {
+<span class="nc" id="L57">        Objects.requireNonNull(descriptor);</span>
+<span class="nc" id="L58">        final String typeName = Objects.requireNonNull(descriptor.getName());</span>
+
+<span class="nc" id="L60">        return Optional.ofNullable(typeNameToDescriptor.put(typeName, descriptor));</span>
+    }
+
+    @SuppressWarnings(&quot;WeakerAccess&quot;)
+    public void addDescriptors(final Path descriptorsFile) {
+<span class="nc" id="L65">        Objects.requireNonNull(descriptorsFile);</span>
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (!Files.isRegularFile(descriptorsFile)) {</span>
+<span class="nc" id="L68">            throw new IllegalArgumentException(&quot;Path must be a regular file: &quot; + descriptorsFile);</span>
+        }
+
+        try {
+<span class="nc" id="L72">            addDescriptors(Files.readAllBytes(descriptorsFile));</span>
+<span class="nc" id="L73">        } catch (final IOException e) {</span>
+<span class="nc" id="L74">            throw new UncheckedIOException(&quot;While reading: &quot; + descriptorsFile.toAbsolutePath(), e);</span>
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">    }</span>
+
+    @SuppressWarnings(&quot;WeakerAccess&quot;)
+    public void addDescriptors(final byte[] descriptorsRaw) {
+<span class="nc" id="L80">        Objects.requireNonNull(descriptorsRaw);</span>
+
+        try {
+<span class="nc" id="L83">            final DescriptorProtos.FileDescriptorSet descriptorSet =</span>
+<span class="nc" id="L84">                    DescriptorProtos.FileDescriptorSet.parseFrom(descriptorsRaw);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            for (final DescriptorProtos.FileDescriptorProto descriptorFile : descriptorSet.getFileList()) {</span>
+<span class="nc" id="L86">                final Descriptors.FileDescriptor fileDescriptor =</span>
+<span class="nc" id="L87">                        Descriptors.FileDescriptor.buildFrom(descriptorFile, DEPENDENCIES);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                for (final Descriptors.Descriptor descriptor : fileDescriptor.getMessageTypes()) {</span>
+<span class="nc" id="L89">                    addDescriptor(descriptor);</span>
+<span class="nc" id="L90">                }</span>
+<span class="nc" id="L91">            }</span>
+<span class="nc" id="L92">        } catch (final InvalidProtocolBufferException | Descriptors.DescriptorValidationException e) {</span>
+<span class="nc" id="L93">            throw new RuntimeException(e);</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">    }</span>
+
+    public Optional&lt;Descriptors.Descriptor&gt; getByTypeName(final String typeName) {
+<span class="nc" id="L98">        Objects.requireNonNull(typeName);</span>
+
+<span class="nc" id="L100">        return Optional.ofNullable(typeNameToDescriptor.get(typeName));</span>
+    }
+
+    public Collection&lt;Descriptors.Descriptor&gt; getDescriptors() {
+<span class="nc" id="L104">        return Collections.unmodifiableCollection(typeNameToDescriptor.values());</span>
+    }
+
+    public Collection&lt;Map.Entry&lt;String, Descriptors.Descriptor&gt;&gt; getEntries() {
+<span class="nc" id="L108">        return Collections.unmodifiableCollection(typeNameToDescriptor.entrySet());</span>
+    }
+
+    public boolean isEmpty() {
+<span class="nc" id="L112">        return typeNameToDescriptor.isEmpty();</span>
+    }
+
+    public int size() {
+<span class="nc" id="L116">        return typeNameToDescriptor.size();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
