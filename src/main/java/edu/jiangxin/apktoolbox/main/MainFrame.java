@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.android.dumpsys.DumpsysPanel;
 import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
+import edu.jiangxin.apktoolbox.convert.color.ColorTablePanel;
 import edu.jiangxin.apktoolbox.convert.encoding.GarbledTextRecoveryPanel;
 import edu.jiangxin.apktoolbox.convert.protobuf.supervised.SupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobufConvertPanel;
@@ -275,6 +276,10 @@ public final class MainFrame extends EasyFrame {
         JMenuItem colorConvertMenuItem = new JMenuItem(bundle.getString("convert.color.title"));
         colorConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorConvertPanel.class, colorConvertMenuItem.getText()));
         convertMenu.add(colorConvertMenuItem);
+
+        JMenuItem colorTableMenuItem = new JMenuItem(bundle.getString("table.color.title"));
+        colorTableMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorTablePanel.class, colorTableMenuItem.getText()));
+        convertMenu.add(colorTableMenuItem);
 
         JMenuItem colorPickerMenuItem = new JMenuItem(bundle.getString("picker.color.title"));
         colorPickerMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorPickerPanel.class, colorPickerMenuItem.getText()));

@@ -1,4 +1,4 @@
-package edu.jiangxin.apktoolbox.convert.color;
+package edu.jiangxin.apktoolbox.convert.color.utils;
 
 import edu.jiangxin.apktoolbox.convert.color.colorspace.CielabColorSpace;
 import edu.jiangxin.apktoolbox.convert.color.colorspace.CmykColorSpace;

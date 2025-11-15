@@ -4,6 +4,7 @@ import edu.jiangxin.apktoolbox.convert.color.colorspace.CielabColorSpace;
 import edu.jiangxin.apktoolbox.convert.color.colorspace.CmykColorSpace;
 import edu.jiangxin.apktoolbox.convert.color.colorspace.HsbColorSpace;
 import edu.jiangxin.apktoolbox.convert.color.colorspace.HslColorSpace;
+import edu.jiangxin.apktoolbox.convert.color.utils.ColorUtils;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
