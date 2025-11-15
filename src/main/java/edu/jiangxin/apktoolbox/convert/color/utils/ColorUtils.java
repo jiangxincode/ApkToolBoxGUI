@@ -9,6 +9,25 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 
 public class ColorUtils {
+    public static int parseByteHex(String hex) {
+        if (hex == null) {
+            return -1;
+        }
+        String s = hex.trim();
+        if (s.startsWith("0x") || s.startsWith("0X")) {
+            s = s.substring(2);
+        } else if (s.startsWith("#")) {
+            s = s.substring(1);
+        }
+        if (s.length() != 2) {
+            return -1;
+        }
+        if (!s.matches("[0-9a-fA-F]{2}")) {
+            return -1;
+        }
+        return Integer.parseInt(s, 16);
+    }
+
     public static Color hex2Color(String hexColor) {
         return Color.decode(hexColor);
     }

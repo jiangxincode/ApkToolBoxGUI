@@ -18,6 +18,8 @@ public class ColorConvertPanel extends EasyPanel {
 
     private Color color;
 
+    private JTextField colorBoxTextField;
+
     private JSpinner redSpinner;
 
     private JSpinner greenInRgbSpinner;
@@ -52,7 +54,11 @@ public class ColorConvertPanel extends EasyPanel {
 
     private JSpinner bInCielabSpinner;
 
-    private JTextField colorBoxTextField;
+    private JSpinner toolsetValueSpinner;
+
+    private JSpinner toolsetPercentageSpinner;
+
+    private JTextField toolsetHexTextField;
 
     private boolean isChangedByUser = true;
 
@@ -82,6 +88,9 @@ public class ColorConvertPanel extends EasyPanel {
 
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createCielabPanel();
+
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createToolSetPanel();
     }
 
     public void createColorBoxPanel() {
@@ -314,6 +323,45 @@ public class ColorConvertPanel extends EasyPanel {
         xPanel.add(bInCielabSpinner);
     }
 
+    private void createToolSetPanel() {
+        JPanel toolSetPanel = new JPanel();
+        add(toolSetPanel);
+        toolSetPanel.setLayout(new BorderLayout());
+        toolSetPanel.setBorder(BorderFactory.createTitledBorder("数值/百分比/16进制"));
+
+        JPanel xPanel = new JPanel();
+        toolSetPanel.add(xPanel);
+        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
+
+        JLabel valueLabel = new JLabel("[0-255]");
+        toolsetValueSpinner = new JSpinner();
+        toolsetValueSpinner.setModel(new SpinnerNumberModel(0, 0, 255, 1));
+        toolsetValueSpinner.addChangeListener(new ToolsetValueChangeListener());
+
+        JLabel percentLabel = new JLabel("[0%-100%]");
+        toolsetPercentageSpinner = new JSpinner();
+        toolsetPercentageSpinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));
+        toolsetPercentageSpinner.addChangeListener(new ToolsetPercentChangeListener());
+
+
+        JLabel hexLabel = new JLabel("[0x00-0xFF]");
+        toolsetHexTextField = new JTextField();
+        toolsetHexTextField.setToolTipText("0xFF格式常用在通用语言中(Java/C++等), #FF格式常用在标记语言中(XML/HTML等)");
+        toolsetHexTextField.getDocument().addDocumentListener(new ToolsetHexDocumentListener());
+
+        xPanel.add(valueLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(toolsetValueSpinner);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(percentLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(toolsetPercentageSpinner);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(hexLabel);
+        xPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        xPanel.add(toolsetHexTextField);
+    }
+
     private void syncToOthersFormat(String colorMode) {
         if (!colorMode.equalsIgnoreCase("RGB")) {
             redSpinner.setValue(color.getRed());
@@ -464,5 +512,70 @@ public class ColorConvertPanel extends EasyPanel {
             }
             isChangedByUser = true;
         }
+    }
+
+    class ToolsetValueChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            int value = (Integer) toolsetValueSpinner.getValue();
+            setToolsetNewValue(value, 1);
+        }
+    }
+
+    class ToolsetPercentChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            int percent = (Integer) toolsetPercentageSpinner.getValue();
+            int value = percent / 100.0f >= 1.0f ? 255 : Math.round((percent / 100.0f) * 255);
+            setToolsetNewValue(value, 2);
+        }
+    }
+
+    class ToolsetHexDocumentListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            onValueUpdate();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            onValueUpdate();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            onValueUpdate();
+        }
+
+        private void onValueUpdate() {
+            String hex = toolsetHexTextField.getText();
+            int value = ColorUtils.parseByteHex(hex);
+            if (value == -1) {
+                return;
+            }
+            setToolsetNewValue(value, 3);
+        }
+    }
+
+    private void setToolsetNewValue(int value, int from) {
+        if (!isChangedByUser) {
+            return;
+        }
+        isChangedByUser = false;
+        if (from == 1) {
+            int percentage = Math.round((value / 255.0f) * 100);
+            toolsetPercentageSpinner.setValue(percentage);
+            String hexString = String.format("0x%02X", value);
+            toolsetHexTextField.setText(hexString);
+        } else if (from == 2) {
+            toolsetValueSpinner.setValue(value);
+            String hexString = String.format("0x%02X", value);
+            toolsetHexTextField.setText(hexString);
+        } else if (from == 3) {
+            toolsetValueSpinner.setValue(value);
+            int percentage = Math.round((value / 255.0f) * 100);
+            toolsetPercentageSpinner.setValue(percentage);
+        }
+        isChangedByUser = true;
     }
 }
