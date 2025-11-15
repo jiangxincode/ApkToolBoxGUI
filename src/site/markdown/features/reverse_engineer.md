@@ -16,6 +16,7 @@ Using third-party tools to decompile package like jar, aar, war, apk, dex and so
 | ApkSigner       | 1.3            | <http://apk.aq.163.com/apkpack.do#download>                 | Apache 2.0 |
 | AXMLPrinter3    | 0.0.1-SNAPSHOT | <https://github.com/jiangxincode/AXMLPrinter3>              | Apache 2.0 |
 | GDA             | 4.11           | <https://github.com/charles2gan/GDA-android-reversing-Tool> | Apache 2.0 |
+| bytecode-viewer | 2.12.0         | <https://github.com/Konloch/bytecode-viewer>                | GNU GPL v3 |
 
 ### Issues
 

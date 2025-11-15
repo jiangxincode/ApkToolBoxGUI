@@ -356,6 +356,10 @@ public final class MainFrame extends EasyFrame {
         jDMenuItem.addActionListener(new ChangeMenToPluginJdListener());
         reverseMenu.add(jDMenuItem);
 
+        JMenuItem bytecodeViewerMenuItem = new JMenuItem(bundle.getString("reverse.bytecode.viewer.title"));
+        bytecodeViewerMenuItem.addActionListener(new ChangeMenuToPluginBytecodeViewerListener());
+        reverseMenu.add(bytecodeViewerMenuItem);
+
         JMenuItem luytenMenuItem = new JMenuItem(bundle.getString("reverse.luyten.title"));
         luytenMenuItem.addActionListener(new ChangeMenuToPluginLuytenListener());
         reverseMenu.add(luytenMenuItem);
