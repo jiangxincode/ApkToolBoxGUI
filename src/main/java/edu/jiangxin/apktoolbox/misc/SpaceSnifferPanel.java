@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -147,7 +148,7 @@ public class SpaceSnifferPanel extends EasyPanel {
     private void updateNavigationButtons() {
         backButton.setEnabled(treemapComponent.isBackAvailable());
         forwardButton.setEnabled(treemapComponent.isForwardAvailable());
-        rootButton.setEnabled(treemapComponent.hasRootFocused() ? false : treemapComponent.getRoot() != null);
+        rootButton.setEnabled(!treemapComponent.hasRootFocused() && treemapComponent.getRoot() != null);
         String path = treemapComponent.getFocusPath();
         focusPathLabel.setText("Focus: " + (path == null ? "(none)" : path));
     }
@@ -461,8 +462,9 @@ public class SpaceSnifferPanel extends EasyPanel {
         private void drawNode(Graphics2D g2, TreemapNode node, int level) {
             if (node.bounds == null) return;
             boolean hasChildren = node.children != null && !node.children.isEmpty();
-            Color base = pickColorForNode(node, level); // removed leaf param
-            Color fill = (node == hoverNode) ? lighten(base, 0.22f) : base;
+            boolean isDir = node.file.isDirectory();
+            Color base = pickColorForNode(node, level);
+            Color fill = (node == hoverNode) ? lighten(base) : base;
             g2.setColor(fill);
             g2.fillRect(node.bounds.x, node.bounds.y, node.bounds.width, node.bounds.height);
             g2.setColor(Color.BLACK);
@@ -482,7 +484,14 @@ public class SpaceSnifferPanel extends EasyPanel {
                 g2.setColor(Color.BLACK);
                 g2.drawLine(node.bounds.x, node.bounds.y + headerHeight, node.bounds.x + node.bounds.width, node.bounds.y + headerHeight);
             }
-            String label = node.name + " - " + humanReadable(node.size);
+
+            // Build label: directories always show name; files show name + size.
+            String label;
+            if (isDir) {
+                label = node.name; // keep concise for directory
+            } else {
+                label = node.name + " - " + humanReadable(node.size);
+            }
             FontMetrics fm = g2.getFontMetrics();
             int availableWidth = node.bounds.width - 4;
             int maxChars = Math.max(0, availableWidth / Math.max(1, fm.charWidth('A')));
@@ -490,9 +499,17 @@ public class SpaceSnifferPanel extends EasyPanel {
                 label = label.substring(0, Math.max(0, maxChars - 3)) + (maxChars > 3 ? "..." : "");
             }
             int textY = node.bounds.y + fm.getAscent() + 2;
-            if (!hasChildren || headerHeight >= fm.getHeight() + 4) {
+            // Draw rules:
+            // 1. Directory: always draw if there's vertical space for ascent (even if headerHeight == 0 or too small)
+            // 2. File: draw only if enough header or no children (leaf)
+            boolean canDraw = true;
+            if (!isDir) {
+                canDraw = (!hasChildren) || (headerHeight >= fm.getHeight() + 4);
+            }
+            if (canDraw && fm.getHeight() + 4 <= node.bounds.height) {
                 g2.drawString(label, node.bounds.x + 2, textY);
             }
+
             if (hasChildren) {
                 for (TreemapNode child : node.children) {
                     drawNode(g2, child, level + 1);
@@ -505,66 +522,68 @@ public class SpaceSnifferPanel extends EasyPanel {
             return Math.min(18, r.height / 5);
         }
 
-        private Color pickColorForNode(TreemapNode node, int level) { // removed leaf param
+        private Color pickColorForNode(TreemapNode node, int level) { // softened pastel palette
+            // Define base pastel colors
+            Color ROOT = new Color(0xF5D4A6); // soft tan
+            Color DIR = new Color(0xCFE8C9); // light green
+            Color IMG = new Color(0xBDE3E6); // light teal
+            Color VID = new Color(0xD7C5ED); // light purple
+            Color AUD = new Color(0xF8D1AC); // light orange
+            Color ARC = new Color(0xE2C6A8); // light brown
+            Color PDF = new Color(0xF6B5B5); // soft pink red
+            Color DOC = new Color(0xC6D8F5); // soft blue
+            Color CODE = new Color(0xC8E6C8); // soft green
+            Color EXE = new Color(0xF5A3A3); // soft red
+            Color OTHER = new Color(0xD2D2D2); // light gray
+
             if (level == 0) {
-                return new Color(0xE0B784); // root tan
+                return ROOT;
             }
             if (node.file.isDirectory()) {
-                // directory hue gradient greenish
-                float hue = (0.30f + level * 0.02f) % 1.0f;
-                float sat = 0.30f + Math.min(0.25f, level * 0.03f);
-                float bri = 0.92f - Math.min(0.45f, level * 0.04f);
-                return Color.getHSBColor(hue, sat, bri);
+                return adjustByLevel(DIR, level);
             }
             String ext = getExtension(node.file.getName());
-            Color catColor;
+            Color base;
             switch (ext) {
                 case "jpg": case "jpeg": case "png": case "gif": case "bmp": case "webp":
-                    catColor = new Color(0x4FA3A1); // images teal
-                    break;
+                    base = IMG; break;
                 case "mp4": case "mkv": case "avi": case "mov": case "flv": case "wmv":
-                    catColor = new Color(0x9159B8); // video purple
-                    break;
+                    base = VID; break;
                 case "mp3": case "wav": case "flac": case "ogg": case "aac": case "m4a":
-                    catColor = new Color(0xE0863D); // audio orange
-                    break;
+                    base = AUD; break;
                 case "zip": case "rar": case "7z": case "tar": case "gz": case "bz2": case "jar": case "war": case "ear":
-                    catColor = new Color(0xA0703A); // archive brown
-                    break;
+                    base = ARC; break;
                 case "pdf":
-                    catColor = new Color(0xD04444); // pdf red
-                    break;
+                    base = PDF; break;
                 case "doc": case "docx": case "xls": case "xlsx": case "ppt": case "pptx": case "txt": case "md": case "html": case "xml": case "rtf":
-                    catColor = new Color(0x4F6FB3); // documents blue
-                    break;
+                    base = DOC; break;
                 case "java": case "class": case "py": case "js": case "ts": case "c": case "cpp": case "h": case "hpp": case "cs": case "rb": case "go": case "rs": case "php": case "kt": case "swift": case "sh": case "bat":
-                    catColor = new Color(0x4F9E4F); // code green
-                    break;
+                    base = CODE; break;
                 case "exe": case "dll": case "so": case "bin": case "ps1":
-                    catColor = new Color(0xC63F3F); // executables strong red
-                    break;
+                    base = EXE; break;
                 default:
-                    catColor = new Color(0x7A7A7A); // other gray
+                    base = OTHER; break;
             }
-            // adjust brightness by level for depth perception
-            float factor = 1.0f - Math.min(0.35f, level * 0.05f);
-            return scaleBrightness(catColor, factor);
+            return adjustByLevel(base, level);
         }
 
-        private String getExtension(String name) {
-            int idx = name.lastIndexOf('.') ;
-            if (idx < 0 || idx == name.length()-1) return "";
-            return name.substring(idx+1).toLowerCase();
-        }
-
-        private Color scaleBrightness(Color c, float factor) {
-            int r = Math.min(255, Math.max(0, (int)(c.getRed() * factor)));
-            int g = Math.min(255, Math.max(0, (int)(c.getGreen() * factor)));
-            int b = Math.min(255, Math.max(0, (int)(c.getBlue() * factor)));
+        private Color adjustByLevel(Color base, int level) {
+            // Slightly darken deeper levels to preserve hierarchy (max 30%)
+            float factor = 1.0f - Math.min(0.30f, level * 0.04f);
+            int r = Math.round(base.getRed() * factor);
+            int g = Math.round(base.getGreen() * factor);
+            int b = Math.round(base.getBlue() * factor);
             return new Color(r, g, b);
         }
 
-        private Color lighten(Color c, float add) {
+        private String getExtension(String name) {
+            int idx = name.lastIndexOf('.');
+            if (idx < 0 || idx == name.length() - 1) return "";
+            return name.substring(idx + 1).toLowerCase(Locale.ROOT);
+        }
+
+        private Color lighten(Color c) { // reduce highlight strength fixed factor
+            float add = 0.12f;
             int r = Math.min(255, (int)(c.getRed() + 255 * add));
             int g = Math.min(255, (int)(c.getGreen() + 255 * add));
             int b = Math.min(255, (int)(c.getBlue() + 255 * add));
