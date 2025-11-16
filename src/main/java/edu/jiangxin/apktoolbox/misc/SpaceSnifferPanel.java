@@ -14,6 +14,8 @@ import java.io.Serial;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +28,11 @@ public class SpaceSnifferPanel extends EasyPanel {
     private FilePanel rootDirPanel;
     private JButton scanButton;
     private JButton cancelButton;
+    // navigation buttons
+    private JButton backButton;
+    private JButton forwardButton;
+    private JButton rootButton;
+    private JLabel focusPathLabel;
     private JCheckBox showFilesCheckBox;
     private JCheckBox followSymlinkCheckBox;
     private JSpinner depthSpinner;
@@ -42,6 +49,8 @@ public class SpaceSnifferPanel extends EasyPanel {
         createOptionPanel();
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createOperationPanel();
+        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
+        createNavigationPanel();
         add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));
         createTreemapPanel();
     }
@@ -92,12 +101,55 @@ public class SpaceSnifferPanel extends EasyPanel {
         add(operationPanel);
     }
 
+    private void createNavigationPanel() {
+        JPanel navPanel = new JPanel();
+        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS));
+        navPanel.setBorder(BorderFactory.createTitledBorder("Navigation"));
+        backButton = new JButton("←");
+        forwardButton = new JButton("→");
+        rootButton = new JButton("Root");
+        backButton.setEnabled(false);
+        forwardButton.setEnabled(false);
+        rootButton.setEnabled(false);
+        focusPathLabel = new JLabel("Focus: (none)");
+        backButton.addActionListener(e -> {
+            treemapComponent.goBack();
+            updateNavigationButtons();
+        });
+        forwardButton.addActionListener(e -> {
+            treemapComponent.goForward();
+            updateNavigationButtons();
+        });
+        rootButton.addActionListener(e -> {
+            treemapComponent.focusRoot();
+            updateNavigationButtons();
+        });
+        navPanel.add(backButton);
+        navPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        navPanel.add(forwardButton);
+        navPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        navPanel.add(rootButton);
+        navPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));
+        navPanel.add(focusPathLabel);
+        navPanel.add(Box.createHorizontalGlue());
+        add(navPanel);
+    }
+
     private void createTreemapPanel() {
         treemapComponent = new TreemapComponent();
+        treemapComponent.setFocusChangeListener(node -> updateNavigationButtons());
         JScrollPane scrollPane = new JScrollPane(treemapComponent);
         scrollPane.setPreferredSize(new Dimension(800, 600));
         scrollPane.setBorder(BorderFactory.createTitledBorder("Treemap"));
         add(scrollPane);
+    }
+
+    private void updateNavigationButtons() {
+        backButton.setEnabled(treemapComponent.isBackAvailable());
+        forwardButton.setEnabled(treemapComponent.isForwardAvailable());
+        rootButton.setEnabled(treemapComponent.hasRootFocused() ? false : treemapComponent.getRoot() != null);
+        String path = treemapComponent.getFocusPath();
+        focusPathLabel.setText("Focus: " + (path == null ? "(none)" : path));
     }
 
     private void startScan() {
@@ -113,6 +165,7 @@ public class SpaceSnifferPanel extends EasyPanel {
         }
         scanButton.setEnabled(false);
         cancelButton.setEnabled(true);
+        rootButton.setEnabled(false);
         treemapComponent.setRoot(null);
         treemapComponent.repaint();
         int depth = (Integer) depthSpinner.getValue();
@@ -159,6 +212,8 @@ public class SpaceSnifferPanel extends EasyPanel {
                 if (cancelled.get()) { return; }
                 SwingUtilities.invokeLater(() -> {
                     treemapComponent.setRoot(node);
+                    treemapComponent.focusRoot();
+                    updateNavigationButtons();
                     treemapComponent.revalidate();
                     treemapComponent.repaint();
                 });
@@ -239,6 +294,11 @@ public class SpaceSnifferPanel extends EasyPanel {
         private static final long serialVersionUID = 1L;
         private TreemapNode root; // full tree root
         private TreemapNode hoverNode; // node currently under mouse for highlight
+        // navigation stacks
+        private final Deque<TreemapNode> backStack = new LinkedList<>();
+        private final Deque<TreemapNode> forwardStack = new LinkedList<>();
+        private TreemapNode focus; // current focused node for view
+        private FocusChangeListener focusChangeListener;
         private final JPopupMenu popupMenu = new JPopupMenu();
         private TreemapNode popupTarget;
         private static final Logger LOGGER = LogManager.getLogger(TreemapComponent.class.getSimpleName());
@@ -310,24 +370,91 @@ public class SpaceSnifferPanel extends EasyPanel {
                     }
                 }
             });
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2 && !SwingUtilities.isRightMouseButton(e)) {
+                        if (focus != null) {
+                            TreemapNode target = findDeepByPoint(focus, e.getPoint());
+                            if (target != null && target != focus) {
+                                focusOn(target);
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         public void setRoot(TreemapNode root) {
             this.root = root;
+            backStack.clear();
+            forwardStack.clear();
+            focus = root;
             layoutTreemap();
+            fireFocusChanged();
         }
+
+        // focus controls
+        public void focusRoot() {
+            if (root == null) return;
+            if (focus != root) {
+                backStack.push(focus);
+                forwardStack.clear();
+                focus = root;
+            }
+            layoutTreemap();
+            repaint();
+            fireFocusChanged();
+        }
+
+        public void focusOn(TreemapNode node) {
+            if (node == null || node == focus) return;
+            backStack.push(focus);
+            forwardStack.clear();
+            focus = node;
+            layoutTreemap();
+            repaint();
+            fireFocusChanged();
+        }
+
+        public void goBack() {
+            if (backStack.isEmpty()) return;
+            forwardStack.push(focus);
+            focus = backStack.pop();
+            layoutTreemap();
+            repaint();
+            fireFocusChanged();
+        }
+
+        public void goForward() {
+            if (forwardStack.isEmpty()) return;
+            backStack.push(focus);
+            focus = forwardStack.pop();
+            layoutTreemap();
+            repaint();
+            fireFocusChanged();
+        }
+
+        public boolean isBackAvailable() { return !backStack.isEmpty(); }
+        public boolean isForwardAvailable() { return !forwardStack.isEmpty(); }
+        public boolean hasRootFocused() { return focus == root; }
+        public TreemapNode getRoot() { return root; }
+        public String getFocusPath() { return (focus == null) ? null : focus.file.getAbsolutePath(); }
+
+        public void setFocusChangeListener(FocusChangeListener l) { this.focusChangeListener = l; }
+        private void fireFocusChanged() { if (focusChangeListener != null) focusChangeListener.onFocusChanged(focus); }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            if (root == null) {
+            if (focus == null) {
                 g.setColor(Color.GRAY);
                 g.drawString("No data. Choose a directory and Scan.", 10, 20);
                 return;
             }
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            drawNode(g2, root, 0);
+            drawNode(g2, focus, 0);
             g2.dispose();
         }
 
@@ -484,12 +611,12 @@ public class SpaceSnifferPanel extends EasyPanel {
         }
 
         private void layoutTreemap() {
-            if (root == null) return;
+            if (focus == null) return;
             Dimension d = getSize();
             if (d.width <= 0 || d.height <= 0) return;
-            root.bounds = new Rectangle(0, 0, d.width, d.height);
-            if (root.children == null || root.children.isEmpty()) return;
-            layoutChildren(root, 0, true);
+            focus.bounds = new Rectangle(0, 0, d.width, d.height);
+            if (focus.children == null || focus.children.isEmpty()) return;
+            layoutChildren(focus, 0, true);
         }
 
         private void layoutChildren(TreemapNode parent, int level, boolean horizontal) {
@@ -561,5 +688,9 @@ public class SpaceSnifferPanel extends EasyPanel {
                 LOGGER.error("Copy to clipboard failed", ex);
             }
         }
+    }
+
+    interface FocusChangeListener {
+        void onFocusChanged(TreemapNode focusNode);
     }
 }
