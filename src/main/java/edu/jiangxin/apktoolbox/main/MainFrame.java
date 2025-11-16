@@ -26,6 +26,7 @@ import edu.jiangxin.apktoolbox.android.i18n.I18nFindLongestPanel;
 import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
 import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
 import edu.jiangxin.apktoolbox.help.settings.SettingsPanel;
+import edu.jiangxin.apktoolbox.misc.SpaceSnifferPanel;
 import edu.jiangxin.apktoolbox.pdf.finder.PdfFinderPanel;
 import edu.jiangxin.apktoolbox.pdf.passwordremover.PdfPasswordRemoverPanel;
 import edu.jiangxin.apktoolbox.pdf.pic2pdf.Pic2PdfPanel;
@@ -180,6 +181,8 @@ public final class MainFrame extends EasyFrame {
 
         createConvertMenu();
 
+        createMiscMenu();
+
         createHelpMenu();
     }
 
@@ -210,6 +213,15 @@ public final class MainFrame extends EasyFrame {
         JMenuItem aboutMenuItem = new JMenuItem(bundle.getString("help.about.title"));
         aboutMenuItem.addActionListener(new ChangeMenuToPanelListener(AboutPanel.class, aboutMenuItem.getText()));
         helpMenu.add(aboutMenuItem);
+    }
+
+    private void createMiscMenu() {
+        JMenu miscMenu = new JMenu(bundle.getString("misc.title"));
+        menuBar.add(miscMenu);
+
+        JMenuItem spaceSnifferMenuItem = new JMenuItem(bundle.getString("misc.space.sniffer.title"));
+        spaceSnifferMenuItem.addActionListener(new ChangeMenuToPanelListener(SpaceSnifferPanel.class, spaceSnifferMenuItem.getText()));
+        miscMenu.add(spaceSnifferMenuItem);
     }
 
     private void createPdfMenu() {
