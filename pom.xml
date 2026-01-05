@@ -13,7 +13,7 @@
         <pdf.version>3.0.6</pdf.version>
         <poi.version>5.4.1</poi.version>
         <itext.version>9.4.0</itext.version>
-        <log4j.version>2.25.2</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
         <junit.minor.version>13.3</junit.minor.version>
         <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
