@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsciiGbViewerPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.encoding</a> &gt; <span class="el_source">AsciiGbViewerPanel.java</span></div><h1>AsciiGbViewerPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.encoding;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.io.UnsupportedEncodingException;
+
+public class AsciiGbViewerPanel extends EasyPanel {
+
+    private JTextField inputField;
+    private JTextArea hexArea;
+    private JTextArea decArea;
+
+<span class="nc" id="L18">    private static final String[] ASCII_NAMES = new String[128];</span>
+
+    static {
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        for (int i = 0; i &lt; 32; i++) {               // 控制字符</span>
+<span class="nc" id="L22">            ASCII_NAMES[i] = String.format(&quot;%-3s&quot;, getControlName(i));</span>
+        }
+<span class="nc" id="L24">        ASCII_NAMES[32] = &quot;SP&quot;;                        // 空格</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        for (int i = 33; i &lt; 127; i++) {               // 可见字符</span>
+<span class="nc" id="L26">            ASCII_NAMES[i] = String.valueOf((char) i);</span>
+        }
+<span class="nc" id="L28">        ASCII_NAMES[127] = &quot;DEL&quot;;                      // 删除</span>
+<span class="nc" id="L29">    }</span>
+
+    public AsciiGbViewerPanel() {
+<span class="nc" id="L32">        super();</span>
+<span class="nc" id="L33">    }</span>
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L37">        buildUI();</span>
+<span class="nc" id="L38">        refreshGb();</span>
+<span class="nc" id="L39">    }</span>
+
+    private static String getControlName(int c) {
+<span class="nc" id="L42">        String[] n = {&quot;NUL&quot;,&quot;SOH&quot;,&quot;STX&quot;,&quot;ETX&quot;,&quot;EOT&quot;,&quot;ENQ&quot;,&quot;ACK&quot;,&quot;BEL&quot;,&quot;BS&quot;,&quot;HT&quot;,&quot;LF&quot;,&quot;VT&quot;,&quot;FF&quot;,&quot;CR&quot;,&quot;SO&quot;,&quot;SI&quot;,</span>
+                &quot;DLE&quot;,&quot;DC1&quot;,&quot;DC2&quot;,&quot;DC3&quot;,&quot;DC4&quot;,&quot;NAK&quot;,&quot;SYN&quot;,&quot;ETB&quot;,&quot;CAN&quot;,&quot;EM&quot;,&quot;SUB&quot;,&quot;ESC&quot;,&quot;FS&quot;,&quot;GS&quot;,&quot;RS&quot;,&quot;US&quot;};
+<span class="nc" id="L44">        return n[c];</span>
+    }
+
+    private void buildUI() {
+<span class="nc" id="L48">        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));</span>
+
+<span class="nc" id="L50">        createInputPanel();</span>
+<span class="nc" id="L51">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L53">        createHexPanel();</span>
+<span class="nc" id="L54">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L56">        createDecPanel();</span>
+<span class="nc" id="L57">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L59">        createAsciiTablePanel();</span>
+<span class="nc" id="L60">    }</span>
+
+    private void createInputPanel() {
+<span class="nc" id="L63">        JPanel inputPanel = new JPanel();</span>
+<span class="nc" id="L64">        inputPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L65">        inputPanel.setBorder(BorderFactory.createTitledBorder(&quot;输入汉字&quot;));</span>
+
+<span class="nc" id="L67">        inputField = new JTextField(&quot;欢迎使用ApkToolBoxGUI&quot;, 20);</span>
+<span class="nc" id="L68">        inputField.getDocument().addDocumentListener(new MyDocumentListener());</span>
+
+<span class="nc" id="L70">        inputPanel.add(inputField);</span>
+<span class="nc" id="L71">        add(inputPanel);</span>
+<span class="nc" id="L72">    }</span>
+
+    private void createHexPanel() {
+<span class="nc" id="L75">        JPanel hexPanel = new JPanel();</span>
+<span class="nc" id="L76">        hexPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L77">        hexPanel.setBorder(BorderFactory.createTitledBorder(&quot;16进制表示（GB2312 编码）&quot;));</span>
+
+<span class="nc" id="L79">        hexArea = new JTextArea(6, 18);</span>
+<span class="nc" id="L80">        hexArea.setEditable(false);</span>
+<span class="nc" id="L81">        hexArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));</span>
+
+<span class="nc" id="L83">        hexPanel.add(new JScrollPane(hexArea));</span>
+<span class="nc" id="L84">        add(hexPanel);</span>
+<span class="nc" id="L85">    }</span>
+
+    private void createDecPanel() {
+<span class="nc" id="L88">        JPanel decPanel = new JPanel();</span>
+<span class="nc" id="L89">        decPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L90">        decPanel.setBorder(BorderFactory.createTitledBorder(&quot;10进制表示（GB2312 编码）&quot;));</span>
+
+<span class="nc" id="L92">        decArea = new JTextArea(6, 18);</span>
+<span class="nc" id="L93">        decArea.setEditable(false);</span>
+<span class="nc" id="L94">        decArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));</span>
+
+<span class="nc" id="L96">        decPanel.add(new JScrollPane(decArea));</span>
+<span class="nc" id="L97">        add(decPanel);</span>
+<span class="nc" id="L98">    }</span>
+
+    private void createAsciiTablePanel() {
+<span class="nc" id="L101">        JPanel asciiTablePanel = new JPanel(new GridLayout(16, 8, 2, 2));</span>
+<span class="nc" id="L102">        asciiTablePanel.setBorder(new TitledBorder(&quot;标准 7-bit ASCII 表（128 字符），鼠标悬停可查看十/十六进制值&quot;));</span>
+<span class="nc" id="L103">        asciiTablePanel.setPreferredSize(new Dimension(500, 400));</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (int i = 0; i &lt; 128; i++) {</span>
+<span class="nc" id="L106">            JLabel lab = new JLabel(ASCII_NAMES[i], SwingConstants.CENTER);</span>
+<span class="nc" id="L107">            lab.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));</span>
+<span class="nc" id="L108">            lab.setToolTipText(&quot;Dec=&quot; + i + &quot;  Hex=0x&quot; + Integer.toHexString(i).toUpperCase());</span>
+<span class="nc" id="L109">            asciiTablePanel.add(lab);</span>
+        }
+
+<span class="nc" id="L112">        add(asciiTablePanel);</span>
+<span class="nc" id="L113">    }</span>
+
+<span class="nc" id="L115">    class MyDocumentListener implements DocumentListener {</span>
+<span class="nc" id="L116">        public void insertUpdate(javax.swing.event.DocumentEvent e) { refreshGb(); }</span>
+<span class="nc" id="L117">        public void removeUpdate(javax.swing.event.DocumentEvent e) { refreshGb(); }</span>
+<span class="nc" id="L118">        public void changedUpdate(javax.swing.event.DocumentEvent e) { refreshGb(); }</span>
+    }
+
+    private void refreshGb() {
+<span class="nc" id="L122">        String txt = inputField.getText();</span>
+<span class="nc" id="L123">        StringBuilder hex = new StringBuilder();</span>
+<span class="nc" id="L124">        StringBuilder dec = new StringBuilder();</span>
+        try {
+<span class="nc" id="L126">            byte[] gb = txt.getBytes(&quot;GB2312&quot;);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            for (byte value : gb) {</span>
+<span class="nc" id="L128">                int b = value &amp; 0xff; // 无符号</span>
+<span class="nc" id="L129">                hex.append(String.format(&quot;%02X &quot;, b));</span>
+<span class="nc" id="L130">                dec.append(b).append(' ');</span>
+            }
+<span class="nc" id="L132">        } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L133">            hex.append(&quot;GB2312 不支持&quot;);</span>
+<span class="nc" id="L134">            dec.append(&quot;GB2312 不支持&quot;);</span>
+<span class="nc" id="L135">        }</span>
+<span class="nc" id="L136">        hexArea.setText(hex.toString());</span>
+<span class="nc" id="L137">        decArea.setText(dec.toString());</span>
+<span class="nc" id="L138">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

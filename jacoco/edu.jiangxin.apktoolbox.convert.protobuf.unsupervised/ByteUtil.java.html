@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ByteUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.unsupervised</a> &gt; <span class="el_source">ByteUtil.java</span></div><h1>ByteUtil.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
+
+import java.nio.ByteOrder;
+
+<span class="nc" id="L5">public class ByteUtil {</span>
+
+    public static int bytesToInt(byte[] bytes) {
+<span class="nc" id="L8">        return bytesToInt(bytes, ByteOrder.LITTLE_ENDIAN);</span>
+    }
+
+    public static int bytesToInt(byte[] bytes, ByteOrder byteOrder) {
+<span class="nc" id="L12">        return bytesToInt(bytes, 0, byteOrder);</span>
+    }
+
+    public static float bytesToFloat(byte[] bytes) {
+<span class="nc" id="L16">        return bytesToFloat(bytes, ByteOrder.LITTLE_ENDIAN);</span>
+    }
+
+    private static float bytesToFloat(byte[] bytes, ByteOrder byteOrder) {
+<span class="nc" id="L20">        return Float.intBitsToFloat(bytesToInt(bytes, byteOrder));</span>
+    }
+
+    public static double bytesToDouble(byte[] bytes) {
+<span class="nc" id="L24">        return bytesToDouble(bytes, ByteOrder.LITTLE_ENDIAN);</span>
+    }
+
+    public static double bytesToDouble(byte[] bytes, ByteOrder byteOrder) {
+<span class="nc" id="L28">        return Double.longBitsToDouble(bytesToLong(bytes, byteOrder));</span>
+    }
+
+    public static long bytesToLong(byte[] bytes) {
+<span class="nc" id="L32">        return bytesToLong(bytes, ByteOrder.LITTLE_ENDIAN);</span>
+    }
+
+    public static long bytesToLong(byte[] bytes, ByteOrder byteOrder) {
+<span class="nc" id="L36">        return bytesToLong(bytes, 0, byteOrder);</span>
+    }
+
+    public static long bytesToLong(byte[] bytes, int start, ByteOrder byteOrder) {
+<span class="nc" id="L40">        long values = 0;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (ByteOrder.LITTLE_ENDIAN == byteOrder) {</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            for (int i = Long.BYTES - 1; i &gt;= 0; i--) {</span>
+<span class="nc" id="L43">                values &lt;&lt;= Byte.SIZE;</span>
+<span class="nc" id="L44">                values |= (bytes[i + start] &amp; 0xff);</span>
+            }
+        } else {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            for (int i = 0; i &lt; Long.BYTES; i++) {</span>
+<span class="nc" id="L48">                values &lt;&lt;= Byte.SIZE;</span>
+<span class="nc" id="L49">                values |= (bytes[i + start] &amp; 0xff);</span>
+            }
+        }
+
+<span class="nc" id="L53">        return values;</span>
+    }
+
+    public static int bytesToInt(byte[] bytes, int start, ByteOrder byteOrder) {
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (ByteOrder.LITTLE_ENDIAN == byteOrder) {</span>
+<span class="nc" id="L58">            return bytes[start] &amp; 0xFF | //</span>
+                    (bytes[1 + start] &amp; 0xFF) &lt;&lt; 8 | //
+                    (bytes[2 + start] &amp; 0xFF) &lt;&lt; 16 | //
+                    (bytes[3 + start] &amp; 0xFF) &lt;&lt; 24; //
+        } else {
+<span class="nc" id="L63">            return bytes[3 + start] &amp; 0xFF | //</span>
+                    (bytes[2 + start] &amp; 0xFF) &lt;&lt; 8 | //
+                    (bytes[1 + start] &amp; 0xFF) &lt;&lt; 16 | //
+                    (bytes[start] &amp; 0xFF) &lt;&lt; 24; //
+        }
+
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+<span class="nc" id="L72">        StringBuilder hexString = new StringBuilder(2 * bytes.length);</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        for (byte b : bytes) {</span>
+<span class="nc" id="L74">            hexString.append(String.format(&quot;%02X&quot;, b));</span>
+        }
+<span class="nc" id="L76">        return hexString.toString();</span>
+    }
+
+    public static byte[] hex2bytes(String hexString) {
+        String fixedHexString;
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (hexString.length() % 2 != 0) {</span>
+<span class="nc" id="L82">            fixedHexString = hexString + &quot;0&quot;;</span>
+        } else {
+<span class="nc" id="L84">            fixedHexString = hexString;</span>
+        }
+<span class="nc" id="L86">        int len = fixedHexString.length();</span>
+<span class="nc" id="L87">        byte[] data = new byte[len / 2];</span>
+
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (int i = 0; i &lt; len-1; i += 2) {</span>
+<span class="nc" id="L90">            data[i / 2] = (byte) ((Character.digit(fixedHexString.charAt(i), 16) &lt;&lt; 4)</span>
+<span class="nc" id="L91">                    + Character.digit(fixedHexString.charAt(i + 1), 16));</span>
+        }
+
+<span class="nc" id="L94">        return data;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
