@@ -18,7 +18,7 @@
         <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
         <surefire.version>3.5.4</surefire.version>
-        <protobuf.version>4.33.2</protobuf.version>
+        <protobuf.version>4.33.4</protobuf.version>
     </properties>
     <dependencies>
         <dependency>
