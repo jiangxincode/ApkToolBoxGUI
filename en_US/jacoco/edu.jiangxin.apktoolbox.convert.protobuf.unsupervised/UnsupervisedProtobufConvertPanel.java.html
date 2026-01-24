@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UnsupervisedProtobufConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.unsupervised</a> &gt; <span class="el_source">UnsupervisedProtobufConvertPanel.java</span></div><h1>UnsupervisedProtobufConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
+
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.Serial;
+
+<span class="nc" id="L13">public class UnsupervisedProtobufConvertPanel extends EasyPanel {</span>
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private JPanel contentPanel;
+
+    private JPanel operationPanel;
+
+    private JTextArea inputTextArea;
+    private RSyntaxTextArea outputTextArea;
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L26">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L27">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L29">        createContentPanel();</span>
+<span class="nc" id="L30">        add(contentPanel);</span>
+<span class="nc" id="L31">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L33">        createOperationPanel();</span>
+<span class="nc" id="L34">        add(operationPanel);</span>
+<span class="nc" id="L35">    }</span>
+
+    private void createContentPanel() {
+<span class="nc" id="L38">        contentPanel = new JPanel();</span>
+
+<span class="nc" id="L40">        BoxLayout boxLayout = new BoxLayout(contentPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L41">        contentPanel.setLayout(boxLayout);</span>
+
+<span class="nc" id="L43">        inputTextArea = new JTextArea();</span>
+<span class="nc" id="L44">        inputTextArea.setLineWrap(true);</span>
+<span class="nc" id="L45">        inputTextArea.setWrapStyleWord(true);</span>
+<span class="nc" id="L46">        inputTextArea.setText(&quot;0a2f0a084a6f686e20446f6510011a106a6f686e406578616d706c652e636f6d220f0a0b3131312d3232322d33333310010a1e0a084a616e6520446f6510021a106a616e65406578616d706c652e636f6d&quot;);</span>
+
+<span class="nc" id="L48">        JScrollPane inputScrollPanel = new JScrollPane(inputTextArea);</span>
+<span class="nc" id="L49">        inputScrollPanel.setPreferredSize(new Dimension(200, 500));</span>
+
+<span class="nc" id="L51">        outputTextArea = new RSyntaxTextArea();</span>
+<span class="nc" id="L52">        outputTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);</span>
+<span class="nc" id="L53">        outputTextArea.setCodeFoldingEnabled(true);</span>
+<span class="nc" id="L54">        outputTextArea.setEditable(false);</span>
+
+<span class="nc" id="L56">        RTextScrollPane outputScrollPane = new RTextScrollPane(outputTextArea);</span>
+<span class="nc" id="L57">        outputScrollPane.setPreferredSize(new Dimension(200, 500));</span>
+
+<span class="nc" id="L59">        contentPanel.add(inputScrollPanel);</span>
+<span class="nc" id="L60">        contentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L61">        contentPanel.add(outputScrollPane);</span>
+<span class="nc" id="L62">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L65">        operationPanel = new JPanel();</span>
+
+<span class="nc" id="L67">        BoxLayout boxLayout = new BoxLayout(operationPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L68">        operationPanel.setLayout(boxLayout);</span>
+
+<span class="nc" id="L70">        JButton convertButton = new JButton(&quot;Convert&quot;);</span>
+
+<span class="nc" id="L72">        convertButton.addActionListener(e -&gt; convertProtoToJson());</span>
+
+<span class="nc" id="L74">        operationPanel.add(convertButton);</span>
+<span class="nc" id="L75">    }</span>
+
+    private void convertProtoToJson() {
+<span class="nc" id="L78">        String hexString = inputTextArea.getText();</span>
+<span class="nc" id="L79">        byte[] byteArray = ByteUtil.hex2bytes(hexString);</span>
+<span class="nc" id="L80">        String jsonString = ProtobufDecoder.bytesDecoder(byteArray);</span>
+<span class="nc" id="L81">        outputTextArea.setText(jsonString);</span>
+<span class="nc" id="L82">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

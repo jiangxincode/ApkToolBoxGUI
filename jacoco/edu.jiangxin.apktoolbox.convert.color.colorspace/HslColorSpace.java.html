@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HslColorSpace.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color.colorspace</a> &gt; <span class="el_source">HslColorSpace.java</span></div><h1>HslColorSpace.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color.colorspace;
+
+import java.awt.color.ColorSpace;
+import java.io.Serial;
+
+public class HslColorSpace extends ColorSpace {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    protected HslColorSpace(int type, int numComponents) {
+<span class="fc" id="L11">        super(type, numComponents);</span>
+<span class="fc" id="L12">    }</span>
+
+    public static HslColorSpace getInstance() {
+<span class="fc" id="L15">        return Holder.INSTANCE;</span>
+    }
+
+    @Override
+    public float[] toRGB(float[] colorvalue) {
+<span class="fc" id="L20">        float h = colorvalue[0];</span>
+<span class="fc" id="L21">        float s = colorvalue[1];</span>
+<span class="fc" id="L22">        float l = colorvalue[2];</span>
+
+        float r, g, b;
+
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        if (s == 0f) {</span>
+<span class="nc" id="L27">            r = g = b = l;</span>
+        } else {
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">            float q = l &lt; 0.5f ? l * (1 + s) : l + s - l * s;</span>
+<span class="fc" id="L30">            float p = 2 * l - q;</span>
+<span class="fc" id="L31">            r = hueToRgb(p, q, h + 1/3f);</span>
+<span class="fc" id="L32">            g = hueToRgb(p, q, h);</span>
+<span class="fc" id="L33">            b = hueToRgb(p, q, h - 1/3f);</span>
+        }
+
+<span class="fc" id="L36">        return new float[]{r, g, b};</span>
+    }
+
+    @Override
+    public float[] fromRGB(float[] rgbvalue) {
+<span class="fc" id="L41">        float r = rgbvalue[0];</span>
+<span class="fc" id="L42">        float g = rgbvalue[1];</span>
+<span class="fc" id="L43">        float b = rgbvalue[2];</span>
+
+<span class="fc" id="L45">        float max = Math.max(r, Math.max(g, b));</span>
+<span class="fc" id="L46">        float min = Math.min(r, Math.min(g, b));</span>
+
+        float h, s;
+<span class="fc" id="L49">        float l = (max + min) / 2;</span>
+
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (max == min) {</span>
+<span class="nc" id="L52">            h = s = 0f;</span>
+        } else {
+<span class="fc" id="L54">            float delta = max - min;</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">            s = l &gt; 0.5f ? delta / (2 - max - min) : delta / (max + min);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">            if (max == r) {</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">                h = (g - b) / delta + (g &lt; b ? 6f : 0f);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            } else if (max == g) {</span>
+<span class="nc" id="L59">                h = (b - r) / delta + 2f;</span>
+            } else {
+<span class="nc" id="L61">                h = (r - g) / delta + 4f;</span>
+            }
+<span class="fc" id="L63">            h /= 6f;</span>
+        }
+
+<span class="fc" id="L66">        return new float[]{h, s, l};</span>
+    }
+
+    @Override
+    public float[] toCIEXYZ(float[] colorvalue) {
+<span class="nc" id="L71">        float[] rgb = toRGB(colorvalue);</span>
+<span class="nc" id="L72">        return ColorSpace.getInstance(CS_sRGB).toCIEXYZ(rgb);</span>
+    }
+
+    @Override
+    public float[] fromCIEXYZ(float[] colorvalue) {
+<span class="nc" id="L77">        float[] rgb = ColorSpace.getInstance(CS_sRGB).fromCIEXYZ(colorvalue);</span>
+<span class="nc" id="L78">        return fromRGB(rgb);</span>
+    }
+
+    private float hueToRgb(float p, float q, float t) {
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (t &lt; 0f) t += 1f;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (t &gt; 1f) t -= 1f;</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (t &lt; 1/6f) return p + (q - p) * 6f * t;</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (t &lt; 1/2f) return q;</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (t &lt; 2/3f) return p + (q - p) * (2/3f - t) * 6f;</span>
+<span class="fc" id="L87">        return p;</span>
+    }
+
+    private static class Holder {
+<span class="fc" id="L91">        private static final HslColorSpace INSTANCE = new HslColorSpace(TYPE_HLS, 3);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

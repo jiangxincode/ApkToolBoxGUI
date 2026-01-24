@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CmykColorSpace.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color.colorspace</a> &gt; <span class="el_source">CmykColorSpace.java</span></div><h1>CmykColorSpace.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color.colorspace;
+
+import java.awt.color.ColorSpace;
+import java.io.Serial;
+
+public class CmykColorSpace extends ColorSpace {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    protected CmykColorSpace(int type, int numComponents) {
+<span class="fc" id="L11">        super(type, numComponents);</span>
+<span class="fc" id="L12">    }</span>
+
+    public static CmykColorSpace getInstance() {
+<span class="fc" id="L15">        return Holder.INSTANCE;</span>
+    }
+
+    @Override
+    public float[] toRGB(float[] colorvalue) {
+<span class="fc" id="L20">        float c = colorvalue[0];</span>
+<span class="fc" id="L21">        float m = colorvalue[1];</span>
+<span class="fc" id="L22">        float y = colorvalue[2];</span>
+<span class="fc" id="L23">        float k = colorvalue[3];</span>
+
+<span class="fc" id="L25">        float r = 1 - Math.min(1, c * (1 - k) + k);</span>
+<span class="fc" id="L26">        float g = 1 - Math.min(1, m * (1 - k) + k);</span>
+<span class="fc" id="L27">        float b = 1 - Math.min(1, y * (1 - k) + k);</span>
+
+<span class="fc" id="L29">        return new float[]{r, g, b};</span>
+    }
+
+    @Override
+    public float[] fromRGB(float[] rgbvalue) {
+<span class="fc" id="L34">        float r = rgbvalue[0];</span>
+<span class="fc" id="L35">        float g = rgbvalue[1];</span>
+<span class="fc" id="L36">        float b = rgbvalue[2];</span>
+
+<span class="fc" id="L38">        float k = 1 - Math.max(r, Math.max(g, b));</span>
+<span class="fc" id="L39">        float c = (1 - r - k) / (1 - k);</span>
+<span class="fc" id="L40">        float m = (1 - g - k) / (1 - k);</span>
+<span class="fc" id="L41">        float y = (1 - b - k) / (1 - k);</span>
+
+<span class="fc" id="L43">        return new float[]{c, m, y, k};</span>
+    }
+
+    @Override
+    public float[] toCIEXYZ(float[] colorvalue) {
+<span class="nc" id="L48">        float[] rgb = toRGB(colorvalue);</span>
+<span class="nc" id="L49">        return ColorSpace.getInstance(CS_sRGB).toCIEXYZ(rgb);</span>
+    }
+
+    @Override
+    public float[] fromCIEXYZ(float[] colorvalue) {
+<span class="nc" id="L54">        float[] rgb = ColorSpace.getInstance(CS_sRGB).fromCIEXYZ(colorvalue);</span>
+<span class="nc" id="L55">        return fromRGB(rgb);</span>
+    }
+
+    private static class Holder {
+<span class="fc" id="L59">        private static final CmykColorSpace INSTANCE = new CmykColorSpace(TYPE_CMYK, 4);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HsbColorSpace.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color.colorspace</a> &gt; <span class="el_source">HsbColorSpace.java</span></div><h1>HsbColorSpace.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color.colorspace;
+
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.io.Serial;
+
+public class HsbColorSpace extends ColorSpace {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    protected HsbColorSpace(int type, int numComponents) {
+<span class="fc" id="L12">        super(type, numComponents);</span>
+<span class="fc" id="L13">    }</span>
+
+    public static HsbColorSpace getInstance() {
+<span class="fc" id="L16">        return Holder.INSTANCE;</span>
+    }
+
+    @Override
+    public float[] toRGB(float[] colorvalue) {
+<span class="fc" id="L21">        int rgb = Color.HSBtoRGB(colorvalue[0], colorvalue[1], colorvalue[2]);</span>
+<span class="fc" id="L22">        return new float[]{</span>
+                (rgb &gt;&gt; 16 &amp; 0xFF) / 255f,
+                (rgb &gt;&gt; 8 &amp; 0xFF) / 255f,
+                (rgb &amp; 0xFF) / 255f
+        };
+    }
+
+    @Override
+    public float[] fromRGB(float[] rgbvalue) {
+<span class="fc" id="L31">        int r = (int) (rgbvalue[0] * 255);</span>
+<span class="fc" id="L32">        int g = (int) (rgbvalue[1] * 255);</span>
+<span class="fc" id="L33">        int b = (int) (rgbvalue[2] * 255);</span>
+<span class="fc" id="L34">        return Color.RGBtoHSB(r, g, b, null);</span>
+    }
+
+    @Override
+    public float[] toCIEXYZ(float[] colorvalue) {
+<span class="nc" id="L39">        float[] rgb = toRGB(colorvalue);</span>
+<span class="nc" id="L40">        return ColorSpace.getInstance(CS_sRGB).toCIEXYZ(rgb);</span>
+    }
+
+    @Override
+    public float[] fromCIEXYZ(float[] colorvalue) {
+<span class="nc" id="L45">        float[] rgb = ColorSpace.getInstance(CS_sRGB).fromCIEXYZ(colorvalue);</span>
+<span class="nc" id="L46">        return fromRGB(rgb);</span>
+    }
+
+    private static class Holder {
+<span class="fc" id="L50">        private static final HsbColorSpace INSTANCE = new HsbColorSpace(TYPE_HSV, 3);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SupervisedProtobufConvertPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.supervised</a> &gt; <span class="el_source">SupervisedProtobufConvertPanel.java</span></div><h1>SupervisedProtobufConvertPanel.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.supervised;
+
+import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.ByteUtil;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.filepanel.FilePanel;
+import edu.jiangxin.apktoolbox.utils.Constants;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.Serial;
+import java.io.StringWriter;
+import java.nio.file.Path;
+
+<span class="nc" id="L19">public class SupervisedProtobufConvertPanel extends EasyPanel {</span>
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private FilePanel descriptorCachePanel;
+
+    private JPanel contentPanel;
+
+    private JPanel operationPanel;
+
+    private JTextArea inputTextArea;
+    private RSyntaxTextArea outputTextArea;
+
+    @Override
+    public void initUI() {
+<span class="nc" id="L34">        BoxLayout boxLayout = new BoxLayout(this, BoxLayout.Y_AXIS);</span>
+<span class="nc" id="L35">        setLayout(boxLayout);</span>
+
+<span class="nc" id="L37">        createDescriptorCachePanel();</span>
+<span class="nc" id="L38">        add(descriptorCachePanel);</span>
+<span class="nc" id="L39">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L41">        createContentPanel();</span>
+<span class="nc" id="L42">        add(contentPanel);</span>
+<span class="nc" id="L43">        add(Box.createVerticalStrut(Constants.DEFAULT_Y_BORDER));</span>
+
+<span class="nc" id="L45">        createOperationPanel();</span>
+<span class="nc" id="L46">        add(operationPanel);</span>
+<span class="nc" id="L47">    }</span>
+
+    private void createDescriptorCachePanel() {
+<span class="nc" id="L50">        descriptorCachePanel = new FilePanel(&quot;Descriptor Cache Directory&quot;);</span>
+<span class="nc" id="L51">        descriptorCachePanel.initialize();</span>
+<span class="nc" id="L52">        descriptorCachePanel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);</span>
+<span class="nc" id="L53">    }</span>
+
+    private void createContentPanel() {
+<span class="nc" id="L56">        contentPanel = new JPanel();</span>
+
+<span class="nc" id="L58">        BoxLayout boxLayout = new BoxLayout(contentPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L59">        contentPanel.setLayout(boxLayout);</span>
+
+<span class="nc" id="L61">        inputTextArea = new JTextArea();</span>
+<span class="nc" id="L62">        inputTextArea.setLineWrap(true);</span>
+<span class="nc" id="L63">        inputTextArea.setWrapStyleWord(true);</span>
+<span class="nc" id="L64">        inputTextArea.setText(&quot;0a2f0a084a6f686e20446f6510011a106a6f686e406578616d706c652e636f6d220f0a0b3131312d3232322d33333310010a1e0a084a616e6520446f6510021a106a616e65406578616d706c652e636f6d&quot;);</span>
+
+<span class="nc" id="L66">        JScrollPane inputScrollPanel = new JScrollPane(inputTextArea);</span>
+<span class="nc" id="L67">        inputScrollPanel.setPreferredSize(new Dimension(200, 500));</span>
+
+<span class="nc" id="L69">        outputTextArea = new RSyntaxTextArea();</span>
+<span class="nc" id="L70">        outputTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);</span>
+<span class="nc" id="L71">        outputTextArea.setCodeFoldingEnabled(true);</span>
+<span class="nc" id="L72">        outputTextArea.setEditable(false);</span>
+
+<span class="nc" id="L74">        RTextScrollPane outputScrollPane = new RTextScrollPane(outputTextArea);</span>
+<span class="nc" id="L75">        outputScrollPane.setPreferredSize(new Dimension(200, 500));</span>
+
+<span class="nc" id="L77">        contentPanel.add(inputScrollPanel);</span>
+<span class="nc" id="L78">        contentPanel.add(Box.createHorizontalStrut(Constants.DEFAULT_X_BORDER));</span>
+<span class="nc" id="L79">        contentPanel.add(outputScrollPane);</span>
+<span class="nc" id="L80">    }</span>
+
+    private void createOperationPanel() {
+<span class="nc" id="L83">        operationPanel = new JPanel();</span>
+
+<span class="nc" id="L85">        BoxLayout boxLayout = new BoxLayout(operationPanel, BoxLayout.X_AXIS);</span>
+<span class="nc" id="L86">        operationPanel.setLayout(boxLayout);</span>
+
+<span class="nc" id="L88">        JButton convertButton = new JButton(&quot;Convert&quot;);</span>
+
+<span class="nc" id="L90">        convertButton.addActionListener(e -&gt; convertProtoToJson());</span>
+
+<span class="nc" id="L92">        operationPanel.add(convertButton);</span>
+<span class="nc" id="L93">    }</span>
+
+    private void convertProtoToJson() {
+        try {
+<span class="nc" id="L97">            String hexString = inputTextArea.getText();</span>
+<span class="nc" id="L98">            byte[] byteArray = ByteUtil.hex2bytes(hexString);</span>
+<span class="nc" id="L99">            File descriptorCacheDirectory = descriptorCachePanel.getFile();</span>
+<span class="nc" id="L100">            Path path = descriptorCacheDirectory.toPath();</span>
+<span class="nc" id="L101">            final DescriptorCache cache = DescriptorCache.fromDirectory(path);</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (cache.isEmpty()) {</span>
+<span class="nc" id="L103">                displayErrorMessage(</span>
+                        &quot;The descriptor cache is empty, could not load any descriptor, check the cache directory:\n&quot;
+<span class="nc" id="L105">                                + path.toAbsolutePath(), &quot;Empty descriptor cache&quot;</span>
+                );
+<span class="nc" id="L107">                return;</span>
+            }
+
+<span class="nc" id="L110">            final ProtoToJson protoToJson = ProtoToJson.fromCache(cache);</span>
+            final String jsonString;
+            try {
+<span class="nc" id="L113">                jsonString = protoToJson.toJson(byteArray);</span>
+<span class="nc" id="L114">            } catch (final RuntimeException e) {</span>
+<span class="nc" id="L115">                displayErrorMessage(</span>
+                        &quot;Unable to find a descriptor matching the given JSON message, check the cache directory:\n&quot;
+<span class="nc" id="L117">                                + path.toAbsolutePath(), &quot;No matching descriptor found&quot;</span>
+                );
+<span class="nc" id="L119">                return;</span>
+<span class="nc" id="L120">            }</span>
+
+<span class="nc" id="L122">            outputTextArea.setText(jsonString);</span>
+<span class="nc" id="L123">        } catch (final Throwable t) {</span>
+<span class="nc" id="L124">            final StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L125">            final PrintWriter pw = new PrintWriter(sw);</span>
+<span class="nc" id="L126">            t.printStackTrace(pw);</span>
+<span class="nc" id="L127">            displayErrorMessage(sw.toString(), &quot;Error&quot;);</span>
+<span class="nc" id="L128">        }</span>
+<span class="nc" id="L129">    }</span>
+
+    private static void displayErrorMessage(final String message, final String title) {
+<span class="nc" id="L132">        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L133">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

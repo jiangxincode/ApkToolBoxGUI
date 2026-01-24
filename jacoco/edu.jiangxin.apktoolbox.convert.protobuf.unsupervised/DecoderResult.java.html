@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DecoderResult.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.protobuf.unsupervised</a> &gt; <span class="el_source">DecoderResult.java</span></div><h1>DecoderResult.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.protobuf.unsupervised;
+
+import java.util.List;
+
+<span class="nc" id="L5">public class DecoderResult {</span>
+
+    /**
+     * 字节范围
+     */
+    private List&lt;Integer&gt; byteRange;
+    /**
+     * 字段数字
+     */
+    private int fieldNumber;
+    /**
+     * 字段类型
+     */
+    private int type;
+    /**
+     * 字段对应的值
+     */
+    private Object content;
+    /**
+     * 字段对应的值的解码结果
+     */
+    private List&lt;DecoderResult&gt; subResults;
+
+    public List&lt;Integer&gt; getByteRange() {
+<span class="nc" id="L29">        return byteRange;</span>
+    }
+
+    public void setByteRange(List&lt;Integer&gt; byteRange) {
+<span class="nc" id="L33">        this.byteRange = byteRange;</span>
+<span class="nc" id="L34">    }</span>
+
+    public int getFieldNumber() {
+<span class="nc" id="L37">        return fieldNumber;</span>
+    }
+
+    public void setFieldNumber(int fieldNumber) {
+<span class="nc" id="L41">        this.fieldNumber = fieldNumber;</span>
+<span class="nc" id="L42">    }</span>
+
+    public int getType() {
+<span class="nc" id="L45">        return type;</span>
+    }
+
+    public void setType(int type) {
+<span class="nc" id="L49">        this.type = type;</span>
+<span class="nc" id="L50">    }</span>
+
+    public Object getContent() {
+<span class="nc" id="L53">        return content;</span>
+    }
+
+    public void setContent(Object content) {
+<span class="nc" id="L57">        this.content = content;</span>
+<span class="nc" id="L58">    }</span>
+
+    public List&lt;DecoderResult&gt; getSubResults() {
+<span class="nc" id="L61">        return subResults;</span>
+    }
+
+    public void setSubResults(List&lt;DecoderResult&gt; subResults) {
+<span class="nc" id="L65">        this.subResults = subResults;</span>
+<span class="nc" id="L66">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

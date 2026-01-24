@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CielabColorSpace.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.convert.color.colorspace</a> &gt; <span class="el_source">CielabColorSpace.java</span></div><h1>CielabColorSpace.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.convert.color.colorspace;
+
+import java.awt.color.ColorSpace;
+
+public class CielabColorSpace extends ColorSpace {
+<span class="fc" id="L6">    private static ColorSpace instance = null;</span>
+
+    private static final long serialVersionUID = 5027741380892134289L;
+
+<span class="fc" id="L10">    private static final ColorSpace CIEXYZ =</span>
+<span class="fc" id="L11">            getInstance(CS_CIEXYZ);</span>
+
+    private static final double N = 4.0 / 29.0;
+
+    CielabColorSpace() {
+<span class="fc" id="L16">        super(TYPE_Lab, 3);</span>
+<span class="fc" id="L17">    }</span>
+
+    public static synchronized ColorSpace getInstance() {
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L21">            instance = new CielabColorSpace();</span>
+        }
+<span class="fc" id="L23">        return instance;</span>
+    }
+
+    @Override
+    public float[] fromCIEXYZ(float[] colorvalue) {
+<span class="fc" id="L28">        double l = f(colorvalue[1]);</span>
+<span class="fc" id="L29">        double L = 116.0 * l - 16.0;</span>
+<span class="fc" id="L30">        double a = 500.0 * (f(colorvalue[0]) - l);</span>
+<span class="fc" id="L31">        double b = 200.0 * (l - f(colorvalue[2]));</span>
+<span class="fc" id="L32">        return new float[] {(float) L, (float) a, (float) b};</span>
+    }
+
+    @Override
+    public float[] toCIEXYZ(float[] colorvalue) {
+<span class="fc" id="L37">        double i = (colorvalue[0] + 16.0) * (1.0 / 116.0);</span>
+<span class="fc" id="L38">        double X = fInv(i + colorvalue[1] * (1.0 / 500.0));</span>
+<span class="fc" id="L39">        double Y = fInv(i);</span>
+<span class="fc" id="L40">        double Z = fInv(i - colorvalue[2] * (1.0 / 200.0));</span>
+<span class="fc" id="L41">        return new float[] {(float) X, (float) Y, (float) Z};</span>
+    }
+
+    @Override
+    public float[] fromRGB(float[] rgbvalue) {
+<span class="fc" id="L46">        float[] xyz = CIEXYZ.fromRGB(rgbvalue);</span>
+<span class="fc" id="L47">        return fromCIEXYZ(xyz);</span>
+    }
+
+    @Override
+    public float[] toRGB(float[] colorvalue) {
+<span class="fc" id="L52">        float[] xyz = toCIEXYZ(colorvalue);</span>
+<span class="fc" id="L53">        return CIEXYZ.toRGB(xyz);</span>
+    }
+
+    @Override
+    public float getMaxValue(int component) {
+<span class="nc" id="L58">        return 128f;</span>
+    }
+
+    @Override
+    public float getMinValue(int component) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        return (component == 0)? 0f: -128f;</span>
+    }
+
+    @Override
+    public String getName(int idx) {
+<span class="nc" id="L68">        return String.valueOf(&quot;Lab&quot;.charAt(idx));</span>
+    }
+
+    private static double f(double x) {
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (x &gt; 216.0 / 24389.0) {</span>
+<span class="fc" id="L73">            return Math.cbrt(x);</span>
+        } else {
+<span class="nc" id="L75">            return 841.0 / 108.0 * x + N;</span>
+        }
+    }
+
+    private static double fInv(double x) {
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (x &gt; 6.0 / 29.0) {</span>
+<span class="fc" id="L81">            return x*x*x;</span>
+        } else {
+<span class="nc" id="L83">            return 108.0 / 841.0 * (x - N);</span>
+        }
+    }
+
+    private Object readResolve() {
+<span class="nc" id="L88">        return getInstance();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
