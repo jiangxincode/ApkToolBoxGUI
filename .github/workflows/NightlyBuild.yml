@@ -29,10 +29,10 @@ jobs:
           echo "DATETIME=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v6
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'zulu'
 
       - name: Cache Maven packages

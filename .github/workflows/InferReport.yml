@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'zulu'
       - name: Cache Maven packages
         uses: actions/cache@v5
@@ -32,7 +32,7 @@ jobs:
           tar xJf "${INFER_FILENAME}.tar.xz"
           rm -rf "${INFER_FILENAME}.tar.xz"
           ./${INFER_FILENAME}/bin/infer --version
-          ./${INFER_FILENAME}/bin/infer --java-version 17 --sarif -- mvn -DskipTests=true clean package
+          ./${INFER_FILENAME}/bin/infer --java-version 21 --sarif -- mvn -DskipTests=true clean package
           ls -al ./infer-out/
       - name: Upload SARIF output to GitHub Security Center
         uses: github/codeql-action/upload-sarif@v4
