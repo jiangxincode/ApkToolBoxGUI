@@ -104,7 +104,7 @@
         <dependency>
             <groupId>com.github.junrar</groupId>
             <artifactId>junrar</artifactId>
-            <version>7.5.7</version>
+            <version>7.5.8</version>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
