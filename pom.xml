@@ -15,7 +15,7 @@
         <itext.version>9.5.0</itext.version>
         <log4j.version>2.25.3</log4j.version>
         <junit.minor.version>14.3</junit.minor.version>
-        <junit.jupiter.version>5.${junit.minor.version}</junit.jupiter.version>
+        <junit.jupiter.version>6.0.3</junit.jupiter.version>
         <junit.platform.version>1.${junit.minor.version}</junit.platform.version>
         <surefire.version>3.5.5</surefire.version>
         <protobuf.version>4.34.0</protobuf.version>
