@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainFrame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApkToolBoxGUI</a> &gt; <a href="index.source.html" class="el_package">edu.jiangxin.apktoolbox.main</a> &gt; <span class="el_source">MainFrame.java</span></div><h1>MainFrame.java</h1><pre class="source lang-java linenums">package edu.jiangxin.apktoolbox.main;
+
+import edu.jiangxin.apktoolbox.Version;
+import edu.jiangxin.apktoolbox.android.dumpsys.DumpsysPanel;
+import edu.jiangxin.apktoolbox.convert.base.BaseConvertPanel;
+import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
+import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
+import edu.jiangxin.apktoolbox.convert.color.ColorTablePanel;
+import edu.jiangxin.apktoolbox.convert.encoding.AsciiGbViewerPanel;
+import edu.jiangxin.apktoolbox.convert.encoding.GarbledTextRecoveryPanel;
+import edu.jiangxin.apktoolbox.convert.protobuf.supervised.SupervisedProtobufConvertPanel;
+import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobufConvertPanel;
+import edu.jiangxin.apktoolbox.convert.relationship.RelationShipConvertPanel;
+import edu.jiangxin.apktoolbox.convert.time.TimeConvertPanel;
+import edu.jiangxin.apktoolbox.convert.zh2unicode.Zh2UnicodeConvertPanel;
+import edu.jiangxin.apktoolbox.file.batchrename.BatchRenamePanel;
+import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
+import edu.jiangxin.apktoolbox.file.OsConvertPanel;
+import edu.jiangxin.apktoolbox.file.checksum.ChecksumPanel;
+import edu.jiangxin.apktoolbox.file.password.recovery.RecoveryPanel;
+import edu.jiangxin.apktoolbox.file.duplicate.DuplicateSearchPanel;
+import edu.jiangxin.apktoolbox.file.zhconvert.ZhConvertPanel;
+import edu.jiangxin.apktoolbox.help.*;
+import edu.jiangxin.apktoolbox.android.i18n.I18nAddPanel;
+import edu.jiangxin.apktoolbox.android.i18n.I18nFindLongestPanel;
+import edu.jiangxin.apktoolbox.android.i18n.I18nRemovePanel;
+import edu.jiangxin.apktoolbox.android.monkey.MonkeyPanel;
+import edu.jiangxin.apktoolbox.help.settings.SettingsPanel;
+import edu.jiangxin.apktoolbox.pdf.finder.PdfFinderPanel;
+import edu.jiangxin.apktoolbox.pdf.passwordremover.PdfPasswordRemoverPanel;
+import edu.jiangxin.apktoolbox.pdf.pic2pdf.Pic2PdfPanel;
+import edu.jiangxin.apktoolbox.pdf.stat.PdfStatPanel;
+import edu.jiangxin.apktoolbox.reverse.*;
+import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
+import edu.jiangxin.apktoolbox.reverse.ApktoolPanel;
+import edu.jiangxin.apktoolbox.swing.extend.EasyFrame;
+import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
+import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.ChangeMenuToUrlListener;
+import edu.jiangxin.apktoolbox.swing.extend.listener.IPreChangeMenuCallBack;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.ChangeMenuPreparePluginController;
+import edu.jiangxin.apktoolbox.swing.extend.plugin.PluginPanel;
+import edu.jiangxin.apktoolbox.swing.keeper.UiStateKeeper;
+import edu.jiangxin.apktoolbox.utils.Utils;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.Serial;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.Objects;
+
+/**
+ * @author jiangxin
+ * @author 2018-08-19
+ */
+public final class MainFrame extends EasyFrame {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private JPanel contentPane;
+<span class="nc" id="L70">    private EasyPanel currentEasyPanel = null;</span>
+    private JMenuBar menuBar;
+
+    public static void main(String[] args) {
+<span class="nc" id="L74">        final Logger logger = LogManager.getLogger(MainFrame.class.getSimpleName());</span>
+<span class="nc" id="L75">        boolean isEnvironmentOk = Utils.checkAndInitEnvironment();</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (!isEnvironmentOk) {</span>
+<span class="nc" id="L77">            logger.error(&quot;Environment is not ready, exit&quot;);</span>
+<span class="nc" id="L78">            return;</span>
+        }
+<span class="nc" id="L80">        EventQueue.invokeLater(() -&gt; {</span>
+<span class="nc" id="L81">            Configuration conf = Utils.getConfiguration();</span>
+<span class="nc" id="L82">            String lookAndFeelClassName = conf.getString(&quot;look.and.feel.class.name&quot;);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (StringUtils.isEmpty(lookAndFeelClassName)) {</span>
+<span class="nc" id="L84">                lookAndFeelClassName = &quot;com.formdev.flatlaf.FlatDarculaLaf&quot;;</span>
+<span class="nc" id="L85">                conf.setProperty(&quot;look.and.feel.class.name&quot;, lookAndFeelClassName);</span>
+            }
+            try {
+<span class="nc" id="L88">                UIManager.setLookAndFeel(lookAndFeelClassName);</span>
+<span class="nc" id="L89">            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L90">                logger.error(&quot;setLookAndFeel failed, use default instead&quot;, e);</span>
+<span class="nc" id="L91">            }</span>
+
+<span class="nc" id="L93">            String currentLocaleLanguage = conf.getString(&quot;locale.language&quot;);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (StringUtils.isEmpty(currentLocaleLanguage)) {</span>
+<span class="nc" id="L95">                currentLocaleLanguage = Locale.ENGLISH.getLanguage();</span>
+<span class="nc" id="L96">                conf.setProperty(&quot;locale.language&quot;, currentLocaleLanguage);</span>
+            }
+<span class="nc" id="L98">            Locale.setDefault(Locale.forLanguageTag(currentLocaleLanguage));</span>
+
+<span class="nc" id="L100">            MainFrame frame = new MainFrame();</span>
+
+<span class="nc" id="L102">            boolean isAlwaysOnTop = conf.getBoolean(&quot;always.on.top&quot;, false);</span>
+<span class="nc" id="L103">            conf.setProperty(&quot;always.on.top&quot;, isAlwaysOnTop);</span>
+<span class="nc" id="L104">            frame.setAlwaysOnTop(isAlwaysOnTop);</span>
+
+<span class="nc" id="L106">            frame.setVisible(true);</span>
+<span class="nc" id="L107">        });</span>
+<span class="nc" id="L108">    }</span>
+
+    public MainFrame() {
+<span class="nc" id="L111">        super();</span>
+<span class="nc" id="L112">        initialize();</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (SystemTray.isSupported()) {</span>
+<span class="nc" id="L114">            configSystemTray();</span>
+        }
+
+<span class="nc" id="L117">        setTitle(MessageFormat.format(bundle.getString(&quot;main.title&quot;), Version.VERSION));</span>
+<span class="nc" id="L118">        setDefaultCloseOperation(EXIT_ON_CLOSE);</span>
+<span class="nc" id="L119">        setMenuBar();</span>
+<span class="nc" id="L120">        contentPane = new JPanel();</span>
+<span class="nc" id="L121">        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+<span class="nc" id="L122">        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L123">        contentPane.add(Box.createVerticalGlue());</span>
+<span class="nc" id="L124">        EasyPanel initPanel = new AboutPanel();</span>
+<span class="nc" id="L125">        initPanel.init();</span>
+<span class="nc" id="L126">        initPanel.setBorder(BorderFactory.createTitledBorder(bundle.getString(&quot;help.about.title&quot;)));</span>
+<span class="nc" id="L127">        contentPane.add(initPanel);</span>
+<span class="nc" id="L128">        contentPane.add(Box.createVerticalGlue());</span>
+<span class="nc" id="L129">        setContentPane(contentPane);</span>
+<span class="nc" id="L130">        refreshSizeAndLocation();</span>
+<span class="nc" id="L131">    }</span>
+
+    private void configSystemTray() {
+<span class="nc" id="L134">        SystemTray systemTray = SystemTray.getSystemTray();</span>
+<span class="nc" id="L135">        PopupMenu popupMenu = new PopupMenu();</span>
+<span class="nc" id="L136">        final MenuItem show = new MenuItem(&quot;Open&quot;);</span>
+<span class="nc" id="L137">        final MenuItem exit = new MenuItem(&quot;Close&quot;);</span>
+<span class="nc" id="L138">        ActionListener actionListener = e -&gt; {</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (e.getSource() == show) {</span>
+<span class="nc" id="L140">                setExtendedState(NORMAL);</span>
+<span class="nc" id="L141">                setVisible(true);</span>
+            }
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            if (e.getSource() == exit) {</span>
+<span class="nc" id="L144">                dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));</span>
+            }
+<span class="nc" id="L146">        };</span>
+<span class="nc" id="L147">        exit.addActionListener(actionListener);</span>
+<span class="nc" id="L148">        show.addActionListener(actionListener);</span>
+<span class="nc" id="L149">        popupMenu.add(show);</span>
+<span class="nc" id="L150">        popupMenu.add(exit);</span>
+<span class="nc" id="L151">        TrayIcon trayIcon = new TrayIcon(image, &quot;系统托盘&quot;, popupMenu);</span>
+<span class="nc" id="L152">        trayIcon.setImageAutoSize(true);</span>
+        try {
+<span class="nc" id="L154">            systemTray.add(trayIcon);</span>
+<span class="nc" id="L155">        } catch (AWTException e) {</span>
+<span class="nc" id="L156">            logger.error(&quot;add icon to tray failed&quot;);</span>
+<span class="nc" id="L157">        }</span>
+<span class="nc" id="L158">        trayIcon.addMouseListener(new MouseAdapter() {</span>
+            @Override
+            public void mouseClicked(MouseEvent e) {
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                if (e.getClickCount() == 2) {</span>
+<span class="nc" id="L162">                    setExtendedState(NORMAL);</span>
+<span class="nc" id="L163">                    setVisible(true);</span>
+                }
+<span class="nc" id="L165">            }</span>
+        });
+<span class="nc" id="L167">    }</span>
+
+    private void setMenuBar() {
+<span class="nc" id="L170">        menuBar = new JMenuBar();</span>
+<span class="nc" id="L171">        setJMenuBar(menuBar);</span>
+
+<span class="nc" id="L173">        createReverseMenu();</span>
+
+<span class="nc" id="L175">        createAndroidMenu();</span>
+
+<span class="nc" id="L177">        createPdfMenu();</span>
+
+<span class="nc" id="L179">        createFileMenu();</span>
+
+<span class="nc" id="L181">        createConvertMenu();</span>
+
+<span class="nc" id="L183">        createHelpMenu();</span>
+<span class="nc" id="L184">    }</span>
+
+    private void createHelpMenu() {
+<span class="nc" id="L187">        JMenu helpMenu = new JMenu(bundle.getString(&quot;help.title&quot;));</span>
+<span class="nc" id="L188">        menuBar.add(helpMenu);</span>
+
+<span class="nc" id="L190">        JMenuItem documentMenuItem = new JMenuItem(bundle.getString(&quot;help.document.title&quot;));</span>
+<span class="nc" id="L191">        documentMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_DOCUMENT));</span>
+<span class="nc" id="L192">        helpMenu.add(documentMenuItem);</span>
+
+<span class="nc" id="L194">        JMenuItem settingsMenuItem = new JMenuItem(bundle.getString(&quot;help.settings.title&quot;));</span>
+<span class="nc" id="L195">        settingsMenuItem.addActionListener(new ChangeMenuToPanelListener(SettingsPanel.class, settingsMenuItem.getText()));</span>
+<span class="nc" id="L196">        helpMenu.add(settingsMenuItem);</span>
+
+<span class="nc" id="L198">        JMenuItem feedbackMenuItem = new JMenuItem(bundle.getString(&quot;help.feedback.title&quot;));</span>
+<span class="nc" id="L199">        feedbackMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_FEEDBACK));</span>
+<span class="nc" id="L200">        helpMenu.add(feedbackMenuItem);</span>
+
+<span class="nc" id="L202">        JMenuItem checkUpdateMenuItem = new JMenuItem(bundle.getString(&quot;help.checkupdate.title&quot;));</span>
+<span class="nc" id="L203">        checkUpdateMenuItem.addActionListener(new CheckUpdateActionListener(this));</span>
+<span class="nc" id="L204">        helpMenu.add(checkUpdateMenuItem);</span>
+
+<span class="nc" id="L206">        JMenuItem contributeMenuItem = new JMenuItem(bundle.getString(&quot;help.contribute.title&quot;));</span>
+<span class="nc" id="L207">        contributeMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_CONTRIBUTE));</span>
+<span class="nc" id="L208">        helpMenu.add(contributeMenuItem);</span>
+
+<span class="nc" id="L210">        JMenuItem aboutMenuItem = new JMenuItem(bundle.getString(&quot;help.about.title&quot;));</span>
+<span class="nc" id="L211">        aboutMenuItem.addActionListener(new ChangeMenuToPanelListener(AboutPanel.class, aboutMenuItem.getText()));</span>
+<span class="nc" id="L212">        helpMenu.add(aboutMenuItem);</span>
+<span class="nc" id="L213">    }</span>
+
+    private void createPdfMenu() {
+<span class="nc" id="L216">        JMenu pdfMenu = new JMenu(bundle.getString(&quot;pdf.title&quot;));</span>
+<span class="nc" id="L217">        menuBar.add(pdfMenu);</span>
+
+<span class="nc" id="L219">        JMenuItem pdfStatMenuItem = new JMenuItem(bundle.getString(&quot;pdf.stat.title&quot;));</span>
+<span class="nc" id="L220">        pdfStatMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfStatPanel.class, pdfStatMenuItem.getText()));</span>
+<span class="nc" id="L221">        pdfMenu.add(pdfStatMenuItem);</span>
+
+<span class="nc" id="L223">        JMenuItem pdfFinderMenuItem = new JMenuItem(bundle.getString(&quot;pdf.finder.title&quot;));</span>
+<span class="nc" id="L224">        pdfFinderMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfFinderPanel.class, pdfFinderMenuItem.getText()));</span>
+<span class="nc" id="L225">        pdfMenu.add(pdfFinderMenuItem);</span>
+
+<span class="nc" id="L227">        JMenuItem pdfPasswordRemoverMenuItem = new JMenuItem(bundle.getString(&quot;pdf.password.remover.title&quot;));</span>
+<span class="nc" id="L228">        pdfPasswordRemoverMenuItem.addActionListener(new ChangeMenuToPanelListener(PdfPasswordRemoverPanel.class, pdfPasswordRemoverMenuItem.getText()));</span>
+<span class="nc" id="L229">        pdfMenu.add(pdfPasswordRemoverMenuItem);</span>
+
+<span class="nc" id="L231">        JMenuItem pic2PdfMenuItem = new JMenuItem(bundle.getString(&quot;pictures.to.pdf.title&quot;));</span>
+<span class="nc" id="L232">        pic2PdfMenuItem.addActionListener(new ChangeMenuToPanelListener(Pic2PdfPanel.class, pic2PdfMenuItem.getText()));</span>
+<span class="nc" id="L233">        pdfMenu.add(pic2PdfMenuItem);</span>
+<span class="nc" id="L234">    }</span>
+
+    private void createFileMenu() {
+<span class="nc" id="L237">        JMenu fileMenu = new JMenu(bundle.getString(&quot;file.title&quot;));</span>
+<span class="nc" id="L238">        menuBar.add(fileMenu);</span>
+
+<span class="nc" id="L240">        JMenuItem osConvertMenuItem = new JMenuItem(bundle.getString(&quot;file.os.convert.title&quot;));</span>
+<span class="nc" id="L241">        osConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(OsConvertPanel.class, osConvertMenuItem.getText()));</span>
+<span class="nc" id="L242">        fileMenu.add(osConvertMenuItem);</span>
+
+<span class="nc" id="L244">        JMenuItem encodeConvertMenuItem = new JMenuItem(bundle.getString(&quot;file.encode.convert.title&quot;));</span>
+<span class="nc" id="L245">        encodeConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(EncodeConvertPanel.class, encodeConvertMenuItem.getText()));</span>
+<span class="nc" id="L246">        fileMenu.add(encodeConvertMenuItem);</span>
+
+<span class="nc" id="L248">        JMenuItem zhConvertMenuItem = new JMenuItem(bundle.getString(&quot;file.zh.convert.title&quot;));</span>
+<span class="nc" id="L249">        zhConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(ZhConvertPanel.class, zhConvertMenuItem.getText()));</span>
+<span class="nc" id="L250">        fileMenu.add(zhConvertMenuItem);</span>
+
+<span class="nc" id="L252">        JMenuItem duplicateFindMenuItem = new JMenuItem(bundle.getString(&quot;file.duplicate.title&quot;));</span>
+<span class="nc" id="L253">        duplicateFindMenuItem.addActionListener(new ChangeMenuToPanelListener(DuplicateSearchPanel.class, duplicateFindMenuItem.getText()));</span>
+<span class="nc" id="L254">        fileMenu.add(duplicateFindMenuItem);</span>
+
+<span class="nc" id="L256">        JMenuItem batchRenameMenuItem = new JMenuItem(bundle.getString(&quot;file.batch.rename.title&quot;));</span>
+<span class="nc" id="L257">        batchRenameMenuItem.addActionListener(new ChangeMenuToPanelListener(BatchRenamePanel.class, batchRenameMenuItem.getText()));</span>
+<span class="nc" id="L258">        fileMenu.add(batchRenameMenuItem);</span>
+
+<span class="nc" id="L260">        JMenuItem checkSumMenuItem = new JMenuItem(bundle.getString(&quot;file.check.summary.title&quot;));</span>
+<span class="nc" id="L261">        checkSumMenuItem.addActionListener(new ChangeMenuToPanelListener(ChecksumPanel.class, checkSumMenuItem.getText()));</span>
+<span class="nc" id="L262">        fileMenu.add(checkSumMenuItem);</span>
+
+<span class="nc" id="L264">        JMenuItem recoveryMenuItem = new JMenuItem(bundle.getString(&quot;file.password.recovery.title&quot;));</span>
+<span class="nc" id="L265">        recoveryMenuItem.addActionListener(new ChangeMenuToPanelListener(RecoveryPanel.class, recoveryMenuItem.getText()));</span>
+<span class="nc" id="L266">        fileMenu.add(recoveryMenuItem);</span>
+<span class="nc" id="L267">    }</span>
+
+    private void createConvertMenu() {
+<span class="nc" id="L270">        JMenu convertMenu = new JMenu(bundle.getString(&quot;convert.title&quot;));</span>
+<span class="nc" id="L271">        menuBar.add(convertMenu);</span>
+
+<span class="nc" id="L273">        JMenuItem timeConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.time.title&quot;));</span>
+<span class="nc" id="L274">        timeConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(TimeConvertPanel.class, timeConvertMenuItem.getText()));</span>
+<span class="nc" id="L275">        convertMenu.add(timeConvertMenuItem);</span>
+
+<span class="nc" id="L277">        JMenuItem colorConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.color.title&quot;));</span>
+<span class="nc" id="L278">        colorConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorConvertPanel.class, colorConvertMenuItem.getText()));</span>
+<span class="nc" id="L279">        convertMenu.add(colorConvertMenuItem);</span>
+
+<span class="nc" id="L281">        JMenuItem colorTableMenuItem = new JMenuItem(bundle.getString(&quot;table.color.title&quot;));</span>
+<span class="nc" id="L282">        colorTableMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorTablePanel.class, colorTableMenuItem.getText()));</span>
+<span class="nc" id="L283">        convertMenu.add(colorTableMenuItem);</span>
+
+<span class="nc" id="L285">        JMenuItem colorPickerMenuItem = new JMenuItem(bundle.getString(&quot;picker.color.title&quot;));</span>
+<span class="nc" id="L286">        colorPickerMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorPickerPanel.class, colorPickerMenuItem.getText()));</span>
+<span class="nc" id="L287">        convertMenu.add(colorPickerMenuItem);</span>
+
+<span class="nc" id="L289">        JMenuItem baseConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.base.title&quot;));</span>
+<span class="nc" id="L290">        baseConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(BaseConvertPanel.class, baseConvertMenuItem.getText()));</span>
+<span class="nc" id="L291">        convertMenu.add(baseConvertMenuItem);</span>
+
+<span class="nc" id="L293">        JMenuItem unicodeConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.unicode.title&quot;));</span>
+<span class="nc" id="L294">        unicodeConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(Zh2UnicodeConvertPanel.class, unicodeConvertMenuItem.getText()));</span>
+<span class="nc" id="L295">        convertMenu.add(unicodeConvertMenuItem);</span>
+
+<span class="nc" id="L297">        JMenuItem encodingRecoveryMenuItem = new JMenuItem(bundle.getString(&quot;garbled.text.recovery.title&quot;));</span>
+<span class="nc" id="L298">        encodingRecoveryMenuItem.addActionListener(new ChangeMenuToPanelListener(GarbledTextRecoveryPanel.class, encodingRecoveryMenuItem.getText()));</span>
+<span class="nc" id="L299">        convertMenu.add(encodingRecoveryMenuItem);</span>
+
+<span class="nc" id="L301">        JMenuItem asciiViewerMenuItem = new JMenuItem(bundle.getString(&quot;ascii.viewer.title&quot;));</span>
+<span class="nc" id="L302">        asciiViewerMenuItem.addActionListener(new ChangeMenuToPanelListener(AsciiGbViewerPanel.class, asciiViewerMenuItem.getText()));</span>
+<span class="nc" id="L303">        convertMenu.add(asciiViewerMenuItem);</span>
+
+<span class="nc" id="L305">        JMenuItem relationShipConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.relationship.title&quot;));</span>
+<span class="nc" id="L306">        relationShipConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(RelationShipConvertPanel.class, relationShipConvertMenuItem.getText()));</span>
+<span class="nc" id="L307">        convertMenu.add(relationShipConvertMenuItem);</span>
+
+<span class="nc" id="L309">        JMenuItem unsupervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.protobuf.unsupervised.title&quot;));</span>
+<span class="nc" id="L310">        unsupervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(UnsupervisedProtobufConvertPanel.class, unsupervisedProtobufConvertMenuItem.getText()));</span>
+<span class="nc" id="L311">        convertMenu.add(unsupervisedProtobufConvertMenuItem);</span>
+
+<span class="nc" id="L313">        JMenuItem supervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString(&quot;convert.protobuf.supervised.title&quot;));</span>
+<span class="nc" id="L314">        supervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(SupervisedProtobufConvertPanel.class, supervisedProtobufConvertMenuItem.getText()));</span>
+<span class="nc" id="L315">        convertMenu.add(supervisedProtobufConvertMenuItem);</span>
+<span class="nc" id="L316">    }</span>
+
+    private void createAndroidMenu() {
+<span class="nc" id="L319">        JMenu androidMenu = new JMenu(bundle.getString(&quot;android.title&quot;));</span>
+<span class="nc" id="L320">        menuBar.add(androidMenu);</span>
+
+<span class="nc" id="L322">        JMenuItem i18nAddMenuItem = new JMenuItem(bundle.getString(&quot;android.i18n.add.title&quot;));</span>
+<span class="nc" id="L323">        i18nAddMenuItem.addActionListener(new ChangeMenuToPanelListener(I18nAddPanel.class, i18nAddMenuItem.getText()));</span>
+<span class="nc" id="L324">        androidMenu.add(i18nAddMenuItem);</span>
+
+<span class="nc" id="L326">        JMenuItem i18nFindLongestMenuItem = new JMenuItem(bundle.getString(&quot;android.i18n.longest.title&quot;));</span>
+<span class="nc" id="L327">        i18nFindLongestMenuItem.addActionListener(new ChangeMenuToPanelListener(I18nFindLongestPanel.class, i18nFindLongestMenuItem.getText()));</span>
+<span class="nc" id="L328">        androidMenu.add(i18nFindLongestMenuItem);</span>
+
+<span class="nc" id="L330">        JMenuItem i18nRemoveMenuItem = new JMenuItem(bundle.getString(&quot;android.i18n.remove.title&quot;));</span>
+<span class="nc" id="L331">        i18nRemoveMenuItem.addActionListener(new ChangeMenuToPanelListener(I18nRemovePanel.class, i18nRemoveMenuItem.getText()));</span>
+<span class="nc" id="L332">        androidMenu.add(i18nRemoveMenuItem);</span>
+
+<span class="nc" id="L334">        JMenuItem screenShotMenuItem = new JMenuItem(bundle.getString(&quot;android.screenshot.title&quot;));</span>
+<span class="nc" id="L335">        screenShotMenuItem.addActionListener(new ChangeMenuToPanelListener(ScreenShotPanel.class, screenShotMenuItem.getText()));</span>
+<span class="nc" id="L336">        screenShotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));</span>
+<span class="nc" id="L337">        androidMenu.add(screenShotMenuItem);</span>
+
+<span class="nc" id="L339">        JMenuItem monkeyMenuItem = new JMenuItem(bundle.getString(&quot;android.monkey.title&quot;));</span>
+<span class="nc" id="L340">        monkeyMenuItem.addActionListener(new ChangeMenuToPanelListener(MonkeyPanel.class, monkeyMenuItem.getText()));</span>
+<span class="nc" id="L341">        androidMenu.add(monkeyMenuItem);</span>
+
+<span class="nc" id="L343">        JMenuItem dumpsysMenuItem = new JMenuItem(bundle.getString(&quot;android.dumpsys.title&quot;));</span>
+<span class="nc" id="L344">        dumpsysMenuItem.addActionListener(new ChangeMenuToPanelListener(DumpsysPanel.class, dumpsysMenuItem.getText()));</span>
+<span class="nc" id="L345">        androidMenu.add(dumpsysMenuItem);</span>
+<span class="nc" id="L346">    }</span>
+
+    private void createReverseMenu() {
+<span class="nc" id="L349">        JMenu reverseMenu = new JMenu(bundle.getString(&quot;reverse.title&quot;));</span>
+<span class="nc" id="L350">        reverseMenu.setMnemonic(KeyEvent.VK_R);</span>
+<span class="nc" id="L351">        menuBar.add(reverseMenu);</span>
+
+<span class="nc" id="L353">        JMenuItem pluginVersionMenuItem = new JMenuItem(bundle.getString(&quot;reverse.plugin.version.title&quot;));</span>
+<span class="nc" id="L354">        pluginVersionMenuItem.addActionListener(new ChangeMenuToUrlListener(Constant.URL_PLUGIN_VERSION));</span>
+<span class="nc" id="L355">        reverseMenu.add(pluginVersionMenuItem);</span>
+
+<span class="nc" id="L357">        JMenuItem apktoolMenuItem = new JMenuItem(bundle.getString(&quot;reverse.apktool.title&quot;), KeyEvent.VK_D);</span>
+<span class="nc" id="L358">        apktoolMenuItem.addActionListener(new ChangeMenuToPanelListener(ApktoolPanel.class, apktoolMenuItem.getText()));</span>
+<span class="nc" id="L359">        reverseMenu.add(apktoolMenuItem);</span>
+
+<span class="nc" id="L361">        JMenuItem apkSignMenuItem = new JMenuItem(bundle.getString(&quot;reverse.apksigner.title&quot;));</span>
+<span class="nc" id="L362">        apkSignMenuItem.addActionListener(new ChangeMenuToPanelListener(ApkSignerPanel.class, apkSignMenuItem.getText()));</span>
+<span class="nc" id="L363">        reverseMenu.add(apkSignMenuItem);</span>
+
+<span class="nc" id="L365">        JMenuItem jDMenuItem = new JMenuItem(bundle.getString(&quot;reverse.jd.gui.title&quot;));</span>
+<span class="nc" id="L366">        jDMenuItem.addActionListener(new ChangeMenToPluginJdListener());</span>
+<span class="nc" id="L367">        reverseMenu.add(jDMenuItem);</span>
+
+<span class="nc" id="L369">        JMenuItem bytecodeViewerMenuItem = new JMenuItem(bundle.getString(&quot;reverse.bytecode.viewer.title&quot;));</span>
+<span class="nc" id="L370">        bytecodeViewerMenuItem.addActionListener(new ChangeMenuToPluginBytecodeViewerListener());</span>
+<span class="nc" id="L371">        reverseMenu.add(bytecodeViewerMenuItem);</span>
+
+<span class="nc" id="L373">        JMenuItem luytenMenuItem = new JMenuItem(bundle.getString(&quot;reverse.luyten.title&quot;));</span>
+<span class="nc" id="L374">        luytenMenuItem.addActionListener(new ChangeMenuToPluginLuytenListener());</span>
+<span class="nc" id="L375">        reverseMenu.add(luytenMenuItem);</span>
+
+<span class="nc" id="L377">        JMenuItem jdDuoMenuItem = new JMenuItem(bundle.getString(&quot;reverse.jd.duo.title&quot;));</span>
+<span class="nc" id="L378">        jdDuoMenuItem.addActionListener(new ChangeMenuToPluginJdDuoListener());</span>
+<span class="nc" id="L379">        reverseMenu.add(jdDuoMenuItem);</span>
+
+<span class="nc" id="L381">        JMenuItem jdaMenuItem = new JMenuItem(bundle.getString(&quot;reverse.jda.title&quot;));</span>
+<span class="nc" id="L382">        jdaMenuItem.addActionListener(new ChangeMenuToPluginJdaListener());</span>
+<span class="nc" id="L383">        reverseMenu.add(jdaMenuItem);</span>
+
+<span class="nc" id="L385">        JMenuItem jADXMenuItem = new JMenuItem(bundle.getString(&quot;reverse.jadx.title&quot;));</span>
+<span class="nc" id="L386">        jADXMenuItem.addActionListener(new ChangeMenuToPluginJadxListener());</span>
+<span class="nc" id="L387">        reverseMenu.add(jADXMenuItem);</span>
+
+<span class="nc" id="L389">        JMenuItem aXMLPrinter = new JMenuItem(bundle.getString(&quot;reverse.axmlprinter.title&quot;));</span>
+<span class="nc" id="L390">        aXMLPrinter.addActionListener(new ChangeMenuToPanelListener(AxmlPrinterPanel.class, aXMLPrinter.getText()));</span>
+<span class="nc" id="L391">        reverseMenu.add(aXMLPrinter);</span>
+<span class="nc" id="L392">    }</span>
+
+    class ChangeMenuToPanelListener implements ChangeMenuListener {
+
+        Class&lt;? extends EasyPanel&gt; easyPanelClass;
+
+<span class="nc" id="L398">        EasyPanel panel = null;</span>
+
+        String title;
+
+<span class="nc" id="L402">        public ChangeMenuToPanelListener(Class&lt;? extends EasyPanel&gt; easyPanelClass, String title) {</span>
+<span class="nc" id="L403">            this.easyPanelClass = easyPanelClass;</span>
+<span class="nc" id="L404">            this.title = title;</span>
+<span class="nc" id="L405">            panel = createEasyPanel();</span>
+<span class="nc" id="L406">        }</span>
+
+        @Override
+        public boolean isNeedPreChangeMenu() {
+<span class="nc" id="L410">            return panel.isNeedPreChangeMenu();</span>
+        }
+
+        @Override
+        public void onPreChangeMenu(IPreChangeMenuCallBack callBack) {
+<span class="nc bnc" id="L415" title="All 2 branches missed.">            if (panel instanceof PluginPanel pluginPanel) {</span>
+<span class="nc" id="L416">                pluginPanel.preparePlugin(new ChangeMenuPreparePluginController(pluginPanel.getPluginFilename(), pluginPanel.isPluginNeedUnzip(), pluginPanel.isPluginNeedUnzipToSeparateDir(), callBack));</span>
+            }
+<span class="nc" id="L418">        }</span>
+
+        @Override
+        public void onChangeMenu() {
+<span class="nc" id="L422">            UiStateKeeper.save(currentEasyPanel);</span>
+<span class="nc" id="L423">            contentPane.removeAll();</span>
+<span class="nc" id="L424">            contentPane.add(Box.createVerticalGlue());</span>
+<span class="nc" id="L425">            panel.init();</span>
+<span class="nc" id="L426">            panel.setBorder(BorderFactory.createTitledBorder(title));</span>
+<span class="nc" id="L427">            contentPane.add(panel);</span>
+<span class="nc" id="L428">            logger.info(&quot;Panel changed: &quot; + panel.getClass().getSimpleName());</span>
+<span class="nc" id="L429">            contentPane.add(Box.createVerticalGlue());</span>
+<span class="nc" id="L430">            contentPane.revalidate();</span>
+<span class="nc" id="L431">            contentPane.repaint();</span>
+<span class="nc" id="L432">            refreshSizeAndLocation();</span>
+<span class="nc" id="L433">            panel.afterPainted();</span>
+<span class="nc" id="L434">            UiStateKeeper.restore(panel);</span>
+<span class="nc" id="L435">            currentEasyPanel = panel;</span>
+<span class="nc" id="L436">        }</span>
+
+        private EasyPanel createEasyPanel() {
+<span class="nc bnc" id="L439" title="All 2 branches missed.">            if (easyPanelClass == null) {</span>
+<span class="nc" id="L440">                return new EasyPanel();</span>
+            }
+<span class="nc" id="L442">            EasyPanel retEasyPanel = null;</span>
+            try {
+<span class="nc" id="L444">                retEasyPanel = easyPanelClass.getDeclaredConstructor().newInstance();</span>
+<span class="nc" id="L445">            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |</span>
+                     NoSuchMethodException e) {
+<span class="nc" id="L447">                logger.info(&quot;createEasyPanel failed: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L448">            }</span>
+<span class="nc" id="L449">            return Objects.requireNonNullElseGet(retEasyPanel, EasyPanel::new);</span>
+        }
+    }
+
+    @Override
+    protected void onWindowClosing(WindowEvent e) {
+<span class="nc" id="L455">        super.onWindowClosing(e);</span>
+<span class="nc" id="L456">        UiStateKeeper.save(currentEasyPanel);</span>
+<span class="nc" id="L457">    }</span>
+
+    @Override
+    protected void onWindowIconified(WindowEvent e) {
+<span class="nc" id="L461">        super.onWindowIconified(e);</span>
+<span class="nc" id="L462">        UiStateKeeper.save(currentEasyPanel);</span>
+<span class="nc" id="L463">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
