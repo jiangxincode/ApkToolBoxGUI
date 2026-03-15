@@ -27,7 +27,7 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 
 ApkToolBoxGUI is a handy tool for programmers with user-friendly GUI. 
 
-It's a collection of common tools, password recovery, encoding convert, timestamp convert, color picker and so on, furthermore there are some specialized tools for Android development (That is why it is named `ApkToolBoxGUI`).
+It's a collection of common tools, password recovery, encoding convert, color picker and so on, furthermore there are some specialized tools for Android development (That is why it is named `ApkToolBoxGUI`).
 
 ## Feature and Usage
 
@@ -39,9 +39,7 @@ It's a collection of common tools, password recovery, encoding convert, timestam
 * [Batch Rename](https://jiangxincode.github.io/ApkToolBoxGUI/features/batch_rename.html)
 * [Check Summary](https://jiangxincode.github.io/ApkToolBoxGUI/features/check_summary.html)
 * [Color Picker](https://jiangxincode.github.io/ApkToolBoxGUI/features/color_picker.html)
-* [Base Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_base.html)
 * [OS Pattern Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_os_pattern.html)
-* [Time Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_time_format.html)
 * [Decode Protobuf](https://jiangxincode.github.io/ApkToolBoxGUI/features/decode_protobuf.html)
 * [Find Duplicate Files](https://jiangxincode.github.io/ApkToolBoxGUI/features/find_duplicate_files.html)
 * [Reverse Engineer](https://jiangxincode.github.io/ApkToolBoxGUI/features/reverse_engineer.html)
