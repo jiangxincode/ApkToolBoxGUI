@@ -5,8 +5,6 @@ import edu.jiangxin.apktoolbox.android.dumpsys.DumpsysPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorConvertPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorTablePanel;
-import edu.jiangxin.apktoolbox.convert.encoding.AsciiGbViewerPanel;
-import edu.jiangxin.apktoolbox.convert.encoding.GarbledTextRecoveryPanel;
 import edu.jiangxin.apktoolbox.convert.protobuf.supervised.SupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.file.batchrename.BatchRenamePanel;
@@ -277,14 +275,6 @@ public final class MainFrame extends EasyFrame {
         JMenuItem colorPickerMenuItem = new JMenuItem(bundle.getString("picker.color.title"));
         colorPickerMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorPickerPanel.class, colorPickerMenuItem.getText()));
         convertMenu.add(colorPickerMenuItem);
-
-        JMenuItem encodingRecoveryMenuItem = new JMenuItem(bundle.getString("garbled.text.recovery.title"));
-        encodingRecoveryMenuItem.addActionListener(new ChangeMenuToPanelListener(GarbledTextRecoveryPanel.class, encodingRecoveryMenuItem.getText()));
-        convertMenu.add(encodingRecoveryMenuItem);
-
-        JMenuItem asciiViewerMenuItem = new JMenuItem(bundle.getString("ascii.viewer.title"));
-        asciiViewerMenuItem.addActionListener(new ChangeMenuToPanelListener(AsciiGbViewerPanel.class, asciiViewerMenuItem.getText()));
-        convertMenu.add(asciiViewerMenuItem);
 
         JMenuItem unsupervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString("convert.protobuf.unsupervised.title"));
         unsupervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(UnsupervisedProtobufConvertPanel.class, unsupervisedProtobufConvertMenuItem.getText()));
