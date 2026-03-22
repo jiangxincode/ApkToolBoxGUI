@@ -48,7 +48,6 @@
             <item name="Check Summary" href="features/check_summary.html"/>
             <item name="Find Duplicate Files" href="features/find_duplicate_files.html"/>
             <item name="Batch Rename" href="features/batch_rename.html"/>
-            <item name="Convert Color Format" href="features/convert_color_format.html"/>
             <item name="Color Picker" href="features/color_picker.html"/>
             <item name="Decode Protobuf" href="features/decode_protobuf.html"/>
             <item name="Reverse Engineer" href="features/reverse_engineer.html"/>
