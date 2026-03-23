@@ -15,7 +15,7 @@
         <itext.version>9.5.0</itext.version>
         <log4j.version>2.25.3</log4j.version>
         <surefire.version>3.5.5</surefire.version>
-        <protobuf.version>4.34.0</protobuf.version>
+        <protobuf.version>4.34.1</protobuf.version>
     </properties>
     <dependencyManagement>
         <dependencies>
