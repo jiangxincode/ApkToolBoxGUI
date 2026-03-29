@@ -40,7 +40,6 @@ It's a collection of common tools, password recovery, encoding convert, color pi
 * [Check Summary](https://jiangxincode.github.io/ApkToolBoxGUI/features/check_summary.html)
 * [Color Picker](https://jiangxincode.github.io/ApkToolBoxGUI/features/color_picker.html)
 * [OS Pattern Convert](https://jiangxincode.github.io/ApkToolBoxGUI/features/convert_os_pattern.html)
-* [Decode Protobuf](https://jiangxincode.github.io/ApkToolBoxGUI/features/decode_protobuf.html)
 * [Find Duplicate Files](https://jiangxincode.github.io/ApkToolBoxGUI/features/find_duplicate_files.html)
 * [Reverse Engineer](https://jiangxincode.github.io/ApkToolBoxGUI/features/reverse_engineer.html)
 * [Android Develop](https://jiangxincode.github.io/ApkToolBoxGUI/features/android_i18n_operation.html)

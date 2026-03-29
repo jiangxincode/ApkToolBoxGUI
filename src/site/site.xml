@@ -49,7 +49,6 @@
             <item name="Find Duplicate Files" href="features/find_duplicate_files.html"/>
             <item name="Batch Rename" href="features/batch_rename.html"/>
             <item name="Color Picker" href="features/color_picker.html"/>
-            <item name="Decode Protobuf" href="features/decode_protobuf.html"/>
             <item name="Reverse Engineer" href="features/reverse_engineer.html"/>
             <item name="Android Dumpsys Alarm Info" href="features/android_dumpsys_alarm.html"/>
             <item name="Android Internationalization Operations" href="features/android_i18n_operation.html"/>

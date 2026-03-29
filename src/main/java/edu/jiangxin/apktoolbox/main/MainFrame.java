@@ -3,8 +3,6 @@ package edu.jiangxin.apktoolbox.main;
 import edu.jiangxin.apktoolbox.Version;
 import edu.jiangxin.apktoolbox.android.dumpsys.DumpsysPanel;
 import edu.jiangxin.apktoolbox.convert.color.ColorPickerPanel;
-import edu.jiangxin.apktoolbox.convert.protobuf.supervised.SupervisedProtobufConvertPanel;
-import edu.jiangxin.apktoolbox.convert.protobuf.unsupervised.UnsupervisedProtobufConvertPanel;
 import edu.jiangxin.apktoolbox.file.batchrename.BatchRenamePanel;
 import edu.jiangxin.apktoolbox.file.EncodeConvertPanel;
 import edu.jiangxin.apktoolbox.file.OsConvertPanel;
@@ -259,20 +257,12 @@ public final class MainFrame extends EasyFrame {
     }
 
     private void createConvertMenu() {
-        JMenu convertMenu = new JMenu(bundle.getString("convert.title"));
-        menuBar.add(convertMenu);
+        JMenu othersMenu = new JMenu(bundle.getString("others.title"));
+        menuBar.add(othersMenu);
 
         JMenuItem colorPickerMenuItem = new JMenuItem(bundle.getString("picker.color.title"));
         colorPickerMenuItem.addActionListener(new ChangeMenuToPanelListener(ColorPickerPanel.class, colorPickerMenuItem.getText()));
-        convertMenu.add(colorPickerMenuItem);
-
-        JMenuItem unsupervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString("convert.protobuf.unsupervised.title"));
-        unsupervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(UnsupervisedProtobufConvertPanel.class, unsupervisedProtobufConvertMenuItem.getText()));
-        convertMenu.add(unsupervisedProtobufConvertMenuItem);
-
-        JMenuItem supervisedProtobufConvertMenuItem = new JMenuItem(bundle.getString("convert.protobuf.supervised.title"));
-        supervisedProtobufConvertMenuItem.addActionListener(new ChangeMenuToPanelListener(SupervisedProtobufConvertPanel.class, supervisedProtobufConvertMenuItem.getText()));
-        convertMenu.add(supervisedProtobufConvertMenuItem);
+        othersMenu.add(colorPickerMenuItem);
     }
 
     private void createAndroidMenu() {

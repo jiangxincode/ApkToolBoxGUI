@@ -15,7 +15,6 @@
         <itext.version>9.5.0</itext.version>
         <log4j.version>2.25.3</log4j.version>
         <surefire.version>3.5.5</surefire.version>
-        <protobuf.version>4.34.0</protobuf.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -163,16 +162,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20251224</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fifesoft</groupId>
