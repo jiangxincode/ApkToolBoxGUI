@@ -20,6 +20,7 @@ import edu.jiangxin.apktoolbox.pdf.finder.PdfFinderPanel;
 import edu.jiangxin.apktoolbox.pdf.passwordremover.PdfPasswordRemoverPanel;
 import edu.jiangxin.apktoolbox.pdf.pic2pdf.Pic2PdfPanel;
 import edu.jiangxin.apktoolbox.pdf.stat.PdfStatPanel;
+import edu.jiangxin.apktoolbox.word.stat.WordStatPanel;
 import edu.jiangxin.apktoolbox.reverse.*;
 import edu.jiangxin.apktoolbox.android.screenshot.ScreenShotPanel;
 import edu.jiangxin.apktoolbox.reverse.ApktoolPanel;
@@ -166,6 +167,8 @@ public final class MainFrame extends EasyFrame {
 
         createPdfMenu();
 
+        createWordMenu();
+
         createFileMenu();
 
         createConvertMenu();
@@ -221,6 +224,15 @@ public final class MainFrame extends EasyFrame {
         JMenuItem pic2PdfMenuItem = new JMenuItem(bundle.getString("pictures.to.pdf.title"));
         pic2PdfMenuItem.addActionListener(new ChangeMenuToPanelListener(Pic2PdfPanel.class, pic2PdfMenuItem.getText()));
         pdfMenu.add(pic2PdfMenuItem);
+    }
+
+    private void createWordMenu() {
+        JMenu wordMenu = new JMenu(bundle.getString("word.title"));
+        menuBar.add(wordMenu);
+
+        JMenuItem wordStatMenuItem = new JMenuItem(bundle.getString("word.stat.title"));
+        wordStatMenuItem.addActionListener(new ChangeMenuToPanelListener(WordStatPanel.class, wordStatMenuItem.getText()));
+        wordMenu.add(wordStatMenuItem);
     }
 
     private void createFileMenu() {
