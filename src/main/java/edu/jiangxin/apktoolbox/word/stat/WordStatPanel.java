@@ -18,10 +18,12 @@ import java.io.File;
 import java.io.Serial;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class WordStatPanel extends EasyPanel {
 
@@ -51,11 +53,11 @@ public class WordStatPanel extends EasyPanel {
 
     private transient SearchThread searchThread;
 
-    private long totalFileSize = 0;
+    private final AtomicLong totalFileSize = new AtomicLong(0);
 
-    private int totalPageCount = 0;
+    private final AtomicInteger totalPageCount = new AtomicInteger(0);
 
-    private transient final List<Vector<Object>> resultFileList = new ArrayList<>();
+    private transient final List<Vector<Object>> resultFileList = new CopyOnWriteArrayList<>();
 
     @Override
     public void initUI() {
@@ -186,7 +188,7 @@ public class WordStatPanel extends EasyPanel {
                 resultTableModel.addRow(file);
             }
             tabbedPane.setSelectedIndex(1);
-            statInfoLabel.setText("Page Count: " + totalPageCount + ", Total Size: " + FileUtils.sizeOfInHumanFormat(totalFileSize));
+            statInfoLabel.setText("Page Count: " + totalPageCount.get() + ", Total Size: " + FileUtils.sizeOfInHumanFormat(totalFileSize.get()));
         });
     }
 
@@ -194,11 +196,11 @@ public class WordStatPanel extends EasyPanel {
         Vector<Object> rowData = new Vector<>();
         rowData.add(file.getParent());
         rowData.add(file.getName());
-        totalFileSize += file.length();
+        totalFileSize.addAndGet(file.length());
         rowData.add(FileUtils.sizeOfInHumanFormat(file));
         rowData.add(DateUtils.millisecondToHumanFormat(file.lastModified()));
         int pageCount = WordUtils.getPageCount(file);
-        totalPageCount += pageCount;
+        totalPageCount.addAndGet(pageCount);
         rowData.add(pageCount);
         return rowData;
     }
@@ -215,8 +217,8 @@ public class WordStatPanel extends EasyPanel {
             this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
             resultFileList.clear();
-            totalFileSize = 0;
-            totalPageCount = 0;
+            totalFileSize.set(0);
+            totalPageCount.set(0);
 
             SwingUtilities.invokeLater(() -> {
                 progressBar.setValue(0);
