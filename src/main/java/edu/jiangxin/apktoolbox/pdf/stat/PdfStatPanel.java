@@ -5,6 +5,7 @@ import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
 import edu.jiangxin.apktoolbox.utils.DateUtils;
+import edu.jiangxin.apktoolbox.utils.ExcelExporter;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
 
 import javax.swing.*;
@@ -12,6 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.Serial;
 import java.util.*;
@@ -148,6 +151,19 @@ public class PdfStatPanel extends EasyPanel {
             resultTable.getColumn(resultTable.getColumnName(i)).setCellRenderer(new PdfFilesTableCellRenderer());
         }
         resultTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        resultTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    JPopupMenu popupmenu = new JPopupMenu();
+                    JMenuItem exportMenuItem = new JMenuItem("导出到 Excel");
+                    exportMenuItem.addActionListener(ev ->
+                        ExcelExporter.export(resultTableModel, "pdf_stat_export.xlsx", PdfStatPanel.this));
+                    popupmenu.add(exportMenuItem);
+                    popupmenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(resultTable);
 
         JPanel statInfoPanel = new JPanel();

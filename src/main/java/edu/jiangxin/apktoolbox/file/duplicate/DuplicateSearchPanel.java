@@ -4,6 +4,7 @@ import edu.jiangxin.apktoolbox.utils.DateUtils;
 import edu.jiangxin.apktoolbox.swing.extend.FileListPanel;
 import edu.jiangxin.apktoolbox.swing.extend.EasyPanel;
 import edu.jiangxin.apktoolbox.utils.Constants;
+import edu.jiangxin.apktoolbox.utils.ExcelExporter;
 import edu.jiangxin.apktoolbox.utils.FileUtils;
 import edu.jiangxin.apktoolbox.utils.RevealFileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -237,6 +238,11 @@ public class DuplicateSearchPanel extends EasyPanel {
                 deleteFilesInSameDirRecursiveMenuItem = new JMenuItem("Delete these duplicate files in the same directory(Recursive)");
                 deleteFilesInSameDirRecursiveMenuItem.addActionListener(menuActionListener);
                 popupmenu.add(deleteFilesInSameDirRecursiveMenuItem);
+
+                JMenuItem exportMenuItem = new JMenuItem("导出到 Excel");
+                exportMenuItem.addActionListener(ev ->
+                    ExcelExporter.export(resultTableModel, "duplicate_files_export.xlsx", DuplicateSearchPanel.this));
+                popupmenu.add(exportMenuItem);
 
                 popupmenu.show(e.getComponent(), e.getX(), e.getY());
             }
