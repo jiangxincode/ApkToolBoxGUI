@@ -9,7 +9,7 @@ on:
     branches: [ master ]
 
 jobs:
-  nightly:
+  build:
     name: Nightly Build
     strategy:
       fail-fast: false
@@ -71,50 +71,37 @@ jobs:
           name: ApkToolBoxGUI-${{ runner.os }}
           path: target/ApkToolBoxGUI-*-with*-JRE-*.zip
 
-      - name: Delete old nightly build tag only if changed
+  release:
+    name: Publish Nightly Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate version
+        id: ver
+        shell: bash
+        run: |
+          echo "DATE=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish Nightly Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          set -e
-          
-          CURRENT_SHA="${{ github.sha }}"
-          EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/refs/tags/nightly-build --jq '.object.sha')
-          echo "Current commit: $CURRENT_SHA"
-          echo "Existing nightly-build tag commit: $EXISTING_SHA"
-          
-          CURRENT_DATE="${{ steps.ver.outputs.DATE }}"
-          EXISTING_DATE_ORIGINAL=$(gh api repos/${{ github.repository }}/releases/tags/nightly-build --jq '.published_at')
-          echo "EXISTING_DATE_ORIGINAL: $EXISTING_DATE_ORIGINAL"
-          if [[ "$OSTYPE" == "darwin"* ]]; then
-            EXISTING_DATE=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$EXISTING_DATE_ORIGINAL" "+%Y%m%d")
-          else
-            EXISTING_DATE=$(date -d "$EXISTING_DATE_ORIGINAL" +%Y%m%d)
-          fi
-          echo "Current date: $CURRENT_DATE"
-          echo "Existing nightly-build date: $EXISTING_DATE"
-          
-          if [[ -n "$EXISTING_SHA" ]]; then
-            if [[ "$EXISTING_SHA" != "$CURRENT_SHA" || "$CURRENT_DATE" != "$EXISTING_DATE" ]]; then
-              echo "Commit or date is different，delete old nightly-build"
-              gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag
-            else
-              echo "Same commit and date, no need to delete"
-            fi
-          else
-            echo "No existing nightly-build tag, no need to delete"
-          fi
+          # 删除旧 release 和 tag
+          gh release delete nightly-build --repo ${{ github.repository }} --yes --cleanup-tag 2>/dev/null || true
+          # 确保 git tag 也被删除
+          gh api -X DELETE repos/${{ github.repository }}/git/refs/tags/nightly-build 2>/dev/null || true
 
-      - name: Upload Release Asset
-        uses: softprops/action-gh-release@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: |
-            target/ApkToolBoxGUI-*-with*-JRE-*.zip
-          name: Nightly Build ${{ steps.ver.outputs.DATE }}
-          tag_name: nightly-build
-          prerelease: true
-          generate_release_notes: false
-          body: |
-            Auto nightly build version, based on commit ${{ github.sha }}. This is only for developer or alpha/beta test users。
+          # 创建新 release 并上传所有产物
+          gh release create nightly-build \
+            --repo ${{ github.repository }} \
+            --title "Nightly Build ${{ steps.ver.outputs.DATE }}" \
+            --notes "Auto nightly build version, based on commit ${{ github.sha }}. This is only for developer or alpha/beta test users。" \
+            --prerelease \
+            artifacts/**/*.zip
