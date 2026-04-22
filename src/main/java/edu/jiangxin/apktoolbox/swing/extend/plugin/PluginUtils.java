@@ -49,17 +49,19 @@ public class PluginUtils {
         }
         File pluginDir = new File(Utils.getPluginDirPath());
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        DownloadRunnable downloadRunnable = new DownloadRunnable(url, pluginDir, callBack);
-        executorService.submit(downloadRunnable);
+        try (ExecutorService executorService = Executors.newSingleThreadExecutor()) {
+            DownloadRunnable downloadRunnable = new DownloadRunnable(url, pluginDir, callBack);
+            executorService.submit(downloadRunnable);
+        }
     }
 
 
     public static void unzipPlugin(String pluginFilename, boolean isPluginNeedUnzipToSeparateDir, IPreparePluginCallback callback) {
         File pluginFile = new File(Utils.getPluginDirPath(), pluginFilename);
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        UnzipRunnable unzipRunnable = new UnzipRunnable(pluginFile, isPluginNeedUnzipToSeparateDir, callback);
-        executorService.submit(unzipRunnable);
+        try (ExecutorService executorService = Executors.newSingleThreadExecutor()) {
+            UnzipRunnable unzipRunnable = new UnzipRunnable(pluginFile, isPluginNeedUnzipToSeparateDir, callback);
+            executorService.submit(unzipRunnable);
+        }
     }
 }
