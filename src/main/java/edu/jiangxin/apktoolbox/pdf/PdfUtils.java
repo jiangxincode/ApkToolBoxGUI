@@ -171,8 +171,10 @@ public class PdfUtils {
         PdfDocument pdfDoc = null;
         PdfWriter writer = null;
         Document doc = null;
+        FileOutputStream fos = null;
         try {
-            writer = new PdfWriter(new FileOutputStream(targetFile));
+            fos = new FileOutputStream(targetFile);
+            writer = new PdfWriter(fos);
             pdfDoc = new PdfDocument(writer);
             doc = new Document(pdfDoc);
 
@@ -196,6 +198,7 @@ public class PdfUtils {
             IOUtils.closeQuietly(doc);
             IOUtils.closeQuietly(pdfDoc);
             IOUtils.closeQuietly(writer);
+            IOUtils.closeQuietly(fos);
         }
     }
 }
