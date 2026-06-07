@@ -1,7 +1,7 @@
 # ApkToolBoxGUI
 
 [![Apache License V2.0](https://img.shields.io/badge/license-Apache%202-green)](http://www.apache.org/licenses/LICENSE-2.0)
-[![GitHub all releases](https://img.shields.io/github/downloads/jiangxincode/ApkToolBoxGUI/total)](https://github.com/jiangxincode/ApkToolBoxGUI/releases)
+[![GitHub Downloads (total)](https://img.shields.io/github/downloads/jiangxincode/ApkToolBoxGUI/total?logo=github)](https://github.com/jiangxincode/ApkToolBoxGUI/releases)
 [![Build and Rel
 ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml/badge.svg)](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRelease.yml)
 [![Project Reports](https://img.shields.io/badge/ApkToolBoxGUI-Reports-green.svg)](https://jiangxincode.github.io/ApkToolBoxGUI/project-reports.html)
