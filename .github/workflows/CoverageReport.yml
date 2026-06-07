@@ -27,9 +27,6 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Publish coverage report to Coveralls
-        run: |
-          mvn clean test jacoco:report coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}
       - name: Publish coverage report to QLTY
         uses: qltysh/qlty-action/coverage@v2
         with:
