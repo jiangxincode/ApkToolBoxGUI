@@ -13,7 +13,6 @@ ease](https://github.com/jiangxincode/ApkToolBoxGUI/actions/workflows/BuildAndRe
 [![Maintainability](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI/maintainability.svg)](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI)
 [![Code Coverage](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI/coverage.svg)](https://qlty.sh/gh/jiangxincode/projects/ApkToolBoxGUI)
 [![Coverage Status](https://coveralls.io/repos/github/jiangxincode/ApkToolBoxGUI/badge.svg?branch=master)](https://coveralls.io/github/jiangxincode/ApkToolBoxGUI?branch=master)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/19016/badge.svg)](https://scan.coverity.com/projects/jiangxincode-apktoolboxgui)
 
 
 [Deutsch](https://www.readme-i18n.com/jiangxincode/ApkToolBoxGUI?lang=de) |
