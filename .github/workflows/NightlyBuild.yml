@@ -28,7 +28,7 @@ jobs:
           echo "DATE=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
           echo "DATETIME=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
